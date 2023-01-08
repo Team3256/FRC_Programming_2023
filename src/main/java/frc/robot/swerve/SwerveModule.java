@@ -12,7 +12,9 @@ import frc.lib.util.SwerveModuleConstants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
@@ -29,25 +31,26 @@ public class SwerveModule {
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
         this.moduleNumber = moduleNumber;
         angleOffset = moduleConstants.angleOffset;
+        CTREConfigs configs = new CTREConfigs();
         
         /* Angle Encoder Config */
         angleEncoder = new CANCoder(moduleConstants.cancoderID);
-        configAngleEncoder();
+        configAngleEncoder(configs.swerveCanCoderConfig);
 
         /* Angle Motor Config */
         mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
-        configAngleMotor();
+        configAngleMotor(configs.swerveAngleFXConfig);
 
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
-        configDriveMotor();
+        configDriveMotor(configs.swerveDriveFXConfig);
 
-        lastAngle = getState().angle.getDegrees();
+        lastAngle = getPosition().angle.getDegrees();
 
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
-        desiredState = CTREModuleState.optimize(desiredState, getState().angle); //Custom optimize command, since default WPILib optimize assumes continuous controller which CTRE is not
+        desiredState = CTREModuleState.optimize(desiredState, getPosition().angle); //Custom optimize command, since default WPILib optimize assumes continuous controller which CTRE is not
 
         if(isOpenLoop){
             double percentOutput = desiredState.speedMetersPerSecond / maxSpeed;
@@ -68,22 +71,22 @@ public class SwerveModule {
         mAngleMotor.setSelectedSensorPosition(absolutePosition);
     }
 
-    private void configAngleEncoder(){        
+    private void configAngleEncoder(CANCoderConfiguration config){        
         angleEncoder.configFactoryDefault();
-        angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
+        angleEncoder.configAllSettings(config);
     }
 
-    private void configAngleMotor(){
+    private void configAngleMotor(TalonFXConfiguration config){
         mAngleMotor.configFactoryDefault();
-        mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
+        mAngleMotor.configAllSettings(config);
         mAngleMotor.setInverted(angleMotorInvert);
         mAngleMotor.setNeutralMode(angleNeutralMode);
         resetToAbsolute();
     }
 
-    private void configDriveMotor(){        
+    private void configDriveMotor(TalonFXConfiguration config){        
         mDriveMotor.configFactoryDefault();
-        mDriveMotor.configAllSettings(Robot.ctreConfigs.swerveDriveFXConfig);
+        mDriveMotor.configAllSettings(config);
         mDriveMotor.setInverted(driveMotorInvert);
         mDriveMotor.setNeutralMode(driveNeutralMode);
         mDriveMotor.setSelectedSensorPosition(0);
