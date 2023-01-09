@@ -2,8 +2,6 @@ package frc.robot.swerve;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import static frc.robot.Constants.SwerveConstants.*;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -14,6 +12,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import frc.robot.swerve.helpers.SwerveModule;
+import frc.robot.swerve.helpers.SwerveModuleConstants;
+
+import static frc.robot.Constants.SwerveConstants.*;
+
 
 public class SwerveDrive extends SubsystemBase {
     private final SwerveModule frontLeftModule = new SwerveModule(0, Mod0.constants);

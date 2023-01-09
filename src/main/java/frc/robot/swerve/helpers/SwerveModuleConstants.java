@@ -1,6 +1,5 @@
-package frc.lib.util;
+package frc.robot.swerve.helpers;
 
-// TODO: Put in the helper folder of the swerve folder
 public class SwerveModuleConstants {
     public final int driveMotorID;
     public final int angleMotorID;

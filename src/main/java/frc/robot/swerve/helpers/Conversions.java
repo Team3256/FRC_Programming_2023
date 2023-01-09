@@ -1,6 +1,5 @@
-package frc.lib.math;
+package frc.robot.swerve.helpers;
 
-// TODO: Put in the helper folder of the swerve folder
 public class Conversions {
 
     /**

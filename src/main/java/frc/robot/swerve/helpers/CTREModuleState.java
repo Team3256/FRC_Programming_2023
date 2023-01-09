@@ -1,9 +1,8 @@
-package frc.lib.util;
+package frc.robot.swerve.helpers;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-// TODO: Put in the helper folder of the swerve folder
 public class CTREModuleState {
 
   /**
