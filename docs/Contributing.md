@@ -29,7 +29,7 @@ Open the project in IntelliJ and make the edits you want!
 We are currently using Github Flow, which can be read about [here](https://guides.github.com/introduction/flow/).
 
 1. Create and checkout a new branch
-    - `git checkout -b <your_branch_name>`, where <your_branch_name> is a descriptive name for your branch. For example `fix-shooter-wheel`, `two-ball-auto`, or `climbing`. Use dashes in the branch name, not underscores.
+    - `git checkout -b <your_branch_name>`, where <your_branch_name> is a descriptive name for your branch. For example `fix/fix-shooter-wheel`, `feat/two-ball-auto`, or `feat/climbing`. Use dashes in the branch name, not underscores. Preface the branch name with either `fix/` or `feat/`.
 2. Make any code changes you need/want to make.
     - Try to make your code as readable as possible, remember you're not just writing code for yourself, but everyone else too. A good tool for documenting your code is [JavaDocs]T(https://www.jetbrains.com/help/idea/working-with-code-documentation.html).
     - You can use comments to clarify confusing aspects of your code that aren't super readable.
