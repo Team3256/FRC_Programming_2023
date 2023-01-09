@@ -4,7 +4,9 @@
   "version": "5.21.2-50-gdb9e910",
   "frcYear": 2022,
   "uuid": "ab676553-b602-441f-a38d-f1296eff6537",
-  "mavenUrls": ["https://maven.ctr-electronics.com/development/"],
+  "mavenUrls": [
+    "https://maven.ctr-electronics.com/development/"
+  ],
   "jsonUrl": "https://maven.ctr-electronics.com/development/com/ctre/phoenix/Phoenix-frc2022-latest.json",
   "javaDependencies": [
     {
@@ -25,7 +27,9 @@
       "version": "5.21.2-50-gdb9e910",
       "isJar": false,
       "skipInvalidPlatforms": true,
-      "validPlatforms": ["linuxathena"]
+      "validPlatforms": [
+        "linuxathena"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -33,7 +37,11 @@
       "version": "5.21.2-50-gdb9e910",
       "isJar": false,
       "skipInvalidPlatforms": true,
-      "validPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "validPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -41,7 +49,11 @@
       "version": "5.21.2-50-gdb9e910",
       "isJar": false,
       "skipInvalidPlatforms": true,
-      "validPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "validPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -49,7 +61,11 @@
       "version": "5.21.2-50-gdb9e910",
       "isJar": false,
       "skipInvalidPlatforms": true,
-      "validPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "validPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -57,7 +73,11 @@
       "version": "5.21.2-50-gdb9e910",
       "isJar": false,
       "skipInvalidPlatforms": true,
-      "validPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "validPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -65,7 +85,11 @@
       "version": "5.21.2-50-gdb9e910",
       "isJar": false,
       "skipInvalidPlatforms": true,
-      "validPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "validPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -73,7 +97,11 @@
       "version": "5.21.2-50-gdb9e910",
       "isJar": false,
       "skipInvalidPlatforms": true,
-      "validPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "validPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     }
   ],
   "cppDependencies": [
@@ -85,7 +113,9 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["linuxathena"]
+      "binaryPlatforms": [
+        "linuxathena"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix",
@@ -95,7 +125,9 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["linuxathena"]
+      "binaryPlatforms": [
+        "linuxathena"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix",
@@ -105,7 +137,9 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["linuxathena"]
+      "binaryPlatforms": [
+        "linuxathena"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -115,7 +149,11 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "binaryPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -125,7 +163,11 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "binaryPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -135,7 +177,11 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "binaryPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -145,7 +191,11 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "binaryPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -155,7 +205,11 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "binaryPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -165,7 +219,11 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "binaryPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -175,7 +233,11 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "binaryPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     },
     {
       "groupId": "com.ctre.phoenix.sim",
@@ -185,7 +247,11 @@
       "headerClassifier": "headers",
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
-      "binaryPlatforms": ["windowsx86-64", "linuxx86-64", "osxx86-64"]
+      "binaryPlatforms": [
+        "windowsx86-64",
+        "linuxx86-64",
+        "osxx86-64"
+      ]
     }
   ]
 }
