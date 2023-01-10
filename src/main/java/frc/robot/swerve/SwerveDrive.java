@@ -62,13 +62,13 @@ public class SwerveDrive extends SubsystemBase {
                     translation.getX(), translation.getY(), rotation, getYaw())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
-    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method
       // TODO: Check if the optimization is happening in the setDesiredState method
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
+    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
   }
 
   /* Used by SwerveControllerCommand in Auto */
