@@ -21,6 +21,7 @@ import frc.robot.swerve.helpers.ControllerUtil;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
   /* Controllers */
   private final Joystick driver = new Joystick(0);
@@ -37,7 +38,6 @@ public class RobotContainer {
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
 
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     boolean fieldRelative = true;
@@ -49,6 +49,7 @@ public class RobotContainer {
             () -> -ControllerUtil.modifyAxis(driverController.getLeftX()) * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -ControllerUtil.modifyAxis(driverController.getRightX()) * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
     );
+    swerveDrive.setDefaultCommand(defaultDriveCommand);
     // Configure the button bindings
     configureButtonBindings();
   }

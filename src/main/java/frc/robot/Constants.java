@@ -80,15 +80,7 @@ public final class Constants {
         public static final boolean canCoderInvert = false;
 
         /* Wheel Configurations */
-/*
-    public static final ModuleConfiguration MK4_L2 = new ModuleConfiguration(
-            0.10033,
-            (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0),
-            true,
-            (15.0 / 32.0) * (10.0 / 60.0),
-            true
-    );
- */
+        //TODO: Check with mechanical to see what gearing we are using with the swerve modules
         public static final double WHEEL_DIAMETER = 0.10033;
         public static final double DRIVE_REDUCTION = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
         public static final double DRIVETRAIN_TRACK_METERS = 0.4445;
