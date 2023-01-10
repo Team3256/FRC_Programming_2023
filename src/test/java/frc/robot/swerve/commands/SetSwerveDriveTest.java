@@ -22,8 +22,6 @@ public class SetSwerveDriveTest {
             Make the suppliers that are accepted by the TeleopSwerveFieldOriented command
          */
 
-        Joystick driver = new Joystick(0);
-
         boolean fieldRelative = true;
         boolean openLoop = true;
 
