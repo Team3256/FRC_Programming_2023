@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.swerve.helpers.SwerveModule;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
   private final SwerveModule frontLeftModule = new SwerveModule(0, Mod0.constants);
@@ -61,6 +62,7 @@ public class SwerveDrive extends SubsystemBase {
                     translation.getX(), translation.getY(), rotation, getYaw())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
+    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method
@@ -107,6 +109,7 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     odometry.update(getYaw(), getPositions());
+    Logger.getInstance().recordOutput("Odometry", getPose());
 
     for (SwerveModule mod : swerveModules) {
       SmartDashboard.putNumber(
