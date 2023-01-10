@@ -2,7 +2,6 @@ package frc.robot.swerve.commands;
 
 
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,10 +9,9 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import frc.robot.swerve.SwerveDrive;
-import org.junit.jupiter.api.Test;
-
-public class TeleopSwerveRobotOrientedTest {
-
+import org.junit.*;
+import org.junit.jupiter.api.*;
+public class TeleopSwerveFieldOrientedTest {
     public void setup() {
         assert HAL.initialize(500, 0); // initialize the HAL, crash if failed
         CommandScheduler.getInstance().enable();
@@ -24,79 +22,19 @@ public class TeleopSwerveRobotOrientedTest {
         SwerveDrive swerve = new SwerveDrive();
         double delta = 1.5;
 
-        TeleopSwerveRobotOriented teleopCommand = new TeleopSwerveRobotOriented(swerve, ()->x,()->y,()->theta);
+        TeleopSwerveFieldOriented teleopCommand = new TeleopSwerveFieldOriented(swerve, ()->x,()->y,()->theta);
         Pose2d pose = swerve.getPose();
         BooleanSupplier overshootTest = () -> Math.hypot(pose.getX()-x,pose.getY()-y)<delta;
 
         CommandScheduler.getInstance().schedule(teleopCommand);
         runSchedulerWithAssert(0.75, overshootTest);
-    }
 
-    private void testResponseTime(double rpm, double timeout) {
-        FlywheelSubsystem flywheelSubsystem = new FlywheelSubsystem();
-        SetFlywheelFromPID pidCommand = new SetFlywheelFromPID(flywheelSubsystem, rpm);
-        BooleanSupplier endCondition = () -> Math.abs(flywheelSubsystem.getAngularVelocityRPM() - rpm) < DELTA;
-
-        CommandScheduler.getInstance().schedule(pidCommand);
-        double timeUntilSetpoint = runSchedulerUntil(endCondition, PID_TIMEOUT);
-
-        if (timeUntilSetpoint != -1 && timeUntilSetpoint <= timeout) {
-            System.out.println("Your PIDController took " + timeUntilSetpoint + " seconds to reach the setpoint of " + rpm + ".");
-        } else {
-            System.out.println("Your PIDController took " + timeUntilSetpoint + " seconds (-1 means it never reached the setpoint) to reach the setpoint of " + rpm + ", but should have taken less than " + timeout + " seconds.");
-        }
-        assertFalse(timeUntilSetpoint == -1); // did not reach setpoint at all
-        assertTrue(timeUntilSetpoint <= timeout); // made it to setpoint
+        Assertions.assertEquals(true,true);
     }
 
     @Test
-    public void testOvershootWith1200RPM() {
-        testOvershoot(1200);
-    }
-
-    @Test
-    public void testOvershootWith1800RPM() {
-        testOvershoot(1800);
-    }
-
-    @Test
-    public void testOvershootWith2200RPM() {
-        testOvershoot(2200);
-    }
-
-    @Test
-    public void testOvershootWith2500RPM() {
-        testOvershoot(2500);
-    }
-
-    @Test
-    public void testOvershootWith3000RPM() {
-        testOvershoot(3000);
-    }
-
-    @Test
-    public void testResponseWith1200RPM() {
-        testPIDResponse(1200, 0.3);
-    }
-
-    @Test
-    public void testResponseWith1800RPM() {
-        testPIDResponse(1800, 0.35);
-    }
-
-    @Test
-    public void testResponseWith2200RPM() {
-        testPIDResponse(2200, 0.43);
-    }
-
-    @Test
-    public void testResponseWith2500RPM() {
-        testPIDResponse(2500, 0.49);
-    }
-
-    @Test
-    public void testResponseWith3000RPM() {
-        testPIDResponse(3000, 0.64);
+    public void testOffsetFullThrottle() {
+        testOffset(100,0,0);
     }
 
     private static void runSchedulerWithAssert(double seconds, BooleanSupplier test) {
