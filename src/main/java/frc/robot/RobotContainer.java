@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.TeleopSwerve;
+import frc.robot.swerve.commands.TeleopSwerveFieldOriented;
+import frc.robot.swerve.helpers.ControllerUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,6 +32,7 @@ public class RobotContainer {
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kA.value);
+  private final XboxController driverController = new XboxController(0);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
@@ -40,8 +42,13 @@ public class RobotContainer {
   public RobotContainer() {
     boolean fieldRelative = true;
     boolean openLoop = true;
-    swerveDrive.setDefaultCommand(new TeleopSwerve(swerveDrive, driver, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop));
 
+    Command defaultDriveCommand = new TeleopSwerveFieldOriented(
+            swerveDrive,
+            () -> -ControllerUtil.modifyAxis(driverController.getLeftY()) * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -ControllerUtil.modifyAxis(driverController.getLeftX()) * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -ControllerUtil.modifyAxis(driverController.getRightX()) * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+    );
     // Configure the button bindings
     configureButtonBindings();
   }

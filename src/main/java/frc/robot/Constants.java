@@ -79,6 +79,27 @@ public final class Constants {
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = false;
 
+        /* Wheel Configurations */
+/*
+    public static final ModuleConfiguration MK4_L2 = new ModuleConfiguration(
+            0.10033,
+            (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0),
+            true,
+            (15.0 / 32.0) * (10.0 / 60.0),
+            true
+    );
+ */
+        public static final double WHEEL_DIAMETER = 0.10033;
+        public static final double DRIVE_REDUCTION = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
+        public static final double DRIVETRAIN_TRACK_METERS = 0.4445;
+        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.4445;
+        private static final double ANGULAR_VELOCITY_CONSTANT = 1;
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
+                DRIVE_REDUCTION *
+                WHEEL_DIAMETER * Math.PI;
+        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = ANGULAR_VELOCITY_CONSTANT * MAX_VELOCITY_METERS_PER_SECOND /
+                Math.hypot(DRIVETRAIN_TRACK_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
+
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
         // TODO: Rename these to the actual position of the module

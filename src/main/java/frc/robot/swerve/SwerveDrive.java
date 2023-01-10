@@ -52,6 +52,10 @@ public class SwerveDrive extends SubsystemBase {
         );
     }
 
+    public Rotation2d getGyroscopeRotation() {
+        return Rotation2d.fromDegrees(gyro.getYaw());
+    }
+
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
             swerveKinematics.toSwerveModuleStates(
