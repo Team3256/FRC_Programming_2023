@@ -1,20 +1,13 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.swerve.helpers.SwerveModule;
-import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
@@ -24,6 +17,7 @@ public class SwerveDrive extends SubsystemBase {
     private final SwerveModule frontRightModule = new SwerveModule(1, Mod1.constants);
     private final SwerveModule backLeftModule = new SwerveModule(2, Mod2.constants);
     private final SwerveModule backRightModule = new SwerveModule(3, Mod3.constants);
+    private final double[] velocities = new double[4];
 
     private final SwerveModule[] swerveModules = {
         frontLeftModule,
@@ -32,8 +26,8 @@ public class SwerveDrive extends SubsystemBase {
         backRightModule
     };
 
-    public SwerveDriveOdometry odometry;
-    public PigeonIMU gyro;
+    private final SwerveDriveOdometry odometry;
+    private final PigeonIMU gyro;
 
     public SwerveDrive() {
         gyro = new PigeonIMU(pigeonID);
@@ -56,13 +50,24 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getYaw());
     }
 
+    private void setModuleVelocity(SwerveModuleState[] swerveModuleStates) {
+        for(int mod=0;mod<4;mod++){
+            velocities[mod] = swerveModuleStates[mod].speedMetersPerSecond;
+        }
+    }
+
+    public double[] getModuleVelocity() {
+        return velocities;
+    }
+
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+
         SwerveModuleState[] swerveModuleStates =
             swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation, 
+                                    3,
+                                    0,
+                                    0,
                                     getYaw()
                                 )
                                 : new ChassisSpeeds(
@@ -71,6 +76,7 @@ public class SwerveDrive extends SubsystemBase {
                                     rotation)
                                 );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
+        setModuleVelocity(swerveModuleStates);
 
         for(SwerveModule mod : swerveModules){
             // TODO: Optimize the module state using wpilib optimize method
@@ -121,6 +127,7 @@ public class SwerveDrive extends SubsystemBase {
         for(SwerveModule mod : swerveModules){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Distance", mod.getPosition().distanceMeters);
         }
     }
 }

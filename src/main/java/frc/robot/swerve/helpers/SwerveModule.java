@@ -42,18 +42,18 @@ public class SwerveModule {
         configDriveMotor(configs.swerveDriveFXConfig);
 
         lastAngle = getPosition().angle.getDegrees();
-
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
         desiredState = CTREModuleState.optimize(desiredState, getPosition().angle); //Custom optimize command, since default WPILib optimize assumes continuous controller which CTRE is not
+
+        double velocity = Conversions.MPSToFalcon(desiredState.speedMetersPerSecond, wheelCircumference, driveGearRatio);
 
         if(isOpenLoop){
             double percentOutput = desiredState.speedMetersPerSecond / maxSpeed;
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
         }
         else {
-            double velocity = Conversions.MPSToFalcon(desiredState.speedMetersPerSecond, wheelCircumference, driveGearRatio);
             mDriveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward, feedforward.calculate(desiredState.speedMetersPerSecond));
         }
 
@@ -91,6 +91,7 @@ public class SwerveModule {
     public Rotation2d getCanCoder(){
         return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
     }
+
 
     public SwerveModulePosition getPosition(){
         double velocity = Conversions.falconToMPS(mDriveMotor.getSelectedSensorPosition(), wheelCircumference, driveGearRatio);

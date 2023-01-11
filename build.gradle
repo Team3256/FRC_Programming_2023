@@ -68,7 +68,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    //Oblog
+    implementation "com.github.Oblarg:Oblog:5.1.0"
 }
+
 
 test {
     useJUnitPlatform()
@@ -96,4 +99,8 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
 }

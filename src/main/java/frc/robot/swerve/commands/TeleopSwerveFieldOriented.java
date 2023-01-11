@@ -1,8 +1,8 @@
 package frc.robot.swerve.commands;
 
-import frc.robot.swerve.SwerveDrive;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.swerve.SwerveDrive;
 
 import java.util.function.DoubleSupplier;
 
@@ -62,7 +62,7 @@ public class TeleopSwerveFieldOriented extends CommandBase {
         );
         drivetrainSubsystem.drive(
                 translation,
-                rotationSupplier.getAsDouble(),
+                0,
                 true,
                 true
         );
