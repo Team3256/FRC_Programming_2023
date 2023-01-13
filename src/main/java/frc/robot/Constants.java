@@ -13,7 +13,11 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
-
+    public static final class ElevatorConstants {
+        public static final int ELEVATOR_MOTOR_ID = 1;
+        public static final int ELEVATOR_UP_SPEED = 1;
+        public static final int ELEVATOR_DOWN_SPEED = 1;
+    }
     public static final class SwerveConstants {
         public static final int pigeonID = 1;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
