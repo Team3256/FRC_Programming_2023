@@ -12,7 +12,7 @@ public class Elevator extends SubsystemBase {
 
 	public Elevator() {
 		elevatorMotor = new TalonFX(ELEVATOR_MOTOR_ID);
-		System.out.println("Elevator Initialized");
+		System.out.println("Elevator initialized");
 		off();
 	}
 
