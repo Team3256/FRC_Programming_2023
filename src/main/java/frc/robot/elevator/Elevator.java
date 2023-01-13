@@ -28,6 +28,6 @@ public class Elevator extends SubsystemBase {
 
 	public void off(){
 		elevatorMotor.neutralOutput();
-		System.out.println("Intake off");
+		System.out.println("Elevator off");
 	}
 }
