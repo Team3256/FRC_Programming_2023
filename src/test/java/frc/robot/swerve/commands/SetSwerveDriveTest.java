@@ -23,7 +23,7 @@ public class SetSwerveDriveTest {
         CommandScheduler.getInstance().enable();
         DriverStationSim.setEnabled(true);
     }
-    @Test
+//    @Test
     public void dummyTest(){
         Assertions.assertTrue(true);
     }
