@@ -88,10 +88,10 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     @Override
     public void initialize() {
         if (AUTO_DEBUG) {
-            driveSubsystem.setTrajectory(trajectory);
+//            driveSubsystem.setTrajectory(trajectory);
         }
         if (this.startPose != null) { // use existing pose for more accuracy if not first path
-            driveSubsystem.resetOdometry(this.startPose);
+//            driveSubsystem.resetOdometry(this.startPose);
         }
 
 

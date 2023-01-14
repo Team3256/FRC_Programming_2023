@@ -2,8 +2,6 @@ package frc.robot.auto.helpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-//import frc.robot.commands.shooter.ZeroHoodMotorCommand;
-//import frc.robot.helper.logging.RobotLogger;
 
 import java.util.ArrayList;
 import java.util.Iterator;

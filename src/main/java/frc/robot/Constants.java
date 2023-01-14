@@ -27,8 +27,8 @@ public final class Constants {
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
-    public static final double trackWidth = Units.inchesToMeters(21.73);
-    public static final double wheelBase = Units.inchesToMeters(21.73);
+    public static final double trackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
+    public static final double wheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
     public static final double wheelDiameter = Units.inchesToMeters(3.94);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
@@ -134,14 +134,28 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
+    public static final boolean AUTO_DEBUG = false;
+    public static final double TRAJECTORY_DURATION_FACTOR = 1.11;
+
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
+    public static double P_X_CONTROLLER = 2.2;
+    public static double I_X_CONTROLLER = 0.025;
+    public static double D_X_CONTROLLER = 0;
+
+    public static double P_Y_CONTROLLER = 2.2;
+    public static double I_Y_CONTROLLER = 0.025;
+    public static double D_Y_CONTROLLER = 0.05;
+
+    public static double TRANSLATION_FF = 0.3;
+
+    public static TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(2.5 * Math.PI, 1.5 * Math.PI);
+    public static double P_THETA_CONTROLLER = 5.4;
+    public static double I_THETA_CONTROLLER = 0.02;
+    public static double D_THETA_CONTROLLER = 1.5;
 
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =

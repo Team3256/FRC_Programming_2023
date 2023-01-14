@@ -27,22 +27,18 @@ import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
-  private final SwerveModule frontLeftModule = new SwerveModule(0, Mod0.constants);
-  private final SwerveModule frontRightModule = new SwerveModule(1, Mod1.constants);
-  private final SwerveModule backLeftModule = new SwerveModule(2, Mod2.constants);
-  private final SwerveModule backRightModule = new SwerveModule(3, Mod3.constants);
-
-  private final SwerveModule[] swerveModules = {
-    frontLeftModule, frontRightModule, backLeftModule, backRightModule
-  };
-
-
-public class SwerveDrive extends SubsystemBase {
     private final SwerveModule frontLeftModule = new SwerveModule(0, Mod0.constants);
     private final SwerveModule frontRightModule = new SwerveModule(1, Mod1.constants);
     private final SwerveModule backLeftModule = new SwerveModule(2, Mod2.constants);
     private final SwerveModule backRightModule = new SwerveModule(3, Mod3.constants);
     private final Field2d field = new Field2d();
+
+    private static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+            new Translation2d(trackWidth / 2.0, wheelBase / 2.0), // Front Right
+            new Translation2d(trackWidth / 2.0, -wheelBase / 2.0), // Back right
+            new Translation2d(-trackWidth / 2.0, wheelBase / 2.0), // Front left
+            new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // Back right
+    );
 
     private final SwerveModule[] swerveModules = {
         frontLeftModule,
@@ -53,14 +49,6 @@ public class SwerveDrive extends SubsystemBase {
 
     public SwerveDriveOdometry odometry;
     public PigeonIMU gyro;
-
-    public SwerveDrive() {
-        gyro = new PigeonIMU(pigeonID);
-        gyro.configFactoryDefault();
-        zeroGyro();
-
-        odometry = new SwerveDriveOdometry(
-
 
   public SwerveDrive() {
     gyro = new PigeonIMU(pigeonID);
@@ -79,28 +67,10 @@ public class SwerveDrive extends SubsystemBase {
             });
   }
 
-  public void drive(
-      Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates =
-        swerveKinematics.toSwerveModuleStates(
-            fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getYaw())
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
-
-    for (SwerveModule mod : swerveModules) {
-      // TODO: Optimize the module state using wpilib optimize method
-      // TODO: Check if the optimization is happening in the setDesiredState method
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-    }
-    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
-  }
-
-
     public void drive(ChassisSpeeds chassisSpeeds) {
         SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(chassisSpeeds); // same as the older version of drive but takes in the calculated chassisspeed
     }
+
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
             swerveKinematics.toSwerveModuleStates(
@@ -122,19 +92,11 @@ public class SwerveDrive extends SubsystemBase {
             // TODO: Check if the optimization is happening in the setDesiredState method
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-    }    
+        Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
+    }
 
-    /* Used by SwerveControllerCommand in Auto */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeed);
-        
-        for(SwerveModule mod : swerveModules){
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
-        }
-    }    
-
-    public Pose2d getPose() {
-        return odometry.getPoseMeters();
+    public SwerveDriveKinematics getKinematics() {
+        return kinematics;
     }
 
   /* Used by SwerveControllerCommand in Auto */
