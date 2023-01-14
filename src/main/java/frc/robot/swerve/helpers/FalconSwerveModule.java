@@ -32,7 +32,7 @@ public class FalconSwerveModule extends SubsystemBase{
     private final Rotation2d mEncoderZero;
     private Rotation2d mTalonOffset;
 
-    private final double kDrivePositionCoefficient = Math.PI * Constants.SwerveConstants.wheelDiameter * Constants.SwerveConstants.driveReduction / 2048.0;
+    private final double kDrivePositionCoefficient = Math.PI * Constants.SwerveConstants.wheelDiameter * Constants.driveReduction / 2048.0;
     private final double kDriveVelocityCoefficient = kDrivePositionCoefficient * 10.0;
 
     private final double kSteerPositionCoefficient = 2.0 * Math.PI / 2048.0 * Constants.steerReduction;
@@ -203,7 +203,7 @@ public class FalconSwerveModule extends SubsystemBase{
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), getDriveDistance(), getSteerAngle());
+        return new SwerveModuleState(getDriveVelocity(), getSteerAngle());
     }
 
     public double getDriveClosedLoopError() {
@@ -249,11 +249,13 @@ public class FalconSwerveModule extends SubsystemBase{
     }
 
     // Returns true if the drive velocity should be inverted.
+
     private boolean setSteerAngleShortestPath(Rotation2d steerAngle) {
         boolean flip = false;
         final double unclampedPosition = getUnclampedSteerAngleRadians();
         final Rotation2d clampedPosition = Rotation2d.fromRadians(unclampedPosition);
-        final Rotation2d relativeRotation = steerAngle.rotateBy(clampedPosition.inverse());
+        // TODO should be clampedPosition.inverse() but inverse is deprecated. Please fix.
+        final Rotation2d relativeRotation = steerAngle.rotateBy(clampedPosition);
         double relativeRadians = relativeRotation.getRadians();
         final double kPiOver2 = Math.PI / 2.0;
         if (relativeRadians > kPiOver2) {
@@ -274,22 +276,8 @@ public class FalconSwerveModule extends SubsystemBase{
         mSteeringMotor.set(TalonFXControlMode.Position, (steerAngleRadians + mTalonOffset.getRadians()) / kSteerPositionCoefficient);
     }
 
-    @Override
-    public void stop() {
-        mDriveMotor.set(TalonFXControlMode.PercentOutput, 0.0);
-        mSteeringMotor.set(TalonFXControlMode.PercentOutput, 0.0);
-    }
-
-
-    @Override
-    public boolean checkSystem() {
-        // Not implemented
-        return false;
-    }
-
-
-    @Override
-    public void outputTelemetry() {
-        // Not implemented
+    public void stop(){
+        mDriveMotor.set(TalonFXControlMode.PercentOutput,0.0);
+        mSteeringMotor.set(TalonFXControlMode.PercentOutput,0.0);
     }
 }
