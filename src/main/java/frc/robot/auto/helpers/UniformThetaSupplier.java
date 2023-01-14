@@ -1,62 +1,70 @@
-package frc.robot.auto.helpers;
+// Copyright (c) 2023 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
+package frc.robot.auto.helpers;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class UniformThetaSupplier implements ThetaSupplier {
-    private double trajectoryDuration;
-    private Rotation2d desiredRotation;
-    private Rotation2d initialAngle = new Rotation2d();
-    private double proportion;
+  private double trajectoryDuration;
+  private Rotation2d desiredRotation;
+  private Rotation2d initialAngle = new Rotation2d();
+  private double proportion;
 
-    public UniformThetaSupplier(double trajectoryDuration, Rotation2d desiredRotation, Rotation2d initialAngle, double proportion) {
-        this.trajectoryDuration = trajectoryDuration;
-        this.desiredRotation = desiredRotation;
-        this.initialAngle = initialAngle;
-        this.proportion = proportion;
-    }
+  public UniformThetaSupplier(
+      double trajectoryDuration,
+      Rotation2d desiredRotation,
+      Rotation2d initialAngle,
+      double proportion) {
+    this.trajectoryDuration = trajectoryDuration;
+    this.desiredRotation = desiredRotation;
+    this.initialAngle = initialAngle;
+    this.proportion = proportion;
+  }
 
-    public UniformThetaSupplier(double trajectoryDuration, Rotation2d desiredRotation, double proportion) {
-        this.trajectoryDuration = trajectoryDuration;
-        this.desiredRotation = desiredRotation;
-        this.proportion = proportion;
-    }
+  public UniformThetaSupplier(
+      double trajectoryDuration, Rotation2d desiredRotation, double proportion) {
+    this.trajectoryDuration = trajectoryDuration;
+    this.desiredRotation = desiredRotation;
+    this.proportion = proportion;
+  }
 
-    public UniformThetaSupplier(double trajectoryDuration) {
-        this.trajectoryDuration = trajectoryDuration;
-        this.desiredRotation = new Rotation2d();
-        this.proportion = 1;
-    }
+  public UniformThetaSupplier(double trajectoryDuration) {
+    this.trajectoryDuration = trajectoryDuration;
+    this.desiredRotation = new Rotation2d();
+    this.proportion = 1;
+  }
 
-    public UniformThetaSupplier(Rotation2d desiredRotation, double proportion) {
-        this.trajectoryDuration = 5; // SHOULD GET CHANGED BY TRAJECTORY FACTORY
-        this.desiredRotation = desiredRotation;
-        this.proportion = proportion;
-    }
+  public UniformThetaSupplier(Rotation2d desiredRotation, double proportion) {
+    this.trajectoryDuration = 5; // SHOULD GET CHANGED BY TRAJECTORY FACTORY
+    this.desiredRotation = desiredRotation;
+    this.proportion = proportion;
+  }
 
-    public UniformThetaSupplier(Rotation2d desiredRotation, Rotation2d initialAngle, double proportion) {
-        this.trajectoryDuration = 5; // SHOULD GET CHANGED BY TRAJECTORY FACTORY
-        this.desiredRotation = desiredRotation;
-        this.initialAngle = initialAngle;
-        this.proportion = proportion;
-    }
+  public UniformThetaSupplier(
+      Rotation2d desiredRotation, Rotation2d initialAngle, double proportion) {
+    this.trajectoryDuration = 5; // SHOULD GET CHANGED BY TRAJECTORY FACTORY
+    this.desiredRotation = desiredRotation;
+    this.initialAngle = initialAngle;
+    this.proportion = proportion;
+  }
 
-    public void setTrajectoryDuration(double duration) {
-        this.trajectoryDuration = duration;
-    }
+  public void setTrajectoryDuration(double duration) {
+    this.trajectoryDuration = duration;
+  }
 
-    public Rotation2d rotationSupply(double now) {
-        return new Rotation2d((this.desiredRotation.getRadians() >= 0 ? 1 : -1) *
-                (this.initialAngle.getRadians()
+  public Rotation2d rotationSupply(double now) {
+    return new Rotation2d(
+        (this.desiredRotation.getRadians() >= 0 ? 1 : -1)
+            * (this.initialAngle.getRadians()
                 + Math.min(
                     Math.abs(
-                            this.desiredRotation.getRadians() * (now/(this.trajectoryDuration * proportion))
-                    ),
-                    Math.abs(
-                            this.desiredRotation.getRadians()
-                    )
-                )
-        ));
-    }
+                        this.desiredRotation.getRadians()
+                            * (now / (this.trajectoryDuration * proportion))),
+                    Math.abs(this.desiredRotation.getRadians()))));
+  }
 }
-

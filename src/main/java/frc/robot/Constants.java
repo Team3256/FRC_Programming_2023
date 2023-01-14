@@ -19,8 +19,8 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 import java.util.Map;
 
 public final class Constants {
-    public static final boolean DEBUG = false;
-    public static final double stickDeadband = 0.1;
+  public static final boolean DEBUG = false;
+  public static final double stickDeadband = 0.1;
 
   public static final class SwerveConstants {
     public static final int pigeonID = 1;
@@ -101,7 +101,6 @@ public final class Constants {
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
-
     /* Front Right Module - Module 1 */
     public static final class Mod1 {
       public static final int driveMotorID = 3;
@@ -152,7 +151,8 @@ public final class Constants {
 
     public static double TRANSLATION_FF = 0.3;
 
-    public static TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(2.5 * Math.PI, 1.5 * Math.PI);
+    public static TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS =
+        new TrapezoidProfile.Constraints(2.5 * Math.PI, 1.5 * Math.PI);
     public static double P_THETA_CONTROLLER = 5.4;
     public static double I_THETA_CONTROLLER = 0.02;
     public static double D_THETA_CONTROLLER = 1.5;
@@ -259,7 +259,6 @@ public final class Constants {
               new Translation3d(
                   highX, nodeFirstY + nodeSeparationY * i, isCube ? highCubeZ : highConeZ);
           highTranslations[i] = new Translation2d(highX, nodeFirstY + nodeSeparationY * i);
-
         }
       }
 
