@@ -1,20 +1,27 @@
-//package frc.robot.swerve.commands;
+// Copyright (c) 2023 FRC 3256
+// https://github.com/Team3256
 //
-//import edu.wpi.first.hal.HAL;
-//import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-//import edu.wpi.first.wpilibj2.command.Command;
-//import edu.wpi.first.wpilibj2.command.CommandScheduler;
-//import frc.robot.Constants;
-//import frc.robot.swerve.SwerveDrive;
-//import frc.robot.swerve.SwerveModuleIO;
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.BeforeAll;
-//import org.junit.jupiter.api.Test;
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
+package frc.robot.swerve.commands;
 //
-//import java.util.Arrays;
-//import java.util.function.DoubleSupplier;
+// import edu.wpi.first.hal.HAL;
+// import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+// import edu.wpi.first.wpilibj2.command.Command;
+// import edu.wpi.first.wpilibj2.command.CommandScheduler;
+// import frc.robot.Constants;
+// import frc.robot.swerve.SwerveDrive;
+// import frc.robot.swerve.SwerveModuleIO;
+// import org.junit.jupiter.api.Assertions;
+// import org.junit.jupiter.api.BeforeAll;
+// import org.junit.jupiter.api.Test;
 //
-//public class SetSwerveDriveTest {
+// import java.util.Arrays;
+// import java.util.function.DoubleSupplier;
+//
+// public class SetSwerveDriveTest {
 //
 //    public static final double DELTA = 0.5; // acceptable deviation range
 //
@@ -36,15 +43,18 @@
 //                leftX = () -> 0.1 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
 //                rotation = () -> 0.2;
 //
-//        TeleopSwerveFieldOriented command = new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation);
+//        TeleopSwerveFieldOriented command = new TeleopSwerveFieldOriented(swerveDrive, leftX,
+// leftY, rotation);
 //
 //        runScheduler(3, command);
 //
 //        System.out.println("Was drive method run by command? " + swerveDrive.isSpeedSet);
-//        System.out.println("Velocities that are currently set: " + Arrays.toString(swerveDrive.getModuleVelocity()));
+//        System.out.println("Velocities that are currently set: " +
+// Arrays.toString(swerveDrive.getModuleVelocity()));
 //        System.out.println("First Chassis Speed set: " + swerveDrive.getLastChassisSpeed());
 //
-////        Assertions.assertEquals(ChassisSpeeds.fromFieldRelativeSpeeds(4.47, 2.48, 0, new Rotation2d()), swerveDrive.getLastChassisSpeed());
+////        Assertions.assertEquals(ChassisSpeeds.fromFieldRelativeSpeeds(4.47, 2.48, 0, new
+// Rotation2d()), swerveDrive.getLastChassisSpeed());
 //    }
 //
 //    //    @Test
@@ -57,7 +67,8 @@
 //                leftX = () -> 0.9 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
 //                rotation = () -> 0.0;
 //
-//        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
+//        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX,
+// leftY, rotation));
 ////        runScheduler(1);
 //
 //        Assertions.assertEquals(1, swerveDrive.getPositions());
@@ -72,7 +83,8 @@
 //                leftX = () -> 0.0,
 //                rotation = () -> 0.0;
 //
-//        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
+//        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX,
+// leftY, rotation));
 ////        runScheduler(1);
 //
 //        Assertions.assertEquals(10, swerveDrive.getPose().getY());
@@ -86,9 +98,11 @@
 //        DoubleSupplier
 //                leftY = () -> 0.0,
 //                leftX = () -> 0.0,
-//                rotation = () -> 0.9 * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+//                rotation = () -> 0.9 *
+// Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
 //
-//        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
+//        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX,
+// leftY, rotation));
 ////        runScheduler(1);
 //
 //        Assertions.assertEquals(45, swerveDrive.getPose().getRotation().getDegrees());
@@ -108,4 +122,5 @@
 //            }
 //        }
 //    }
-//}
+// }
+public class SetSwerveDriveTest {}

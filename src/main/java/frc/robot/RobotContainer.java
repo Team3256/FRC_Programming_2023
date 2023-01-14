@@ -46,15 +46,13 @@ public class RobotContainer {
     boolean openLoop = true;
 
     // @suppress-warnings
-    switch (Constants.currentMode){
+    switch (Constants.currentMode) {
       case REAL:
         swerveDrive = new SwerveDrive(new SwerveModuleIO());
         break;
 
       default: // Replay robot - disable IO impl.
-        swerveDrive = new SwerveDrive(new SwerveIO(){
-
-        });
+        swerveDrive = new SwerveDrive(new SwerveIO() {});
     }
 
     swerveDrive.setDefaultCommand(

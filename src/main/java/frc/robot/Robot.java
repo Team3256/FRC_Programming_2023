@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -35,8 +33,8 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-//    Logger.getInstance()
-//        .recordMetadata("ProjectName", "WarriorBorgs (2023)"); // Set a metadata value
+    //    Logger.getInstance()
+    //        .recordMetadata("ProjectName", "WarriorBorgs (2023)"); // Set a metadata value
 
     Logger logger = Logger.getInstance();
 
@@ -46,7 +44,7 @@ public class Robot extends LoggedRobot {
     logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
     logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
 
-    switch (Constants.currentMode){
+    switch (Constants.currentMode) {
       case REAL:
         logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
         logger.addDataReceiver(new NT4Publisher());
@@ -83,9 +81,10 @@ public class Robot extends LoggedRobot {
                   LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
     }*/
 
-//    Logger.getInstance()
-//        .start(); // Start logging! No more data receivers, replay sources, or metadata values may
-//    // be added.
+    //    Logger.getInstance()
+    //        .start(); // Start logging! No more data receivers, replay sources, or metadata values
+    // may
+    //    // be added.
 
     logger.start(); // Start advkit logger
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
