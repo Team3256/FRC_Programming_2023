@@ -21,8 +21,16 @@ import java.util.Map;
 public final class Constants {
   public static final double stickDeadband = 0.1;
 
+  public static final Mode currentMode = Mode.REAL;
+
+  public static enum Mode {
+    REAL,
+    SIM,
+    REPLAY
+  }
+
   public static final class SwerveConstants {
-    public static final int pigeonID = 1;
+    public static final int pigeonID = 9;
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
@@ -88,44 +96,58 @@ public final class Constants {
     /* Angle Encoder Invert */
     public static final boolean canCoderInvert = false;
 
+    /* Wheel Configurations */
+    // TODO: Check with mechanical to see what gearing we are using with the swerve modules
+    public static final double WHEEL_DIAMETER = 0.10033;
+    public static final double DRIVE_REDUCTION = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
+    public static final double DRIVETRAIN_TRACK_METERS = 0.4445;
+    public static final double DRIVETRAIN_WHEELBASE_METERS = 0.4445;
+    private static final double ANGULAR_VELOCITY_CONSTANT = 1;
+    public static final double MAX_VELOCITY_METERS_PER_SECOND =
+        6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * Math.PI;
+    public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND =
+        ANGULAR_VELOCITY_CONSTANT
+            * MAX_VELOCITY_METERS_PER_SECOND
+            / Math.hypot(DRIVETRAIN_TRACK_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
+
     /* Module Specific Constants */
     /* Front Left Module - Module 0 */
-    // TODO: Rename these to the actual position of the module
+    // TODO: Reassign Module Motor and Cancoder ID's to the actual ones in Phoenix tuner
     public static final class Mod0 {
-      public static final int driveMotorID = 1;
-      public static final int angleMotorID = 2;
-      public static final int canCoderID = 1;
-      public static final double angleOffset = 37.35;
+      public static final int driveMotorID = 13;
+      public static final int angleMotorID = 11;
+      public static final int canCoderID = 12;
+      public static final double angleOffset = Units.radiansToDegrees(2.977361);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
     /* Front Right Module - Module 1 */
     public static final class Mod1 {
-      public static final int driveMotorID = 3;
-      public static final int angleMotorID = 4;
-      public static final int canCoderID = 2;
-      public static final double angleOffset = 10.45;
+      public static final int driveMotorID = 7;
+      public static final int angleMotorID = 5;
+      public static final int canCoderID = 6;
+      public static final double angleOffset = Units.radiansToDegrees(0.846566);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
     /* Back Left Module - Module 2 */
     public static final class Mod2 {
-      public static final int driveMotorID = 5;
-      public static final int angleMotorID = 6;
-      public static final int canCoderID = 3;
-      public static final double angleOffset = 38.75;
+      public static final int driveMotorID = 16;
+      public static final int angleMotorID = 14;
+      public static final int canCoderID = 15;
+      public static final double angleOffset = Units.radiansToDegrees(3.166089);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
     /* Back Right Module - Module 3 */
     public static final class Mod3 {
-      public static final int driveMotorID = 7;
-      public static final int angleMotorID = 8;
-      public static final int canCoderID = 4;
-      public static final double angleOffset = 58.88;
+      public static final int driveMotorID = 4;
+      public static final int angleMotorID = 2;
+      public static final int canCoderID = 3;
+      public static final double angleOffset = Units.radiansToDegrees(4.067925);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
