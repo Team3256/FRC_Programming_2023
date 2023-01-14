@@ -1,19 +1,17 @@
-package frc.robot.helper.auto;
+package frc.robot.auto.helpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.shooter.ZeroHoodMotorCommand;
-import frc.robot.helper.logging.RobotLogger;
+//import frc.robot.commands.shooter.ZeroHoodMotorCommand;
+//import frc.robot.helper.logging.RobotLogger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static frc.robot.Constants.AutoConstants.COMMAND_MARKER_THRESHOLD;
+
 
 public class AutoCommandRunner {
-    private RobotLogger logger = new RobotLogger(AutoCommandRunner.class.getCanonicalName());
     private List<AutoCommandMarker> commandMarkers = new ArrayList<>();
     private List<AutoCommandMarker> startedCommandMarkers = new ArrayList<>();
     private Pose2d lastPose;
@@ -26,48 +24,43 @@ public class AutoCommandRunner {
         if (lastPose == null) {
             for (int i = 0; i < commandMarkers.size(); i++) {
                 AutoCommandMarker autoCommandMarker = commandMarkers.get(i);
-                if (isAtMarker(autoCommandMarker.getMarker(), currentPose)) {
-                    logger.info("Ran: " + autoCommandMarker.getCommand().getClass().getCanonicalName());
-                    autoCommandMarker.getCommand().schedule();
-                    startedCommandMarkers.add(autoCommandMarker);
-                    commandMarkers.remove(i);
-                    i--;
-                }
+//                if (isAtMarker(autoCommandMarker.getMarker(), currentPose)) {
+//                    autoCommandMarker.getCommand().schedule();
+//                    startedCommandMarkers.add(autoCommandMarker);
+//                    commandMarkers.remove(i);
+//                    i--;
+//                }
             }
 
             for (int i = 0; i < startedCommandMarkers.size(); i++) { // cancel started commands
                 AutoCommandMarker autoCommandMarker = startedCommandMarkers.get(i);
-                if (isAtMarker(autoCommandMarker.getEndingMarker(), currentPose)) {
                     autoCommandMarker.getCommand().cancel();
-                    logger.info("Stopped: " + autoCommandMarker.getCommand().getClass().getCanonicalName());
                     startedCommandMarkers.remove(i);
                     i--;
                 }
             }
-        } else {
-            for (int i = 0; i < commandMarkers.size(); i++) {
-                AutoCommandMarker autoCommandMarker = commandMarkers.get(i);
-                if (isAtMarker(autoCommandMarker.getMarker(), currentPose, lastPose)) {
-                    autoCommandMarker.getCommand().schedule();
-                    logger.info("Ran: " + autoCommandMarker.getCommand().getClass().getCanonicalName());
-                    startedCommandMarkers.add(autoCommandMarker);
-                    commandMarkers.remove(i);
-                    i--;
-                }
-            }
+//        } else {
+//            for (int i = 0; i < commandMarkers.size(); i++) {
+//                AutoCommandMarker autoCommandMarker = commandMarkers.get(i);
+////                if (isAtMarker(autoCommandMarker.getMarker(), currentPose, lastPose)) {
+////                    autoCommandMarker.getCommand().schedule();
+////                    startedCommandMarkers.add(autoCommandMarker);
+////                    commandMarkers.remove(i);
+////                    i--;
+////                }
+//            }
 
             for (int i = 0; i < startedCommandMarkers.size(); i++) { // cancel started commands
                 AutoCommandMarker autoCommandMarker = startedCommandMarkers.get(i);
-                if (isAtMarker(autoCommandMarker.getEndingMarker(), currentPose, lastPose)) {
-                    autoCommandMarker.getCommand().cancel();
-                    logger.info("Stopped: " + autoCommandMarker.getCommand().getClass().getCanonicalName());
-                    startedCommandMarkers.remove(i);
-                    i--;
-                }
+//                if (isAtMarker(autoCommandMarker.getEndingMarker(), currentPose, lastPose)) {
+//                    autoCommandMarker.getCommand().cancel();
+//                    startedCommandMarkers.remove(i);
+//                    i--;
+//                }
             }
         }
-        lastPose = currentPose;
-    }
+//        lastPose = currentPose;
+
 
     public void end() {
         Iterator<AutoCommandMarker> startedCommandMarkerIterator = startedCommandMarkers.iterator();
@@ -76,14 +69,14 @@ public class AutoCommandRunner {
         }
     }
 
-    private boolean isAtMarker(Translation2d marker, Pose2d currentPose) {
-        if (marker == null || currentPose == null) {
-            return false;
-        }
-
-        double distance = marker.getDistance(currentPose.getTranslation());
-        return distance < COMMAND_MARKER_THRESHOLD;
-    }
+//    private boolean isAtMarker(Translation2d marker, Pose2d currentPose) {
+//        if (marker == null || currentPose == null) {
+//            return false;
+//        }
+//
+//        double distance = marker.getDistance(currentPose.getTranslation());
+//        return distance < COMMAND_MARKER_THRESHOLD;
+//    }
 
     private boolean isAtMarker(Translation2d marker, Pose2d currentPose, Pose2d lastPose) {
         if (marker == null || currentPose == null || lastPose == null) {

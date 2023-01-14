@@ -1,4 +1,4 @@
-package frc.robot.helper.auto;
+package frc.robot.auto.helpers;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;

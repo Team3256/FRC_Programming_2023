@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.robot.auto.helpers;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -14,11 +14,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.commands.PPTrajectoryFollowCommand;
-import frc.robot.commands.TrajectoryFollowCommand;
-import frc.robot.helper.auto.AutoCommandRunner;
-import frc.robot.helper.auto.ThetaSupplier;
-import frc.robot.helper.auto.UniformThetaSupplier;
+import frc.robot.auto.commands.PPTrajectoryFollowCommand;
+import frc.robot.auto.commands.TrajectoryFollowCommand;
 import frc.robot.swerve.SwerveDrive;
 
 import java.io.IOException;

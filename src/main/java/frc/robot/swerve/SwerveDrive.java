@@ -10,8 +10,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 import frc.robot.swerve.helpers.SwerveModule;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
@@ -24,6 +26,7 @@ public class SwerveDrive extends SubsystemBase {
     private final SwerveModule frontRightModule = new SwerveModule(1, Mod1.constants);
     private final SwerveModule backLeftModule = new SwerveModule(2, Mod2.constants);
     private final SwerveModule backRightModule = new SwerveModule(3, Mod3.constants);
+    private final Field2d field = new Field2d();
 
     private final SwerveModule[] swerveModules = {
         frontLeftModule,
@@ -52,6 +55,9 @@ public class SwerveDrive extends SubsystemBase {
         );
     }
 
+    public void drive(ChassisSpeeds chassisSpeeds) {
+        SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(chassisSpeeds); // same as the older version of drive but takes in the calculated chassisspeed
+    }
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
             swerveKinematics.toSwerveModuleStates(
@@ -119,4 +125,10 @@ public class SwerveDrive extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
         }
     }
+
+    public void setTrajectory(Trajectory trajectory) {
+        field.getObject("traj").setTrajectory(trajectory);
+    }
+
+
 }

@@ -13,6 +13,7 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
+    public static final boolean DEBUG = false;
 
     public static final class SwerveConstants {
         public static final int pigeonID = 1;
@@ -124,6 +125,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
+        public static final double TRANSLATION_FF = 0;
+        public static final double TRAJECTORY_DURATION_FACTOR = 0;
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -148,6 +151,7 @@ public final class Constants {
         public static final double P_Y_CONTROLLER = 0;
         public static final double I_Y_CONTROLLER = 0;
         public static final double D_Y_CONTROLLER = 0;
+        public static boolean AUTO_DEBUG = false;
 
 
 

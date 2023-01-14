@@ -1,4 +1,4 @@
-package frc.robot.helper.auto;
+package frc.robot.auto.helpers;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -9,6 +9,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import org.opencv.core.Mat;
+
+//TODO: TUNE TRANSLATION_FF IN CONSTANTS.AUTO CONSTANTS
 
 import static frc.robot.Constants.AutoConstants.TRANSLATION_FF;
 
