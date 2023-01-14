@@ -129,7 +129,7 @@ public final class Constants {
             public static final int driveMotorID = 4;
             public static final int angleMotorID = 2;
             public static final int canCoderID = 3;
-            public static final double angleOffset = Units.radiansToDegrees(4.067925);
+            public static final double angleOffset = Units.radiansToDegrees(4.067925) - 90;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
