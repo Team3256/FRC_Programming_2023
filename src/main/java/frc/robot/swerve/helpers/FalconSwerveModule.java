@@ -1,4 +1,4 @@
-package com.team254.frc2022.subsystems;
+package frc.robot.swerve.helpers;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -10,37 +10,34 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
-import com.team254.frc2022.Constants;
-import com.team254.frc2022.Robot;
-import com.team254.lib.drivers.CanDeviceId;
-import com.team254.lib.drivers.Subsystem;
-import com.team254.lib.drivers.TalonFXFactory;
-import com.team254.lib.drivers.TalonUtil;
-import com.team254.lib.geometry.Rotation2d;
-import com.team254.lib.loops.ILooper;
-import com.team254.lib.loops.Loop;
-import com.team254.lib.swerve.SwerveModuleState;
-
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.drivers.CanDeviceId;
+import frc.robot.drivers.TalonFXFactory;
+import frc.robot.drivers.TalonUtil;
 
 // SDS Mk4i L3 Internals
 // TODO(correctly use readperiodicinputs/writeperiodicoutputs)
 // TODO(pass in TalonFXConfiguration)
 // TODO(use servomotorsubsystem for steering)
-public class FalconSwerveModule extends Subsystem {
+
+public class FalconSwerveModule extends SubsystemBase{
     private final TalonFX mSteeringMotor;
     private final TalonFX mDriveMotor;
     private final CANCoder mCanCoder;
     private final Rotation2d mEncoderZero;
     private Rotation2d mTalonOffset;
 
-    private final double kDrivePositionCoefficient = Math.PI * Constants.kDriveWheelDiameter * Constants.kDriveReduction / 2048.0;
+    private final double kDrivePositionCoefficient = Math.PI * Constants.SwerveConstants.wheelDiameter * Constants.SwerveConstants.driveReduction / 2048.0;
     private final double kDriveVelocityCoefficient = kDrivePositionCoefficient * 10.0;
 
-    private final double kSteerPositionCoefficient = 2.0 * Math.PI / 2048.0 * Constants.kSteerReduction;
+    private final double kSteerPositionCoefficient = 2.0 * Math.PI / 2048.0 * Constants.steerReduction;
 
-    public FalconSwerveModule(CanDeviceId driveId, CanDeviceId steeringId,  CANCoder cancoder, Rotation2d encoderZero) {
+    public FalconSwerveModule(CanDeviceId driveId,CanDeviceId steeringId,CANCoder cancoder,Rotation2d encoderZero) {
         mDriveMotor = TalonFXFactory.createDefaultTalon(driveId);
         mSteeringMotor = TalonFXFactory.createDefaultTalon(steeringId);
         mCanCoder = cancoder;
@@ -190,17 +187,19 @@ public class FalconSwerveModule extends Subsystem {
         mSteeringMotor.setNeutralMode(NeutralMode.Brake);
     }
 
+    // TODO should be getAdjustedCanCoderAngle().inverse() but inverse is deprecated. Please fix.
     public void rezeroSteeringMotor() {
         mTalonOffset = Rotation2d.fromRadians(mSteeringMotor.getSelectedSensorPosition() * kSteerPositionCoefficient)
-                .rotateBy(getAdjustedCanCoderAngle().inverse());
+                .rotateBy(getAdjustedCanCoderAngle());
     }
 
     public Rotation2d getCanCoderAngle() {
         return Rotation2d.fromDegrees(mCanCoder.getAbsolutePosition());
     }
 
+    // TODO should be mEncoderZero.inverse() but inverse is deprecated. Please fix.
     public Rotation2d getAdjustedCanCoderAngle() {
-        return getCanCoderAngle().rotateBy(mEncoderZero.inverse());
+        return getCanCoderAngle().rotateBy(mEncoderZero);
     }
 
     public SwerveModuleState getState() {
