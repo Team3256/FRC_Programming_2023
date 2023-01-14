@@ -102,6 +102,7 @@ public final class Constants {
             public static final double angleOffset = Units.radiansToDegrees(2.977361);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+
         }
 
         /* Front Right Module - Module 1 */
@@ -133,6 +134,12 @@ public final class Constants {
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
+
+        public static TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(2.5 * Math.PI, 1.5 * Math.PI);
+        public static double P_THETA_CONTROLLER = 0.008;
+        public static double I_THETA_CONTROLLER = 0.0;
+        public static double D_THETA_CONTROLLER = 0.0;
+        public static final boolean INVERT_TURN = true;
 
     }
 

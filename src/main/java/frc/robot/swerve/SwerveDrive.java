@@ -1,22 +1,28 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.swerve.helpers.SwerveModule;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
-
 public class SwerveDrive extends SubsystemBase {
     private final SwerveModule frontLeftModule = new SwerveModule(0, Mod0.constants);
     private final SwerveModule frontRightModule = new SwerveModule(1, Mod1.constants);
     private final SwerveModule backLeftModule = new SwerveModule(2, Mod2.constants);
     private final SwerveModule backRightModule = new SwerveModule(3, Mod3.constants);
+    private final ProfiledPIDController thetaController = new ProfiledPIDController(P_THETA_CONTROLLER, I_THETA_CONTROLLER, D_THETA_CONTROLLER, THETA_CONTROLLER_CONSTRAINTS);
+    private Rotation2d currGyroPosition;
+    private double gyroSetpoint = 0;
+    private boolean updateSetpoint = true;
 
     private final double[] velocities;
     private ChassisSpeeds lastChassisSpeeds;
@@ -51,6 +57,10 @@ public class SwerveDrive extends SubsystemBase {
         velocities = new double[4];
         isSpeedSet = false;
         lastChassisSpeeds = new ChassisSpeeds();
+
+        currGyroPosition = getYaw();
+        thetaController.enableContinuousInput(-180, 180);
+
     }
 
     public Rotation2d getGyroscopeRotation() {
@@ -86,16 +96,30 @@ public class SwerveDrive extends SubsystemBase {
                 getYaw()
         );
 
+        currGyroPosition = getGyroscopeRotation();
+
+        if (currChassisSpeed.omegaRadiansPerSecond == 0) {
+            if (updateSetpoint) gyroSetpoint = currGyroPosition.getRadians();
+            updateSetpoint = false;
+
+            double modMeasure = Units.radiansToDegrees(MathUtil.angleModulus(currGyroPosition.getRadians()));
+            double modSetpoint = Units.radiansToDegrees(MathUtil.angleModulus(gyroSetpoint));
+
+            SmartDashboard.putNumber("Mod Setpoint", modSetpoint);
+            SmartDashboard.putNumber("Mod Measure", modMeasure);
+
+            currChassisSpeed.omegaRadiansPerSecond = thetaController.calculate(modMeasure, modSetpoint);
+        } else {
+            updateSetpoint = true;
+            currChassisSpeed.omegaRadiansPerSecond = INVERT_TURN ? -currChassisSpeed.omegaRadiansPerSecond : currChassisSpeed.omegaRadiansPerSecond;
+        }
+
         setLastChassisSpeeds(currChassisSpeed);
 
         SwerveModuleState[] swerveModuleStates =
             swerveKinematics.toSwerveModuleStates(
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    translation.getX(),
-                                    translation.getY(),
-                                    rotation,
-                                    getYaw()
-                                )
+                fieldRelative ? currChassisSpeed
+
                                 : new ChassisSpeeds(
                                     translation.getX(), 
                                     translation.getY(), 
