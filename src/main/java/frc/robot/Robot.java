@@ -35,10 +35,39 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-    Logger.getInstance()
-        .recordMetadata("ProjectName", "WarriorBorgs (2023)"); // Set a metadata value
+//    Logger.getInstance()
+//        .recordMetadata("ProjectName", "WarriorBorgs (2023)"); // Set a metadata value
 
-    if (isReal()) {
+    Logger logger = Logger.getInstance();
+
+    logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+
+    switch (Constants.currentMode){
+      case REAL:
+        logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
+        logger.addDataReceiver(new NT4Publisher());
+        break;
+      case SIM:
+        logger.addDataReceiver(new WPILOGWriter(""));
+        logger.addDataReceiver(new NT4Publisher());
+        break;
+      case REPLAY:
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog();
+        logger.setReplaySource(new WPILOGReader(logPath));
+        logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
+      default: // Unknown mode.
+        logger.addDataReceiver(new WPILOGWriter(""));
+        logger.addDataReceiver(new NT4Publisher());
+        break;
+    }
+
+    /*if (isReal()) {
       Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
       Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
@@ -52,11 +81,13 @@ public class Robot extends LoggedRobot {
           .addDataReceiver(
               new WPILOGWriter(
                   LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-    }
+    }*/
 
-    Logger.getInstance()
-        .start(); // Start logging! No more data receivers, replay sources, or metadata values may
-    // be added.
+//    Logger.getInstance()
+//        .start(); // Start logging! No more data receivers, replay sources, or metadata values may
+//    // be added.
+
+    logger.start(); // Start advkit logger
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();

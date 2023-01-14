@@ -115,15 +115,14 @@ public class SwerveModule {
   public SwerveModulePosition getPosition() {
     double velocity = getModuleVelocity();
     Rotation2d angle =
-        Rotation2d.fromDegrees(
-            Conversions.falconToDegrees(getModuleAngle(), angleGearRatio));
+        Rotation2d.fromDegrees(Conversions.falconToDegrees(getModuleAngle(), angleGearRatio));
     return new SwerveModulePosition(velocity, angle);
   }
 
   public double getModuleVelocity() {
     double velocity =
-            Conversions.falconToMPS(
-                    mDriveMotor.getSelectedSensorPosition(), wheelCircumference, driveGearRatio);
+        Conversions.falconToMPS(
+            mDriveMotor.getSelectedSensorPosition(), wheelCircumference, driveGearRatio);
     return velocity;
   }
 

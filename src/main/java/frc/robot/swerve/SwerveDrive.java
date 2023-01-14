@@ -9,12 +9,9 @@ package frc.robot.swerve;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -35,12 +32,12 @@ public class SwerveDrive extends SubsystemBase {
     odometry =
         new SwerveDriveOdometry(
             swerveKinematics,
-                swerveIO.getYaw(),
+            swerveIO.getYaw(),
             new SwerveModulePosition[] {
-             getFrontLeftModulePosition(),
-                    getFrontRightModulePosition(),
-                    getBackLeftModulePosition(),
-                    getBackRightModulePosition()
+              getFrontLeftModulePosition(),
+              getFrontRightModulePosition(),
+              getBackLeftModulePosition(),
+              getBackRightModulePosition()
             });
     this.swerveIO = swerveIO;
   }
@@ -90,32 +87,32 @@ public class SwerveDrive extends SubsystemBase {
   public SwerveModulePosition getFrontLeftModulePosition() {
     double velocity = swerveIOInputs.frontLeftModuleVelocity;
     Rotation2d angle =
-            Rotation2d.fromDegrees(
-                    Conversions.falconToDegrees(swerveIOInputs.frontLeftModuleAngle, angleGearRatio));
+        Rotation2d.fromDegrees(
+            Conversions.falconToDegrees(swerveIOInputs.frontLeftModuleAngle, angleGearRatio));
     return new SwerveModulePosition(velocity, angle);
   }
 
   public SwerveModulePosition getFrontRightModulePosition() {
     double velocity = swerveIOInputs.frontRightModuleVelocity;
     Rotation2d angle =
-            Rotation2d.fromDegrees(
-                    Conversions.falconToDegrees(swerveIOInputs.frontRightModuleAngle, angleGearRatio));
+        Rotation2d.fromDegrees(
+            Conversions.falconToDegrees(swerveIOInputs.frontRightModuleAngle, angleGearRatio));
     return new SwerveModulePosition(velocity, angle);
   }
 
   public SwerveModulePosition getBackLeftModulePosition() {
     double velocity = swerveIOInputs.backLeftModuleVelocity;
     Rotation2d angle =
-            Rotation2d.fromDegrees(
-                    Conversions.falconToDegrees(swerveIOInputs.backLeftModuleAngle, angleGearRatio));
+        Rotation2d.fromDegrees(
+            Conversions.falconToDegrees(swerveIOInputs.backLeftModuleAngle, angleGearRatio));
     return new SwerveModulePosition(velocity, angle);
   }
 
   public SwerveModulePosition getBackRightModulePosition() {
     double velocity = swerveIOInputs.backRightModuleVelocity;
     Rotation2d angle =
-            Rotation2d.fromDegrees(
-                    Conversions.falconToDegrees(swerveIOInputs.backRightModuleAngle, angleGearRatio));
+        Rotation2d.fromDegrees(
+            Conversions.falconToDegrees(swerveIOInputs.backRightModuleAngle, angleGearRatio));
     return new SwerveModulePosition(velocity, angle);
   }
 

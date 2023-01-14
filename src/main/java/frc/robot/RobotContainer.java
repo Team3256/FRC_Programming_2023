@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.swerve.SwerveDrive;
+import frc.robot.swerve.SwerveIO;
 import frc.robot.swerve.SwerveModuleIO;
 import frc.robot.swerve.commands.TeleopSwerve;
 
@@ -37,12 +38,25 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kA.value);
 
   /* Subsystems */
-  private final SwerveDrive swerveDrive = new SwerveDrive(new SwerveModuleIO());
+  private final SwerveDrive swerveDrive;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     boolean fieldRelative = true;
     boolean openLoop = true;
+
+    // @suppress-warnings
+    switch (Constants.currentMode){
+      case REAL:
+        swerveDrive = new SwerveDrive(new SwerveModuleIO());
+        break;
+
+      default: // Replay robot - disable IO impl.
+        swerveDrive = new SwerveDrive(new SwerveIO(){
+
+        });
+    }
+
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,

@@ -7,17 +7,13 @@
 
 package frc.robot.swerve;
 
+import static frc.robot.Constants.SwerveConstants.*;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.AutoLog;
-import org.littletonrobotics.junction.Logger;
-
-import static frc.robot.Constants.SwerveConstants.*;
-import static frc.robot.Constants.SwerveConstants.maxSpeed;
 
 public interface SwerveIO {
   @AutoLog
@@ -32,7 +28,6 @@ public interface SwerveIO {
     public double frontLeftModuleAngle = 0.0;
     public double backLeftModuleAngle = 0.0;
     public double backRightModuleAngle = 0.0;
-
   }
 
   /** Updates the set of loggable inputs. */
@@ -42,18 +37,15 @@ public interface SwerveIO {
     return new Rotation2d();
   }
 
-  public default void zeroGyro() {
-  }
+  public default void zeroGyro() {}
 
   public default void drive(
-          Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-  }
+      Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {}
 
   /* Used by SwerveControllerCommand in Auto */
-  public default void setModuleStates(SwerveModuleState[] desiredStates) {
-  }
+  public default void setModuleStates(SwerveModuleState[] desiredStates) {}
 
   public default SwerveModule[] getSwerveModules() {
-    return new SwerveModule[]{};
+    return new SwerveModule[] {};
   }
 }
