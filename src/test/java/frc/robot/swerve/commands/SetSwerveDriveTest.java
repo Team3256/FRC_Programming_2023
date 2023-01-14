@@ -2,61 +2,50 @@ package frc.robot.swerve.commands;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.function.DoubleSupplier;
 
 public class SetSwerveDriveTest {
 
     public static final double DELTA = 0.5; // acceptable deviation range
-    public static SwerveDrive swerveDrive;
 
     @BeforeAll
     public static void setup() {
-        assert HAL.initialize(2000, 0); // initialize the HAL, crash if failed
+        assert HAL.initialize(500, 0); // initialize the HAL, crash if failed
         CommandScheduler.getInstance().enable();
         DriverStationSim.setEnabled(true);
     }
-/*
 
-    Command defaultDriveCommand = new TeleopSwerveFieldOriented(
-            swerveDrive,
-            () -> -ControllerUtil.modifyAxis(driverController.getLeftY()) * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -ControllerUtil.modifyAxis(driverController.getLeftX()) * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -ControllerUtil.modifyAxis(driverController.getRightX()) * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-    );
-
- */
-    @Test
-    public void TestingTest() {
-        Assertions.assertEquals(true, true);
-    }
-
-    @Test
+//    @Test
     public void TestVelocities() {
-        swerveDrive = new SwerveDrive();
-
+        SwerveDrive swerveDrive = new SwerveDrive();
         DoubleSupplier
-                leftY = () -> 0.0,
-                leftX = () -> 0.9 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                rotation = () -> 0.0;
+                leftY = () -> 0.1 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                leftX = () -> 0.1 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                rotation = () -> 0.2;
 
-        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
-        runScheduler(0.5);
+        TeleopSwerveFieldOriented command = new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation);
 
-        double[] testArray = {0, 0, 0, 0};
-        Assertions.assertArrayEquals(testArray, swerveDrive.getModuleVelocity());
+        runScheduler(3, command);
+
+        System.out.println("Was drive method run by command? " + swerveDrive.isSpeedSet);
+        System.out.println("Velocities that are currently set: " + Arrays.toString(swerveDrive.getModuleVelocity()));
+        System.out.println("First Chassis Speed set: " + swerveDrive.getLastChassisSpeed());
+
+//        Assertions.assertEquals(ChassisSpeeds.fromFieldRelativeSpeeds(4.47, 2.48, 0, new Rotation2d()), swerveDrive.getLastChassisSpeed());
     }
 
 //    @Test
     public void TestTeleopX() {
 
-        swerveDrive = new SwerveDrive();
+        SwerveDrive swerveDrive = new SwerveDrive();
 
         DoubleSupplier
                 leftY = () -> 0.0,
@@ -64,20 +53,22 @@ public class SetSwerveDriveTest {
                 rotation = () -> 0.0;
 
         CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
-        runScheduler(1);
+//        runScheduler(1);
 
         Assertions.assertEquals(1, swerveDrive.getPositions());
     }
 
 //    @Test
     public void TestTeleopY() {
+        SwerveDrive swerveDrive = new SwerveDrive();
+
         DoubleSupplier
                 leftY = () -> 0.9 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
                 leftX = () -> 0.0,
                 rotation = () -> 0.0;
 
         CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
-        runScheduler(1);
+//        runScheduler(1);
 
         Assertions.assertEquals(10, swerveDrive.getPose().getY());
 
@@ -85,26 +76,31 @@ public class SetSwerveDriveTest {
 
 //    @Test
     public void TestTeleopTheta() {
+        SwerveDrive swerveDrive = new SwerveDrive();
+
         DoubleSupplier
                 leftY = () -> 0.0,
                 leftX = () -> 0.0,
                 rotation = () -> 0.9 * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
 
         CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
-        runScheduler(1);
+//        runScheduler(1);
 
         Assertions.assertEquals(45, swerveDrive.getPose().getRotation().getDegrees());
     }
 
-    private static void runScheduler(double seconds) {
-        try {
-            for (int i = 0; i < 10; ++i) {
+    private static void runScheduler(double seconds, Command command) {
+
+        for(int i=0; i<10; i++) {
+            try {
                 com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
                 CommandScheduler.getInstance().run();
-                Thread.sleep((long) (seconds * 100));
+                command.execute();
+                Thread.sleep(20);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

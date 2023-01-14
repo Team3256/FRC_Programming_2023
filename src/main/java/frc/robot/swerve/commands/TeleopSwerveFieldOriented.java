@@ -7,6 +7,7 @@ import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
 public class TeleopSwerveFieldOriented extends CommandBase {
+
     private final SwerveDrive drivetrainSubsystem;
 
     private final DoubleSupplier translationXSupplier;
@@ -17,10 +18,12 @@ public class TeleopSwerveFieldOriented extends CommandBase {
                                             DoubleSupplier translationXSupplier,
                                             DoubleSupplier translationYSupplier,
                                             DoubleSupplier rotationSupplier) {
+
         this.drivetrainSubsystem = drivetrainSubsystem;
         this.translationXSupplier = translationXSupplier;
         this.translationYSupplier = translationYSupplier;
         this.rotationSupplier = rotationSupplier;
+
 
         addRequirements(drivetrainSubsystem);
     }
@@ -36,7 +39,7 @@ public class TeleopSwerveFieldOriented extends CommandBase {
 
     @Override
     public void initialize() {
-        super.initialize();
+        System.out.println("Initializing swerve");
     }
 
     @Override

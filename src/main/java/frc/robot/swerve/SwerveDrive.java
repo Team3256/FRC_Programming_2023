@@ -17,7 +17,10 @@ public class SwerveDrive extends SubsystemBase {
     private final SwerveModule frontRightModule = new SwerveModule(1, Mod1.constants);
     private final SwerveModule backLeftModule = new SwerveModule(2, Mod2.constants);
     private final SwerveModule backRightModule = new SwerveModule(3, Mod3.constants);
-    private final double[] velocities = new double[4];
+
+    private final double[] velocities;
+    private ChassisSpeeds lastChassisSpeeds;
+    public boolean isSpeedSet;
 
     private final SwerveModule[] swerveModules = {
         frontLeftModule,
@@ -44,6 +47,10 @@ public class SwerveDrive extends SubsystemBase {
                 backRightModule.getPosition()
             }
         );
+
+        velocities = new double[4];
+        isSpeedSet = false;
+        lastChassisSpeeds = new ChassisSpeeds();
     }
 
     public Rotation2d getGyroscopeRotation() {
@@ -57,17 +64,36 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public double[] getModuleVelocity() {
-        return velocities;
+        return this.velocities;
+    }
+
+    public void setLastChassisSpeeds(ChassisSpeeds chassisSpeed) {
+        if (!this.isSpeedSet) {
+            this.lastChassisSpeeds = chassisSpeed;
+            this.isSpeedSet = true;
+        }
+    }
+
+    public ChassisSpeeds getLastChassisSpeed() {
+        return this.lastChassisSpeeds;
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+        ChassisSpeeds currChassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(),
+                translation.getY(),
+                rotation,
+                getYaw()
+        );
+
+        setLastChassisSpeeds(currChassisSpeed);
 
         SwerveModuleState[] swerveModuleStates =
             swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    3,
-                                    0,
-                                    0,
+                                    translation.getX(),
+                                    translation.getY(),
+                                    rotation,
                                     getYaw()
                                 )
                                 : new ChassisSpeeds(
@@ -75,12 +101,11 @@ public class SwerveDrive extends SubsystemBase {
                                     translation.getY(), 
                                     rotation)
                                 );
+
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
         setModuleVelocity(swerveModuleStates);
 
         for(SwerveModule mod : swerveModules){
-            // TODO: Optimize the module state using wpilib optimize method
-            // TODO: Check if the optimization is happening in the setDesiredState method
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
     }    
@@ -122,7 +147,7 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic(){
-        odometry.update(getYaw(), getPositions());  
+        odometry.update(getYaw(), getPositions());
 
         for(SwerveModule mod : swerveModules){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
