@@ -219,3 +219,6 @@ local.properties
 
 # AdvantageKit
 src/main/java/frc/robot/BuildConstants.java
+
+**/*/.DS_Store
+.datalogtool/*
