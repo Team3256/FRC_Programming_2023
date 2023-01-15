@@ -14,9 +14,11 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
     public static final class ElevatorConstants {
-        public static final int ELEVATOR_MOTOR_ID = 1;
-        public static final int ELEVATOR_UP_SPEED = 1;
-        public static final int ELEVATOR_DOWN_SPEED = 1;
+        public static final int MASTER_ELEVATOR_MOTOR_ID = 1;
+        public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 2;
+        public static final int LOW_POSITION_METERS = 1;
+        public static final int MEDIUM_POSITION_METERS = 2;
+        public static final int HIGH_POSITION_METERS = 3;
     }
     public static final class SwerveConstants {
         public static final int pigeonID = 1;
