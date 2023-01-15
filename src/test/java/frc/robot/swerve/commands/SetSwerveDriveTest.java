@@ -15,7 +15,7 @@ import java.util.function.DoubleSupplier;
 
 public class SetSwerveDriveTest {
 
-    public static final double DELTA = 0.5; // acceptable deviation range
+    public static final double DELTA = 0.05; // acceptable deviation range
 
     @BeforeAll
     public static void setup() {
@@ -23,17 +23,14 @@ public class SetSwerveDriveTest {
         CommandScheduler.getInstance().enable();
         DriverStationSim.setEnabled(true);
     }
-//    @Test
-    public void dummyTest(){
-        Assertions.assertTrue(true);
-    }
-//    @Test
-    public void TestVelocities() {
+
+    @Test
+    public void TestTeleopY() {
         SwerveDrive swerveDrive = new SwerveDrive();
         DoubleSupplier
                 leftY = () -> 0.1 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                leftX = () -> 0.1 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                rotation = () -> 0.2;
+                leftX = () -> 0.0 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                rotation = () -> 0.0;
 
         TeleopSwerveFieldOriented command = new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation);
 
@@ -41,60 +38,45 @@ public class SetSwerveDriveTest {
 
         System.out.println("Was drive method run by command? " + swerveDrive.isSpeedSet);
         System.out.println("Velocities that are currently set: " + Arrays.toString(swerveDrive.getModuleVelocity()));
-        System.out.println("First Chassis Speed set: " + swerveDrive.getLastChassisSpeed());
+        System.out.println("Curr Chassis Speed set: " + swerveDrive.getLastChassisSpeed());
 
-//        Assertions.assertEquals(ChassisSpeeds.fromFieldRelativeSpeeds(4.47, 2.48, 0, new Rotation2d()), swerveDrive.getLastChassisSpeed());
+        Assertions.assertEquals(0.50, swerveDrive.getLastChassisSpeed().vyMetersPerSecond, DELTA);
     }
 
-//    @Test
+    @Test
     public void TestTeleopX() {
 
         SwerveDrive swerveDrive = new SwerveDrive();
 
         DoubleSupplier
                 leftY = () -> 0.0,
-                leftX = () -> 0.9 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                leftX = () -> 0.1 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
                 rotation = () -> 0.0;
 
-        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
-//        runScheduler(1);
+        TeleopSwerveFieldOriented command = new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation);
 
-        Assertions.assertEquals(1, swerveDrive.getPositions());
+        runScheduler(3, command);
+
+        System.out.println("Was drive method run by command? " + swerveDrive.isSpeedSet);
+        System.out.println("Velocities that are currently set: " + Arrays.toString(swerveDrive.getModuleVelocity()));
+        System.out.println("Curr Chassis Speed set: " + swerveDrive.getLastChassisSpeed());
+
+        Assertions.assertEquals(0.5, swerveDrive.getLastChassisSpeed().vxMetersPerSecond, DELTA);
     }
 
-//    @Test
-    public void TestTeleopY() {
-        SwerveDrive swerveDrive = new SwerveDrive();
-
-        DoubleSupplier
-                leftY = () -> 0.9 * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                leftX = () -> 0.0,
-                rotation = () -> 0.0;
-
-        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
-//        runScheduler(1);
-
-        Assertions.assertEquals(10, swerveDrive.getPose().getY());
-
-    }
-
-//    @Test
     public void TestTeleopTheta() {
         SwerveDrive swerveDrive = new SwerveDrive();
 
         DoubleSupplier
                 leftY = () -> 0.0,
                 leftX = () -> 0.0,
-                rotation = () -> 0.9 * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+                rotation = () -> 0.1 * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
 
-        CommandScheduler.getInstance().schedule(new TeleopSwerveFieldOriented(swerveDrive, leftX, leftY, rotation));
-//        runScheduler(1);
-
-        Assertions.assertEquals(45, swerveDrive.getPose().getRotation().getDegrees());
+//        Assertions.assertEquals(45, swerveDrive.getPose().getRotation().getDegrees());
     }
 
     private static void runScheduler(double seconds, Command command) {
-
+        CommandScheduler.getInstance().schedule(command);
         for(int i=0; i<10; i++) {
             try {
                 com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);

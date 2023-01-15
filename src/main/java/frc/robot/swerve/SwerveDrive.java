@@ -78,10 +78,8 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void setLastChassisSpeeds(ChassisSpeeds chassisSpeed) {
-        if (!this.isSpeedSet) {
             this.lastChassisSpeeds = chassisSpeed;
             this.isSpeedSet = true;
-        }
     }
 
     public ChassisSpeeds getLastChassisSpeed() {
