@@ -135,6 +135,7 @@ public final class Constants {
   public static final class AutoConstants {
     public static final boolean AUTO_DEBUG = false;
     public static final double TRAJECTORY_DURATION_FACTOR = 1.11;
+    public static final double COMMAND_MARKER_THRESHOLD = 0.1;
 
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;

@@ -11,17 +11,17 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AutoCommandMarker {
-  private Translation2d marker;
+  private Translation2d pos;
   private Translation2d endingMarker;
   private Command command;
 
-  public AutoCommandMarker(Translation2d marker, Command command) {
-    this.marker = marker;
+  public AutoCommandMarker(Translation2d pos, Command command) {
+    this.pos = pos;
     this.command = command;
   }
 
-  public AutoCommandMarker(Translation2d marker, Translation2d endingMarker, Command command) {
-    this.marker = marker;
+  public AutoCommandMarker(Translation2d pos, Translation2d endingMarker, Command command) {
+    this.pos = pos;
     this.endingMarker = endingMarker;
     this.command = command;
   }
@@ -30,8 +30,8 @@ public class AutoCommandMarker {
     return command;
   }
 
-  public Translation2d getMarker() {
-    return marker;
+  public Translation2d getPos() {
+    return pos;
   }
 
   public Translation2d getEndingMarker() {
