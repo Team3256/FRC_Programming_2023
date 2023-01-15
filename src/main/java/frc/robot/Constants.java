@@ -27,6 +27,7 @@ public final class Constants {
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
+    // TODO: Update these constants later
     public static final double trackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
     public static final double wheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
     public static final double wheelDiameter = Units.inchesToMeters(3.94);
@@ -55,24 +56,6 @@ public final class Constants {
     public static final int drivePeakCurrentLimit = 60;
     public static final double drivePeakCurrentDuration = 0.1;
     public static final boolean driveEnableCurrentLimit = true;
-
-    /* Angle Motor PID Values */
-    public static final double angleKP = 0.6;
-    public static final double angleKI = 0.0;
-    public static final double angleKD = 12.0;
-    public static final double angleKF = 0.0;
-
-    /* Drive Motor PID Values */
-    public static final double driveKP = 0.10;
-    public static final double driveKI = 0.0;
-    public static final double driveKD = 0.0;
-    public static final double driveKF = 0.0;
-
-    /* Drive Motor Characterization Values */
-    public static final double driveKS =
-        (0.667 / 12); // divide by 12 to convert from volts to percent output for CTRE
-    public static final double driveKV = (2.44 / 12);
-    public static final double driveKA = (0.27 / 12);
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
@@ -135,11 +118,40 @@ public final class Constants {
   public static final class AutoConstants {
     public static final boolean AUTO_DEBUG = false;
     public static final double TRAJECTORY_DURATION_FACTOR = 1.11;
+    public static final double COMMAND_MARKER_THRESHOLD = 0.05; // meters
 
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    // Constraint for the motion profilied robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+        new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  }
+
+  public static final class PIDConstants {
+
+    /* Angle Motor PID Values */
+    public static final double angleKP = 0.6;
+    public static final double angleKI = 0.0;
+    public static final double angleKD = 12.0;
+    public static final double angleKF = 0.0;
+
+    /* Drive Motor PID Values */
+    public static final double driveKP = 0.10;
+    public static final double driveKI = 0.0;
+    public static final double driveKD = 0.0;
+    public static final double driveKF = 0.0;
+
+    /* Drive Motor Characterization Values */
+    public static final double driveKS =
+        (0.667 / 12); // divide by 12 to convert from volts to percent output for CTRE
+    public static final double driveKV = (2.44 / 12);
+    public static final double driveKA = (0.27 / 12);
+
+    /* Auto translation constants */
 
     public static double P_X_CONTROLLER = 2.2;
     public static double I_X_CONTROLLER = 0.025;
@@ -151,16 +163,13 @@ public final class Constants {
 
     public static double TRANSLATION_FF = 0.3;
 
+    /* ThetaController constants */
+
     public static TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS =
         new TrapezoidProfile.Constraints(2.5 * Math.PI, 1.5 * Math.PI);
     public static double P_THETA_CONTROLLER = 5.4;
     public static double I_THETA_CONTROLLER = 0.02;
     public static double D_THETA_CONTROLLER = 1.5;
-
-    // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-        new TrapezoidProfile.Constraints(
-            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
   public static final class FieldConstants {

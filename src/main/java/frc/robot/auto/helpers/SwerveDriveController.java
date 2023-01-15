@@ -7,7 +7,7 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.AutoConstants.TRANSLATION_FF;
+import static frc.robot.Constants.PIDConstants.TRANSLATION_FF;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;

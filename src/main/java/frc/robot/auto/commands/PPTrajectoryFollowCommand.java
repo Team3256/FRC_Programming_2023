@@ -30,7 +30,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
   private final PathPlannerTrajectory trajectory;
   private final SwerveDriveController controller;
-  private final SwerveDrive driveSubsystem;
+  private final SwerveDrive swerveSubsystem;
   private final double trajectoryDuration;
   private Pose2d startPose;
   private AutoCommandRunner autoCommandRunner;
@@ -40,20 +40,20 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       PIDController xController,
       PIDController yController,
       ProfiledPIDController thetaController,
-      SwerveDrive driveSubsystem) {
+      SwerveDrive swerveSubsystem) {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
     this.controller = new SwerveDriveController(xController, yController, thetaController);
 
-    this.driveSubsystem = driveSubsystem;
+    this.swerveSubsystem = swerveSubsystem;
     PathPlannerTrajectory.PathPlannerState start =
         (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
     Rotation2d rotation = start.holonomicRotation;
     Translation2d translation = start.poseMeters.getTranslation();
     this.startPose = new Pose2d(translation, rotation);
 
-    addRequirements(driveSubsystem);
+    addRequirements(swerveSubsystem);
   }
 
   public PPTrajectoryFollowCommand(
@@ -68,7 +68,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
     this.controller = new SwerveDriveController(xController, yController, thetaController);
 
-    this.driveSubsystem = driveSubsystem;
+    this.swerveSubsystem = driveSubsystem;
     this.startPose = startPose;
     addRequirements(driveSubsystem);
   }
@@ -86,10 +86,10 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   @Override
   public void initialize() {
     if (AUTO_DEBUG) {
-      //            driveSubsystem.setTrajectory(trajectory);
+      swerveSubsystem.setTrajectory(trajectory);
     }
     if (this.startPose != null) { // use existing pose for more accuracy if not first path
-      //            driveSubsystem.resetOdometry(this.startPose);
+      swerveSubsystem.resetOdometry(this.startPose);
     }
 
     this.controller.reset();
@@ -107,7 +107,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     PathPlannerTrajectory.PathPlannerState desired =
         (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
-    Pose2d currentPose = driveSubsystem.getPose();
+    Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d desiredPose = desired.poseMeters;
     double desiredLinearVelocity = desired.velocityMetersPerSecond;
 
@@ -122,20 +122,21 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       autoCommandRunner.execute(desiredPose);
     }
 
-    driveSubsystem.drive(
+    swerveSubsystem.drive(
         controller.calculate(currentPose, desiredPose, desiredLinearVelocity, desiredRotation));
   }
 
+  // TODO: Fix to give a little more time to be in the right place
   @Override
   public boolean isFinished() {
     return timer.get() >= trajectoryDuration * TRAJECTORY_DURATION_FACTOR;
-  } // give a little more time to be in the right place
+  }
 
   @Override
   public void end(boolean interrupted) {
     if (autoCommandRunner != null) {
       autoCommandRunner.end();
     }
-    driveSubsystem.drive(new ChassisSpeeds());
+    swerveSubsystem.drive(new ChassisSpeeds());
   }
 }

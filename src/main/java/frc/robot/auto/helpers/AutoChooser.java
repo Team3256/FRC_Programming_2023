@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.*;
 
 public class AutoChooser {
   private static SendableChooser<Command> autoChooser;
-  private static TrajectoryFactory trajectoryFactory;
 
   public static SendableChooser<Command> getDefaultChooser() {
 
