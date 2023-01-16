@@ -7,7 +7,7 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.AutoConstants.*;
+import static frc.robot.Constants.PIDConstants.*;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -46,14 +46,16 @@ public class AutoBuilder {
   }
 
   private Command createCommand(PathPlannerTrajectory trajectory) {
-    PIDController xController = new PIDController(P_X_CONTROLLER, I_X_CONTROLLER, D_X_CONTROLLER);
-    PIDController yController = new PIDController(P_Y_CONTROLLER, I_Y_CONTROLLER, D_Y_CONTROLLER);
+    PIDController xController =
+        new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
+    PIDController yController =
+        new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
     ProfiledPIDController thetaController =
         new ProfiledPIDController(
-            P_THETA_CONTROLLER,
-            I_THETA_CONTROLLER,
-            D_THETA_CONTROLLER,
-            THETA_CONTROLLER_CONSTRAINTS);
+            kAutoThetaControllerP,
+            kAutoThetaControllerI,
+            kAutoThetaControllerD,
+            kAutoThetaControllerContraints);
 
     return new PPTrajectoryFollowCommand(
         trajectory, xController, yController, thetaController, this.swerveSubsystem);

@@ -133,7 +133,6 @@ public final class Constants {
     public static final double TRAJECTORY_DURATION_FACTOR = 1.11;
     public static final double COMMAND_MARKER_THRESHOLD = 0.05; // meters
 
-
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -167,23 +166,24 @@ public final class Constants {
 
     /* Auto translation constants */
 
-    public static double P_X_CONTROLLER = 2.2;
-    public static double I_X_CONTROLLER = 0.025;
-    public static double D_X_CONTROLLER = 0;
+    public static double kAutoXTranslationP = 2.2;
+    public static double kAutoXTranslationI = 0.025;
+    public static double kAutoXTranslationD = 0;
 
-    public static double P_Y_CONTROLLER = 2.2;
-    public static double I_Y_CONTROLLER = 0.025;
-    public static double D_Y_CONTROLLER = 0.05;
+    public static double kAutoYTranslationP = 2.2;
+    public static double kAutoYTranslationI = 0.025;
+    public static double kAutoYTranslationD = 0;
 
     public static double TRANSLATION_FF = 0.3;
 
     /* ThetaController constants */
-
-    public static TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS =
-        new TrapezoidProfile.Constraints(2.5 * Math.PI, 1.5 * Math.PI);
-    public static double P_THETA_CONTROLLER = 5.4;
-    public static double I_THETA_CONTROLLER = 0.02;
-    public static double D_THETA_CONTROLLER = 1.5;
+    public static double kAutoThetaControllerP = 5.4;
+    public static double kAutoThetaControllerI = 0.02;
+    public static double kAutoThetaControllerD = 1.5;
+    public static TrapezoidProfile.Constraints kAutoThetaControllerContraints =
+        new TrapezoidProfile.Constraints(
+            AutoConstants.kMaxAngularSpeedRadiansPerSecond,
+            AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
   public static final class FieldConstants {
