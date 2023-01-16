@@ -8,7 +8,7 @@
 package frc.robot.auto.commands;
 
 import static frc.robot.Constants.AutoConstants.AUTO_DEBUG;
-import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
+//import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.controller.PIDController;
@@ -129,14 +129,32 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   // TODO: Fix to give a little more time to be in the right place
   @Override
   public boolean isFinished() {
-    return timer.get() >= trajectoryDuration * TRAJECTORY_DURATION_FACTOR;
+    return timer.get() >= trajectoryDuration;//* TRAJECTORY_DURATION_FACTOR;
   }
 
   @Override
   public void end(boolean interrupted) {
     if (autoCommandRunner != null) {
+      // find out what to call the method on
+      //.atReference();
       autoCommandRunner.end();
     }
     swerveSubsystem.drive(new ChassisSpeeds());
   }
+  private Pose2d poseTolerance = new Pose2d();
+  private Pose2d poseError;
+  private Rotation2d rotationError;
+  
+  //calculates pose difference
+  public boolean atReference() {
+
+    // ---------------------------------------------
+    final Translation2d eTranslate = poseError.getTranslation();
+    final Rotation2d eRotate = rotationError;
+    final Translation2d tolTranslate = poseTolerance.getTranslation();
+    final Rotation2d tolRotate = poseTolerance.getRotation();
+    return Math.abs(eTranslate.getX()) < tolTranslate.getX()
+    && Math.abs(eTranslate.getY()) < tolTranslate.getY()
+    && Math.abs(eRotate.getRadians()) < tolRotate.getRadians();
+    }
 }
