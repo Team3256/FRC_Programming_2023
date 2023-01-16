@@ -145,7 +145,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   private Pose2d poseError;
   private Rotation2d rotationError;
   
-  //calculates pose difference
+  //calculates pose differences
   public boolean atReference() {
 
     // ---------------------------------------------
@@ -158,4 +158,4 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     && Math.abs(eRotate.getRadians()) < tolRotate.getRadians();
     }
 }
-// 
+//to prompt commit (ignore this)
