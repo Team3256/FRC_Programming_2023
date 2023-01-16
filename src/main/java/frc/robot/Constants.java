@@ -21,6 +21,19 @@ import java.util.Map;
 public final class Constants {
   public static final boolean DEBUG = false;
   public static final double stickDeadband = 0.1;
+  public static final int kLongCANTimeoutMs = 1;
+  public static final double kMaxDriveVoltage = 1;
+  public static final double kMk4DriveVelocityKp = 1;
+  public static final double kMk4DriveVelocityKi = 1;
+  public static final double kMk4DriveVelocityKd = 1;
+  public static final double kMk4DriveVelocityKf = 1;
+
+  public static final double kMk4AziKp = 1;
+  public static final double kMk4AziKi = 1;
+  public static final double kMk4AziKd = 1;
+
+  public static final double driveReduction = 1;
+  public static final double steerReduction = 1;
 
   public static final class SwerveConstants {
     public static final int pigeonID = 1;
@@ -153,23 +166,24 @@ public final class Constants {
 
     /* Auto translation constants */
 
-    public static double P_X_CONTROLLER = 2.2;
-    public static double I_X_CONTROLLER = 0.025;
-    public static double D_X_CONTROLLER = 0;
+    public static double kAutoXTranslationP = 2.2;
+    public static double kAutoXTranslationI = 0.025;
+    public static double kAutoXTranslationD = 0;
 
-    public static double P_Y_CONTROLLER = 2.2;
-    public static double I_Y_CONTROLLER = 0.025;
-    public static double D_Y_CONTROLLER = 0.05;
+    public static double kAutoYTranslationP = 2.2;
+    public static double kAutoYTranslationI = 0.025;
+    public static double kAutoYTranslationD = 0;
 
     public static double TRANSLATION_FF = 0.3;
 
     /* ThetaController constants */
-
-    public static TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS =
-        new TrapezoidProfile.Constraints(2.5 * Math.PI, 1.5 * Math.PI);
-    public static double P_THETA_CONTROLLER = 5.4;
-    public static double I_THETA_CONTROLLER = 0.02;
-    public static double D_THETA_CONTROLLER = 1.5;
+    public static double kAutoThetaControllerP = 5.4;
+    public static double kAutoThetaControllerI = 0.02;
+    public static double kAutoThetaControllerD = 1.5;
+    public static TrapezoidProfile.Constraints kAutoThetaControllerContraints =
+        new TrapezoidProfile.Constraints(
+            AutoConstants.kMaxAngularSpeedRadiansPerSecond,
+            AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
   public static final class FieldConstants {
