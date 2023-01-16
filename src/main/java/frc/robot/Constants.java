@@ -21,6 +21,19 @@ import java.util.Map;
 public final class Constants {
   public static final boolean DEBUG = false;
   public static final double stickDeadband = 0.1;
+  public static final int kLongCANTimeoutMs = 1;
+  public static final double kMaxDriveVoltage = 1;
+  public static final double kMk4DriveVelocityKp = 1;
+  public static final double kMk4DriveVelocityKi = 1;
+  public static final double kMk4DriveVelocityKd = 1;
+  public static final double kMk4DriveVelocityKf = 1;
+
+  public static final double kMk4AziKp = 1;
+  public static final double kMk4AziKi = 1;
+  public static final double kMk4AziKd = 1;
+
+  public static final double driveReduction = 1;
+  public static final double steerReduction = 1;
 
   public static final class SwerveConstants {
     public static final int pigeonID = 1;
@@ -119,6 +132,7 @@ public final class Constants {
     public static final boolean AUTO_DEBUG = false;
     public static final double TRAJECTORY_DURATION_FACTOR = 1.11;
     public static final double COMMAND_MARKER_THRESHOLD = 0.05; // meters
+
 
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
