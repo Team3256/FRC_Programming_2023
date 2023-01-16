@@ -12,12 +12,12 @@ public final class BuildConstants {
   public static final String MAVEN_GROUP = "";
   public static final String MAVEN_NAME = "FRC_Programming_2023";
   public static final String VERSION = "unspecified";
-  public static final int GIT_REVISION = 14;
-  public static final String GIT_SHA = "a09908a136d09342fe3c75bf3970d58df8065eef";
-  public static final String GIT_DATE = "2023-01-14 09:49:29 PST";
-  public static final String GIT_BRANCH = "chore/update-phoenix-libs";
-  public static final String BUILD_DATE = "2023-01-14 10:15:55 PST";
-  public static final long BUILD_UNIX_TIME = 1673720155231L;
+  public static final int GIT_REVISION = 20;
+  public static final String GIT_SHA = "1485cc8084afef67192075ddfa71c3eff91212b4";
+  public static final String GIT_DATE = "2023-01-14 15:33:58 PST";
+  public static final String GIT_BRANCH = "feat/talonFX-factory-w-254-config";
+  public static final String BUILD_DATE = "2023-01-14 15:36:12 PST";
+  public static final long BUILD_UNIX_TIME = 1673739372872L;
   public static final int DIRTY = 0;
 
   private BuildConstants() {}
