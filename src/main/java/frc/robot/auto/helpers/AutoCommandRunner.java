@@ -44,7 +44,7 @@ public class AutoCommandRunner {
   }
 
   public void execute(Pose2d currentPose) {
- for (int i = 0; i < commandMarkers.size(); i++) {
+    for (int i = 0; i < commandMarkers.size(); i++) {
       AutoCommandMarker marker = commandMarkers.get(i);
       boolean atMarker =
           lastPose == null
