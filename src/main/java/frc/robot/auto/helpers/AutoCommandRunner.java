@@ -43,22 +43,8 @@ public class AutoCommandRunner {
     return convertedMarkers;
   }
 
-  public void execute(Pose2d currentPose) {
-    for (int i = 0; i < commandMarkers.size(); i++) {
-      AutoCommandMarker marker = commandMarkers.get(i);
-      boolean atMarker =
-          lastPose == null
-              ? isAtMarker(marker.getPos(), currentPose)
-              : isAtMarker(marker.getPos(), currentPose, lastPose);
-
-      if (atMarker) {
-        marker.getCommand().schedule();
-        startedCommandMarkers.add(marker);
-        commandMarkers.remove(i);
-        i--;
-      }
-    }
-
+  private void cancelStartedCommands(
+      Pose2d currentPose, List<AutoCommandMarker> startedCommandMarkers) {
     for (int i = 0; i < startedCommandMarkers.size(); i++) { // cancel started commands
       AutoCommandMarker marker = startedCommandMarkers.get(i);
       boolean atMarker =
@@ -73,6 +59,11 @@ public class AutoCommandRunner {
         i--;
       }
     }
+  }
+
+  public void execute(Pose2d currentPose) {
+    cancelStartedCommands(currentPose, commandMarkers);
+    cancelStartedCommands(currentPose, startedCommandMarkers);
     lastPose = currentPose;
   }
 

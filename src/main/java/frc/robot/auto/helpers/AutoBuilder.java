@@ -33,9 +33,9 @@ public class AutoBuilder {
   }
 
   public ArrayList<Command> createPaths(
-      String pathGroup, PathConstraints contraint, PathConstraints... constraints) {
+      String pathGroup, PathConstraints constraint, PathConstraints... constraints) {
     ArrayList<PathPlannerTrajectory> trajectories =
-        new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, contraint, constraints));
+        new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
 
     ArrayList<Command> commands = new ArrayList<>();
     for (PathPlannerTrajectory trajectory : trajectories) {

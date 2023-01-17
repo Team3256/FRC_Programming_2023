@@ -11,6 +11,7 @@ import static frc.robot.Constants.AutoConstants.AUTO_DEBUG;
 import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -62,15 +63,12 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       PIDController yController,
       ProfiledPIDController thetaController,
       Pose2d startPose,
-      SwerveDrive driveSubsystem) {
+      SwerveDrive swerveDrive) {
 
-    this.trajectory = trajectory;
-    this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller = new SwerveDriveController(xController, yController, thetaController);
-
-    this.swerveSubsystem = driveSubsystem;
+    this(trajectory, xController, yController, thetaController, swerveDrive);
     this.startPose = startPose;
-    addRequirements(driveSubsystem);
+
+    addRequirements(swerveDrive);
   }
 
   public void setAutoCommandRunner(AutoCommandRunner commandRunner) {
@@ -88,7 +86,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     if (AUTO_DEBUG) {
       swerveSubsystem.setTrajectory(trajectory);
     }
-    if (this.startPose != null) { // use existing pose for more accuracy if not first path
+    if (this.startPose != null) { // use existing pose for more accuracy if it is the first path
       swerveSubsystem.resetOdometry(this.startPose);
     }
 
@@ -100,10 +98,8 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   @Override
   public void execute() {
     double now = timer.get();
-    now =
-        now >= trajectoryDuration
-            ? trajectoryDuration - 0.01
-            : now; // if overtime, dont error sampling
+
+    now = MathUtil.clamp(now, trajectoryDuration - 0.01, trajectoryDuration);
 
     PathPlannerTrajectory.PathPlannerState desired =
         (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
