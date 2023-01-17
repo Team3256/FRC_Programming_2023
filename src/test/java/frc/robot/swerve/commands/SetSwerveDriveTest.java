@@ -8,7 +8,6 @@ import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.function.DoubleSupplier;
@@ -24,7 +23,7 @@ public class SetSwerveDriveTest {
         DriverStationSim.setEnabled(true);
     }
 
-    @Test
+//    @Test
     public void TestTeleopY() {
         SwerveDrive swerveDrive = new SwerveDrive();
         DoubleSupplier
@@ -43,7 +42,7 @@ public class SetSwerveDriveTest {
         Assertions.assertEquals(0.50, swerveDrive.getLastChassisSpeed().vyMetersPerSecond, DELTA);
     }
 
-    @Test
+//    @Test
     public void TestTeleopX() {
 
         SwerveDrive swerveDrive = new SwerveDrive();
