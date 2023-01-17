@@ -19,13 +19,13 @@ import frc.robot.swerve.helpers.ControllerUtil;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-
 public class RobotContainer {
   /* Controllers */
   private final XboxController driverController = new XboxController(0);
 
   /* Driver Buttons */
-  private final JoystickButton zeroGyro = new JoystickButton(driverController, XboxController.Button.kA.value);
+  private final JoystickButton zeroGyro =
+      new JoystickButton(driverController, XboxController.Button.kA.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
@@ -35,12 +35,18 @@ public class RobotContainer {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
-    Command defaultDriveCommand = new TeleopSwerveFieldOriented(
+    Command defaultDriveCommand =
+        new TeleopSwerveFieldOriented(
             swerveDrive,
-            () -> -ControllerUtil.modifyAxis(driverController.getLeftY()) * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -ControllerUtil.modifyAxis(driverController.getLeftX()) * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -ControllerUtil.modifyAxis(driverController.getRightX()) * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-    );
+            () ->
+                -ControllerUtil.modifyAxis(driverController.getLeftY())
+                    * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+            () ->
+                -ControllerUtil.modifyAxis(driverController.getLeftX())
+                    * Constants.SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+            () ->
+                -ControllerUtil.modifyAxis(driverController.getRightX())
+                    * Constants.SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
     swerveDrive.setDefaultCommand(defaultDriveCommand);
     // Configure the button bindings
     configureButtonBindings();
@@ -63,6 +69,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-        return new InstantCommand();
-    }
+    return new InstantCommand();
+  }
 }
