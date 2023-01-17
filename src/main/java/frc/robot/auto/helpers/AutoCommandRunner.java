@@ -74,7 +74,6 @@ public class AutoCommandRunner {
       }
     }
     lastPose = currentPose;
-    lastPose = currentPose;
   }
 
   public void end() {
