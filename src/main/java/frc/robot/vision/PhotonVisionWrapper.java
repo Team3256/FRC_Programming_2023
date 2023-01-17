@@ -7,22 +7,21 @@
 
 package frc.robot.vision;
 
+import static frc.robot.Constants.FieldConstants;
+import static frc.robot.Constants.VisionConstants;
+
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import java.util.ArrayList;
+import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.RobotPoseEstimator;
 import org.photonvision.RobotPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
-
-import java.util.ArrayList;
-import java.util.Optional;
-
-import static frc.robot.Constants.FieldConstants;
-import static frc.robot.Constants.VisionConstants;
 
 public class PhotonVisionWrapper {
   private PhotonCamera camera;

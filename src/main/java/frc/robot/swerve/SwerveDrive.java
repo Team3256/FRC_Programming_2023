@@ -7,6 +7,8 @@
 
 package frc.robot.swerve;
 
+import static frc.robot.Constants.SwerveConstants.*;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -19,11 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.swerve.helpers.SwerveModule;
 import frc.robot.vision.PhotonVisionWrapper;
-import org.littletonrobotics.junction.Logger;
-
 import java.util.Optional;
-
-import static frc.robot.Constants.SwerveConstants.*;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
   private final SwerveModule frontLeftModule = new SwerveModule(0, Mod0.constants);
