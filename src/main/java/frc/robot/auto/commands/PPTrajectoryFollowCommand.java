@@ -97,9 +97,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public void execute() {
-    double now = timer.get();
-
-    now = MathUtil.clamp(now, trajectoryDuration - 0.01, trajectoryDuration);
+    double now = MathUtil.clamp(timer.get(), 0, trajectoryDuration);
 
     PathPlannerTrajectory.PathPlannerState desired =
         (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
@@ -155,4 +153,3 @@ public class PPTrajectoryFollowCommand extends CommandBase {
         && Math.abs(eRotate.getRadians()) < tolRotate.getRadians();
   }
 }
-// to prompt commit (ignore this)
