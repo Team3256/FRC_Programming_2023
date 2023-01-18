@@ -47,10 +47,10 @@ public final class Constants {
     public static final double kArmMassKg = 1;
     public static final boolean kArmSimGravity = true;
 
-    public static final double KP = 1;
-    public static final double KI = 1;
-    public static final double KD = 1;
-    public static final double KFF = 1;
+    public static final double kP = 1;
+    public static final double kI = 1;
+    public static final double kD = 1;
+    public static final double kFF = 1;
   }
 
   public static final class SwerveConstants {

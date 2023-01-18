@@ -21,14 +21,14 @@ public class SetArmFromPID extends PIDCommand {
   // TODO: Use ArmK
   public SetArmFromPID(ArmSubsystem armSubsystem) {
     super(
-        new PIDController(ArmConstants.KP, ArmConstants.KI, ArmConstants.KD),
+        new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD),
         armSubsystem::getAngularVelocityRPM,
         SmartDashboard.getNumber("Velocity Setpoint", 1200),
         voltage ->
             armSubsystem.setInputVoltage(
                 voltage
                     + SmartDashboard.getNumber("Velocity Setpoint", 1200)
-                        * SmartDashboard.getNumber("Arm KFF", ArmConstants.KFF)),
+                        * SmartDashboard.getNumber("Arm KFF", ArmConstants.kFF)),
         armSubsystem);
 
     this.velocity = () -> SmartDashboard.getNumber("Velocity Setpoint", 1200);
@@ -37,10 +37,10 @@ public class SetArmFromPID extends PIDCommand {
 
   public SetArmFromPID(ArmSubsystem armSubsystem, double velocity) {
     super(
-        new PIDController(ArmConstants.KP, ArmConstants.KI, ArmConstants.KD),
+        new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD),
         armSubsystem::getAngularVelocityRPM,
         velocity,
-        voltage -> armSubsystem.setInputVoltage(voltage + velocity * ArmConstants.KFF),
+        voltage -> armSubsystem.setInputVoltage(voltage + velocity * ArmConstants.kFF),
         armSubsystem);
 
     this.velocity = () -> velocity;
@@ -51,7 +51,7 @@ public class SetArmFromPID extends PIDCommand {
   public void initialize() {
     SmartDashboard.putData(getController());
     SmartDashboard.putNumber("Velocity Setpoint", 1200);
-    SmartDashboard.putNumber("Arm KFF", ArmConstants.KFF);
+    SmartDashboard.putNumber("Arm KFF", ArmConstants.kFF);
   }
 
   // @Override // ?
