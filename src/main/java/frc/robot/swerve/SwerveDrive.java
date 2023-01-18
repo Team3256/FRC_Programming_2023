@@ -24,10 +24,10 @@ import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
-  private final SwerveModule frontLeftModule = new SwerveModule(0, Mod0.constants);
-  private final SwerveModule frontRightModule = new SwerveModule(1, Mod1.constants);
-  private final SwerveModule backLeftModule = new SwerveModule(2, Mod2.constants);
-  private final SwerveModule backRightModule = new SwerveModule(3, Mod3.constants);
+  private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
+  private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
+  private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
+  private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
 
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
