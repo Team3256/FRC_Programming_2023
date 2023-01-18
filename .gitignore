@@ -216,3 +216,4 @@ build/
 local.properties
 
 *.wpilog
+/src/main/java/frc/robot/BuildConstants.java

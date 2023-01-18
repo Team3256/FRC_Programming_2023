@@ -12,19 +12,19 @@ public class Intake extends SubsystemBase {
 	private final TalonFX intakeMotor;
 
 	public Intake() {
-		intakeMotor = new TalonFX(INTAKE_MOTOR_ID);
+		intakeMotor = new TalonFX(intakeMotorID);
 		off();
 		System.out.println("Intake initialized");
 	}
 
 	public void forward(){
 		System.out.println("Intake forward");
-		intakeMotor.set(ControlMode.PercentOutput, INTAKE_FORWARD_SPEED);
+		intakeMotor.set(ControlMode.PercentOutput, kIntakeForwardSpeed);
 	}
 
 	public void backward(){
 		System.out.println("Intake backward");
-		intakeMotor.set(ControlMode.PercentOutput, INTAKE_BACKWARD_SPEED);
+		intakeMotor.set(ControlMode.PercentOutput, kOuttakeSpeed);
 	}
 
 	public void off(){
