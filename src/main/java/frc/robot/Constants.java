@@ -19,13 +19,27 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 import java.util.Map;
 
 public final class Constants {
-    public static final double stickDeadband = 0.1;
+  public static final boolean DEBUG = false;
+  public static final double stickDeadband = 0.1;
+  public static final int kLongCANTimeoutMs = 1;
+  public static final double kMaxDriveVoltage = 1;
+  public static final double kMk4DriveVelocityKp = 1;
+  public static final double kMk4DriveVelocityKi = 1;
+  public static final double kMk4DriveVelocityKd = 1;
+  public static final double kMk4DriveVelocityKf = 1;
 
-    public static final class IntakeConstants {
-        public static final int intakeMotorID= 1;
-        public static final double kIntakeForwardSpeed = 0.5;
-        public static final double kOuttakeSpeed = -0.5;
-    }
+  public static final double kMk4AziKp = 1;
+  public static final double kMk4AziKi = 1;
+  public static final double kMk4AziKd = 1;
+
+  public static final double driveReduction = 1;
+  public static final double steerReduction = 1;
+
+  public static final class IntakeConstants {
+    public static final int intakeMotorID = 1;
+    public static final double kIntakeForwardSpeed = 0.5;
+    public static final double kOuttakeSpeed = -0.5;
+  }
 
   public static final class SwerveConstants {
     public static final int pigeonID = 1;
@@ -87,7 +101,6 @@ public final class Constants {
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
-
     public static final class FrontRight {
       public static final int driveMotorID = 6;
       public static final int angleMotorID = 7;
@@ -126,7 +139,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    // Constraint for the motion profilied robot angle controller
+    // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
@@ -168,7 +181,7 @@ public final class Constants {
     public static double kAutoThetaControllerP = 5.4;
     public static double kAutoThetaControllerI = 0.02;
     public static double kAutoThetaControllerD = 1.5;
-    public static TrapezoidProfile.Constraints kAutoThetaControllerContraints =
+    public static TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
             AutoConstants.kMaxAngularSpeedRadiansPerSecond,
             AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
