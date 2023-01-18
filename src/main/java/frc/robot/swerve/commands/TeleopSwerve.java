@@ -7,14 +7,14 @@
 
 package frc.robot.swerve.commands;
 
+import static frc.robot.Constants.SwerveConstants.maxAngularVelocity;
+import static frc.robot.Constants.SwerveConstants.maxSpeed;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
-
-import static frc.robot.Constants.SwerveConstants.maxAngularVelocity;
-import static frc.robot.Constants.SwerveConstants.maxSpeed;
 
 public class TeleopSwerve extends CommandBase {
 
