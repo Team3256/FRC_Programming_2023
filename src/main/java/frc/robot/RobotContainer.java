@@ -13,12 +13,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
-
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.intake.Intake;
-
 import frc.robot.swerve.commands.TeleopSwerve;
 
 /**
@@ -40,14 +38,13 @@ public class RobotContainer {
   private final JoystickButton zeroGyro =
       new JoystickButton(driver, XboxController.Button.kA.value);
   private final JoystickButton intake =
-          new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+      new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton outtake =
-          new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+      new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
-
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -77,7 +74,7 @@ public class RobotContainer {
     /* Driver Buttons */
     zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
 
-    //intake buttons for testing
+    // intake buttons for testing
     intake.onTrue(new IntakeForward(intakeSubsystem));
     outtake.onTrue(new Outtake(intakeSubsystem));
   }
