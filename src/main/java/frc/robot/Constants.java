@@ -35,6 +35,11 @@ public final class Constants {
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
 
+  public static final class BotConstants {
+    //length, width of robot in meters
+    public static final double length = 0.7435;
+    public static final double width = 0.8829;
+  }
   public static final class IntakeConstants {
     public static final int intakeMotorID = 1;
     public static final double kIntakeForwardSpeed = 0.5;
