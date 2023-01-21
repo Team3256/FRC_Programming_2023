@@ -35,12 +35,6 @@ public final class Constants {
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
 
-  public static final class BotConstants {
-    // length, width of robot in meters
-    public static final double length = 0.7435;
-    public static final double width = 0.8829;
-  }
-
   public static final class IntakeConstants {
     public static final int intakeMotorID = 1;
     public static final double kIntakeForwardSpeed = 0.5;
@@ -71,9 +65,10 @@ public final class Constants {
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
-    // TODO: Update these constants later
-    public static final double trackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
-    public static final double wheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
+    // TODO: Update Constants
+    public static final double trackWidth = Units.inchesToMeters(24.25);
+    public static final double wheelBase = Units.inchesToMeters(24.25);
+    public static final double lockedSpeed = 0.5;
     public static final double wheelDiameter = Units.inchesToMeters(3.94);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 

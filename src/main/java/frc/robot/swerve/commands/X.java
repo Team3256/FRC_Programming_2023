@@ -8,37 +8,39 @@
 package frc.robot.swerve.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.BotConstants;
+import static frc.robot.Constants.SwerveConstants.*;
 import frc.robot.swerve.SwerveDrive;
 
 public class X extends CommandBase {
   private final SwerveDrive swerveDrive;
 
   public X(SwerveDrive swerveDrive) {
-    addRequirements(swerveDrive);
     this.swerveDrive = swerveDrive;
+    addRequirements(swerveDrive);
   }
 
   @Override
   public void initialize() {
-    // calculate the universal X formation inward angle
-    double inwardAngle = Math.tan(BotConstants.length / BotConstants.width);
-    // convert inward angle into specific angles for each swerve module
-    double[] modAngle = {inwardAngle, 180 - inwardAngle, inwardAngle, 180 - inwardAngle};
+    double inwardAngle = Math.tan(trackWidth / wheelBase);
 
-    // set each swerve module to modAngle and stop movement
     SwerveModuleState[] states = new SwerveModuleState[4];
-    for (int i = 0; i < 4; i++) states[i] = new SwerveModuleState(0, new Rotation2d(modAngle[i]));
-    swerveDrive.setModuleStates(states);
+    for (int mod = 0; mod < 4; mod++) {
+      states[mod] = new SwerveModuleState(lockedSpeed, new Rotation2d(inwardAngle));
+      inwardAngle += Math.PI/2;
+      swerveDrive.setModuleStates(states);
+    }
   }
 
   @Override
   public void execute() {}
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    swerveDrive.drive(new ChassisSpeeds());
+  }
 
   @Override
   public boolean isFinished() {
