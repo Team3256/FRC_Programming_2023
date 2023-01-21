@@ -77,13 +77,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
-
-    // intake buttons for testing
-    intake.onTrue(new IntakeForward(intakeSubsystem));
-    outtake.onTrue(new Outtake(intakeSubsystem));
-
+    
     // REMOVE AFTER TESTING. before merging
     toggleLock.toggleOnTrue(new LockSwerve(swerveDrive));
+
+    intake.whileTrue(new IntakeForward(intakeSubsystem));
+    outtake.whileTrue(new Outtake(intakeSubsystem));
+
   }
 
   /**
