@@ -35,8 +35,13 @@ public final class Constants {
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
 
-  public static final class ArmConstants {
+  public static final class IntakeConstants {
+    public static final int intakeMotorID = 1;
+    public static final double kIntakeForwardSpeed = 0.5;
+    public static final double kOuttakeSpeed = -0.5;
+  }
 
+  public static final class ArmConstants {
     // TODO: Fix these to comply to the mechanical ppls kg
     public static final int ARM_MOTOR_ID = -1;
     public static final double kArmGearing = 1;
@@ -106,7 +111,6 @@ public final class Constants {
     public static final boolean canCoderInvert = false;
 
     /* Module Specific Constants */
-    /* Module 0 */
     public static final class FrontLeft {
       public static final int driveMotorID = 3;
       public static final int angleMotorID = 4;
@@ -116,7 +120,6 @@ public final class Constants {
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
-    /* Module 1 */
     public static final class FrontRight {
       public static final int driveMotorID = 6;
       public static final int angleMotorID = 7;
@@ -126,7 +129,6 @@ public final class Constants {
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
-    /* Module 2 */
     public static final class BackLeft {
       public static final int driveMotorID = 9;
       public static final int angleMotorID = 10;
@@ -136,7 +138,6 @@ public final class Constants {
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
-    /* Module 3 */
     public static final class BackRight {
       public static final int driveMotorID = 12;
       public static final int angleMotorID = 13;
@@ -157,7 +158,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    // Constraint for the motion profilied robot angle controller
+    // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
@@ -199,7 +200,7 @@ public final class Constants {
     public static double kAutoThetaControllerP = 5.4;
     public static double kAutoThetaControllerI = 0.02;
     public static double kAutoThetaControllerD = 1.5;
-    public static TrapezoidProfile.Constraints kAutoThetaControllerContraints =
+    public static TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
             AutoConstants.kMaxAngularSpeedRadiansPerSecond,
             AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);

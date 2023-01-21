@@ -10,7 +10,7 @@ package frc.robot.swerve.helpers;
 public class SwerveModuleConstants {
   public final int driveMotorID;
   public final int angleMotorID;
-  public final int cancoderID;
+  public final int canCoderID;
   public final double angleOffset;
 
   /**
@@ -25,7 +25,7 @@ public class SwerveModuleConstants {
       int driveMotorID, int angleMotorID, int canCoderID, double angleOffset) {
     this.driveMotorID = driveMotorID;
     this.angleMotorID = angleMotorID;
-    this.cancoderID = canCoderID;
+    this.canCoderID = canCoderID;
     this.angleOffset = angleOffset;
   }
 }
