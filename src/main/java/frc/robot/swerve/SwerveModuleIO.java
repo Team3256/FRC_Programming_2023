@@ -7,6 +7,8 @@
 
 package frc.robot.swerve;
 
+import static frc.robot.Constants.SwerveConstants.*;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,8 +17,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
-
-import static frc.robot.Constants.SwerveConstants.*;
 
 public class SwerveModuleIO implements SwerveIO {
 
