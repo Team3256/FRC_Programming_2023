@@ -75,8 +75,8 @@ public class RobotContainer {
     zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
 
     // intake buttons for testing
-    intake.onTrue(new IntakeForward(intakeSubsystem));
-    outtake.onTrue(new Outtake(intakeSubsystem));
+    intake.whileTrue(new IntakeForward(intakeSubsystem));
+    outtake.whileTrue(new Outtake(intakeSubsystem));
   }
 
   /**
