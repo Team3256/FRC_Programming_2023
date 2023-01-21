@@ -35,7 +35,6 @@ public final class Constants {
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
 
-
   public static final class IntakeConstants {
     public static final int intakeMotorID = 1;
     public static final double kIntakeForwardSpeed = 0.5;
