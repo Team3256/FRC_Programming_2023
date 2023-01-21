@@ -21,6 +21,7 @@ import java.util.Map;
 public final class Constants {
   public static final boolean DEBUG = false;
   public static final double stickDeadband = 0.1;
+  public static final double azimuthStickDeadband = 0.3;
   public static final int kLongCANTimeoutMs = 1;
   public static final double kMaxDriveVoltage = 1;
   public static final double kMk4DriveVelocityKp = 1;
@@ -155,7 +156,10 @@ public final class Constants {
 
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+    // Max velocity
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    // Max acceleration
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     // Constraint for the motion profiled robot angle controller
