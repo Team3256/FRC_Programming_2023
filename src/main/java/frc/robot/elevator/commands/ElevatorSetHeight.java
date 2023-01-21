@@ -10,16 +10,11 @@ public class ElevatorSetHeight extends PIDCommand{
 	public ElevatorSetHeight(Elevator elevatorSubsystem, double tar) {
 		super(
         new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD),
-        // Close loop on heading
         elevatorSubsystem::getPosition,
-        // Set reference to targt
         tar,
-        // Pipe output to turn robot
         output -> elevatorSubsystem.setSpeed(output),
-        // Require the drive
        	elevatorSubsystem);
 		this.elevatorSubsystem=elevatorSubsystem;
-
 		getController().setTolerance(ElevatorConstants.kTolerancePosition, ElevatorConstants.kToleranceRate);
 	}
 
