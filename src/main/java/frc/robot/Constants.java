@@ -16,9 +16,17 @@ public final class Constants {
     public static final class ElevatorConstants {
         public static final int MASTER_ELEVATOR_MOTOR_ID = 1;
         public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 2;
-        public static final int LOW_POSITION_METERS = 1;
-        public static final int MEDIUM_POSITION_METERS = 2;
-        public static final int HIGH_POSITION_METERS = 3;
+
+        public static final double kP = 1;
+        public static final double kI = 1;
+        public static final double kD = 1;
+
+        public static final double kTolerancePosition = 1;
+        public static final double kToleranceRate = 1;
+
+        public static final double LOW_POSITION_METERS = 1;
+        public static final double MEDIUM_POSITION_METERS = 2;
+        public static final double HIGH_POSITION_METERS = 3;
     }
     public static final class SwerveConstants {
         public static final int pigeonID = 1;
