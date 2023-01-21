@@ -7,17 +7,18 @@
 
 package frc.robot.swerve.commands;
 
+import static frc.robot.Constants.SwerveConstants.*;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import static frc.robot.Constants.SwerveConstants.*;
 import frc.robot.swerve.SwerveDrive;
 
-public class X extends CommandBase {
+public class LockSwerve extends CommandBase {
   private final SwerveDrive swerveDrive;
 
-  public X(SwerveDrive swerveDrive) {
+  public LockSwerve(SwerveDrive swerveDrive) {
     this.swerveDrive = swerveDrive;
     addRequirements(swerveDrive);
   }
@@ -29,7 +30,7 @@ public class X extends CommandBase {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (int mod = 0; mod < 4; mod++) {
       states[mod] = new SwerveModuleState(lockedSpeed, new Rotation2d(inwardAngle));
-      inwardAngle += Math.PI/2;
+      inwardAngle += Math.PI / 2;
       swerveDrive.setModuleStates(states);
     }
   }

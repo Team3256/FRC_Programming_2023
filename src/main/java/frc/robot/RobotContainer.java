@@ -17,8 +17,8 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
 import frc.robot.swerve.SwerveDrive;
+import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.swerve.commands.TeleopSwerve;
-import frc.robot.swerve.commands.X;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,7 +44,7 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
   private final JoystickButton toggleLock =
-          new JoystickButton(driver, XboxController.Button.kY.value);
+      new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
@@ -82,9 +82,8 @@ public class RobotContainer {
     intake.onTrue(new IntakeForward(intakeSubsystem));
     outtake.onTrue(new Outtake(intakeSubsystem));
 
-    //REMOVE AFTER TESTING. before merging
-    toggleLock.onTrue(new X(swerveDrive));
-
+    // REMOVE AFTER TESTING. before merging
+    toggleLock.toggleOnTrue(new LockSwerve(swerveDrive));
   }
 
   /**
