@@ -8,7 +8,6 @@
 package frc.robot.auto.commands;
 
 import static frc.robot.Constants.AutoConstants.AUTO_DEBUG;
-// import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
@@ -17,7 +16,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +24,8 @@ import frc.robot.Constants;
 import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.SwerveDriveController;
 import frc.robot.swerve.SwerveDrive;
+
+// import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
 
 public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
@@ -116,8 +116,9 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       autoCommandRunner.execute(desiredPose);
     }
 
-    swerveSubsystem.drive(
-        controller.calculate(currentPose, desiredPose, desiredLinearVelocity, desiredRotation));
+    //    swerveSubsystem.drive(
+    //        controller.calculate(currentPose, desiredPose, desiredLinearVelocity,
+    // desiredRotation));
   }
 
   // TODO: Fix to give a little more time to be in the right place
@@ -133,7 +134,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       // .atReference();
       autoCommandRunner.end();
     }
-    swerveSubsystem.drive(new ChassisSpeeds());
+    //    swerveSubsystem.drive(new ChassisSpeeds());
   }
 
   private Pose2d poseTolerance = new Pose2d();

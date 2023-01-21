@@ -7,18 +7,16 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.SwerveConstants.*;
-import static frc.robot.Constants.SwerveConstants.maxSpeed;
-
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.Constants.SwerveConstants.*;
 
 public class SwerveModuleIO implements SwerveIO {
 
@@ -34,10 +32,10 @@ public class SwerveModuleIO implements SwerveIO {
   private double[] ypr = new double[3];
 
   public SwerveModuleIO() {
-    frontLeftModule = new SwerveModule(0, Constants.SwerveConstants.Mod0.constants);
-    frontRightModule = new SwerveModule(1, Constants.SwerveConstants.Mod1.constants);
-    backLeftModule = new SwerveModule(2, Constants.SwerveConstants.Mod2.constants);
-    backRightModule = new SwerveModule(3, Constants.SwerveConstants.Mod3.constants);
+    frontLeftModule = new SwerveModule(0, FrontLeft.constants);
+    frontRightModule = new SwerveModule(1, FrontRight.constants);
+    backLeftModule = new SwerveModule(2, BackLeft.constants);
+    backRightModule = new SwerveModule(3, BackRight.constants);
     gyro = new PigeonIMU(pigeonID);
     gyro.configFactoryDefault();
     swerveModules =
@@ -61,7 +59,7 @@ public class SwerveModuleIO implements SwerveIO {
 
   @Override
   public void zeroGyro() {
-    gyro.setYaw(0);
+    gyro.setYaw(-90);
   }
 
   @Override

@@ -7,14 +7,9 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.SwerveConstants.*;
-
-import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -22,84 +17,43 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.swerve.helpers.Conversions;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
+import static frc.robot.Constants.SwerveConstants.angleGearRatio;
+import static frc.robot.Constants.SwerveConstants.swerveKinematics;
+
 public class SwerveDrive extends SubsystemBase {
-  private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
-  private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
-  private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
-  private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
-  private final Field2d field = new Field2d();
-
-  private static final SwerveDriveKinematics kinematics =
-      new SwerveDriveKinematics(
-          new Translation2d(trackWidth / 2.0, wheelBase / 2.0), // Front Right
-          new Translation2d(trackWidth / 2.0, -wheelBase / 2.0), // Back right
-          new Translation2d(-trackWidth / 2.0, wheelBase / 2.0), // Front left
-          new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // Back right
-          );
-
-  private final SwerveModule[] swerveModules = {
-    frontLeftModule, frontRightModule, backLeftModule, backRightModule
-  };
 
   public SwerveDriveOdometry odometry;
-  public PigeonIMU gyro;
 
-  public SwerveDrive() {
-    gyro = new PigeonIMU(pigeonID);
-    gyro.configFactoryDefault();
-    zeroGyro();
+  private final SwerveIO swerveIO;
+  private final SwerveIOInputsAutoLogged swerveIOInputs = new SwerveIOInputsAutoLogged();
+  private final Field2d field = new Field2d();
 
+  public SwerveDrive(SwerveIO swerveIO) {
     odometry =
         new SwerveDriveOdometry(
             swerveKinematics,
-            getYaw(),
+            swerveIO.getYaw(),
             new SwerveModulePosition[] {
-              frontLeftModule.getPosition(),
-              frontRightModule.getPosition(),
-              backLeftModule.getPosition(),
-              backRightModule.getPosition()
+              getFrontLeftModulePosition(),
+              getFrontRightModulePosition(),
+              getBackLeftModulePosition(),
+              getBackRightModulePosition()
             });
-  }
-
-  public void drive(ChassisSpeeds chassisSpeeds) {
-    SwerveModuleState[] swerveModuleStates =
-        swerveKinematics.toSwerveModuleStates(
-            chassisSpeeds); // same as the older version of drive but takes in the calculated
-    // chassisspeed
+    this.swerveIO = swerveIO;
   }
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates =
-        swerveKinematics.toSwerveModuleStates(
-            fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getYaw())
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
-
-    for (SwerveModule mod : swerveModules) {
-      // TODO: Optimize the module state using wpilib optimize method
-      // TODO: Check if the optimization is happening in the setDesiredState method
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-    }
-    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
-  }
-
-  public SwerveDriveKinematics getKinematics() {
-    return kinematics;
+    swerveIO.drive(translation, rotation, fieldRelative, isOpenLoop);
   }
 
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeed);
-
-    for (SwerveModule mod : swerveModules) {
-      mod.setDesiredState(desiredStates[mod.moduleNumber], false);
-    }
+    setModuleStates(desiredStates);
   }
 
   public Pose2d getPose() {
@@ -107,38 +61,67 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void resetOdometry(Pose2d pose) {
-    odometry.resetPosition(getYaw(), getPositions(), pose);
+    odometry.resetPosition(swerveIO.getYaw(), getPositions(), pose);
   }
 
   public SwerveModulePosition[] getPositions() {
     SwerveModulePosition[] states = new SwerveModulePosition[4];
-    for (SwerveModule mod : swerveModules) {
-      states[mod.moduleNumber] = mod.getPosition();
-    }
+    states[0] = getFrontLeftModulePosition();
+    states[1] = getFrontRightModulePosition();
+    states[2] = getBackLeftModulePosition();
+    states[3] = getBackRightModulePosition();
     return states;
-  }
-
-  public void zeroGyro() {
-    gyro.setYaw(0);
-  }
-
-  public Rotation2d getYaw() {
-    double[] ypr = new double[3];
-    gyro.getYawPitchRoll(ypr);
-    return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
 
   @Override
   public void periodic() {
-    odometry.update(getYaw(), getPositions());
+    swerveIO.updateInputs(swerveIOInputs);
+    Logger.getInstance().processInputs("SwerveDrive", swerveIOInputs);
+    odometry.update(swerveIO.getYaw(), getPositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
-    for (SwerveModule mod : swerveModules) {
+    for (SwerveModule mod : swerveIO.getSwerveModules()) {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
     }
+  }
+
+  public SwerveModulePosition getFrontLeftModulePosition() {
+    double velocity = swerveIOInputs.frontLeftModuleVelocity;
+    Rotation2d angle =
+        Rotation2d.fromDegrees(
+            Conversions.falconToDegrees(swerveIOInputs.frontLeftModuleAngle, angleGearRatio));
+    return new SwerveModulePosition(velocity, angle);
+  }
+
+  public SwerveModulePosition getFrontRightModulePosition() {
+    double velocity = swerveIOInputs.frontRightModuleVelocity;
+    Rotation2d angle =
+        Rotation2d.fromDegrees(
+            Conversions.falconToDegrees(swerveIOInputs.frontRightModuleAngle, angleGearRatio));
+    return new SwerveModulePosition(velocity, angle);
+  }
+
+  public SwerveModulePosition getBackLeftModulePosition() {
+    double velocity = swerveIOInputs.backLeftModuleVelocity;
+    Rotation2d angle =
+        Rotation2d.fromDegrees(
+            Conversions.falconToDegrees(swerveIOInputs.backLeftModuleAngle, angleGearRatio));
+    return new SwerveModulePosition(velocity, angle);
+  }
+
+  public SwerveModulePosition getBackRightModulePosition() {
+    double velocity = swerveIOInputs.backRightModuleVelocity;
+    Rotation2d angle =
+        Rotation2d.fromDegrees(
+            Conversions.falconToDegrees(swerveIOInputs.backRightModuleAngle, angleGearRatio));
+    return new SwerveModulePosition(velocity, angle);
+  }
+
+  public void zeroGyro() {
+    swerveIO.zeroGyro();
   }
 
   public void setTrajectory(Trajectory trajectory) {

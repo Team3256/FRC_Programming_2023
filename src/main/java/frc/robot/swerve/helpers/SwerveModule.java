@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants;
 
 public class SwerveModule {
   public int moduleNumber;
@@ -28,7 +29,11 @@ public class SwerveModule {
   private CANCoder angleEncoder;
   private double lastAngle;
 
-  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(driveKS, driveKV, driveKA);
+  SimpleMotorFeedforward feedforward =
+      new SimpleMotorFeedforward(
+          Constants.PIDConstants.driveKS,
+          Constants.PIDConstants.driveKV,
+          Constants.PIDConstants.driveKA);
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;

@@ -21,7 +21,6 @@ import frc.robot.swerve.SwerveIO;
 import frc.robot.swerve.SwerveModuleIO;
 import frc.robot.swerve.commands.TeleopSwerve;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -46,22 +45,13 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
   /* Subsystems */
-  private final SwerveDrive swerveDrive = new SwerveDrive();
+  private final SwerveDrive swerveDrive;
   private final Intake intakeSubsystem = new Intake();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     boolean fieldRelative = true;
     boolean openLoop = true;
-    swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            swerveDrive,
-            driver,
-            translationAxis,
-            strafeAxis,
-            rotationAxis,
-            fieldRelative,
-            openLoop));
 
     // @suppress-warnings
     switch (Constants.currentMode) {
