@@ -25,7 +25,7 @@ public final class Constants {
         public static final double kToleranceRate = 1;
 
         public static final double LOW_POSITION_METERS = 1;
-        public static final double MEDIUM_POSITION_METERS = 2;
+        public static final double MIDDLE_POSITION_METERS = 2;
         public static final double HIGH_POSITION_METERS = 3;
     }
     public static final class SwerveConstants {
