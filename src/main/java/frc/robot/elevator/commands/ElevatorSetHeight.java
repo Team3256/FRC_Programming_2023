@@ -6,19 +6,19 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.elevator.Elevator;
 
 public class ElevatorSetHeight extends PIDCommand{
-	Elevator elevator;
-	public ElevatorSetHeight(Elevator elevator, double tar) {
+	Elevator elevatorSubsystem;
+	public ElevatorSetHeight(Elevator elevatorSubsystem, double tar) {
 		super(
         new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD),
         // Close loop on heading
-        elevator::getPosition,
+        elevatorSubsystem::getPosition,
         // Set reference to targt
         tar,
         // Pipe output to turn robot
-        output -> elevator.setSpeed(output),
+        output -> elevatorSubsystem.setSpeed(output),
         // Require the drive
-       	elevator);
-		this.elevator=elevator;
+       	elevatorSubsystem);
+		this.elevatorSubsystem=elevatorSubsystem;
 
 		getController().setTolerance(ElevatorConstants.kTolerancePosition, ElevatorConstants.kToleranceRate);
 	}
@@ -30,6 +30,6 @@ public class ElevatorSetHeight extends PIDCommand{
 
 	@Override
 	public void end(boolean interrupted) {
-		elevator.off();
+		elevatorSubsystem.off();
 	}
 }
