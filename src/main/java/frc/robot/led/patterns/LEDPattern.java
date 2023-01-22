@@ -10,7 +10,8 @@ package frc.robot.led.patterns;
 import frc.robot.drivers.Color;
 
 /**
- * Only extend this class, don't actually use any of these The foundation of a displayable and
+ * Only extend this class
+ * The foundation of a displayable and
  * periodically updating LEDPattern
  */
 public class LEDPattern {

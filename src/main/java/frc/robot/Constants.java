@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.drivers.Color;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 import java.util.Map;
 
@@ -438,5 +439,11 @@ public final class Constants {
                 Units.inchesToMeters(42.19),
                 Units.inchesToMeters(18.22),
                 new Rotation3d()));
+  }
+  public static final class LEDConstants {
+    public static final Color purple = new Color(255,0,255);
+    public static final Color yellow = new Color(255,255,0);
+    public static final Color red = new Color(255,0,0);
+    public static final Color off = new Color(0,0,0);
   }
 }
