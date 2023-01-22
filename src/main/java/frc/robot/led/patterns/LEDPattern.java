@@ -36,7 +36,7 @@ public class LEDPattern {
   }
 
   public void setRange(int start, int end, Color color) {
-    for (int i = start; start <= end; i++) {
+    for (int i = start; i <= end; i++) {
       set(i, color);
     }
   }
