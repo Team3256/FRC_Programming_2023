@@ -40,12 +40,13 @@ public final class Constants {
 
   public static final class LimeLightConstants {
 
-    //TODO:Set value for later
+    // TODO:Set value for later
     public static final double DIST_FROM_BOTTOM_OF_ROBOT_TO_CAMERA = 0.0;
 
     public static final int APRIL_TAG_ID_1 = 0;
     public static final int APRIL_TAG_ID_2 = 1;
-    // TODO: set the values for all of limelght contstants and remove the unchanged comment of that and change the april tag above if needed(This can be deleted if no changes or necessary)
+    // TODO: set the values for all of limelght contstants and remove the unchanged comment of that
+    // and change the april tag above if needed(This can be deleted if no changes or necessary)
     // same line when changed value
 
     static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
