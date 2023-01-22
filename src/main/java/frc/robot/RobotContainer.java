@@ -18,7 +18,7 @@ import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
-
+import frc.robot.swerve.commands.TeleopSwerveLimited;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,6 +34,8 @@ public class RobotContainer {
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private final boolean fieldRelative = true;
+  private final boolean openLoop = true;
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro =
@@ -42,6 +44,8 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton outtake =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton sensitivityToggle =
+      new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
@@ -49,8 +53,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    boolean fieldRelative = true;
-    boolean openLoop = true;
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
@@ -74,6 +76,9 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
+    sensitivityToggle.toggleOnTrue(
+        new TeleopSwerveLimited(
+            swerveDrive, driver, translationAxis, strafeAxis, rotationAxis, true, true));
 
     // intake buttons for testing
     intake.whileTrue(new IntakeForward(intakeSubsystem));
