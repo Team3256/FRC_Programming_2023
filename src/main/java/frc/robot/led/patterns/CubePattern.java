@@ -17,6 +17,6 @@ public class CubePattern extends LEDPattern{
   @Override
   public void update() {
     super.update();
-    setRange(0, 99, LEDConstants.purple);
+    setRange(1, 100, LEDConstants.purple);
   }
 }

@@ -17,7 +17,7 @@ public class DrivingPattern extends LEDPattern{
   @Override
   public void update() {
     super.update();
-    setRange(0, 49,LEDConstants.red);
-    setRange(50,99,LEDConstants.off);
+    setRange(1, 50,LEDConstants.red);
+    setRange(51,100,LEDConstants.off);
   }
 }

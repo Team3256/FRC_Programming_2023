@@ -10,6 +10,7 @@ package frc.robot.led;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.led.patternBases.LEDPattern;
 import frc.robot.led.patterns.ConePattern;
 import frc.robot.led.patterns.CubePattern;
 import frc.robot.led.patterns.DrivingPattern;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
  * periodic will be called in Robot periodic
  * it updates totalPattern, updates ledContainers, and then sets the led
  */
-public class LEDSubsystem extends SubsystemBase{
+public class LED extends SubsystemBase{
   private final ArrayList<LEDSection> ledContainers = new ArrayList<>();
   private final AddressableLED led;
   private final AddressableLEDBuffer buffer;
@@ -35,7 +36,7 @@ public class LEDSubsystem extends SubsystemBase{
   private final ConePattern conePattern = new ConePattern();
   private final DrivingPattern drivingPattern = new DrivingPattern();
 
-  public LEDSubsystem(int port,int length) {
+  public LED(int port,int length) {
     // initialize led and buffer
     led = new AddressableLED(port);
     buffer = new AddressableLEDBuffer(length);
@@ -52,7 +53,15 @@ public class LEDSubsystem extends SubsystemBase{
     led.setData(buffer);
   }
 
+  public void set(int sectionId, LEDPattern pattern){
+    ledContainers.get(sectionId).writeToBuffer(pattern,buffer);
+  }
 
+  public void bulkSet(LEDPattern pattern){
+    for (int i=0;i<ledContainers.size();i++){
+      set(i,pattern);
+    }
+  }
 
   public void periodic() {
     //display pattern in each container

@@ -17,6 +17,6 @@ public class ConePattern extends LEDPattern{
   @Override
   public void update() {
     super.update();
-    setRange(0, 99,LEDConstants.yellow);
+    setRange(1, 100,LEDConstants.yellow);
   }
 }
