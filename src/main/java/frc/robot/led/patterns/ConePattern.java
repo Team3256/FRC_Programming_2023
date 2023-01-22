@@ -8,14 +8,12 @@
 package frc.robot.led.patterns;
 
 import frc.robot.Constants.LEDConstants;
-import frc.robot.drivers.Color;
+import frc.robot.led.patternBases.LEDPattern;
 
 /**
  * Full Yellow
  */
-public class ConePattern extends LEDPattern {
-  public ConePattern(Color[] totalPattern) { super(0, 99, totalPattern);}
-
+public class ConePattern extends LEDPattern{
   @Override
   public void update() {
     super.update();

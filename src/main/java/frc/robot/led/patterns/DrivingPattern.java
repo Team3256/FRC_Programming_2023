@@ -8,16 +8,12 @@
 package frc.robot.led.patterns;
 
 import frc.robot.Constants.LEDConstants;
-import frc.robot.drivers.Color;
+import frc.robot.led.patternBases.LEDPattern;
 
 /**
  * Half red half empty
  */
-public class DrivingPattern extends LEDPattern {
-  public DrivingPattern(Color[] totalPattern) {
-    super(0, 99, totalPattern);
-  }
-
+public class DrivingPattern extends LEDPattern{
   @Override
   public void update() {
     super.update();
