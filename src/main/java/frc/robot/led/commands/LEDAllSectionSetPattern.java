@@ -8,10 +8,10 @@ public class LEDAllSectionSetPattern extends CommandBase{
 	private final LED LEDSubsystem;
 	private final LEDPattern pattern;
 
-	public LEDAllSectionSetPattern(LED LEDSubsystem,LEDPattern pattern){
+	public LEDAllSectionSetPattern(LED LEDSubsystem, LEDPattern pattern){
 		addRequirements(LEDSubsystem);
 		this.LEDSubsystem = LEDSubsystem;
-		this.pattern=pattern;
+		this.pattern = pattern;
 	}
 
 	@Override
