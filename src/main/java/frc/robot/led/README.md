@@ -1,11 +1,26 @@
-How to use the led (simple) API
+3256 LED API:
 
-In the LEDController: add custom length containers and add patterns
+patternBases
+* LED Pattern
+* Animated Pattern
+* Stack Pattern
 
-In Patterns: create custom patterns that extend from LEDPattern
+patterns (custom patterns that extend a pattern base)
+* Cone Pattern
+* Cube Pattern
+* Driving Pattern
 
-Helpful to note that:
+LED Section: 
+* Custom length
+* Renders a pattern in any length
 
-Patterns color percentage ranges, not pixel ranges
-Everything is 0-indexed
-follow the convention of BallColorPattern when creating patterns
+LED Subsystem:
+* Collection of sections
+* Each section displays same pattern
+
+Note:
+* Patterns are in percentages
+* LED is in pixels
+* 1 indexed
+* endpoints inclusive
+* follow Convention when creating new Custom Patterns
