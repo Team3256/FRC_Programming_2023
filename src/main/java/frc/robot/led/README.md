@@ -23,4 +23,8 @@ Note:
 * LED is in pixels
 * 1 indexed
 * endpoints inclusive
-* follow Convention when creating new Custom Patterns
+* follow convention when creating new Custom Patterns
+
+Electrical:
+* Addressable LED 
+* PWM pin, power pin, ground pin
