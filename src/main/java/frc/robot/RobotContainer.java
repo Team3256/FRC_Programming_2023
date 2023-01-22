@@ -16,6 +16,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
+import frc.robot.led.LED;
+import frc.robot.led.commands.LEDAllSectionSetPattern;
+import frc.robot.led.patterns.DrivingPattern;
+import frc.robot.led.patterns.SpiritPattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 
@@ -41,10 +45,12 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton outtake =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
+  private final JoystickButton driving = new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton bussin = new JoystickButton(driver, XboxController.Button.kY.value);
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
+  private final LED LEDSubsystem = new LED(0,75);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -77,6 +83,10 @@ public class RobotContainer {
     // intake buttons for testing
     intake.whileTrue(new IntakeForward(intakeSubsystem));
     outtake.whileTrue(new Outtake(intakeSubsystem));
+
+    // led buttons for fun
+    driving.onTrue(new LEDAllSectionSetPattern(LEDSubsystem, new DrivingPattern()));
+    bussin.onTrue(new LEDAllSectionSetPattern(LEDSubsystem, new SpiritPattern()));
   }
 
   /**
