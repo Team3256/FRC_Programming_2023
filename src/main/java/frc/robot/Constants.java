@@ -68,7 +68,7 @@ public final class Constants {
     // TODO: Update Constants
     public static final double trackWidth = Units.inchesToMeters(24.25);
     public static final double wheelBase = Units.inchesToMeters(24.25);
-    public static final double lockedSpeed = 0.5;
+    public static final double lockedSpeed = 1;
     public static final double wheelDiameter = Units.inchesToMeters(3.94);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
