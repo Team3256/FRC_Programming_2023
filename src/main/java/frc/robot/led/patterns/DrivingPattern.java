@@ -12,14 +12,14 @@ import frc.robot.led.patternBases.BlinkingPattern;
 import frc.robot.led.patternBases.LEDPattern;
 
 /** Blinking Half red half empty */
-public class DrivingPattern extends BlinkingPattern{
+public class DrivingPattern extends BlinkingPattern {
   public DrivingPattern() {
-    super(50,50);
+    super(50, 50);
     LEDPattern main = new LEDPattern();
     main.setRange(1, 25, LEDConstants.red);
     main.setRange(26, 50, LEDConstants.off);
-    main.setRange(51,75, LEDConstants.red);
-    main.setRange(76,100, LEDConstants.off);
+    main.setRange(51, 75, LEDConstants.red);
+    main.setRange(76, 100, LEDConstants.off);
     setMainPattern(main);
   }
 }
