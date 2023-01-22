@@ -17,6 +17,8 @@ import frc.robot.led.patterns.DrivingPattern;
 
 import java.util.ArrayList;
 
+import static frc.robot.Constants.LEDConstants.cubePattern;
+
 /**
  * allocates sections of a full LED strip to multiple strips that display the same image
  * information is stored in percentage instead of pixel
@@ -31,10 +33,6 @@ public class LED extends SubsystemBase{
   private final ArrayList<LEDSection> ledContainers = new ArrayList<>();
   private final AddressableLED led;
   private final AddressableLEDBuffer buffer;
-
-  private final CubePattern cubePattern = new CubePattern();
-  private final ConePattern conePattern = new ConePattern();
-  private final DrivingPattern drivingPattern = new DrivingPattern();
 
   public LED(int port,int length) {
     // initialize led and buffer
