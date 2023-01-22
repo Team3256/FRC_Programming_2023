@@ -9,9 +9,11 @@ package frc.robot.led;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import frc.robot.drivers.Color;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.led.patterns.ConePattern;
 import frc.robot.led.patterns.CubePattern;
-import frc.robot.led.patterns.LEDPattern;
+import frc.robot.led.patterns.DrivingPattern;
+
 import java.util.ArrayList;
 
 /**
@@ -24,47 +26,38 @@ import java.util.ArrayList;
  * periodic will be called in Robot periodic
  * it updates totalPattern, updates ledContainers, and then sets the led
  */
-public class LEDController {
-  ArrayList<LEDContainer> ledContainers = new ArrayList<>();
-  ArrayList<LEDPattern> ledPatterns = new ArrayList<>();
-  Color[] totalPattern = new Color[100];
-  AddressableLED led;
-  AddressableLEDBuffer buffer;
+public class LEDSubsystem extends SubsystemBase{
+  private final ArrayList<LEDSection> ledContainers = new ArrayList<>();
+  private final AddressableLED led;
+  private final AddressableLEDBuffer buffer;
 
-  public LEDController(int port, int length) {
+  private final CubePattern cubePattern = new CubePattern();
+  private final ConePattern conePattern = new ConePattern();
+  private final DrivingPattern drivingPattern = new DrivingPattern();
+
+  public LEDSubsystem(int port,int length) {
     // initialize led and buffer
     led = new AddressableLED(port);
     buffer = new AddressableLEDBuffer(length);
     led.setLength(buffer.getLength());
 
     // initialize led containers sequentially
-    ledContainers.add(new LEDContainer(0, 24));
-    ledContainers.add(new LEDContainer(25, 49));
-    ledContainers.add(new LEDContainer(50, 74));
-    ledContainers.add(new LEDContainer(75, 99));
-
-    // initialize the total pattern percentage array
-    for (int i = 0; i < 100; i++) {
-      totalPattern[i] = new Color(0, 0, 0);
-    }
-
-    // initialize the patterns used
-    ledPatterns.add(new CubePattern(totalPattern));
+    ledContainers.add(new LEDSection(0, 24));
+    ledContainers.add(new LEDSection(25, 49));
+    ledContainers.add(new LEDSection(50, 74));
+    ledContainers.add(new LEDSection(75, 99));
 
     // turn on led to default
-    led.setData(buffer);
     led.start();
+    led.setData(buffer);
   }
 
-  public void periodic() {
-    //concatenate ledPatterns into totalPattern
-    for (LEDPattern pattern : ledPatterns) {
-      pattern.update();
-    }
 
-    //display totalPattern in each container
-    for (LEDContainer container : ledContainers) {
-      container.display(totalPattern, buffer);
+
+  public void periodic() {
+    //display pattern in each container
+    for (LEDSection container : ledContainers) {
+      container.writeToBuffer(cubePattern, buffer);
     }
     led.setData(buffer);
   }
