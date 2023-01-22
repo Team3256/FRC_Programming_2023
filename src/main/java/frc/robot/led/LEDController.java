@@ -6,21 +6,19 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.drivers.Color;
+import frc.robot.led.patterns.CubePattern;
 import frc.robot.led.patterns.LEDPattern;
 
 /**
  * class that allocates sections of a full LED strip
  * to multiple strips that display the same information
  * information is stored in percentage instead of pixel
- *
  * ledContainers stores the different sections of the full LED strip
  * ledPatterns stores the different patterns that are displayed
  * totalPattern is the information from ledPatterns concatenated
- *
- * led and buffer are standard for controlling the leds
- *
+ * led and buffer are standard for controlling the led
  * periodic will be called in Robot periodic
- * it updates totalPattern, updates ledContainers, and then sets the leds
+ * it updates totalPattern, updates ledContainers, and then sets the led
  */
 public class LEDController {
     ArrayList<LEDContainer> ledContainers = new ArrayList<>();
@@ -47,9 +45,9 @@ public class LEDController {
         }
 
         //initialize the patterns used
-        ledPatterns.add(new BallColorPattern(totalPattern));
+        ledPatterns.add(new CubePattern(totalPattern));
 
-        //turn on leds to default
+        //turn on led to default
         led.setData(buffer);
         led.start();
     }
@@ -63,7 +61,7 @@ public class LEDController {
         for (LEDContainer container : ledContainers){
             container.display(totalPattern, buffer);
         }
-        //set the leds
+        //set the led
         led.setData(buffer);
     }
 }
