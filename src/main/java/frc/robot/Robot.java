@@ -30,7 +30,7 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer robotContainer;
 
-  LEDTester ledTester = new LEDTester(100, 0);
+  LEDTester ledTester = new LEDTester(50, 0);
   // LEDController ledController = new LEDController();
 
   /**
@@ -84,7 +84,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    ledTester.setAll(255, 0, 255);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -113,6 +115,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    ledTester.setAll(255, 255, 0);
   }
 
   /** This function is called periodically during operator control. */
@@ -123,7 +127,6 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-    ledTester.setAll(0, 0, 255);
   }
 
   /** This function is called periodically during test mode. */
