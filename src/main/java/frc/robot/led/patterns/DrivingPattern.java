@@ -14,9 +14,8 @@ import frc.robot.led.patternBases.LEDPattern;
  * Half red half empty
  */
 public class DrivingPattern extends LEDPattern{
-  @Override
-  public void update() {
-    super.update();
+  public DrivingPattern() {
+    super();
     setRange(1, 50,LEDConstants.red);
     setRange(51,100,LEDConstants.off);
   }

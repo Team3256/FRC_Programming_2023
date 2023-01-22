@@ -14,9 +14,8 @@ import frc.robot.led.patternBases.LEDPattern;
  * Full Purple
  */
 public class CubePattern extends LEDPattern{
-  @Override
-  public void update() {
-    super.update();
+  public CubePattern(){
+    super();
     setRange(1, 100, LEDConstants.purple);
   }
 }
