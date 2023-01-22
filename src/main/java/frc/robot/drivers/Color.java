@@ -16,6 +16,9 @@ public class Color {
   public Color(int R, int G, int B) {
     set(R, G, B);
   }
+  public Color(){
+    set(0,0,0);
+  }
 
   public void set(Color color) {
     set(color.R, color.G, color.B);
