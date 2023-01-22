@@ -18,10 +18,7 @@ public class LEDPattern {
 
   public LEDPattern() {
     pattern = new Color[101];
-  }
-
-  public void update() {
-    setRange(1, 100,LEDConstants.off);
+    for (int i=1;i<=100;i++) pattern[i] = new Color();
   }
 
   public void set(int percent, Color color){
@@ -36,5 +33,9 @@ public class LEDPattern {
 
   public Color get(int percent){
     return pattern[percent];
+  }
+
+  public Color[] getPattern(){
+    return pattern;
   }
 }
