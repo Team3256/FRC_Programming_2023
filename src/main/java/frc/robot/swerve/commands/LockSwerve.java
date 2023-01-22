@@ -27,7 +27,7 @@ public class LockSwerve extends CommandBase {
 
   @Override
   public void execute() {
-    double inwardAngle = Math.atan(trackWidth/wheelBase);
+    double inwardAngle = Math.atan(trackWidth / wheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
     double[] offset = {Math.PI, Math.PI / 2, 3 * Math.PI / 2, 0};
 
