@@ -11,10 +11,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-/**
- * LED class to help test the LED strip can play rainbow can set all to a certain color takes length
- * of all led and pwm port as parameters
- */
+/** Simple LED class to test LED is working */
 public class LEDTester extends SubsystemBase {
   private final AddressableLED LED;
   private final AddressableLEDBuffer LEDBuffer;
