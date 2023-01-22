@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.led.LEDController;
 import frc.robot.led.test.LEDTester;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -31,7 +32,6 @@ public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
 
   LEDTester ledTester = new LEDTester(200, 0);
-  // LEDController ledController = new LEDController();
 
   /**
    * This function is run when the robot is first started up and should be used for any
