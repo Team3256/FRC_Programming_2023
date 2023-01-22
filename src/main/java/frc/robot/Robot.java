@@ -30,7 +30,7 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer robotContainer;
 
-  LEDTester ledTester = new LEDTester(50, 0);
+  LEDTester ledTester = new LEDTester(200, 0);
   // LEDController ledController = new LEDController();
 
   /**
