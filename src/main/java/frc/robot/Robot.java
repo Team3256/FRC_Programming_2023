@@ -72,8 +72,8 @@ public class Robot extends LoggedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
-  //updated every 20 ms by default
-  //this can be changed by calling the superclass constructor with the new desired update rate
+  // updated every 20 ms by default
+  // this can be changed by calling the superclass constructor with the new desired update rate
   @Override
   public void robotPeriodic() {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled

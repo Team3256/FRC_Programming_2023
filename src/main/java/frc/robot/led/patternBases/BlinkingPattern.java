@@ -1,11 +1,25 @@
+// Copyright (c) 2023 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.led.patternBases;
 
-import static frc.robot.Constants.LEDConstants.offPattern;
+import frc.robot.led.patterns.OffPattern;
 
-public class BlinkingPattern extends AnimatedPattern{
-	public BlinkingPattern(int onTicks, int offTicks, LEDPattern pattern){
-		super(onTicks+offTicks);
-		setEvent(0,pattern);
-		setEvent(onTicks,offPattern);
-	}
+public class BlinkingPattern extends AnimatedPattern {
+  int onTicks;
+  int offTicks;
+  public BlinkingPattern(int onTicks, int offTicks) {
+    super(onTicks + offTicks);
+    this.onTicks=onTicks;
+    this.offTicks=offTicks;
+  }
+  public void setMainPattern(LEDPattern pattern){
+    setEvent(0, pattern);
+    setEvent(onTicks, new OffPattern());
+  }
 }
+

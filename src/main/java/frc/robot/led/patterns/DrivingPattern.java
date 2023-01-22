@@ -8,15 +8,18 @@
 package frc.robot.led.patterns;
 
 import frc.robot.Constants.LEDConstants;
+import frc.robot.led.patternBases.BlinkingPattern;
 import frc.robot.led.patternBases.LEDPattern;
 
-/**
- * Half red half empty
- */
-public class DrivingPattern extends LEDPattern{
+/** Blinking Half red half empty */
+public class DrivingPattern extends BlinkingPattern{
   public DrivingPattern() {
-    super();
-    setRange(1, 50,LEDConstants.red);
-    setRange(51,100,LEDConstants.off);
+    super(50,50);
+    LEDPattern main = new LEDPattern();
+    main.setRange(1, 25, LEDConstants.red);
+    main.setRange(26, 50, LEDConstants.off);
+    main.setRange(51,75, LEDConstants.red);
+    main.setRange(76,100, LEDConstants.off);
+    setMainPattern(main);
   }
 }

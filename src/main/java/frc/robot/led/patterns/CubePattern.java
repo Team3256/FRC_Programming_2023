@@ -10,11 +10,9 @@ package frc.robot.led.patterns;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.led.patternBases.LEDPattern;
 
-/**
- * Full Purple
- */
-public class CubePattern extends LEDPattern{
-  public CubePattern(){
+/** Full Purple */
+public class CubePattern extends LEDPattern {
+  public CubePattern() {
     super();
     setRange(1, 100, LEDConstants.purple);
   }

@@ -9,24 +9,29 @@ package frc.robot.led;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.drivers.Color;
-
 import frc.robot.led.patternBases.LEDPattern;
+import frc.robot.led.patterns.OffPattern;
 
-/**
- * displays a pattern onto section of LED
- */
-public class LEDSection{
+/** displays a pattern onto section of LED */
+public class LEDSection {
   int start;
   int end;
   int length;
+  LEDPattern pattern;
 
-  public LEDSection(int start,int end) {
+  public LEDSection(int start, int end) {
     this.start = start;
     this.end = end;
     length = end - start + 1;
+    pattern = new OffPattern();
   }
 
-  public void writeToBuffer(LEDPattern pattern,AddressableLEDBuffer buffer) {
+  public void setPattern(LEDPattern pattern) {
+    this.pattern = pattern;
+  }
+
+  public void writeToBuffer(AddressableLEDBuffer buffer) {
+    pattern.update();
     // loop through every percent
     for (int percent = 1; percent <= 100; percent++) {
       // convert percentage to pixel
@@ -34,7 +39,6 @@ public class LEDSection{
       // finesse out of bound errors
       if (pixel < 0 || pixel >= buffer.getLength()) continue;
       // set the buffer pixel to the color
-
       Color color = pattern.get(percent);
       buffer.setRGB(pixel, color.R, color.G, color.B);
     }

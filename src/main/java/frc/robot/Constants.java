@@ -16,10 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.drivers.Color;
-import frc.robot.led.patterns.ConePattern;
-import frc.robot.led.patterns.CubePattern;
-import frc.robot.led.patterns.DrivingPattern;
-import frc.robot.led.patterns.OffPattern;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 import java.util.Map;
 
@@ -444,15 +440,11 @@ public final class Constants {
                 Units.inchesToMeters(18.22),
                 new Rotation3d()));
   }
-  public static final class LEDConstants {
-    public static final Color purple = new Color(255,0,255);
-    public static final Color yellow = new Color(255,255,0);
-    public static final Color red = new Color(255,0,0);
-    public static final Color off = new Color(0,0,0);
 
-    public static final CubePattern cubePattern = new CubePattern();
-    public static final ConePattern conePattern = new ConePattern();
-    public static final DrivingPattern drivingPattern = new DrivingPattern();
-    public static final OffPattern offPattern = new OffPattern();
+  public static final class LEDConstants {
+    public static final Color purple = new Color(255, 0, 255);
+    public static final Color yellow = new Color(255, 255, 0);
+    public static final Color red = new Color(255, 0, 0);
+    public static final Color off = new Color(0, 0, 0);
   }
 }

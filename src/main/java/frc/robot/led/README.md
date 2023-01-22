@@ -10,7 +10,7 @@ patterns (custom patterns that extend a pattern base)
 * Cube Pattern
 * Driving Pattern
 
-LED Section: 
+LED Section:
 * Custom length
 * Renders a pattern in any length
 
@@ -26,5 +26,5 @@ Note:
 * follow convention when creating new Custom Patterns
 
 Electrical:
-* Addressable LED 
+* Addressable LED
 * PWM pin, power pin, ground pin

@@ -11,30 +11,22 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.led.patternBases.LEDPattern;
-import frc.robot.led.patterns.ConePattern;
-import frc.robot.led.patterns.CubePattern;
-import frc.robot.led.patterns.DrivingPattern;
-
 import java.util.ArrayList;
 
-import static frc.robot.Constants.LEDConstants.cubePattern;
-
 /**
- * allocates sections of a full LED strip to multiple strips that display the same image
- * information is stored in percentage instead of pixel
- * ledContainers stores the different sections of the full LED strip
- * ledPatterns stores the different patterns that are displayed
- * totalPattern is the information from ledPatterns concatenated
- * led and buffer are standard for controlling the led
- * periodic will be called in Robot periodic
- * it updates totalPattern, updates ledContainers, and then sets the led
+ * allocates sections of a full LED strip to multiple strips that display the same image information
+ * is stored in percentage instead of pixel ledContainers stores the different sections of the full
+ * LED strip ledPatterns stores the different patterns that are displayed totalPattern is the
+ * information from ledPatterns concatenated led and buffer are standard for controlling the led
+ * periodic will be called in Robot periodic it updates totalPattern, updates ledContainers, and
+ * then sets the led
  */
-public class LED extends SubsystemBase{
+public class LED extends SubsystemBase {
   private final ArrayList<LEDSection> ledContainers = new ArrayList<>();
   private final AddressableLED led;
   private final AddressableLEDBuffer buffer;
 
-  public LED(int port,int length) {
+  public LED(int port, int length) {
     // initialize led and buffer
     led = new AddressableLED(port);
     buffer = new AddressableLEDBuffer(length);
@@ -51,20 +43,20 @@ public class LED extends SubsystemBase{
     led.setData(buffer);
   }
 
-  public void set(int sectionId, LEDPattern pattern){
-    ledContainers.get(sectionId).writeToBuffer(pattern,buffer);
+  public void set(int sectionId, LEDPattern pattern) {
+    ledContainers.get(sectionId).setPattern(pattern);
   }
 
-  public void bulkSet(LEDPattern pattern){
-    for (int i=0;i<ledContainers.size();i++){
-      set(i,pattern);
+  public void bulkSet(LEDPattern pattern) {
+    for (int i = 0; i < ledContainers.size(); i++) {
+      set(i, pattern);
     }
   }
 
   public void periodic() {
-    //display pattern in each container
+    // display pattern in each container
     for (LEDSection container : ledContainers) {
-      container.writeToBuffer(cubePattern, buffer);
+      container.writeToBuffer(buffer);
     }
     led.setData(buffer);
   }

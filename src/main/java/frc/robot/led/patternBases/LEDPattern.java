@@ -7,35 +7,34 @@
 
 package frc.robot.led.patternBases;
 
-import frc.robot.Constants.LEDConstants;
 import frc.robot.drivers.Color;
 
-/**
- * Base class of LEDPattern
- */
+/** Base class of LEDPattern */
 public class LEDPattern {
   public Color[] pattern;
 
   public LEDPattern() {
     pattern = new Color[101];
-    for (int i=1;i<=100;i++) pattern[i] = new Color();
+    for (int i = 1; i <= 100; i++) pattern[i] = new Color();
   }
 
-  public void set(int percent, Color color){
+  public void update() {}
+
+  public void set(int percent, Color color) {
     pattern[percent].set(color);
   }
 
   public void setRange(int start, int end, Color color) {
     for (int percent = start; percent <= end; percent++) {
-      set(percent,color);
+      set(percent, color);
     }
   }
 
-  public Color get(int percent){
+  public Color get(int percent) {
     return pattern[percent];
   }
 
-  public Color[] getPattern(){
+  public Color[] getPattern() {
     return pattern;
   }
 }

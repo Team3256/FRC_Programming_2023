@@ -10,12 +10,10 @@ package frc.robot.led.patterns;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.led.patternBases.LEDPattern;
 
-/**
- * Full Yellow
- */
-public class ConePattern extends LEDPattern{
-  public ConePattern(){
+/** Full Yellow */
+public class ConePattern extends LEDPattern {
+  public ConePattern() {
     super();
-    setRange(1, 100,LEDConstants.yellow);
+    setRange(1, 100, LEDConstants.yellow);
   }
 }
