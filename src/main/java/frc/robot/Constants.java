@@ -15,6 +15,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 import java.util.Map;
 
@@ -34,6 +37,34 @@ public final class Constants {
 
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
+
+  public static final class LimeLightConstants {
+
+    //TODO:Set value for later
+    public static final double DIST_FROM_BOTTOM_OF_ROBOT_TO_CAMERA = 0.0;
+
+    public static final int APRIL_TAG_ID_1 = 0;
+    public static final int APRIL_TAG_ID_2 = 1;
+    // TODO: set the values for all of limelght contstants and remove the unchanged comment of that and change the april tag above if needed(This can be deleted if no changes or necessary)
+    // same line when changed value
+
+    static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    static NetworkTableEntry ty = table.getEntry("ty");
+    public static double targetOffsetAngle_Vertical = ty.getDouble(0.0);
+
+    // how many degrees back is your limelight rotated from perfectly vertical?
+    public static double limelightMountAngleDegrees = 25.0; // unchanged
+    // unchanged
+    // distance from the center of the Limelight lens to the floor
+    public static double limelightLensHeightInches = 20.0; // unchanged
+
+    // distance from the target to the floor
+    public static double goalHeightInches = 60.0; // unchanged
+
+    public static double angleToGoalDegrees =
+        limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    public static double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+  }
 
   public static final class SwerveConstants {
     public static final int pigeonID = 1;
