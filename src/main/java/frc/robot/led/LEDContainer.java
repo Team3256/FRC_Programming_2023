@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.drivers.Color;
 
 /**
- * class that properly displays a pattern percentage array onto the specified section of the whole
- * LED strip
+ * displays a pattern onto section of LED
  */
 public class LEDContainer {
   int start;

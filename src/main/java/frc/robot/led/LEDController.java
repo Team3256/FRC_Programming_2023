@@ -15,12 +15,14 @@ import frc.robot.led.patterns.LEDPattern;
 import java.util.ArrayList;
 
 /**
- * class that allocates sections of a full LED strip to multiple strips that display the same
- * information information is stored in percentage instead of pixel ledContainers stores the
- * different sections of the full LED strip ledPatterns stores the different patterns that are
- * displayed totalPattern is the information from ledPatterns concatenated led and buffer are
- * standard for controlling the led periodic will be called in Robot periodic it updates
- * totalPattern, updates ledContainers, and then sets the led
+ * allocates sections of a full LED strip to multiple strips that display the same image
+ * information is stored in percentage instead of pixel
+ * ledContainers stores the different sections of the full LED strip
+ * ledPatterns stores the different patterns that are displayed
+ * totalPattern is the information from ledPatterns concatenated
+ * led and buffer are standard for controlling the led
+ * periodic will be called in Robot periodic
+ * it updates totalPattern, updates ledContainers, and then sets the led
  */
 public class LEDController {
   ArrayList<LEDContainer> ledContainers = new ArrayList<>();
@@ -29,10 +31,10 @@ public class LEDController {
   AddressableLED led;
   AddressableLEDBuffer buffer;
 
-  public LEDController() {
+  public LEDController(int port, int length) {
     // initialize led and buffer
-    led = new AddressableLED(0);
-    buffer = new AddressableLEDBuffer(75);
+    led = new AddressableLED(port);
+    buffer = new AddressableLEDBuffer(length);
     led.setLength(buffer.getLength());
 
     // initialize led containers sequentially
@@ -55,15 +57,15 @@ public class LEDController {
   }
 
   public void periodic() {
-    // concatenate ledPatterns into totalPattern
+    //concatenate ledPatterns into totalPattern
     for (LEDPattern pattern : ledPatterns) {
       pattern.update();
     }
-    // set the buffer to display totalPattern in each container
+
+    //display totalPattern in each container
     for (LEDContainer container : ledContainers) {
       container.display(totalPattern, buffer);
     }
-    // set the led
     led.setData(buffer);
   }
 }

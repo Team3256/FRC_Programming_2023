@@ -7,12 +7,11 @@
 
 package frc.robot.led.patterns;
 
+import frc.robot.Constants.LEDConstants;
 import frc.robot.drivers.Color;
 
 /**
- * Only extend this class
- * The foundation of a displayable and
- * periodically updating LEDPattern
+ * Base class of LEDPattern
  */
 public class LEDPattern {
   public int startPercentage;
@@ -27,9 +26,8 @@ public class LEDPattern {
     this.totalPattern = totalPattern;
   }
 
-  // "clear" update
   public void update() {
-    setRange(0, length - 1, new Color(0, 0, 0));
+    setRange(0, length - 1,LEDConstants.off);
   }
 
   public void set(int percentage, Color color) {
