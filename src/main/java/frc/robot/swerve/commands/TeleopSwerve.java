@@ -49,6 +49,13 @@ public class TeleopSwerve extends CommandBase {
     this.openLoop = openLoop;
   }
 
+  //set drivetrain to reg
+  @Override
+  public void initialize() {
+    drivetrain.configAngleMotor.setNeutralMode(angleNeutralMode);
+    drivetrain.configDriveMotor.setNeutralMode(driveNeutralMode);
+  }
+
   @Override
   public void execute() {
     double yAxis = -controller.getRawAxis(translationAxis);
