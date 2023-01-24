@@ -49,11 +49,10 @@ public class TeleopSwerve extends CommandBase {
     this.openLoop = openLoop;
   }
 
-  //set drivetrain to reg
   @Override
   public void initialize() {
-    drivetrain.configAngleMotor.setNeutralMode(angleNeutralMode);
-    drivetrain.configDriveMotor.setNeutralMode(driveNeutralMode);
+    swerveDrive.setAngleMotorsNeutralMode(angleNeutralMode);
+    swerveDrive.setDriveMotorsNeutralMode(driveNeutralMode);
   }
 
   @Override
