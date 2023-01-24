@@ -123,9 +123,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Rotation2d getYaw() {
-    double[] ypr = new double[3];
-    gyro.getYawPitchRoll(ypr);
-    return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+    return Rotation2d.fromDegrees(invertGyro ? -gyro.getYaw() : gyro.getYaw());
   }
 
   @Override

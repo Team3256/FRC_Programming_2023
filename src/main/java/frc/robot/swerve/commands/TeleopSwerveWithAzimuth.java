@@ -1,18 +1,25 @@
+// Copyright (c) 2023 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.PIDConstants.*;
+import static frc.robot.Constants.SwerveConstants.*;
 
-
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
 
-
-// TODO: Use our own teleop command
+// TODO: Add modifier button to swith to velocity control in robot container
+// TODO: use profile PID controller
 public class TeleopSwerveWithAzimuth extends CommandBase {
 
   private Translation2d translation;
@@ -23,7 +30,7 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
   private Joystick controller;
   private int translationAxis;
   private int strafeAxis;
-  private ProfiledPIDController azimuthController;
+  private PIDController azimuthController;
   private int rotationXAxis;
   private int rotationYAxis;
 
@@ -47,16 +54,9 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     this.rotationYAxis = rotationYAxis;
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
-    this.azimuthController =
-        new ProfiledPIDController(
-            kAutoThetaControllerP,
-            kAutoThetaControllerI,
-            kAutoThetaControllerD,
-            kAutoThetaControllerConstraints);
+    this.azimuthController = new PIDController(0.09, 0, 0.01);
 
-    
     azimuthController.enableContinuousInput(-180, 180);
-    
   }
 
   @Override
@@ -65,27 +65,42 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     double xAxis = -controller.getRawAxis(strafeAxis);
     // Obtains axis values for x and y for translation command
 
-    double rAxisX = -controller.getRawAxis(rotationXAxis);
+    double rAxisX = controller.getRawAxis(rotationXAxis);
     // Gets position of joystick input on the x axis of the total stick area
     double rAxisY = -controller.getRawAxis(rotationYAxis);
     // Gets position of joystick input on the y axis of the total stick area
-    
+
     /* Deadbands */
     yAxis = (Math.abs(yAxis) < Constants.stickDeadband) ? 0 : yAxis;
     xAxis = (Math.abs(xAxis) < Constants.stickDeadband) ? 0 : xAxis;
     rAxisX = (Math.abs(rAxisX) < Constants.azimuthStickDeadband) ? 0 : rAxisX;
     rAxisY = (Math.abs(rAxisY) < Constants.azimuthStickDeadband) ? 0 : rAxisY;
-    // Safety area, insures that joystick movement will not be tracled within a certain area, prevents unintentional drifting
-    
-    double azimuthAngle = (Math.atan2(rAxisY, rAxisX) - Math.PI/2) * 180/Math.PI;
-    // Converts from coordinates to angle, setsjoystick forward input as 0, converts angle to degrees
+    // Safety area, insures that joystick movement will not be tracked within a certain area,
+    // prevents unintentional drifting
 
-    double rotationPIDOutput = azimuthController.calculate(swerveDrive.getYaw().getDegrees(), azimuthAngle);
-    // PID controller takes current robot position (getYaw) and compares to the azimuth angle to calculate error
+    SmartDashboard.putNumber("Rotation Angle", swerveDrive.getYaw().getDegrees());
+
+    translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
+    if (rAxisX == 0 && rAxisY == 0) {
+      swerveDrive.drive(translation, 0, fieldRelative, openLoop);
+      return;
+    }
+
+    double azimuthAngle = (Math.atan2(rAxisY, rAxisX) * 180 / Math.PI) - 90;
+    // Converts from coordinates to angle, sets joystick forward input as 0, converts angle to
+    // degrees
+
+    double rotationPIDOutput =
+        azimuthController.calculate(swerveDrive.getYaw().getDegrees(), azimuthAngle);
+    // PID controller takes current robot position (getYaw) and compares to the azimuth angle to
+    // calculate error
+
+    SmartDashboard.putNumber("Setpoint Angle", azimuthAngle);
+    SmartDashboard.putNumber("Rotation Velocity", rotationPIDOutput);
+    SmartDashboard.putData("Azimuth PID Controller", azimuthController);
 
     translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
     swerveDrive.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
     // Sets motors to the velocities defined here
   }
 }
-
