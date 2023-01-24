@@ -115,7 +115,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void zeroGyro() {
-    gyro.setYaw(-90);
+    gyro.setYaw(0);
   }
 
   public Rotation2d getYaw() {

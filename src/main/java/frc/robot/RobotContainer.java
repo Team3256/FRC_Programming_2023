@@ -78,7 +78,13 @@ public class RobotContainer {
     zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
     sensitivityToggle.toggleOnTrue(
         new TeleopSwerveLimited(
-            swerveDrive, driver, translationAxis, strafeAxis, rotationAxis, true, true));
+            swerveDrive,
+            driver,
+            translationAxis,
+            strafeAxis,
+            rotationAxis,
+            fieldRelative,
+            openLoop));
 
     // intake buttons for testing
     intake.whileTrue(new IntakeForward(intakeSubsystem));
