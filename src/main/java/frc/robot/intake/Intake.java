@@ -18,6 +18,10 @@ public class Intake extends SubsystemBase {
 
   private final TalonFX intakeMotor;
 
+  public double getIntakeSpeed() {
+    return intakeMotor.getMotorOutputPercent();
+  }
+
   public Intake() {
     intakeMotor = new TalonFX(intakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
