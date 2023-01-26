@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.CANDeviceTester;
 
 public class Intake extends SubsystemBase {
 
@@ -38,5 +39,12 @@ public class Intake extends SubsystemBase {
   public void off() {
     System.out.println("Intake off");
     intakeMotor.neutralOutput();
+  }
+
+  public boolean test() {
+    System.out.println("Testing intake:");
+    boolean result = CANDeviceTester.testTalonFX(intakeMotor);
+    System.out.println("Intake connected: " + result);
+    return result;
   }
 }
