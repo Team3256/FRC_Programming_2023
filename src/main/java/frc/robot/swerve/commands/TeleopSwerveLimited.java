@@ -12,11 +12,10 @@ import static frc.robot.Constants.SwerveConstants.*;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
 
 // TODO: Use our own teleop command
-public class TeleopSwerve extends CommandBase {
+public class TeleopSwerveLimited extends CommandBase {
 
   private double rotation;
   private Translation2d translation;
@@ -30,7 +29,7 @@ public class TeleopSwerve extends CommandBase {
   private int rotationAxis;
 
   /** Driver control */
-  public TeleopSwerve(
+  public TeleopSwerveLimited(
       SwerveDrive swerveDrive,
       Joystick controller,
       int translationAxis,
@@ -51,14 +50,11 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void execute() {
-    double yAxis = -controller.getRawAxis(translationAxis);
-    double xAxis = -controller.getRawAxis(strafeAxis);
-    double rAxis = -controller.getRawAxis(rotationAxis);
+    double yAxis = -controller.getRawAxis(translationAxis) * kSensitivityScale;
+    double xAxis = -controller.getRawAxis(strafeAxis) * kSensitivityScale;
+    double rAxis = -controller.getRawAxis(rotationAxis) * kSensitivityScale;
 
-    /* Deadbands */
-    yAxis = (Math.abs(yAxis) < Constants.stickDeadband) ? 0 : yAxis;
-    xAxis = (Math.abs(xAxis) < Constants.stickDeadband) ? 0 : xAxis;
-    rAxis = (Math.abs(rAxis) < Constants.stickDeadband) ? 0 : rAxis;
+    /* No deadbands since sensitivity is so low */
 
     translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
     rotation = rAxis * maxAngularVelocity;

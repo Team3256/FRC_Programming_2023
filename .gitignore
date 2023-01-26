@@ -216,6 +216,16 @@ build/
 local.properties
 
 *.wpilog
+
 src/main/java/frc/robot/BuildConstants.java
 src/main/java/frc/robot/BuildConstants.java
 /src/main/java/frc/robot/BuildConstants.java
+
+
+# AdvantageKit
+/src/main/java/frc/robot/BuildConstants.java
+**/*/BuildConstants.java
+
+**/*/.DS_Store
+.datalogtool/*
+
