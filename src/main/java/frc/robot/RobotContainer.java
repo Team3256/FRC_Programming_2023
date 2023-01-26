@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.drivers.Testable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
@@ -50,7 +51,7 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
-  private final ArrayList<Subsystem> subsystems = new ArrayList<Subsystem>();
+  private final ArrayList<Testable> subsystems = new ArrayList<Testable>();
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
 
@@ -109,7 +110,8 @@ public class RobotContainer {
 
   public boolean test() {
     System.out.println("Testing robot:");
-    boolean result = swerveDrive.test() && intakeSubsystem.test();
+    boolean result = true;
+    for (Testable subsystem : subsystems) result&=subsystem.test();
     System.out.println("Robot connected: " + result);
     return result;
   }
