@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.CANDeviceTester;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
@@ -145,8 +146,9 @@ public class SwerveDrive extends SubsystemBase {
     System.out.println("Testing swerve:");
     boolean result = true;
     for (SwerveModule device : swerveModules) {
-      result = result && device.test();
+      result &= device.test();
     }
+    result &= CANDeviceTester.testPigeon(gyro);
     System.out.println("Swerve connected: " + result);
     return result;
   }
