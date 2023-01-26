@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.drivers.Testable;
 import frc.robot.intake.Intake;
@@ -111,7 +110,7 @@ public class RobotContainer {
   public boolean test() {
     System.out.println("Testing robot:");
     boolean result = true;
-    for (Testable subsystem : subsystems) result&=subsystem.test();
+    for (Testable subsystem : subsystems) result &= subsystem.test();
     System.out.println("Robot connected: " + result);
     return result;
   }

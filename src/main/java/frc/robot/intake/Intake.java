@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.Testable;
 
-public class Intake extends SubsystemBase implements Testable{
+public class Intake extends SubsystemBase implements Testable {
 
   private final TalonFX intakeMotor;
 

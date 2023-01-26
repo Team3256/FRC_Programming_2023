@@ -23,7 +23,7 @@ import frc.robot.drivers.Testable;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveDrive extends SubsystemBase implements Testable{
+public class SwerveDrive extends SubsystemBase implements Testable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
   private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
