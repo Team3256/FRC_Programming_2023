@@ -7,6 +7,8 @@
 
 package frc.robot.arm;
 
+import static frc.robot.arm.ArmConstants.*;
+
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.MathUtil;
@@ -17,7 +19,6 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.arm.ArmConstants.*;
 import frc.robot.Robot;
 
 // TODO: Add
@@ -45,15 +46,16 @@ public class ArmSubsystem extends SubsystemBase {
       System.out.println("Arm initalized");
     } else {
       // Configure Sim HW
-      armSim = new SingleJointedArmSim(
-          DCMotor.getFalcon500(1),
-          kArmGearing,
-          kArmInertia,
-          kArmLengthMeters,
-          kMinAngleRads,
-          kMaxAngleRads,
-          kArmMassKg,
-          kArmSimGravity);
+      armSim =
+          new SingleJointedArmSim(
+              DCMotor.getFalcon500(1),
+              kArmGearing,
+              kArmInertia,
+              kArmLengthMeters,
+              kMinAngleRads,
+              kMaxAngleRads,
+              kArmMassKg,
+              kArmSimGravity);
     }
   }
 

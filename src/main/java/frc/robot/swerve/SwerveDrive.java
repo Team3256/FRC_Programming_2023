@@ -7,7 +7,7 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.swerve.SwerveDriveConstants.*;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;

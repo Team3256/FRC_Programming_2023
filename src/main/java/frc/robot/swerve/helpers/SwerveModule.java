@@ -8,7 +8,7 @@
 package frc.robot.swerve.helpers;
 
 import static frc.robot.Constants.PIDConstants.*;
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.swerve.SwerveDriveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;

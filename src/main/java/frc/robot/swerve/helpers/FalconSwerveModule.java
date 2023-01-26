@@ -7,6 +7,8 @@
 
 package frc.robot.swerve.helpers;
 
+import static frc.robot.swerve.SwerveDriveConstants.*;
+
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -25,8 +27,6 @@ import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.TalonFXFactory;
 import frc.robot.drivers.TalonUtil;
 
-import static frc.robot.swerve.SwerveDriveConstants.*;
-
 // SDS Mk4i L3 Internals
 // TODO(correctly use readperiodicinputs/writeperiodicoutputs)
 // TODO: FIX CONSTANTS
@@ -40,8 +40,8 @@ public class FalconSwerveModule extends SubsystemBase {
   private final Rotation2d mEncoderZero;
   private Rotation2d mTalonOffset;
 
-  private final double kDrivePositionCoefficient = Math.PI * wheelDiameter
-      * driveReduction / 2048.0;
+  private final double kDrivePositionCoefficient =
+      Math.PI * wheelDiameter * driveReduction / 2048.0;
   private final double kDriveVelocityCoefficient = kDrivePositionCoefficient * 10.0;
 
   private final double kSteerPositionCoefficient = 2.0 * Math.PI / 2048.0 * steerReduction;
@@ -74,19 +74,16 @@ public class FalconSwerveModule extends SubsystemBase {
 
   public void configureTalons() throws RuntimeException {
     TalonUtil.checkErrorWithThrow(
-        mDriveMotor.configVoltageCompSaturation(
-            kMaxDriveVoltage, kLongCANTimeoutMs),
+        mDriveMotor.configVoltageCompSaturation(kMaxDriveVoltage, kLongCANTimeoutMs),
         "Failed to set voltage compensation");
 
     TalonUtil.checkErrorWithThrow(
         mDriveMotor.configSupplyCurrentLimit(
-            new SupplyCurrentLimitConfiguration(false, 100.0, 120.0, 0.0),
-            kLongCANTimeoutMs),
+            new SupplyCurrentLimitConfiguration(false, 100.0, 120.0, 0.0), kLongCANTimeoutMs),
         "Failed to set supply current limit");
     TalonUtil.checkErrorWithThrow(
         mDriveMotor.configStatorCurrentLimit(
-            new StatorCurrentLimitConfiguration(true, 100.0, 120.0, 0.0),
-            kLongCANTimeoutMs),
+            new StatorCurrentLimitConfiguration(true, 100.0, 120.0, 0.0), kLongCANTimeoutMs),
         "Failed to set stator current limit");
 
     TalonUtil.checkErrorWithThrow(
@@ -121,17 +118,13 @@ public class FalconSwerveModule extends SubsystemBase {
     // PID
     // TODO(get rid of dependency on Constants)
     TalonUtil.checkErrorWithThrow(
-        mDriveMotor.config_kI(0, kMk4DriveVelocityKi, kLongCANTimeoutMs),
-        "Failed to set kI");
+        mDriveMotor.config_kI(0, kMk4DriveVelocityKi, kLongCANTimeoutMs), "Failed to set kI");
     TalonUtil.checkErrorWithThrow(
-        mDriveMotor.config_kP(0, kMk4DriveVelocityKp, kLongCANTimeoutMs),
-        "Failed to set kP");
+        mDriveMotor.config_kP(0, kMk4DriveVelocityKp, kLongCANTimeoutMs), "Failed to set kP");
     TalonUtil.checkErrorWithThrow(
-        mDriveMotor.config_kD(0, kMk4DriveVelocityKd, kLongCANTimeoutMs),
-        "Failed to set kD");
+        mDriveMotor.config_kD(0, kMk4DriveVelocityKd, kLongCANTimeoutMs), "Failed to set kD");
     TalonUtil.checkErrorWithThrow(
-        mDriveMotor.config_kF(0, kMk4DriveVelocityKf, kLongCANTimeoutMs),
-        "Failed to set kF");
+        mDriveMotor.config_kF(0, kMk4DriveVelocityKf, kLongCANTimeoutMs), "Failed to set kF");
 
     // Steering
     TalonUtil.checkErrorWithThrow(
@@ -139,18 +132,15 @@ public class FalconSwerveModule extends SubsystemBase {
             TalonFXFeedbackDevice.IntegratedSensor, 0, kLongCANTimeoutMs),
         "Failed to set encoder");
     TalonUtil.checkErrorWithThrow(
-        mSteeringMotor.configVoltageCompSaturation(
-            kMaxDriveVoltage, kLongCANTimeoutMs),
+        mSteeringMotor.configVoltageCompSaturation(kMaxDriveVoltage, kLongCANTimeoutMs),
         "Failed to set voltage compensation");
     TalonUtil.checkErrorWithThrow(
         mSteeringMotor.configSupplyCurrentLimit(
-            new SupplyCurrentLimitConfiguration(false, 100.0, 120.0, 0.0),
-            kLongCANTimeoutMs),
+            new SupplyCurrentLimitConfiguration(false, 100.0, 120.0, 0.0), kLongCANTimeoutMs),
         "Failed to set supply current limit");
     TalonUtil.checkErrorWithThrow(
         mSteeringMotor.configStatorCurrentLimit(
-            new StatorCurrentLimitConfiguration(true, 100.0, 120.0, 0.0),
-            kLongCANTimeoutMs),
+            new StatorCurrentLimitConfiguration(true, 100.0, 120.0, 0.0), kLongCANTimeoutMs),
         "Failed to set stator current limit");
 
     mSteeringMotor.enableVoltageCompensation(true);
@@ -173,14 +163,11 @@ public class FalconSwerveModule extends SubsystemBase {
     // PID
     // TODO(get rid of dependency on Constants)
     TalonUtil.checkErrorWithThrow(
-        mSteeringMotor.config_kP(0, kMk4AziKp, kLongCANTimeoutMs),
-        "Failed to set kP");
+        mSteeringMotor.config_kP(0, kMk4AziKp, kLongCANTimeoutMs), "Failed to set kP");
     TalonUtil.checkErrorWithThrow(
-        mSteeringMotor.config_kI(0, kMk4AziKi, kLongCANTimeoutMs),
-        "Failed to set kI");
+        mSteeringMotor.config_kI(0, kMk4AziKi, kLongCANTimeoutMs), "Failed to set kI");
     TalonUtil.checkErrorWithThrow(
-        mSteeringMotor.config_kD(0, kMk4AziKd, kLongCANTimeoutMs),
-        "Failed to set kD");
+        mSteeringMotor.config_kD(0, kMk4AziKd, kLongCANTimeoutMs), "Failed to set kD");
     TalonUtil.checkErrorWithThrow(
         mSteeringMotor.config_kF(0, 0.0, kLongCANTimeoutMs), "Failed to set kF");
   }
@@ -196,9 +183,10 @@ public class FalconSwerveModule extends SubsystemBase {
   // TODO should be getAdjustedCanCoderAngle().inverse() but inverse is
   // deprecated. Please fix.
   public void rezeroSteeringMotor() {
-    mTalonOffset = Rotation2d.fromRadians(
-        mSteeringMotor.getSelectedSensorPosition() * kSteerPositionCoefficient)
-        .rotateBy(getAdjustedCanCoderAngle());
+    mTalonOffset =
+        Rotation2d.fromRadians(
+                mSteeringMotor.getSelectedSensorPosition() * kSteerPositionCoefficient)
+            .rotateBy(getAdjustedCanCoderAngle());
   }
 
   public Rotation2d getCanCoderAngle() {

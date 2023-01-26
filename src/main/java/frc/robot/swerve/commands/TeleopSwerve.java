@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.swerve.SwerveDriveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;

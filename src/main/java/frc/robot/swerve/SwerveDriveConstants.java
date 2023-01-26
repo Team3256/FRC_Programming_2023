@@ -1,7 +1,13 @@
+// Copyright (c) 2023 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -38,11 +44,12 @@ public final class SwerveDriveConstants {
   public static final double driveGearRatio = (6.86 / 1.0); // 6.86:1
   public static final double angleGearRatio = (12.8 / 1.0); // 12.8:1
 
-  public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-      new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-      new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-      new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-      new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+  public static final SwerveDriveKinematics swerveKinematics =
+      new SwerveDriveKinematics(
+          new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+          new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+          new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+          new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
 
   /* Swerve Current Limiting */
   public static final int angleContinuousCurrentLimit = 25;
@@ -76,8 +83,8 @@ public final class SwerveDriveConstants {
     public static final int angleMotorID = 4;
     public static final int canCoderID = 2;
     public static final double angleOffset = 531.6064455; // 531 or 171 (ziptide constants)
-    public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
-        canCoderID, angleOffset);
+    public static final SwerveModuleConstants constants =
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
   }
 
   public static final class FrontRight {
@@ -85,8 +92,8 @@ public final class SwerveDriveConstants {
     public static final int angleMotorID = 7;
     public static final int canCoderID = 5;
     public static final double angleOffset = 48.691406; // (ziptide constants)
-    public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
-        canCoderID, angleOffset);
+    public static final SwerveModuleConstants constants =
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
   }
 
   public static final class BackLeft {
@@ -94,8 +101,8 @@ public final class SwerveDriveConstants {
     public static final int angleMotorID = 10;
     public static final int canCoderID = 8;
     public static final double angleOffset = 174.770508; // (ziptide constants)
-    public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
-        canCoderID, angleOffset);
+    public static final SwerveModuleConstants constants =
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
   }
 
   public static final class BackRight {
@@ -103,8 +110,8 @@ public final class SwerveDriveConstants {
     public static final int angleMotorID = 13;
     public static final int canCoderID = 11;
     public static final double angleOffset = 233.0419925; // (ziptide constants)
-    public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
-        canCoderID, angleOffset);
+    public static final SwerveModuleConstants constants =
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
   }
 
   public static final double kSensitivityScale = 0.20;
