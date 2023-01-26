@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
@@ -19,6 +20,7 @@ import frc.robot.intake.commands.Outtake;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
+import java.util.ArrayList;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -48,11 +50,16 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
+  private final ArrayList<Subsystem> subsystems = new ArrayList<Subsystem>();
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // add all subsystems to an iterable
+    subsystems.add(swerveDrive);
+    subsystems.add(intakeSubsystem);
+
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
@@ -98,5 +105,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new InstantCommand();
+  }
+
+  public boolean test() {
+    System.out.println("Testing robot:");
+    boolean result = swerveDrive.test() && intakeSubsystem.test();
+    System.out.println("Robot connected: " + result);
+    return result;
   }
 }
