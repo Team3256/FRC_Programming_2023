@@ -7,7 +7,7 @@
 
 package frc.robot.intake;
 
-import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
