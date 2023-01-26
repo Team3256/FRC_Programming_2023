@@ -9,6 +9,7 @@ package frc.robot.swerve.commands;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -27,6 +28,9 @@ public class LockSwerve extends CommandBase {
 
   @Override
   public void execute() {
+    swerveDrive.setDriveMotorsNeutralMode(NeutralMode.Brake);
+    swerveDrive.setAngleMotorsNeutralMode(NeutralMode.Brake);
+
     double inwardAngle = Math.atan(trackWidth / wheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
     double[] offset = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
@@ -34,6 +38,7 @@ public class LockSwerve extends CommandBase {
     for (int mod = 0; mod < 4; mod++) {
       states[mod] = new SwerveModuleState(0, new Rotation2d(inwardAngle + offset[mod]));
     }
+
     swerveDrive.setModuleStates(states);
   }
 
