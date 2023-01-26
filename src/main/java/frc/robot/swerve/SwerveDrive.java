@@ -140,4 +140,14 @@ public class SwerveDrive extends SubsystemBase {
   public void setTrajectory(Trajectory trajectory) {
     field.getObject("traj").setTrajectory(trajectory);
   }
+
+  public boolean test() {
+    System.out.println("Testing swerve:");
+    boolean result = true;
+    for (SwerveModule device : swerveModules) {
+      result = result && device.test();
+    }
+    System.out.println("Swerve connected: " + result);
+    return result;
+  }
 }
