@@ -20,6 +20,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.drivers.CANDeviceTester;
 
 public class SwerveModule {
@@ -125,12 +126,13 @@ public class SwerveModule {
   }
 
   public boolean test() {
-    System.out.println("Testing swerve module:");
+    System.out.println("Testing swerve module CAN:");
     boolean result =
         CANDeviceTester.testTalonFX(mDriveMotor)
             && CANDeviceTester.testTalonFX(mAngleMotor)
             && CANDeviceTester.testCANCoder(angleEncoder);
-    System.out.println("Swerve module connected: " + result);
+    System.out.println("Swerve module CAN connected: " + result);
+    SmartDashboard.putBoolean("Swerve module CAN connected", result);
     return result;
   }
 }
