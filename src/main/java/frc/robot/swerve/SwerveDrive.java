@@ -151,6 +151,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable{
     }
     result &= CANDeviceTester.testPigeon(gyro);
     System.out.println("Swerve connected: " + result);
+    SmartDashboard.putBoolean("Swerve connected",result);
     return result;
   }
 }

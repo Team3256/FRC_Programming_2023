@@ -12,6 +12,7 @@ import static frc.robot.Constants.IntakeConstants.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
@@ -46,6 +47,7 @@ public class Intake extends SubsystemBase implements CANTestable{
     System.out.println("Testing intake:");
     boolean result = CANDeviceTester.testTalonFX(intakeMotor);
     System.out.println("Intake connected: " + result);
+    SmartDashboard.putBoolean("Intake connected",result);
     return result;
   }
 }
