@@ -147,6 +147,8 @@ public final class Constants {
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
+
+    public static final double kSensitivityScale = 0.20;
   }
 
   public static final class AutoConstants {
