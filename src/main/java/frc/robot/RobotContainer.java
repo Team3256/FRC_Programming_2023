@@ -110,10 +110,10 @@ public class RobotContainer {
   }
 
   public boolean test() {
-    System.out.println("Testing robot:");
+    System.out.println("Testing CAN connections:");
     boolean result = true;
     for (Testable subsystem : testables) result &= subsystem.test();
-    System.out.println("Robot connected: " + result);
+    System.out.println("CAN fully connected: " + result);
     return result;
   }
 }
