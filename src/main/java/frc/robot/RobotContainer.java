@@ -50,15 +50,17 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
-  private final ArrayList<Testable> subsystems = new ArrayList<Testable>();
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
 
+  /* Lists */
+  private final ArrayList<Testable> testables = new ArrayList<Testable>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // add all subsystems to an iterable
-    subsystems.add(swerveDrive);
-    subsystems.add(intakeSubsystem);
+    // add all testables to an iterable
+    testables.add(swerveDrive);
+    testables.add(intakeSubsystem);
 
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
@@ -110,7 +112,7 @@ public class RobotContainer {
   public boolean test() {
     System.out.println("Testing robot:");
     boolean result = true;
-    for (Testable subsystem : subsystems) result &= subsystem.test();
+    for (Testable subsystem : testables) result &= subsystem.test();
     System.out.println("Robot connected: " + result);
     return result;
   }
