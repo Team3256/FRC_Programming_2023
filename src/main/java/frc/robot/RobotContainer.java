@@ -13,8 +13,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.intake.Intake;
+import frc.robot.intake.commands.IntakeForward;
+import frc.robot.intake.commands.Outtake;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
+import frc.robot.swerve.commands.TeleopSwerveLimited;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,18 +34,25 @@ public class RobotContainer {
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private final boolean fieldRelative = true;
+  private final boolean openLoop = true;
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro =
       new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton intake =
+      new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  private final JoystickButton outtake =
+      new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton sensitivityToggle =
+      new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
+  private final Intake intakeSubsystem = new Intake();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    boolean fieldRelative = true;
-    boolean openLoop = true;
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
@@ -64,7 +75,20 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    zeroGyro.onTrue(new InstantCommand(() -> swerveDrive.zeroGyro()));
+    zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
+    sensitivityToggle.toggleOnTrue(
+        new TeleopSwerveLimited(
+            swerveDrive,
+            driver,
+            translationAxis,
+            strafeAxis,
+            rotationAxis,
+            fieldRelative,
+            openLoop));
+
+    // intake buttons for testing
+    intake.whileTrue(new IntakeForward(intakeSubsystem));
+    outtake.whileTrue(new Outtake(intakeSubsystem));
   }
 
   /**

@@ -13,21 +13,28 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
-  private final SwerveModule frontLeftModule = new SwerveModule(0, Mod0.constants);
-  private final SwerveModule frontRightModule = new SwerveModule(1, Mod1.constants);
-  private final SwerveModule backLeftModule = new SwerveModule(2, Mod2.constants);
-  private final SwerveModule backRightModule = new SwerveModule(3, Mod3.constants);
+  private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
+  private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
+  private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
+  private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
+  private final Field2d field = new Field2d();
+
+  private static final SwerveDriveKinematics kinematics =
+      new SwerveDriveKinematics(
+          new Translation2d(trackWidth / 2.0, wheelBase / 2.0), // Front Right
+          new Translation2d(trackWidth / 2.0, -wheelBase / 2.0), // Back right
+          new Translation2d(-trackWidth / 2.0, wheelBase / 2.0), // Front left
+          new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // Back right
+          );
 
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
@@ -53,6 +60,13 @@ public class SwerveDrive extends SubsystemBase {
             });
   }
 
+  public void drive(ChassisSpeeds chassisSpeeds) {
+    SwerveModuleState[] swerveModuleStates =
+        swerveKinematics.toSwerveModuleStates(
+            chassisSpeeds); // same as the older version of drive but takes in the calculated
+    // chassisspeed
+  }
+
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates =
@@ -69,6 +83,10 @@ public class SwerveDrive extends SubsystemBase {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
     Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
+  }
+
+  public SwerveDriveKinematics getKinematics() {
+    return kinematics;
   }
 
   /* Used by SwerveControllerCommand in Auto */
@@ -117,5 +135,9 @@ public class SwerveDrive extends SubsystemBase {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
     }
+  }
+
+  public void setTrajectory(Trajectory trajectory) {
+    field.getObject("traj").setTrajectory(trajectory);
   }
 }

@@ -7,6 +7,7 @@
 
 package frc.robot.swerve.helpers;
 
+import static frc.robot.Constants.PIDConstants.*;
 import static frc.robot.Constants.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -36,7 +37,7 @@ public class SwerveModule {
     CTREConfigs configs = new CTREConfigs();
 
     /* Angle Encoder Config */
-    angleEncoder = new CANCoder(moduleConstants.cancoderID);
+    angleEncoder = new CANCoder(moduleConstants.canCoderID);
     configAngleEncoder(configs.swerveCanCoderConfig);
 
     /* Angle Motor Config */
