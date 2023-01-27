@@ -23,7 +23,7 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveDrive extends SubsystemBase implements CANTestable{
+public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
   private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
@@ -151,7 +151,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable{
     }
     result &= CANDeviceTester.testPigeon(gyro);
     System.out.println("Swerve connected: " + result);
-    SmartDashboard.putBoolean("Swerve connected",result);
+    SmartDashboard.putBoolean("Swerve connected", result);
     return result;
   }
 }

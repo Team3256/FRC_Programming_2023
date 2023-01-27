@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 
-public class Intake extends SubsystemBase implements CANTestable{
+public class Intake extends SubsystemBase implements CANTestable {
 
   private final TalonFX intakeMotor;
 
@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase implements CANTestable{
     System.out.println("Testing intake:");
     boolean result = CANDeviceTester.testTalonFX(intakeMotor);
     System.out.println("Intake connected: " + result);
-    SmartDashboard.putBoolean("Intake connected",result);
+    SmartDashboard.putBoolean("Intake connected", result);
     return result;
   }
 }
