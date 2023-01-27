@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.drivers.Testable;
+import frc.robot.drivers.CANTestable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
@@ -54,7 +54,7 @@ public class RobotContainer {
   private final Intake intakeSubsystem = new Intake();
 
   /* Lists */
-  private final ArrayList<Testable> testables = new ArrayList<Testable>();
+  private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -112,7 +112,7 @@ public class RobotContainer {
   public boolean test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (Testable subsystem : testables) result &= subsystem.test();
+    for (CANTestable subsystem : testables) result &= subsystem.test();
     System.out.println("CAN fully connected: " + result);
     return result;
   }

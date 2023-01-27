@@ -14,9 +14,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
-import frc.robot.drivers.Testable;
+import frc.robot.drivers.CANTestable;
 
-public class Intake extends SubsystemBase implements Testable {
+public class Intake extends SubsystemBase implements CANTestable{
 
   private final TalonFX intakeMotor;
 
