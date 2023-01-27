@@ -12,9 +12,13 @@ import static frc.robot.Constants.IntakeConstants.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.Loggable;
+import frc.robot.intake.commands.IntakeForward;
+import frc.robot.intake.commands.Outtake;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements Loggable {
 
   private final TalonFX intakeMotor;
 
@@ -38,5 +42,17 @@ public class Intake extends SubsystemBase {
   public void off() {
     System.out.println("Intake off");
     intakeMotor.neutralOutput();
+  }
+
+  @Override
+  public void startLog() {
+    SmartDashboard.putData(this);
+    SmartDashboard.putData("Intake Forward", new IntakeForward(this));
+    SmartDashboard.putData("Outtake", new Outtake(this));
+  }
+
+  @Override
+  public void periodicLog() {
+    SmartDashboard.putNumber("Intake Motor Voltage", intakeMotor.getBusVoltage());
   }
 }
