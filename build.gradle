@@ -99,11 +99,12 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+project.compileJava.dependsOn(spotlessApply)
 spotless {
     java {
         target fileTree('.') {
             include '**/*.java'
-            exclude '**/build/**', '**/build-*/**'
+            exclude '**/build/**', '**/build-*/**', '**/.idea/**'
         }
         toggleOffOn()
         googleJavaFormat()
@@ -124,7 +125,7 @@ spotless {
     format 'xml', {
         target fileTree('.') {
             include '**/*.xml'
-            exclude '**/build/**', '**/build-*/**', '**/.idea/workspace.xml'
+            exclude '**/build/**', '**/build-*/**', '**/.idea/**'
         }
         eclipseWtp('xml')
         trimTrailingWhitespace()
