@@ -19,8 +19,7 @@ public class LEDTester extends SubsystemBase {
   public LEDTester(int length, int port) {
     LED = new AddressableLED(port);
     LEDBuffer = new AddressableLEDBuffer(length);
-    LED.setLength(LEDBuffer.getLength());
-
+    LED.setLength(length);
     LED.setData(LEDBuffer);
     LED.start();
   }
