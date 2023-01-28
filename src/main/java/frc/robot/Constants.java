@@ -49,6 +49,7 @@ public final class Constants {
     public static final int kD = 1;
     public static final int kTolerancePosition = 1;
     public static final int kToleranceRate = 1;
+    public static final double rateLimitingElevatorConstant = 0.05;
   }
 
   public static final class ArmConstants {
@@ -69,7 +70,7 @@ public final class Constants {
     public static final double kFF = 1;
   }
 
-  public static final class SwerveConstants {
+  public static final class  SwerveConstants {
     public static int X_ACCEL_RATE_LIMIT = 15;
     public static int X_DECEL_RATE_LIMIT = 10;
 

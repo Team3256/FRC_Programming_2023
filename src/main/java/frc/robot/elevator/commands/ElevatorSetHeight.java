@@ -29,6 +29,7 @@ public class ElevatorSetHeight extends PIDCommand {
 
   @Override
   public boolean isFinished() {
+    Elevator.currentHeight = elevatorSubsystem.getPosition();
     return getController().atSetpoint();
   }
 
