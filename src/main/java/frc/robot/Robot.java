@@ -30,7 +30,7 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer robotContainer;
 
-  LEDTester ledTester = new LEDTester(50, 0);
+  LEDTester ledTester = new LEDTester(100, 0);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -133,6 +133,6 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    ledTester.rainbow();
+    ledTester.spirit();
   }
 }
