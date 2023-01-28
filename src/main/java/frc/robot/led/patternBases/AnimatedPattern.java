@@ -10,7 +10,7 @@ package frc.robot.led.patternBases;
 public class AnimatedPattern extends LEDPattern {
   private LEDPattern[] eventList;
   private final int ticks;
-  private int tick;
+  private int tick = 0;
 
   public AnimatedPattern() {
     super();
