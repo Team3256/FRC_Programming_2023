@@ -101,7 +101,7 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = Math.PI * 0.5;
+    public static final double maxAngularVelocity = Math.PI * 1.5;
     public static final double maxAngularAcceleration = Math.PI * 0.5;
 
     /* Neutral Modes */

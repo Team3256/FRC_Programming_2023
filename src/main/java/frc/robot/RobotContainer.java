@@ -42,10 +42,10 @@ public class RobotContainer {
   private final JoystickButton outtake =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-  private final JoystickButton velocityAngularControl =
+  private final JoystickButton azimuthControl =
       new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  JoystickAnalogButton intake =
-      new JoystickAnalogButton(driver, XboxController.Axis.kRightTrigger.value, 0.1);
+  private final JoystickAnalogButton intake =
+      new JoystickAnalogButton(driver, XboxController.Axis.kLeftTrigger.value, 0.1);
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
@@ -53,13 +53,12 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveDrive.setDefaultCommand(
-        new TeleopSwerveWithAzimuth(
+        new TeleopSwerve(
             swerveDrive,
             driver,
             translationAxis,
             strafeAxis,
             rotationXAxis,
-            rotationYAxis,
             Constants.fieldRelative,
             Constants.openLoop));
 
@@ -76,17 +75,19 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
+    intake.setThreshold(0.1);
 
     // intake buttons for testing
     intake.whileTrue(new IntakeForward(intakeSubsystem));
     outtake.whileTrue(new Outtake(intakeSubsystem));
-    velocityAngularControl.whileTrue(
-        new TeleopSwerve(
+    azimuthControl.whileTrue(
+        new TeleopSwerveWithAzimuth(
             swerveDrive,
             driver,
             translationAxis,
             strafeAxis,
             rotationXAxis,
+            rotationYAxis,
             Constants.fieldRelative,
             Constants.openLoop));
   }

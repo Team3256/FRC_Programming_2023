@@ -9,6 +9,7 @@ package frc.robot.swerve.commands;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
@@ -102,6 +103,7 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     SmartDashboard.putData("Azimuth PID Controller", azimuthController);
 
     translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
+    rotationPIDOutput = MathUtil.clamp(rotationPIDOutput, -maxAngularVelocity, maxAngularVelocity);
     swerveDrive.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
     // Sets motors to the velocities defined here
   }
