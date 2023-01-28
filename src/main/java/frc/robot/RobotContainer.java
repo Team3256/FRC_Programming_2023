@@ -36,7 +36,8 @@ public class RobotContainer {
 
   /* Driver Buttons */
   private final JoystickTrigger zeroGyro = (JoystickTrigger) operator.a();
-  private final JoystickButton button = new JoystickButton(operator2,XboxController.Button.kA.value);
+  private final JoystickButton button =
+      new JoystickButton(operator2, XboxController.Button.kA.value);
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
 
