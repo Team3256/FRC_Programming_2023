@@ -29,6 +29,8 @@ public class SetArmFromVoltage extends CommandBase {
     addRequirements(armSubsystem);
   }
 
+  public SetArmFromVoltage(ArmSubsystem armSubsystem2, double d) {}
+
   @Override
   public void initialize() {
     if (!usingDashboard) {
