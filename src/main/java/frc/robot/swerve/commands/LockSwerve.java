@@ -24,22 +24,22 @@ public class LockSwerve extends CommandBase {
   }
 
   @Override
-  public void initialize() {}
-
-  @Override
-  public void execute() {
-    swerveDrive.setDriveMotorsNeutralMode(NeutralMode.Brake);
-    swerveDrive.setAngleMotorsNeutralMode(NeutralMode.Brake);
-
+  public void initialize() {
     double inwardAngle = Math.atan(trackWidth / wheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
     double[] offset = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
 
     for (int mod = 0; mod < 4; mod++) {
-      states[mod] = new SwerveModuleState(0, new Rotation2d(inwardAngle + offset[mod]));
+      states[mod] = new SwerveModuleState(1, new Rotation2d(inwardAngle + offset[mod]));
     }
 
     swerveDrive.setModuleStates(states);
+  }
+
+  @Override
+  public void execute() {
+    swerveDrive.setDriveMotorsNeutralMode(NeutralMode.Brake);
+    swerveDrive.setAngleMotorsNeutralMode(NeutralMode.Brake);
   }
 
   @Override
