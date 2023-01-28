@@ -46,10 +46,7 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton sensitivityToggle =
       new JoystickButton(driver, XboxController.Button.kB.value);
-
-  private final JoystickButton toggleLock =
-      new JoystickButton(driver, XboxController.Button.kY.value);
-
+      
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
@@ -88,9 +85,6 @@ public class RobotContainer {
     //            rotationAxis,
     //            fieldRelative,
     //            openLoop));
-
-    // REMOVE AFTER TESTING. before merging
-    toggleLock.whileTrue(new LockSwerve(swerveDrive));
 
     // intake buttons for testing
     intakeCube.whileTrue(new IntakeCube(intakeSubsystem));
