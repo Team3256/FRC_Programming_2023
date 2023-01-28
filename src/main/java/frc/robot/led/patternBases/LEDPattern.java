@@ -7,6 +7,7 @@
 
 package frc.robot.led.patternBases;
 
+import frc.robot.Constants.LEDConstants;
 import frc.robot.drivers.Color;
 
 /** Base class of LEDPattern */
@@ -14,14 +15,15 @@ public class LEDPattern {
   private Color[] pattern;
 
   public LEDPattern() {
-    pattern = new Color[101];
-    for (int i = 1; i <= 100; i++) pattern[i] = new Color();
+    pattern = new Color[LEDConstants.kResolution];
+    for (int i = 1; i <= LEDConstants.kResolution; i++) pattern[i] = new Color();
   }
 
   public void update() {}
 
   // getters and setters
   public void set(int percent, Color color) {
+    if (percent < 1 || percent > LEDConstants.kResolution) return;
     pattern[percent].set(color);
   }
 

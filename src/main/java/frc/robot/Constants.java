@@ -450,5 +450,6 @@ public final class Constants {
     public static final Color kOff = new Color(0, 0, 0);
     public static final Color kBlue = new Color(0, 0, 255);
     public static final Color kWhite = new Color(255, 255, 255);
+    public static final int kResolution = 100;
   }
 }

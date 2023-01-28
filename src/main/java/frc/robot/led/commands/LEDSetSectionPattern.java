@@ -14,7 +14,7 @@ import frc.robot.led.patternBases.LEDPattern;
 public class LEDSetSectionPattern extends CommandBase {
   private final LED LEDSubsystem;
   private final LEDPattern pattern;
-  int sectionID;
+  private int sectionID;
 
   public LEDSetSectionPattern(LED LEDSubsystem, int sectionID, LEDPattern pattern) {
     addRequirements(LEDSubsystem);

@@ -14,14 +14,12 @@ import frc.robot.led.patterns.OffPattern;
 
 /** displays a pattern onto section of LED */
 public class LEDSection {
-  int start;
-  int end;
-  int length;
-  LEDPattern pattern;
+  private final int start;
+  private final int length;
+  private LEDPattern pattern;
 
   public LEDSection(int start, int end) {
     this.start = start;
-    this.end = end;
     length = end - start + 1;
     pattern = new OffPattern();
   }
