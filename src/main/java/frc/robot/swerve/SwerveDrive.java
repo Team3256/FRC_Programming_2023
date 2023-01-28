@@ -9,7 +9,7 @@ package frc.robot.swerve;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -42,10 +42,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
   };
 
   public SwerveDriveOdometry odometry;
-  public PigeonIMU gyro;
+  public WPI_PigeonIMU gyro;
 
   public SwerveDrive() {
-    gyro = new PigeonIMU(pigeonID);
+    gyro = new WPI_PigeonIMU(pigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
 
@@ -145,6 +145,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
   @Override
   public void startLog() {
     SmartDashboard.putData(this);
+    SmartDashboard.putData("Gyro Angle", gyro);
   }
 
   @Override
