@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,6 +55,14 @@ public class RobotContainer {
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
+  private final PowerDistribution pdh =
+      new PowerDistribution(
+          1, PowerDistribution.ModuleType.kRev); // Enables power distribution logging
+
+  @Override
+  public boolean equals(Object obj) {
+    return super.equals(obj);
+  }
 
   ArrayList<Loggable> loggables = new ArrayList<Loggable>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -110,6 +119,7 @@ public class RobotContainer {
   public void startLog() {
     for (Loggable device : loggables) device.startLog();
     SmartDashboard.putData("Joystick Angle", new GyroSendable(driver::getDirectionDegrees));
+    SmartDashboard.putData("Power Distribution", pdh);
   }
 
   public void periodicLog() {
