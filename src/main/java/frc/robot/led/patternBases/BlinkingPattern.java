@@ -17,7 +17,7 @@ public class BlinkingPattern extends AnimatedPattern {
     this.onTicks = onTicks;
   }
 
-  public void setMainPattern(LEDPattern pattern) {
+  protected void setMainPattern(LEDPattern pattern) {
     setEvent(0, pattern);
     setEvent(onTicks, new OffPattern());
   }

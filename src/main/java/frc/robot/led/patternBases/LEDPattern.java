@@ -20,21 +20,26 @@ public class LEDPattern {
 
   public void update() {}
 
-  protected void set(int percent, Color color) {
+  // getters and setters
+  public void set(int percent, Color color) {
     pattern[percent].set(color);
   }
 
-  protected void setRange(int start, int end, Color color) {
+  public void setRange(int start, int end, Color color) {
     for (int percent = start; percent <= end; percent++) {
       set(percent, color);
     }
   }
 
-  protected void setPattern(Color[] pattern) {
+  public void setPattern(Color[] pattern) {
     this.pattern = pattern;
   }
 
-  protected Color get(int percent) {
+  public void setPattern(LEDPattern ledPattern) {
+    this.pattern = ledPattern.getPattern();
+  }
+
+  public Color get(int percent) {
     return pattern[percent];
   }
 
