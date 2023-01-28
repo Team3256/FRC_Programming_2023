@@ -77,6 +77,9 @@ public final class Constants {
     public static final double driveGearRatio = (6.86 / 1.0); // 6.86:1
     public static final double angleGearRatio = (12.8 / 1.0); // 12.8:1
 
+    public static final double[] lockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
+
+
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0),

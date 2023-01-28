@@ -83,6 +83,18 @@ public class SwerveModule {
     lastAngle = angle;
   }
 
+  public void setDesiredAngleState(SwerveModuleState desiredState) {
+    desiredState = CTREModuleState.optimize(desiredState, getPosition().angle);
+
+    double angle =
+        (Math.abs(desiredState.speedMetersPerSecond) <= (maxSpeed * 0.01))
+            ? lastAngle
+            : desiredState.angle.getDegrees();
+
+    mAngleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(angle, angleGearRatio));
+    lastAngle = angle;
+  }
+
   private void resetToAbsolute() {
     double absolutePosition =
         Conversions.degreesToFalcon(getCanCoder().getDegrees() - angleOffset, angleGearRatio);
