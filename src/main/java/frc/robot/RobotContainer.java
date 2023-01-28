@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
@@ -28,7 +28,9 @@ import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
  */
 public class RobotContainer {
   /* Controllers */
-  private final Joystick driver = new Joystick(0);
+  Joystick driverJoystick = new Joystick(0);
+  CommandXboxController driver = new CommandXboxController(0);
+  CommandXboxController operator = new CommandXboxController(1);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -36,16 +38,6 @@ public class RobotContainer {
   private final int rotationXAxis = XboxController.Axis.kRightX.value;
   private final int rotationYAxis = XboxController.Axis.kRightY.value;
 
-  /* Driver Buttons */
-  private final JoystickButton zeroGyro =
-      new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton outtake =
-      new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
-  private final JoystickButton azimuthControl =
-      new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickAnalogButton intake =
-      new JoystickAnalogButton(driver, XboxController.Axis.kLeftTrigger.value, 0.1);
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
@@ -55,7 +47,7 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
-            driver,
+            driverJoystick,
             translationAxis,
             strafeAxis,
             rotationXAxis,
@@ -74,22 +66,23 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
-    intake.setThreshold(0.1);
+    driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
 
     // intake buttons for testing
-    intake.whileTrue(new IntakeForward(intakeSubsystem));
-    outtake.whileTrue(new Outtake(intakeSubsystem));
-    azimuthControl.whileTrue(
-        new TeleopSwerveWithAzimuth(
-            swerveDrive,
-            driver,
-            translationAxis,
-            strafeAxis,
-            rotationXAxis,
-            rotationYAxis,
-            Constants.fieldRelative,
-            Constants.openLoop));
+    driver.leftTrigger().whileTrue(new IntakeForward(intakeSubsystem));
+    driver.leftBumper().whileTrue(new Outtake(intakeSubsystem));
+    driver
+        .rightBumper()
+        .whileTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveDrive,
+                driverJoystick,
+                translationAxis,
+                strafeAxis,
+                rotationXAxis,
+                rotationYAxis,
+                Constants.fieldRelative,
+                Constants.openLoop));
   }
 
   /**
