@@ -14,11 +14,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeForward;
-import frc.robot.intake.commands.Outtake;
+import frc.robot.intake.commands.IntakeCone;
+import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
+import frc.robot.swerve.commands.TeleopSwerveLimited;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,12 +36,20 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationXAxis = XboxController.Axis.kRightX.value;
   private final int rotationYAxis = XboxController.Axis.kRightY.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private final boolean fieldRelative = true;
+  private final boolean openLoop = true;
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro =
       new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton outtake =
+  private final JoystickButton intakeCube =
+      new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  private final JoystickButton intakeCone =
+  
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton sensitivityToggle =
+      new JoystickButton(driver, XboxController.Button.kY.value);
 
   private final JoystickButton azimuthControl =
       new JoystickButton(driver, XboxController.Button.kRightBumper.value);
@@ -75,6 +84,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
+
     intake.setThreshold(0.1);
 
     // intake buttons for testing
@@ -90,6 +100,21 @@ public class RobotContainer {
             rotationYAxis,
             Constants.fieldRelative,
             Constants.openLoop));
+            
+    sensitivityToggle.toggleOnTrue(
+        new TeleopSwerveLimited(
+            swerveDrive,
+            driver,
+            translationAxis,
+            strafeAxis,
+            rotationAxis,
+            fieldRelative,
+            openLoop));
+
+    // intake buttons for testing
+    intakeCube.whileTrue(new IntakeCube(intakeSubsystem));
+    intakeCone.whileTrue(new IntakeCone(intakeSubsystem));
+
   }
 
   /**
@@ -99,5 +124,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new InstantCommand();
+  }
+
+  public void zeroGyro() {
+    swerveDrive.zeroGyro();
   }
 }
