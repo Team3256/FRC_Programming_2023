@@ -12,10 +12,10 @@ import static frc.robot.Constants.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -24,9 +24,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 public class SwerveModule {
   public int moduleNumber;
   private double angleOffset;
-  private TalonFX mAngleMotor;
-  private TalonFX mDriveMotor;
-  private CANCoder angleEncoder;
+  private WPI_TalonFX mAngleMotor;
+  private WPI_TalonFX mDriveMotor;
+  private WPI_CANCoder angleEncoder;
   private double lastAngle;
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(driveKS, driveKV, driveKA);
@@ -37,15 +37,15 @@ public class SwerveModule {
     CTREConfigs configs = new CTREConfigs();
 
     /* Angle Encoder Config */
-    angleEncoder = new CANCoder(moduleConstants.canCoderID);
+    angleEncoder = new WPI_CANCoder(moduleConstants.canCoderID);
     configAngleEncoder(configs.swerveCanCoderConfig);
 
     /* Angle Motor Config */
-    mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+    mAngleMotor = new WPI_TalonFX(moduleConstants.angleMotorID);
     configAngleMotor(configs.swerveAngleFXConfig);
 
     /* Drive Motor Config */
-    mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+    mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
     configDriveMotor(configs.swerveDriveFXConfig);
 
     lastAngle = getPosition().angle.getDegrees();
@@ -121,5 +121,17 @@ public class SwerveModule {
         Rotation2d.fromDegrees(
             Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), angleGearRatio));
     return new SwerveModulePosition(velocity, angle);
+  }
+
+  public WPI_TalonFX getAngleMotor() {
+    return mAngleMotor;
+  }
+
+  public WPI_TalonFX getDriveMotor() {
+    return mDriveMotor;
+  }
+
+  public WPI_CANCoder getAngleEncoder() {
+    return angleEncoder;
   }
 }
