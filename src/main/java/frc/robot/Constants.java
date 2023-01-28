@@ -53,6 +53,10 @@ public final class Constants {
     static NetworkTableEntry ty = table.getEntry("ty");
     public static double targetOffsetAngle_Vertical = ty.getDouble(0.0);
 
+    // Camtran constants
+
+    public static double mountingHeight = 0.0;
+
     // how many degrees back is your limelight rotated from perfectly vertical?
     public static double limelightMountAngleDegrees = 25.0; // unchanged
     // unchanged
