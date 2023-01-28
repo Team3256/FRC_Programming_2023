@@ -11,7 +11,7 @@ import frc.robot.drivers.Color;
 
 /** Base class of LEDPattern */
 public class LEDPattern {
-  public Color[] pattern;
+  private Color[] pattern;
 
   public LEDPattern() {
     pattern = new Color[101];
@@ -20,17 +20,21 @@ public class LEDPattern {
 
   public void update() {}
 
-  public void set(int percent, Color color) {
+  protected void set(int percent, Color color) {
     pattern[percent].set(color);
   }
 
-  public void setRange(int start, int end, Color color) {
+  protected void setRange(int start, int end, Color color) {
     for (int percent = start; percent <= end; percent++) {
       set(percent, color);
     }
   }
 
-  public Color get(int percent) {
+  protected void setPattern(Color[] pattern) {
+    this.pattern = pattern;
+  }
+
+  protected Color get(int percent) {
     return pattern[percent];
   }
 

@@ -8,9 +8,9 @@
 package frc.robot.led.patternBases;
 
 public class AnimatedPattern extends LEDPattern {
-  LEDPattern[] eventList;
-  int ticks;
-  int tick;
+  private LEDPattern[] eventList;
+  private final int ticks;
+  private int tick;
 
   public AnimatedPattern() {
     super();
@@ -26,11 +26,11 @@ public class AnimatedPattern extends LEDPattern {
 
   @Override
   public void update() {
-    pattern = eventList[tick].getPattern();
+    setPattern(eventList[tick].getPattern());
     tick = (tick + 1) % ticks;
   }
 
-  public void setEvent(int tick, LEDPattern event) {
+  protected void setEvent(int tick, LEDPattern event) {
     eventList[tick] = event;
   }
 }

@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.led.LED;
 import frc.robot.led.patternBases.LEDPattern;
 
-public class LEDSectionSetPattern extends CommandBase {
+public class LEDSetSectionPattern extends CommandBase {
   private final LED LEDSubsystem;
   private final LEDPattern pattern;
   int sectionID;
 
-  public LEDSectionSetPattern(LED LEDSubsystem, int sectionID, LEDPattern pattern) {
+  public LEDSetSectionPattern(LED LEDSubsystem, int sectionID, LEDPattern pattern) {
     addRequirements(LEDSubsystem);
     this.LEDSubsystem = LEDSubsystem;
     this.sectionID = sectionID;

@@ -10,13 +10,11 @@ package frc.robot.led.patternBases;
 import frc.robot.led.patterns.OffPattern;
 
 public class BlinkingPattern extends AnimatedPattern {
-  int onTicks;
-  int offTicks;
+  private int onTicks;
 
   public BlinkingPattern(int onTicks, int offTicks) {
     super(onTicks + offTicks);
     this.onTicks = onTicks;
-    this.offTicks = offTicks;
   }
 
   public void setMainPattern(LEDPattern pattern) {
