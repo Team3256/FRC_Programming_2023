@@ -101,8 +101,8 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = 11.5;
-    public static final double maxAngularAcceleration = 5.0;
+    public static final double maxAngularVelocity = Math.PI * 0.5;
+    public static final double maxAngularAcceleration = Math.PI * 0.5;
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -116,8 +116,6 @@ public final class Constants {
     public static final boolean canCoderInvert = false;
 
     /* PID Constants Trapezoid Profile for the Azimuth Control */
-    public static final TrapezoidProfile.Constraints kAzimuthProfile =
-        new TrapezoidProfile.Constraints(maxAngularAcceleration, maxAngularVelocity);
     public static final double kAzimuthP = 0.09;
     public static final double kAzimuthI = 0.00;
     public static final double kAzimuthD = 0.01;
@@ -320,9 +318,11 @@ public final class Constants {
         }
       }
 
-      // Complex low layout (shifted to account for cube vs cone rows and wide edge nodes)
+      // Complex low layout (shifted to account for cube vs cone rows and wide edge
+      // nodes)
       public static final double complexLowXCones =
-          outerX - Units.inchesToMeters(16.0) / 2.0; // Centered X under cone nodes
+          outerX - Units.inchesToMeters(16.0) / 2.0; // Centered X under cone
+      // nodes
       public static final double complexLowXCubes = lowX; // Centered X under cube nodes
       public static final double complexLowOuterYOffset =
           nodeFirstY - Units.inchesToMeters(3.0) - (Units.inchesToMeters(25.75) / 2.0);
