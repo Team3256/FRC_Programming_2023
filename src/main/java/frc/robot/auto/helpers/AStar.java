@@ -1,33 +1,51 @@
-/* CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/ */
+// Copyright (c) 2023 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.auto.helpers;
 
-import java.util.Arrays;
+import static frc.robot.Constants.DynamicPathGenerationConstants.*;
 
-// TODO: Look into optimizations
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import java.util.Arrays;
+import java.util.function.BiFunction;
+
+// TODO: Look into optimizations like Bi Directional A*
 /**
  * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/
- * Used to perform the A-Star (A*) Algorithm to find the shortest path from a
- * start to a target node.
+ * Adapted for Team 3256's
+ * needs Used to perform the A-Star (A*) Algorithm to find the shortest path
+ * from a start to a
+ * target node.
  */
 public class AStar {
   /**
    * Finds the shortest distance between two nodes using the A-star algorithm
-   * 
+   *
    * @param graph     an adjacency-matrix-representation of the graph where (x,y)
-   *                  is the weight of the edge or 0 if there is no edge.
+   *                  is the weight of the
+   *                  edge or 0 if there is no edge.
    * @param heuristic an estimation of distance from node x to y that is
-   *                  guaranteed to be lower than the actual distance. E.g.
-   *                  straight-line distance
+   *                  guaranteed to be lower than
+   *                  the actual distance. E.g. straight-line distance
    * @param start     the node to start from.
    * @param goal      the node we're searching for
    * @return The shortest distance to the goal node. Can be easily modified to
    *         return the path.
    */
-  public static double compute(double[][] graph, double[][] heuristic, int start, int goal) {
+  public static double findPath(
+      double[][] graph,
+      BiFunction<Pose2d, Pose2d, Double> heuristic,
+      int start,
+      int goal) {
     // This contains the distances from the start node to all other nodes
-    int[] distances = new int[graph.length];
+    double[] distances = new double[graph.length];
     // Initializing with a distance of "Infinity"
-    Arrays.fill(distances, Integer.MAX_VALUE);
+    Arrays.fill(distances, Double.MAX_VALUE);
     // The distance from the start node to itself is of course 0
     distances[start] = 0;
 
@@ -35,10 +53,10 @@ public class AStar {
     // the heuristic.
     double[] priorities = new double[graph.length];
     // Initializing with a priority of "Infinity"
-    Arrays.fill(priorities, Integer.MAX_VALUE);
+    Arrays.fill(priorities, Double.MAX_VALUE);
     // start node has a priority equal to straight line distance to goal. It will be
     // the first to be expanded.
-    priorities[start] = heuristic[start][goal];
+    priorities[start] = heuristic.apply(poseIndexes[start], poseIndexes[goal]);
 
     // This contains whether a node was already visited
     boolean[] visited = new boolean[graph.length];
@@ -78,9 +96,14 @@ public class AStar {
             // ...save this path as new shortest path
             distances[i] = distances[lowestPriorityIndex] + graph[lowestPriorityIndex][i];
             // ...and set the priority with which we should continue with this node
-            priorities[i] = distances[i] + heuristic[i][goal];
+            priorities[i] = distances[i] + heuristic.apply(poseIndexes[i], poseIndexes[goal]);
             System.out.println(
-                "Updating distance of node " + i + " to " + distances[i] + " and priority to " + priorities[i]);
+                "Updating distance of node "
+                    + i
+                    + " to "
+                    + distances[i]
+                    + " and priority to "
+                    + priorities[i]);
           }
         }
       }
