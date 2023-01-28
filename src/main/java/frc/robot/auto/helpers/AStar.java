@@ -11,6 +11,8 @@ import static frc.robot.Constants.DynamicPathGenerationConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 
@@ -37,7 +39,7 @@ public class AStar {
    * @return The shortest distance to the goal node. Can be easily modified to
    *         return the path.
    */
-  public static double findPath(
+  public static ArrayList<Integer> findPath(
       double[][] graph,
       BiFunction<Pose2d, Pose2d, Double> heuristic,
       int start,
@@ -81,6 +83,7 @@ public class AStar {
       } else if (lowestPriorityIndex == goal) {
         // Goal node found
         // System.out.println("Goal node found!");
+        // TODO Return ArrayList of shortest path
         return distances[lowestPriorityIndex];
       }
 
