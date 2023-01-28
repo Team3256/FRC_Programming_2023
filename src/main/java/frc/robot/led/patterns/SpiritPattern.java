@@ -7,12 +7,18 @@
 
 package frc.robot.led.patterns;
 
+import frc.robot.Constants.LEDConstants;
 import frc.robot.led.patternBases.AnimatedPattern;
+import frc.robot.led.patternBases.LEDPattern;
 
 public class SpiritPattern extends AnimatedPattern {
   public SpiritPattern() {
     super(100);
-    setEvent(0, new ConePattern());
-    setEvent(50, new CubePattern());
+    LEDPattern blue = new LEDPattern();
+    blue.setRange(1, 100, LEDConstants.kBlue);
+    LEDPattern white = new LEDPattern();
+    white.setRange(1, 100, LEDConstants.kWhite);
+    setEvent(0, blue);
+    setEvent(50, white);
   }
 }
