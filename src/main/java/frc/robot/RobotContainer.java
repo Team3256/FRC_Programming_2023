@@ -14,8 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeForward;
-import frc.robot.intake.commands.Outtake;
+import frc.robot.intake.commands.IntakeCone;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
@@ -37,6 +36,9 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationXAxis = XboxController.Axis.kRightX.value;
   private final int rotationYAxis = XboxController.Axis.kRightY.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private final boolean fieldRelative = true;
+  private final boolean openLoop = true;
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
@@ -69,8 +71,8 @@ public class RobotContainer {
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
 
     // intake buttons for testing
-    driver.leftTrigger().whileTrue(new IntakeForward(intakeSubsystem));
-    driver.leftBumper().whileTrue(new Outtake(intakeSubsystem));
+    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
+    driver.leftBumper().whileTrue(new IntakeCone(intakeSubsystem));
     driver
         .rightBumper()
         .whileTrue(
@@ -92,5 +94,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new InstantCommand();
+  }
+
+  public void zeroGyro() {
+    swerveDrive.zeroGyro();
   }
 }
