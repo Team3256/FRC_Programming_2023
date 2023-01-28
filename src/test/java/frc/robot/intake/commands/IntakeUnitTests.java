@@ -30,6 +30,7 @@ public class IntakeUnitTests {
 
   @Test
   public void intakeTestForward() {
+    Intake intake = new Intake();
     IntakeForward command = new IntakeForward(intake);
     CommandScheduler.getInstance().schedule(command);
     runScheduler(3, command);
