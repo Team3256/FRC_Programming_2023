@@ -16,10 +16,10 @@ public class DrivingPattern extends BlinkingPattern {
   public DrivingPattern() {
     super(50, 50);
     LEDPattern main = new LEDPattern();
-    main.setRange(1, 25, LEDConstants.red);
-    main.setRange(26, 50, LEDConstants.off);
-    main.setRange(51, 75, LEDConstants.red);
-    main.setRange(76, 100, LEDConstants.off);
+    main.setRange(1, 25, LEDConstants.kRed);
+    main.setRange(26, 50, LEDConstants.kOff);
+    main.setRange(51, 75, LEDConstants.kRed);
+    main.setRange(76, 100, LEDConstants.kOff);
     setMainPattern(main);
   }
 }

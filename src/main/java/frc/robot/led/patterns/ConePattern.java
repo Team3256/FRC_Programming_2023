@@ -14,6 +14,6 @@ import frc.robot.led.patternBases.LEDPattern;
 public class ConePattern extends LEDPattern {
   public ConePattern() {
     super();
-    setRange(1, 100, LEDConstants.yellow);
+    setRange(1, 100, LEDConstants.kYellow);
   }
 }

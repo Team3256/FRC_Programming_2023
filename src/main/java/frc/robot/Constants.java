@@ -444,9 +444,9 @@ public final class Constants {
   }
 
   public static final class LEDConstants {
-    public static final Color purple = new Color(255, 0, 255);
-    public static final Color yellow = new Color(255, 255, 0);
-    public static final Color red = new Color(255, 0, 0);
-    public static final Color off = new Color(0, 0, 0);
+    public static final Color kPurple = new Color(255, 0, 255);
+    public static final Color kYellow = new Color(255, 255, 0);
+    public static final Color kRed = new Color(255, 0, 0);
+    public static final Color kOff = new Color(0, 0, 0);
   }
 }
