@@ -30,9 +30,14 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
   private final Field2d field = new Field2d();
 
-  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter = new AdaptiveSlewRateLimiter(Constants.SwerveConstants.X_ACCEL_RATE_LIMIT, Constants.SwerveConstants.X_DECEL_RATE_LIMIT);
-  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter = new AdaptiveSlewRateLimiter(Constants.SwerveConstants.Y_ACCEL_RATE_LIMIT, Constants.SwerveConstants.Y_DECEL_RATE_LIMIT);
-
+  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
+      new AdaptiveSlewRateLimiter(
+          Constants.SwerveConstants.X_ACCEL_RATE_LIMIT,
+          Constants.SwerveConstants.X_DECEL_RATE_LIMIT);
+  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
+      new AdaptiveSlewRateLimiter(
+          Constants.SwerveConstants.Y_ACCEL_RATE_LIMIT,
+          Constants.SwerveConstants.Y_DECEL_RATE_LIMIT);
 
   private static final SwerveDriveKinematics kinematics =
       new SwerveDriveKinematics(
@@ -67,9 +72,10 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
-    chassisSpeeds.vxMetersPerSecond = adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
-    chassisSpeeds.vyMetersPerSecond = adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
-
+    chassisSpeeds.vxMetersPerSecond =
+        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+    chassisSpeeds.vyMetersPerSecond =
+        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
 
     SwerveModuleState[] swerveModuleStates =
         swerveKinematics.toSwerveModuleStates(
@@ -82,18 +88,20 @@ public class SwerveDrive extends SubsystemBase {
 
     ChassisSpeeds chassisSpeeds;
 
-    if (fieldRelative){
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+    if (fieldRelative) {
+      chassisSpeeds =
+          ChassisSpeeds.fromFieldRelativeSpeeds(
               translation.getX(), translation.getY(), rotation, getYaw());
     } else {
       chassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
     }
-    
-    chassisSpeeds.vxMetersPerSecond = adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
-    chassisSpeeds.vyMetersPerSecond = adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
 
-    SwerveModuleState[] swerveModuleStates =
-        swerveKinematics.toSwerveModuleStates(chassisSpeeds);
+    chassisSpeeds.vxMetersPerSecond =
+        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+    chassisSpeeds.vyMetersPerSecond =
+        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+
+    SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
 
     for (SwerveModule mod : swerveModules) {

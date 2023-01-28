@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
-
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -45,6 +44,11 @@ public final class Constants {
 
   public static final class ElevatorConstants {
     public static final int MASTER_ELEVATOR_MOTOR_ID = -1;
+    public static final int kP = 1;
+    public static final int kI = 1;
+    public static final int kD = 1;
+    public static final int kTolerancePosition = 1;
+    public static final int kToleranceRate = 1;
   }
 
   public static final class ArmConstants {
@@ -72,9 +76,10 @@ public final class Constants {
     public static int Y_ACCEL_RATE_LIMIT = 15;
     public static int Y_DECEL_RATE_LIMIT = 10;
 
-    public static Hashtable<Double, Integer[]> X_RATE_LIMIT_DICT = new Hashtable<Double, Integer[]>();
-    public static Hashtable<Double, Integer[]> Y_RATE_LIMIT_DICT = new Hashtable<Double, Integer[]>();
-
+    public static Hashtable<Double, Integer[]> X_RATE_LIMIT_DICT =
+        new Hashtable<Double, Integer[]>();
+    public static Hashtable<Double, Integer[]> Y_RATE_LIMIT_DICT =
+        new Hashtable<Double, Integer[]>();
 
     public static final int POSITION_DIST_DELTA = 0;
 
