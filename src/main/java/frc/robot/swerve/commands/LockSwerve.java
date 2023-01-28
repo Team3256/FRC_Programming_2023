@@ -34,19 +34,18 @@ public class LockSwerve extends CommandBase {
     }
 
     swerveDrive.setModuleStates(states);
-  }
-
-  @Override
-  public void execute() {
     swerveDrive.setDriveMotorsNeutralMode(NeutralMode.Brake);
     swerveDrive.setAngleMotorsNeutralMode(NeutralMode.Brake);
   }
+
+  @Override
+  public void execute() {}
 
   @Override
   public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
