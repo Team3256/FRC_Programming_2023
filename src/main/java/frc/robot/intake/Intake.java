@@ -11,7 +11,7 @@ import static frc.robot.Constants.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.Loggable;
@@ -20,10 +20,10 @@ import frc.robot.intake.commands.Outtake;
 
 public class Intake extends SubsystemBase implements Loggable {
 
-  private final TalonFX intakeMotor;
+  private final WPI_TalonFX intakeMotor;
 
   public Intake() {
-    intakeMotor = new TalonFX(intakeMotorID);
+    intakeMotor = new WPI_TalonFX(intakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     off();
     System.out.println("Intake initialized");
@@ -49,6 +49,10 @@ public class Intake extends SubsystemBase implements Loggable {
     SmartDashboard.putData(this);
     SmartDashboard.putData("Intake Forward", new IntakeForward(this));
     SmartDashboard.putData("Outtake", new Outtake(this));
+
+    addChild("Intake Motor", intakeMotor);
+    addChild("Intake Forward", new IntakeForward(this));
+    addChild("Outtake", new Outtake(this));
   }
 
   @Override
