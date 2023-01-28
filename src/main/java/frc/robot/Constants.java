@@ -36,6 +36,9 @@ public final class Constants {
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
 
+  public static final boolean fieldRelative = true;
+  public static final boolean openLoop = true;
+
   public static final class IntakeConstants {
     public static final int intakeMotorID = 14;
     public static final double kIntakeForwardSpeed = 0.5;
@@ -99,6 +102,7 @@ public final class Constants {
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
     public static final double maxAngularVelocity = 11.5;
+    public static final double maxAngularAcceleration = 5.0;
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -110,6 +114,12 @@ public final class Constants {
 
     /* Angle Encoder Invert */
     public static final boolean canCoderInvert = false;
+
+    /* PID Constants Trapezoid Profile for the Azimuth Control */
+    public static final TrapezoidProfile.Constraints kAzimuthProfile = new TrapezoidProfile.Constraints(maxAngularAcceleration,maxAngularVelocity);
+    public static final double kAzimuthP = 0.09;
+    public static final double kAzimuthI = 0.00;
+    public static final double kAzimuthD = 0.01;
 
     /* Module Specific Constants */
     public static final class FrontLeft {

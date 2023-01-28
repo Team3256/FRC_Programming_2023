@@ -17,6 +17,7 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
 import frc.robot.swerve.SwerveDrive;
+import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 
 /**
@@ -25,6 +26,7 @@ import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
   /* Controllers */
   private final Joystick driver = new Joystick(0);
@@ -42,15 +44,14 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton outtake =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
+  private final JoystickButton velocityAngularControl =
+          new JoystickButton(driver, XboxController.Button.kY.value);
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    boolean fieldRelative = true;
-    boolean openLoop = true;
     swerveDrive.setDefaultCommand(
         new TeleopSwerveWithAzimuth(
             swerveDrive,
@@ -59,8 +60,8 @@ public class RobotContainer {
             strafeAxis,
             rotationXAxis,
             rotationYAxis,
-            fieldRelative,
-            openLoop));
+            Constants.fieldRelative,
+            Constants.openLoop));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -79,6 +80,14 @@ public class RobotContainer {
     // intake buttons for testing
     intake.whileTrue(new IntakeForward(intakeSubsystem));
     outtake.whileTrue(new Outtake(intakeSubsystem));
+    velocityAngularControl.whileTrue(new TeleopSwerve(
+            swerveDrive,
+            driver,
+            translationAxis,
+            strafeAxis,
+            rotationXAxis,
+            Constants.fieldRelative,
+            Constants.openLoop));
   }
 
   /**

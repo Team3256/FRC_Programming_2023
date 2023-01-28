@@ -7,10 +7,7 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.PIDConstants.*;
-import static frc.robot.Constants.SwerveConstants.*;
-
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
 
-// TODO: Add modifier button to swith to velocity control in robot container
-// TODO: use profile PID controller
+import static frc.robot.Constants.SwerveConstants.*;
+
 public class TeleopSwerveWithAzimuth extends CommandBase {
 
   private Translation2d translation;
@@ -30,7 +27,7 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
   private Joystick controller;
   private int translationAxis;
   private int strafeAxis;
-  private PIDController azimuthController;
+  private ProfiledPIDController azimuthController;
   private int rotationXAxis;
   private int rotationYAxis;
 
@@ -54,7 +51,7 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     this.rotationYAxis = rotationYAxis;
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
-    this.azimuthController = new PIDController(0.09, 0, 0.01);
+    this.azimuthController = new ProfiledPIDController(kAzimuthP, kAzimuthI, kAzimuthD, kAzimuthProfile);
 
     azimuthController.enableContinuousInput(-180, 180);
   }
