@@ -146,6 +146,13 @@ public class SwerveDrive extends SubsystemBase implements Loggable {
   public void startLog() {
     SmartDashboard.putData(this);
     SmartDashboard.putData("Gyro Angle", gyro);
+
+    addChild("Gyro", gyro);
+    for (int i = 0; i < swerveModules.length; i++) {
+      addChild("Swerve Module " + i + " Encoder", swerveModules[i].getAngleEncoder());
+      // addChild("Swerve Module " + i + " Angle Motor", swerveModules[i].getAngleMotor());
+      // addChild("Swerve Module" + i + " Drive Motor", swerveModules[i].getDriveMotor());
+    }
   }
 
   @Override
