@@ -17,7 +17,6 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.swerve.commands.TeleopSwerve;
 
 /**
@@ -46,7 +45,7 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton sensitivityToggle =
       new JoystickButton(driver, XboxController.Button.kB.value);
-      
+
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
