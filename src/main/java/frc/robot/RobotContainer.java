@@ -55,7 +55,6 @@ public class RobotContainer {
   private final JoystickButton sensitivityToggle =
       new JoystickButton(driver, XboxController.Button.kY.value);
 
-
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();

@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.led.LED;
 import frc.robot.led.patternBases.LEDPattern;
 
-public class LEDAllSectionSetPattern extends CommandBase {
+public class LEDSetAllSectionsPattern extends CommandBase {
   private final LED LEDSubsystem;
   private final LEDPattern pattern;
 
-  public LEDAllSectionSetPattern(LED LEDSubsystem, LEDPattern pattern) {
+  public LEDSetAllSectionsPattern(LED LEDSubsystem, LEDPattern pattern) {
     addRequirements(LEDSubsystem);
     this.LEDSubsystem = LEDSubsystem;
     this.pattern = pattern;
@@ -23,7 +23,7 @@ public class LEDAllSectionSetPattern extends CommandBase {
 
   @Override
   public void initialize() {
-    LEDSubsystem.bulkSet(pattern);
+    LEDSubsystem.setAll(pattern);
   }
 
   @Override

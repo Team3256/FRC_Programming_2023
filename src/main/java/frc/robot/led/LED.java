@@ -47,7 +47,7 @@ public class LED extends SubsystemBase {
     ledContainers.get(sectionId).setPattern(pattern);
   }
 
-  public void bulkSet(LEDPattern pattern) {
+  public void setAll(LEDPattern pattern) {
     for (int i = 0; i < ledContainers.size(); i++) {
       set(i, pattern);
     }
