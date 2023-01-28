@@ -62,7 +62,7 @@
           "2,0": {
             "size": [
               2,
-              4
+              5
             ],
             "content": {
               "_type": "Subsystem Layout",
@@ -79,19 +79,79 @@
                   "_showGlyph": false
                 },
                 {
-                  "_type": "Text View",
+                  "_type": "Gyro",
                   "_source0": "network_table:///SmartDashboard/Gyro Angle",
                   "_title": "Gyro Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Visuals/Major tick spacing": 45.0,
+                  "Visuals/Starting angle": 180.0,
+                  "Visuals/Show tick mark ring": true,
+                  "Visuals/Counter clockwise": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Mod 0 Cancoder",
+                  "_title": "Mod 0 Cancoder",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Mod 0 Integrated",
+                  "_title": "Mod 0 Integrated",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Mod 1 Cancoder",
+                  "_title": "Mod 1 Cancoder",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Mod 1 Integrated",
+                  "_title": "Mod 1 Integrated",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Mod 2 Cancoder",
+                  "_title": "Mod 2 Cancoder",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Mod 2 Integrated",
+                  "_title": "Mod 2 Integrated",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Mod 3 Cancoder",
+                  "_title": "Mod 3 Cancoder",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Mod 3 Integrated",
+                  "_title": "Mod 3 Integrated",
                   "_glyph": 148,
                   "_showGlyph": false
                 }
               ]
             }
           },
-          "4,0": {
+          "8,0": {
             "size": [
               2,
-              4
+              2
             ],
             "content": {
               "_type": "Subsystem Layout",
@@ -101,117 +161,17 @@
               "Layout/Label position": "BOTTOM",
               "_children": [
                 {
-                  "_type": "Text View",
+                  "_type": "Gyro",
                   "_source0": "network_table:///SmartDashboard/Joystick Angle",
-                  "_title": "Joystick Angle",
+                  "_title": "SmartDashboard/Joystick Angle",
                   "_glyph": 148,
-                  "_showGlyph": false
+                  "_showGlyph": false,
+                  "Visuals/Major tick spacing": 45.0,
+                  "Visuals/Starting angle": 180.0,
+                  "Visuals/Show tick mark ring": true,
+                  "Visuals/Counter clockwise": false
                 }
               ]
-            }
-          },
-          "6,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mod 0 Cancoder",
-              "_title": "Mod 0 Cancoder",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "7,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mod 0 Integrated",
-              "_title": "Mod 0 Integrated",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "8,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mod 1 Cancoder",
-              "_title": "Mod 1 Cancoder",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mod 1 Integrated",
-              "_title": "Mod 1 Integrated",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mod 2 Cancoder",
-              "_title": "Mod 2 Cancoder",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "7,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mod 2 Integrated",
-              "_title": "Mod 2 Integrated",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "8,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mod 3 Cancoder",
-              "_title": "Mod 3 Cancoder",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mod 3 Integrated",
-              "_title": "Mod 3 Integrated",
-              "_glyph": 148,
-              "_showGlyph": false
             }
           }
         }
@@ -306,6 +266,6 @@
     "x": 0.0,
     "y": 38.0,
     "width": 1512.0,
-    "height": 873.0
+    "height": 872.0
   }
 }
