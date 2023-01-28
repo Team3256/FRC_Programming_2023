@@ -40,11 +40,12 @@ public class RobotContainer {
   private final JoystickButton zeroGyro =
       new JoystickButton(driver, XboxController.Button.kA.value);
   private final JoystickButton intake =
-      new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+      new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value);
   private final JoystickButton outtake =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton velocityAngularControl =
-      new JoystickButton(driver, XboxController.Button.kY.value);
+
+  JoystickAnalogButton velocityAngularControl =
+      new JoystickAnalogButton(driver, XboxController.Axis.kRightTrigger.value, 0.1);
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
