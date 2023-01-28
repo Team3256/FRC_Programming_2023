@@ -7,6 +7,9 @@
 
 package frc.robot.intake.commands;
 
+import static frc.robot.Constants.IntakeConstants.kIntakeForwardSpeed;
+import static frc.robot.Constants.IntakeConstants.kOuttakeSpeed;
+
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -18,58 +21,42 @@ import org.junit.jupiter.api.Test;
 public class IntakeUnitTests {
   public final double DELTA = 0.05;
 
-  Intake intake;
+  static Intake intakeSubsystem;
 
   @BeforeAll
   public static void setup() {
     assert HAL.initialize(500, 0); // initialize the HAL, crash if failed
     CommandScheduler.getInstance().enable();
     DriverStationSim.setEnabled(true);
-    new Intake();
+    intakeSubsystem = new Intake();
   }
 
   @Test
-  public void intakeTestForward() {
-    Intake intake = new Intake();
-    IntakeForward command = new IntakeForward(intake);
-    CommandScheduler.getInstance().schedule(command);
-    runScheduler(3, command);
+  public void testForward() {
+    IntakeForward command = new IntakeForward(intakeSubsystem);
+    command.initialize();
+    runScheduler(0.5);
 
-    double velocity = intake.getIntakeSpeed();
-    Assertions.assertEquals(0.50, velocity, DELTA);
+    double velocity = intakeSubsystem.getIntakeSpeed();
+    Assertions.assertEquals(kIntakeForwardSpeed, velocity, DELTA);
   }
 
   @Test
-  public void intakeTestBackward() {
-    Intake intake = new Intake();
-    Outtake command = new Outtake(intake);
-    CommandScheduler.getInstance().schedule(command);
-    runScheduler2(3, command);
+  public void testOuttake() {
+    Outtake command = new Outtake(intakeSubsystem);
+    command.initialize();
+    runScheduler(0.5);
 
-    double velocity = intake.getIntakeSpeed();
-    Assertions.assertEquals(-0.50, velocity, DELTA);
+    double velocity = intakeSubsystem.getIntakeSpeed();
+    Assertions.assertEquals(kOuttakeSpeed, velocity, DELTA);
   }
 
-  private static void runScheduler(double seconds, IntakeForward command) {
+  private static void runScheduler(double seconds) {
     try {
-      for (int i = 0; i < seconds * 1000 / 20; ++i) {
+      for (int i = 0; i < 10; ++i) {
         com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
         CommandScheduler.getInstance().run();
-        command.initialize();
-        Thread.sleep(20);
-      }
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private static void runScheduler2(double seconds, Outtake command) {
-    try {
-      for (int i = 0; i < seconds * 1000 / 20; ++i) {
-        com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
-        CommandScheduler.getInstance().run();
-        command.initialize();
-        Thread.sleep(20);
+        Thread.sleep((long) (seconds * 100));
       }
     } catch (InterruptedException e) {
       e.printStackTrace();
