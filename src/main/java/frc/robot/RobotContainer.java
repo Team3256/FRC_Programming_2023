@@ -26,7 +26,6 @@ import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-
 public class RobotContainer {
   /* Controllers */
   private final Joystick driver = new Joystick(0);
@@ -45,7 +44,7 @@ public class RobotContainer {
   private final JoystickButton outtake =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton velocityAngularControl =
-          new JoystickButton(driver, XboxController.Button.kY.value);
+      new JoystickButton(driver, XboxController.Button.kY.value);
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
@@ -80,7 +79,8 @@ public class RobotContainer {
     // intake buttons for testing
     intake.whileTrue(new IntakeForward(intakeSubsystem));
     outtake.whileTrue(new Outtake(intakeSubsystem));
-    velocityAngularControl.whileTrue(new TeleopSwerve(
+    velocityAngularControl.whileTrue(
+        new TeleopSwerve(
             swerveDrive,
             driver,
             translationAxis,

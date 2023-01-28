@@ -116,7 +116,8 @@ public final class Constants {
     public static final boolean canCoderInvert = false;
 
     /* PID Constants Trapezoid Profile for the Azimuth Control */
-    public static final TrapezoidProfile.Constraints kAzimuthProfile = new TrapezoidProfile.Constraints(maxAngularAcceleration,maxAngularVelocity);
+    public static final TrapezoidProfile.Constraints kAzimuthProfile =
+        new TrapezoidProfile.Constraints(maxAngularAcceleration, maxAngularVelocity);
     public static final double kAzimuthP = 0.09;
     public static final double kAzimuthI = 0.00;
     public static final double kAzimuthD = 0.01;

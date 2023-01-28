@@ -51,7 +51,8 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     this.rotationYAxis = rotationYAxis;
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
-    this.azimuthController = new ProfiledPIDController(kAzimuthP, kAzimuthI, kAzimuthD, kAzimuthProfile);
+    this.azimuthController =
+        new ProfiledPIDController(kAzimuthP, kAzimuthI, kAzimuthD, kAzimuthProfile);
 
     azimuthController.enableContinuousInput(-180, 180);
   }
