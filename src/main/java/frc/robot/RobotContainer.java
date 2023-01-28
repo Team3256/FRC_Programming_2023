@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.drivers.GyroSendable;
 import frc.robot.drivers.Loggable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
@@ -108,11 +109,10 @@ public class RobotContainer {
 
   public void startLog() {
     for (Loggable device : loggables) device.startLog();
+    SmartDashboard.putData("Joystick Angle", new GyroSendable(driver::getDirectionDegrees));
   }
 
   public void periodicLog() {
     for (Loggable device : loggables) device.periodicLog();
-    // log joystick
-    SmartDashboard.putNumber("Joystick Angle", driver.getDirectionDegrees());
   }
 }
