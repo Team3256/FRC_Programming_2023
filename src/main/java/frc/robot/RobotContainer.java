@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeForward;
-import frc.robot.intake.commands.Outtake;
+import frc.robot.intake.commands.IntakeCone;
+import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.swerve.commands.TeleopSwerve;
@@ -40,9 +40,9 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton zeroGyro =
       new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton intake =
+  private final JoystickButton intakeCube =
       new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton outtake =
+  private final JoystickButton intakeCone =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton sensitivityToggle =
       new JoystickButton(driver, XboxController.Button.kB.value);
@@ -92,8 +92,9 @@ public class RobotContainer {
     // REMOVE AFTER TESTING. before merging
     toggleLock.whileTrue(new LockSwerve(swerveDrive));
 
-    intake.whileTrue(new IntakeForward(intakeSubsystem));
-    outtake.whileTrue(new Outtake(intakeSubsystem));
+    // intake buttons for testing
+    intakeCube.whileTrue(new IntakeCube(intakeSubsystem));
+    intakeCone.whileTrue(new IntakeCone(intakeSubsystem));
   }
 
   /**
@@ -103,5 +104,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new InstantCommand();
+  }
+
+  public void zeroGyro() {
+    swerveDrive.zeroGyro();
   }
 }
