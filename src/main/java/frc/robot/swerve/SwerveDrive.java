@@ -80,7 +80,8 @@ public class SwerveDrive extends SubsystemBase {
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method
-      // TODO: Check if the optimization is happening in the setDesiredState and setDesiredAngleState method
+      // TODO: Check if the optimization is happening in the setDesiredState and
+      // setDesiredAngleState method
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
     Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
