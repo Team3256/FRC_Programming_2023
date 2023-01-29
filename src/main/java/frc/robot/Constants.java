@@ -70,7 +70,7 @@ public final class Constants {
     public static final double kFF = 1;
   }
 
-  public static final class  SwerveConstants {
+  public static final class SwerveConstants {
     public static int X_ACCEL_RATE_LIMIT = 15;
     public static int X_DECEL_RATE_LIMIT = 10;
 

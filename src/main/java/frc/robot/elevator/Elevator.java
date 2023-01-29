@@ -15,28 +15,22 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-  public final TalonFX elevatorMotor;
-  public static double currentHeight = 0;
+  private static TalonFX elevatorMotor;
   // private final AdaptiveSlewRateLimiter elevatorRateLimiter = new AdaptiveSlewRateLimiter()
-   //private final TalonFX followerElevatorMotor;
 
   public Elevator() {
     elevatorMotor = new TalonFX(ElevatorConstants.MASTER_ELEVATOR_MOTOR_ID);
-    //		followerElevatorMotor = new TalonFX(FOLLOWER_ELEVATOR_MOTOR_ID);
-    //		followerElevatorMotor.follow(masterElevatorMotor);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     System.out.println("Elevator initialized");
     off();
   }
-  public static double getElevatorHeight() {
-    return currentHeight;
-  }
+
   public void setSpeed(double speed) {
     elevatorMotor.set(ControlMode.PercentOutput, speed);
     System.out.println("Elevator speed: " + speed);
   }
 
-  public double getPosition() {
+  public static double getPosition() {
     return elevatorMotor.getSelectedSensorPosition();
   }
 
