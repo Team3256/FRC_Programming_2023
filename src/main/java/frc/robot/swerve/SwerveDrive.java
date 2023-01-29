@@ -161,7 +161,8 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     System.out.println("Swerve CAN connected: " + result);
     SmartDashboard.putBoolean("Swerve CAN connected", result);
     return result;
-    
+  }
+
   public void setDriveMotorsNeutralMode(NeutralMode neutralMode) {
     for (SwerveModule swerveModule : swerveModules) {
       swerveModule.setDriveMotorNeutralMode(neutralMode);

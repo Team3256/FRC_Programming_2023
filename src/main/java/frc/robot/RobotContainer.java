@@ -19,7 +19,6 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
-import frc.robot.swerve.commands.TeleopSwerveLimited;
 import java.util.ArrayList;
 
 /**
@@ -108,13 +107,14 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new InstantCommand();
   }
-  
+
   public void test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
     for (CANTestable subsystem : testables) result &= subsystem.test();
     System.out.println("CAN fully connected: " + result);
-  
+  }
+
   public void zeroGyro() {
     swerveDrive.zeroGyro();
   }
