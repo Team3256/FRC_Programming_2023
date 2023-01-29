@@ -1,4 +1,4 @@
-package frc.robot.limelight.scommands;
+package frc.robot.limelight.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
