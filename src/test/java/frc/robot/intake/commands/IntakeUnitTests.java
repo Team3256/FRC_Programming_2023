@@ -9,12 +9,12 @@ package frc.robot.intake.commands;
 
 import static frc.robot.Constants.IntakeConstants.kIntakeForwardSpeed;
 import static frc.robot.Constants.IntakeConstants.kOuttakeSpeed;
+import static org.junit.jupiter.api.Assertions.*;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.intake.Intake;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -31,32 +31,33 @@ public class IntakeUnitTests {
     intakeSubsystem = new Intake();
   }
 
+  // TODO: run schedule instead of initialize
   @Test
   public void testForward() {
     IntakeForward command = new IntakeForward(intakeSubsystem);
     command.initialize();
-    runScheduler(0.5);
+    runScheduler(1);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
-    Assertions.assertEquals(kIntakeForwardSpeed, velocity, DELTA);
+    assertEquals(kIntakeForwardSpeed, velocity, DELTA);
   }
 
   @Test
   public void testOuttake() {
     Outtake command = new Outtake(intakeSubsystem);
     command.initialize();
-    runScheduler(0.5);
+    runScheduler(1);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
-    Assertions.assertEquals(kOuttakeSpeed, velocity, DELTA);
+    assertEquals(kOuttakeSpeed, velocity, DELTA);
   }
 
   private static void runScheduler(double seconds) {
     try {
-      for (int i = 0; i < 10; ++i) {
+      for (int i = 0; i < seconds * 1000 / 20; ++i) {
         com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
         CommandScheduler.getInstance().run();
-        Thread.sleep((long) (seconds * 100));
+        Thread.sleep(20);
       }
     } catch (InterruptedException e) {
       e.printStackTrace();
