@@ -20,6 +20,9 @@ import java.util.Map;
 
 public final class Constants {
   public static final boolean DEBUG = false;
+  public static final boolean intakeFlag = true;
+  public static final boolean elevatorFlag = true;
+  public static final boolean swerveFlag = true;
   public static final double stickDeadband = 0.1;
   public static final int kLongCANTimeoutMs = 1;
   public static final double kMaxDriveVoltage = 1;

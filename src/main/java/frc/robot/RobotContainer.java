@@ -19,6 +19,9 @@ import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 
+import static frc.robot.Constants.elevatorFlag;
+import static frc.robot.Constants.intakeFlag;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -47,25 +50,34 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kB.value);
 
   /* Subsystems */
-  private final SwerveDrive swerveDrive = new SwerveDrive();
-  private final Intake intakeSubsystem = new Intake();
+  private SwerveDrive swerveDrive = null;
+  private Intake intakeSubsystem = null;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            swerveDrive,
-            driver,
-            translationAxis,
-            strafeAxis,
-            rotationAxis,
-            fieldRelative,
-            openLoop));
+    if (intakeFlag)
+      initializeIntake();
+    if (elevatorFlag)
+      initializeSwerve();
 
     // Configure the button bindings
     configureButtonBindings();
   }
-
+  private void initializeIntake() {
+    this.intakeSubsystem = new Intake();
+  }
+  private void initializeSwerve() {
+    this.swerveDrive = new SwerveDrive();
+    swerveDrive.setDefaultCommand(
+            new TeleopSwerve(
+                    swerveDrive,
+                    driver,
+                    translationAxis,
+                    strafeAxis,
+                    rotationAxis,
+                    fieldRelative,
+                    openLoop));
+  }
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
