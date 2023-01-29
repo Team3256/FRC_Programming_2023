@@ -109,7 +109,7 @@ public class RobotContainer {
     return new InstantCommand();
   }
 
-  public boolean test() {
+  public void test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
     for (CANTestable subsystem : testables) result &= subsystem.test();
