@@ -9,6 +9,7 @@ package frc.robot.swerve;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -81,10 +82,17 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method
-      // TODO: Check if the optimization is happening in the setDesiredState method
+      // TODO: Check if the optimization is happening in the setDesiredState and
+      // setDesiredAngleState method
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
     Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
+  }
+
+  public void setDesiredAngleState(SwerveModuleState[] swerveModuleStates) {
+    for (SwerveModule mod : swerveModules) {
+      mod.setDesiredAngleState(swerveModuleStates[mod.moduleNumber]);
+    }
   }
 
   public SwerveDriveKinematics getKinematics() {
@@ -153,5 +161,16 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     System.out.println("Swerve CAN connected: " + result);
     SmartDashboard.putBoolean("Swerve CAN connected", result);
     return result;
+    
+  public void setDriveMotorsNeutralMode(NeutralMode neutralMode) {
+    for (SwerveModule swerveModule : swerveModules) {
+      swerveModule.setDriveMotorNeutralMode(neutralMode);
+    }
+  }
+
+  public void setAngleMotorsNeutralMode(NeutralMode neutralMode) {
+    for (SwerveModule swerveModule : swerveModules) {
+      swerveModule.setAngleMotorNeutralMode(neutralMode);
+    }
   }
 }

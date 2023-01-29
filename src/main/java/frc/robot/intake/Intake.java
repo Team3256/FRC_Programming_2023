@@ -35,7 +35,7 @@ public class Intake extends SubsystemBase implements CANTestable {
 
   public void backward() {
     System.out.println("Intake backward");
-    intakeMotor.set(ControlMode.PercentOutput, kOuttakeSpeed);
+    intakeMotor.set(ControlMode.PercentOutput, kIntakeBackwardSpeed);
   }
 
   public void off() {
