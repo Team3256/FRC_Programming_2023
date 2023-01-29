@@ -1,4 +1,4 @@
-package frc.robot.limeLight.commands;// Copyright (c) 2023 FRC 3256
+package frc.robot.limelight.commands;// Copyright (c) 2023 FRC 3256
 // https://github.com/Team3256
 //
 // Use of this source code is governed by an MIT-style
@@ -9,9 +9,13 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.LimeLightConstants;
 
 import static frc.robot.Constants.LimeLightConstants.*;
+ import static frc.robot.Constants.goalHeightInches;
+ import static frc.robot.Constants.mountingHeight;
+ import static frc.robot.Constants.limelightMountAngleDegrees;
+ import static frc.robot.Constants.limelightLensHeightInches;
+ import static frc.robot.Constants.angleToGoalRadians;
 
 public class LimeLightValues {
   private static int users = 0;
@@ -105,7 +109,7 @@ public class LimeLightValues {
    * @return raw distance to target (inches)
    */
   public static double getRawDistanceToTarget(){
-    return (goalHeightInches -mountingHeight)/Math.tan(toRadians(limelightMountAngleDegrees+getTy()));
+    return (goalHeightInches - mountingHeight)/Math.tan(toRadians(limelightMountAngleDegrees + getTy()));
   }
 
   /**
