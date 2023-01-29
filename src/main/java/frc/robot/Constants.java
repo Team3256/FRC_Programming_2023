@@ -43,13 +43,13 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    public static final int MASTER_ELEVATOR_MOTOR_ID = -1;
+    public static final int elevatorID = -1;
     public static final int kP = 1;
     public static final int kI = 1;
     public static final int kD = 1;
     public static final int kTolerancePosition = 1;
     public static final int kToleranceRate = 1;
-    public static final double rateLimitingElevatorConstant = 0.05;
+    public static final double kRateLimiting = 0.05;
   }
 
   public static final class ArmConstants {

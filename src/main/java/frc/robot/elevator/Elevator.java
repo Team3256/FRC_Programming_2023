@@ -16,10 +16,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
   private static TalonFX elevatorMotor;
-  // private final AdaptiveSlewRateLimiter elevatorRateLimiter = new AdaptiveSlewRateLimiter()
 
   public Elevator() {
-    elevatorMotor = new TalonFX(ElevatorConstants.MASTER_ELEVATOR_MOTOR_ID);
+    elevatorMotor = new TalonFX(ElevatorConstants.elevatorID);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     System.out.println("Elevator initialized");
     off();

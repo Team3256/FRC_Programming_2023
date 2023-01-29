@@ -7,7 +7,7 @@
 
 package frc.robot.helper;
 
-import static frc.robot.Constants.ElevatorConstants.rateLimitingElevatorConstant;
+import static frc.robot.Constants.ElevatorConstants.kRateLimiting;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.WPIUtilJNI;
@@ -39,8 +39,8 @@ public class AdaptiveSlewRateLimiter {
     double elapsedTime = currentTime - this.prevTime;
     double currRateLimit =
         (Math.abs(input) > Math.abs(prevVal)
-            ? rateLimitingElevatorConstant * accelRateLimit * Elevator.getPosition()
-            : rateLimitingElevatorConstant * decelRateLimit * Elevator.getPosition());
+            ? kRateLimiting * accelRateLimit * Elevator.getPosition()
+            : kRateLimiting * decelRateLimit * Elevator.getPosition());
 
     SmartDashboard.putNumber("Acc(?)", Math.abs(input) > Math.abs(prevVal) ? 1 : 0);
     SmartDashboard.putNumber("Prev Val", prevVal);
