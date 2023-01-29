@@ -17,21 +17,21 @@ import org.junit.Assert.*;
 
 public class ArmUnitTest {
 
-  ArmSubsystem armSubsystem;
+  static ArmSubsystem armSubsystem;
 
   @Before
   public static void setup() {
     assert HAL.initialize(500, 0); // Initialize the HAL, crash if failed
     CommandScheduler.getInstance().enable();
     DriverStationSim.setEnabled(true);
-    new ArmSubsystem();
+    armSubsystem = new ArmSubsystem();
   }
 
   // Subsystem tests
   @Test
   public void setInputVoltageTo0() {
     ArmSubsystem setInputVoltageTo0Command = new ArmSubsystem(0.0);
-    ArmSubsystem armSubsystem;
+    DriverStationSim.setEnabled(true);
     assertEquals("Set input voltage to 0", ArmSubsystem.getVoltage(), 0.0, DELTA);
   }
 
@@ -39,24 +39,30 @@ public class ArmUnitTest {
   @Test
   public void setVoltageTo5Volts() {
     SetArmFromVoltage setVoltageTo5Command = new SetArmFromVoltage(armSubsystem, 5.5);
-    SetArmFromVoltage setArmFromVoltage;
+    setVoltageTo5Command.schedule();
+    runScheduler();
+    DriverStationSim.setEnabled(true);
     assertEquals("Set voltage to 0", ArmSubsystem.getVoltage(), 5.0, DELTA);
   }
 
   @Test
   public void setVoltageRoutine() {
-    SetArmFromVoltage setVoltageRoutineCommand = new SetArmFromVoltage(armSubsystem, 0.5);
-    SetArmFromVoltage setArmFromVoltage;
+    SetArmFromVoltage setVoltageTo5Volts = new SetArmFromVoltage(armSubsystem, 0.5);
+    setVoltageTo5Volts.schedule();
+    runScheduler();
+    DriverStationSim.setEnabled(true);
     assertEquals("Set voltage to 5", ArmSubsystem.getVoltage(), 5.0, DELTA);
     wait(1500);
 
-    SetArmFromVoltage setVoltageRoutineCommand2 = new SetArmFromVoltage(armSubsystem, 0.0);
-    SetArmFromVoltage setArmFromVoltage2;
+    SetArmFromVoltage setVoltageTo0Volts = new SetArmFromVoltage(armSubsystem, 0.0);
+    setVoltageTo0Volts.schedule();
+    runScheduler();
     assertEquals("Set voltage to 0", ArmSubsystem.getVoltage(), 0.0, DELTA);
     wait(1500);
 
-    SetArmFromVoltage setVoltageRoutineCommand3 = new SetArmFromVoltage(armSubsystem, 0.5);
-    SetArmFromVoltage setArmFromVoltage3;
+    SetArmFromVoltage setVoltageTo5Volts = new SetArmFromVoltage(armSubsystem, 0.5);
+    setVoltageTo5Volts.schedule();
+    runScheduler();
     assertEquals("Set voltage to 5", ArmSubsystem.getVoltage(), 5.0, DELTA);
     wait(1000);
   }
@@ -65,7 +71,9 @@ public class ArmUnitTest {
   @Test
   public void setArmFromPID() {
     SetArmFromPID setArmFromPIDCommand = new SetArmFromPID(armSubsystem, 1200);
-    SetArmFromPID setArmFromPID;
+    setArmFromPIDCommand.schedule();
+    runScheduler();
+    DriverStationSim.setEnabled(true);
     assertEquals(
         "Set angular velocity to 1200 RPM", ArmSubsystem.getAngularVelocityRPM(), 1200, DELTA);
   }
@@ -74,18 +82,22 @@ public class ArmUnitTest {
   public void setArmFromPIDRoutine() {
     SetArmFromPID setArmFromPIDCommand1 = new SetArmFromPID(armSubsystem, 600);
     // use assert true to compare initialized value with actual value
-    SetArmFromPID setArmFromPID1;
+    setArmFromPIDCommand1.schedule();
+    runScheduler(0);
+    DriverStationSim.setEnabled(true);
     assertEquals(
         "Set angular velocity to 600 RPM", armSubsystem.getAngularVelocityRPM(), 600, DELTA);
     wait(1000);
 
     SetArmFromPID setArmFromPIDCommand2 = new SetArmFromPID(armSubsystem, 0);
-    SetArmFromPID setArmFromPID2;
+    setArmFromPIDCommand2.schedule();
+    runScheduler();
     assertEquals("Set angular velocity to 0 RPM", armSubsystem.getAngularVelocityRPM(), 0, DELTA);
     wait(1000);
 
     SetArmFromPID setArmFromPIDCommand3 = new SetArmFromPID(armSubsystem, 1200);
-    SetArmFromPID setArmFromPID3;
+    setArmFromPIDCommand3.schedule();
+    runScheduler();
     assertEquals(
         "Set angular velocity to 1200 RPM", armSubsystem.getAngularVelocityRPM(), 1200, DELTA);
     setArmFromPIDCommand3.end();
