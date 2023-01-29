@@ -114,6 +114,5 @@ public class RobotContainer {
     boolean result = true;
     for (CANTestable subsystem : testables) result &= subsystem.test();
     System.out.println("CAN fully connected: " + result);
-    return result;
   }
 }
