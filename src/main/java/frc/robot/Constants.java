@@ -69,9 +69,9 @@ public final class Constants {
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
-    // TODO: Update these constants later
-    public static final double trackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
-    public static final double wheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
+    // TODO: Update Constants
+    public static final double trackWidth = Units.inchesToMeters(24.25);
+    public static final double wheelBase = Units.inchesToMeters(24.25);
     public static final double wheelDiameter = Units.inchesToMeters(3.94);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
@@ -80,6 +80,8 @@ public final class Constants {
 
     public static final double driveGearRatio = (6.86 / 1.0); // 6.86:1
     public static final double angleGearRatio = (12.8 / 1.0); // 12.8:1
+
+    public static final double[] lockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
 
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
@@ -162,7 +164,6 @@ public final class Constants {
 
   public static final class AutoConstants {
     public static final boolean AUTO_DEBUG = false;
-    public static final double TRAJECTORY_DURATION_FACTOR = 1.11;
     public static final double COMMAND_MARKER_THRESHOLD = 0.05; // meters
 
     public static final double kMaxSpeedMetersPerSecond = 3;

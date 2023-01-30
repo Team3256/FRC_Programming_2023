@@ -19,6 +19,7 @@ import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -69,7 +70,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
-
     // intake buttons for testing
     driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
     driver.leftBumper().whileTrue(new IntakeCone(intakeSubsystem));
