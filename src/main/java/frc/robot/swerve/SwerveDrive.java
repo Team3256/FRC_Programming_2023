@@ -19,10 +19,12 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.CANDeviceTester;
+import frc.robot.drivers.CANTestable;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveDrive extends SubsystemBase {
+public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
   private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
@@ -154,6 +156,18 @@ public class SwerveDrive extends SubsystemBase {
 
   public void setTrajectory(Trajectory trajectory) {
     field.getObject("traj").setTrajectory(trajectory);
+  }
+
+  public boolean test() {
+    System.out.println("Testing drivetrain CAN:");
+    boolean result = true;
+    for (SwerveModule device : swerveModules) {
+      result &= device.test();
+    }
+    result &= CANDeviceTester.testPigeon(gyro);
+    System.out.println("Drivetrain CAN connected: " + result);
+    SmartDashboard.putBoolean("Drivetrain CAN connected", result);
+    return result;
   }
 
   public void setDriveMotorsNeutralMode(NeutralMode neutralMode) {
