@@ -13,11 +13,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.drivers.CANTestable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
+import java.util.ArrayList;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -50,8 +52,15 @@ public class RobotContainer {
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
 
+  /* Lists */
+  private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // add all testables to an iterable
+    testables.add(swerveDrive);
+    testables.add(intakeSubsystem);
+
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
@@ -97,6 +106,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new InstantCommand();
+  }
+
+  public void test() {
+    System.out.println("Testing CAN connections:");
+    boolean result = true;
+    for (CANTestable subsystem : testables) result &= subsystem.test();
+    System.out.println("CAN fully connected: " + result);
   }
 
   public void zeroGyro() {
