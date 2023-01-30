@@ -76,6 +76,7 @@ public final class Constants {
     public static int kXDecelRateLimit = 10;
 
     public static int kYAccelRateLimit = 15;
+
     public static int kYDecelRateLimit = 10;
 
     public static Hashtable<Double, Integer[]> X_RATE_LIMIT_DICT =
