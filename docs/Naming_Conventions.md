@@ -1,5 +1,5 @@
  # Auto paths naming conventions
- 
+
 - OH - score only on hybrid
 - number - how many game pieces scored
 - engage - robot engages at end of auto
