@@ -7,12 +7,12 @@
 
 package frc.robot.elevator;
 
-import static frc.robot.Constants.*;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import static frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
   private static TalonFX elevatorMotor;
@@ -36,24 +36,5 @@ public class Elevator extends SubsystemBase {
   public void off() {
     elevatorMotor.neutralOutput();
     System.out.println("Elevator off");
-  }
-
-  @Override
-  public void periodic() {
-    for (var rateLimit : SwerveConstants.X_RATE_LIMIT_DICT.entrySet()) {
-      if (Math.abs(getPosition() - rateLimit.getKey()) < SwerveConstants.POSITION_DIST_DELTA) {
-        // Update:
-        SwerveConstants.X_ACCEL_RATE_LIMIT = rateLimit.getValue()[0];
-        SwerveConstants.X_DECEL_RATE_LIMIT = rateLimit.getValue()[1];
-      }
-    }
-
-    for (var rateLimit : SwerveConstants.Y_RATE_LIMIT_DICT.entrySet()) {
-      if (Math.abs(getPosition() - rateLimit.getKey()) < SwerveConstants.POSITION_DIST_DELTA) {
-        // Update:
-        SwerveConstants.Y_ACCEL_RATE_LIMIT = rateLimit.getValue()[0];
-        SwerveConstants.Y_DECEL_RATE_LIMIT = rateLimit.getValue()[1];
-      }
-    }
   }
 }

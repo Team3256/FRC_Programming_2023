@@ -37,10 +37,11 @@ public class AdaptiveSlewRateLimiter {
   public double calculate(double input) {
     double currentTime = WPIUtilJNI.now() * 1e-6;
     double elapsedTime = currentTime - this.prevTime;
+    // constant kRateLimiting is to adjust the weight of the height of the elevator
     double currRateLimit =
         (Math.abs(input) > Math.abs(prevVal)
-            ? kRateLimiting * accelRateLimit * Elevator.getPosition()
-            : kRateLimiting * decelRateLimit * Elevator.getPosition());
+            ? kRateLimiting * accelRateLimit * (1 / Elevator.getPosition())
+            : kRateLimiting * decelRateLimit * (1 / Elevator.getPosition()));
 
     SmartDashboard.putNumber("Acc(?)", Math.abs(input) > Math.abs(prevVal) ? 1 : 0);
     SmartDashboard.putNumber("Prev Val", prevVal);
