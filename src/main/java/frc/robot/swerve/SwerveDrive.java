@@ -152,14 +152,14 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   }
 
   public boolean test() {
-    System.out.println("Testing swerve CAN:");
+    System.out.println("Testing drivetrain CAN:");
     boolean result = true;
     for (SwerveModule device : swerveModules) {
       result &= device.test();
     }
     result &= CANDeviceTester.testPigeon(gyro);
-    System.out.println("Swerve CAN connected: " + result);
-    SmartDashboard.putBoolean("Swerve CAN connected", result);
+    System.out.println("Drivetrain CAN connected: " + result);
+    SmartDashboard.putBoolean("Drivetrain CAN connected", result);
     return result;
   }
 
