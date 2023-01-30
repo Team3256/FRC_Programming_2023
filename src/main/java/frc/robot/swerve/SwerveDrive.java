@@ -18,7 +18,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.helper.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
@@ -31,13 +30,9 @@ public class SwerveDrive extends SubsystemBase {
   private final Field2d field = new Field2d();
 
   private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
-      new AdaptiveSlewRateLimiter(
-          Constants.SwerveConstants.X_ACCEL_RATE_LIMIT,
-          Constants.SwerveConstants.X_DECEL_RATE_LIMIT);
+      new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
   private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
-      new AdaptiveSlewRateLimiter(
-          Constants.SwerveConstants.Y_ACCEL_RATE_LIMIT,
-          Constants.SwerveConstants.Y_DECEL_RATE_LIMIT);
+      new AdaptiveSlewRateLimiter(kYAccelRateLimit, kYDecelRateLimit);
 
   private static final SwerveDriveKinematics kinematics =
       new SwerveDriveKinematics(

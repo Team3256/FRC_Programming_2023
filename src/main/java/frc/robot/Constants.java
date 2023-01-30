@@ -72,11 +72,11 @@ public final class Constants {
   }
 
   public static final class SwerveConstants {
-    public static int X_ACCEL_RATE_LIMIT = 15;
-    public static int X_DECEL_RATE_LIMIT = 10;
+    public static int kXAccelRateLimit = 15;
+    public static int kXDecelRateLimit = 10;
 
-    public static int Y_ACCEL_RATE_LIMIT = 15;
-    public static int Y_DECEL_RATE_LIMIT = 10;
+    public static int kYAccelRateLimit = 15;
+    public static int kYDecelRateLimit = 10;
 
     public static Hashtable<Double, Integer[]> X_RATE_LIMIT_DICT =
         new Hashtable<Double, Integer[]>();
