@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.ElevatorConstants;
+import static frc.robot.Constants.ElevatorConstants.kEncoderToMetersConversionFactor;
 
 public class Elevator extends SubsystemBase {
   private static TalonFX elevatorMotor;
@@ -30,7 +31,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public static double getPosition() {
-    return elevatorMotor.getSelectedSensorPosition();
+    return elevatorMotor.getSelectedSensorPosition() * kEncoderToMetersConversionFactor;
   }
 
   public void off() {

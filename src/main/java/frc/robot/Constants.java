@@ -50,6 +50,7 @@ public final class Constants {
     public static final int kTolerancePosition = 1;
     public static final int kToleranceRate = 1;
     public static final double kRateLimiting = 0.05;
+    public static final double kEncoderToMetersConversionFactor = -1;
   }
 
   public static final class ArmConstants {
