@@ -19,8 +19,7 @@ import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 
-import static frc.robot.Constants.elevatorFlag;
-import static frc.robot.Constants.intakeFlag;
+import static frc.robot.Constants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -55,10 +54,12 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    if (intakeFlag)
+    if (INTAKE)
       initializeIntake();
-    if (elevatorFlag)
+    if (SWERVE)
       initializeSwerve();
+    if (ELEVATOR)
+      initializeElevator();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -77,6 +78,9 @@ public class RobotContainer {
                     rotationAxis,
                     fieldRelative,
                     openLoop));
+  }
+  public void initializeElevator() {
+
   }
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
