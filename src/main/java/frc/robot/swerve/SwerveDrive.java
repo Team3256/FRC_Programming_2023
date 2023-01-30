@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.helper.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,6 +28,11 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
   private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
   private final Field2d field = new Field2d();
+
+  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
+      new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
+  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
+      new AdaptiveSlewRateLimiter(kYAccelRateLimit, kYDecelRateLimit);
 
   private static final SwerveDriveKinematics kinematics =
       new SwerveDriveKinematics(
@@ -61,6 +67,11 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
+    chassisSpeeds.vxMetersPerSecond =
+        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+    chassisSpeeds.vyMetersPerSecond =
+        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+
     SwerveModuleState[] swerveModuleStates =
         swerveKinematics.toSwerveModuleStates(
             chassisSpeeds); // same as the older version of drive but takes in the calculated
@@ -69,12 +80,23 @@ public class SwerveDrive extends SubsystemBase {
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates =
-        swerveKinematics.toSwerveModuleStates(
-            fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getYaw())
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+
+    ChassisSpeeds chassisSpeeds;
+
+    if (fieldRelative) {
+      chassisSpeeds =
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+              translation.getX(), translation.getY(), rotation, getYaw());
+    } else {
+      chassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    }
+
+    chassisSpeeds.vxMetersPerSecond =
+        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+    chassisSpeeds.vyMetersPerSecond =
+        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+
+    SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
 
     for (SwerveModule mod : swerveModules) {

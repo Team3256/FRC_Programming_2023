@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
+import java.util.Hashtable;
 import java.util.Map;
 
 public final class Constants {
@@ -41,6 +42,17 @@ public final class Constants {
     public static final double kOuttakeSpeed = -0.5;
   }
 
+  public static final class ElevatorConstants {
+    public static final int elevatorID = -1;
+    public static final int kP = 1;
+    public static final int kI = 1;
+    public static final int kD = 1;
+    public static final int kTolerancePosition = 1;
+    public static final int kToleranceRate = 1;
+    public static final double kRateLimiting = 0.05;
+    public static final double kEncoderToMetersConversionFactor = -1;
+  }
+
   public static final class ArmConstants {
     // TODO: Fix these to comply to the mechanical ppls kg
     public static final int ARM_MOTOR_ID = -1;
@@ -60,6 +72,19 @@ public final class Constants {
   }
 
   public static final class SwerveConstants {
+    public static int kXAccelRateLimit = 15;
+    public static int kXDecelRateLimit = 10;
+
+    public static int kYAccelRateLimit = 15;
+
+    public static int kYDecelRateLimit = 10;
+
+    public static Hashtable<Double, Integer[]> X_RATE_LIMIT_DICT =
+        new Hashtable<Double, Integer[]>();
+    public static Hashtable<Double, Integer[]> Y_RATE_LIMIT_DICT =
+        new Hashtable<Double, Integer[]>();
+
+    public static final int POSITION_DIST_DELTA = 0;
 
     public static final int pigeonID = 1;
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
@@ -76,7 +101,6 @@ public final class Constants {
 
     public static final double driveGearRatio = (6.86 / 1.0); // 6.86:1
     public static final double angleGearRatio = (12.8 / 1.0); // 12.8:1
-
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
