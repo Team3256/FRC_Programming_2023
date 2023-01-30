@@ -68,6 +68,14 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
         swerveKinematics.toSwerveModuleStates(
             chassisSpeeds); // same as the older version of drive but takes in the calculated
     // chassisspeed
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
+
+    for (SwerveModule mod : swerveModules) {
+      // TODO: Optimize the module state using wpilib optimize method
+      // TODO: Check if the optimization is happening in the setDesiredState method
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
+    }
+    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
   }
 
   public void drive(
@@ -78,6 +86,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
                     translation.getX(), translation.getY(), rotation, getYaw())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
 
     for (SwerveModule mod : swerveModules) {
@@ -129,9 +138,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   }
 
   public Rotation2d getYaw() {
-    double[] ypr = new double[3];
-    gyro.getYawPitchRoll(ypr);
-    return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+    return Rotation2d.fromDegrees(invertGyro ? -gyro.getYaw() : gyro.getYaw());
   }
 
   @Override

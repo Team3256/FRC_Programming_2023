@@ -21,6 +21,7 @@ import java.util.Map;
 public final class Constants {
   public static final boolean DEBUG = false;
   public static final double stickDeadband = 0.1;
+  public static final double azimuthStickDeadband = 0.3;
   public static final int kLongCANTimeoutMs = 1;
   public static final double kMaxDriveVoltage = 1;
   public static final double kMk4DriveVelocityKp = 1;
@@ -34,6 +35,9 @@ public final class Constants {
 
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
+
+  public static final boolean fieldRelative = true;
+  public static final boolean openLoop = true;
 
   public static final class IntakeConstants {
     public static final int intakeMotorID = 14;
@@ -99,7 +103,8 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = 11.5;
+    public static final double maxAngularVelocity = Math.PI * 1.5;
+    public static final double maxAngularAcceleration = Math.PI * 0.5;
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -111,6 +116,11 @@ public final class Constants {
 
     /* Angle Encoder Invert */
     public static final boolean canCoderInvert = false;
+
+    /* PID Constants Trapezoid Profile for the Azimuth Control */
+    public static final double kAzimuthP = 0.09;
+    public static final double kAzimuthI = 0.00;
+    public static final double kAzimuthD = 0.01;
 
     /* Module Specific Constants */
     public static final class FrontLeft {
@@ -158,7 +168,10 @@ public final class Constants {
 
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+    // Max velocity
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    // Max acceleration
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     // Constraint for the motion profiled robot angle controller
@@ -308,9 +321,11 @@ public final class Constants {
         }
       }
 
-      // Complex low layout (shifted to account for cube vs cone rows and wide edge nodes)
+      // Complex low layout (shifted to account for cube vs cone rows and wide edge
+      // nodes)
       public static final double complexLowXCones =
-          outerX - Units.inchesToMeters(16.0) / 2.0; // Centered X under cone nodes
+          outerX - Units.inchesToMeters(16.0) / 2.0; // Centered X under cone
+      // nodes
       public static final double complexLowXCubes = lowX; // Centered X under cube nodes
       public static final double complexLowOuterYOffset =
           nodeFirstY - Units.inchesToMeters(3.0) - (Units.inchesToMeters(25.75) / 2.0);

@@ -12,13 +12,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
+import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
 
 /**
@@ -29,24 +29,18 @@ import java.util.ArrayList;
  */
 public class RobotContainer {
   /* Controllers */
-  private final Joystick driver = new Joystick(0);
+  Joystick driverJoystick = new Joystick(0);
+  CommandXboxController driver = new CommandXboxController(0);
+  CommandXboxController operator = new CommandXboxController(1);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationXAxis = XboxController.Axis.kRightX.value;
+  private final int rotationYAxis = XboxController.Axis.kRightY.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
   private final boolean fieldRelative = true;
   private final boolean openLoop = true;
-
-  /* Driver Buttons */
-  private final JoystickButton zeroGyro =
-      new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton intakeCube =
-      new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton intakeCone =
-      new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton sensitivityToggle =
-      new JoystickButton(driver, XboxController.Button.kB.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
@@ -64,12 +58,12 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
-            driver,
+            driverJoystick,
             translationAxis,
             strafeAxis,
-            rotationAxis,
-            fieldRelative,
-            openLoop));
+            rotationXAxis,
+            Constants.fieldRelative,
+            Constants.openLoop));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -83,20 +77,22 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
-    //    sensitivityToggle.toggleOnTrue(
-    //        new TeleopSwerveLimited(
-    //            swerveDrive,
-    //            driver,
-    //            translationAxis,
-    //            strafeAxis,
-    //            rotationAxis,
-    //            fieldRelative,
-    //            openLoop));
-
+    driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     // intake buttons for testing
-    intakeCube.whileTrue(new IntakeCube(intakeSubsystem));
-    intakeCone.whileTrue(new IntakeCone(intakeSubsystem));
+    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
+    driver.leftBumper().whileTrue(new IntakeCone(intakeSubsystem));
+    driver
+        .rightBumper()
+        .whileTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveDrive,
+                driverJoystick,
+                translationAxis,
+                strafeAxis,
+                rotationXAxis,
+                rotationYAxis,
+                Constants.fieldRelative,
+                Constants.openLoop));
   }
 
   /**
