@@ -43,24 +43,28 @@ public class LEDTester extends SubsystemBase {
     LED.setData(LEDBuffer);
   }
 
-  int h = 208;
+  int iH = 208;
   int iS = 87;
   int iV = 30;
+  int fH = 0;
   int fS = 0;
   int fV = 100;
-  int kT = 30;
+  int kT = 60;
   int t = 0;
 
   public void spirit() {
     t = (t + 1) % kT;
 
-    double mS = (double) (fS-iS)/kT;
-    double mV = (double) (fV-iV)/kT;
+    double mH = (double) (fS - iS) / kT;
+    double mS = (double) (fS - iS) / kT;
+    double mV = (double) (fV - iV) / kT;
+
+    int h = (int) (iH + mH * t);
     int s = (int) (iS + mS * t);
     int v = (int) (iV + mV * t);
 
     for (int i = 0; i < LEDBuffer.getLength(); i++) {
-      LEDBuffer.setHSV(i, h, iS+(iS+mS*(t+i))%fS, iV+(iV+mV*(t+i))%fV);
+      LEDBuffer.setHSV(i, h, s, v);
     }
     LED.setData(LEDBuffer);
   }
