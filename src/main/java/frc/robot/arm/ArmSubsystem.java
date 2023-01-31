@@ -7,6 +7,8 @@
 
 package frc.robot.arm;
 
+import static frc.robot.Constants.ArmConstants.ARM_MOTOR_ID;
+
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.MathUtil;
@@ -21,8 +23,6 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.TalonFXFactory;
-
-import static frc.robot.Constants.ArmConstants.ARM_MOTOR_ID;
 
 // TODO: Add
 public class ArmSubsystem extends SubsystemBase {
