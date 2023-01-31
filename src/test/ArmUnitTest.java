@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.arm.commands.SetArmFromPID;
 import frc.robot.arm.commands.SetArmFromVoltage;
+
+import java.sql.Driver;
+
 import org.junit.*;
 import org.junit.Assert.*;
 
@@ -31,28 +34,25 @@ public class ArmUnitTest {
 
   // Subsystem tests
   @Test
-  public void setInputVoltageTo0() {
-    ArmSubsystem setInputVoltageTo0Command = new ArmSubsystem(0.0);
-    DriverStationSim.setEnabled(true);
+  public void setVoltageTo0Then5Volts() {
+    SetArmFromVoltage setVoltageTo0Command = new SetArmFromVoltage(armSubsystem, 0.0);
+    setVoltageTo0Command().schedule();
+    runScheduler(1);
     assertEquals("Set input voltage to 0", ArmSubsystem.getVoltage(), 0.0, DELTA);
+    wait(500);
+
+    SetArmFromVoltage setVoltageTo5Command = new SetArmFromVoltage(armSubsystem, 5.0);
+    setVoltageto5VoltsCommand().schedule();
+    runScheduler(1);
+    assertEquals("Set voltage to 5", ArmSubsystem.getVoltage(), 5.0, DELTA);
   }
 
   // SetArmFromVoltage tests
-  @Test
-  public void setVoltageTo5Volts() {
-    SetArmFromVoltage setVoltageTo5Command = new SetArmFromVoltage(armSubsystem, 5.0);
-    setVoltageTo5Command.schedule();
-    runScheduler(1);
-    DriverStationSim.setEnabled(true);
-    assertEquals("Set voltage to 0", ArmSubsystem.getVoltage(), 5.0, DELTA);
-  }
-
   @Test
   public void setVoltageRoutine5() {
     SetArmFromVoltage setVoltageTo5Volts = new SetArmFromVoltage(armSubsystem, 5.0);
     setVoltageTo5Volts.schedule();
     runScheduler(1);
-    DriverStationSim.setEnabled(true);
     assertEquals("Set voltage to 5", ArmSubsystem.getVoltage(), 5.0, DELTA);
     wait(1500);
 
@@ -75,7 +75,6 @@ public class ArmUnitTest {
     SetArmFromPID setArmFromPIDCommand = new SetArmFromPID(armSubsystem, 1200);
     setArmFromPIDCommand.schedule();
     runScheduler(1);
-    DriverStationSim.setEnabled(true);
     assertEquals(
         "Set angular velocity to 1200 RPM", ArmSubsystem.getAngularVelocityRPM(), 1200, DELTA);
   }
@@ -85,7 +84,6 @@ public class ArmUnitTest {
     SetArmFromPID setArmPIDTo600 = new SetArmFromPID(armSubsystem, 600);
     setArmPIDTo600.schedule();
     runScheduler(1.5);
-    DriverStationSim.setEnabled(true);
     assertEquals(
         "Set angular velocity to 600 RPM", armSubsystem.getAngularVelocityRPM(), 600, DELTA);
     wait(1000);
