@@ -21,6 +21,10 @@ public class Intake extends SubsystemBase implements CANTestable {
 
   private final TalonFX intakeMotor;
 
+  public double getIntakeSpeed() {
+    return intakeMotor.getMotorOutputPercent();
+  }
+
   public Intake() {
     intakeMotor = new TalonFX(intakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
