@@ -21,7 +21,11 @@ import java.util.Map;
 
 public final class Constants {
   public static final boolean DEBUG = false;
+  public static final boolean INTAKE = true;
+  public static final boolean ELEVATOR = true;
+  public static final boolean SWERVE = true;
   public static final double stickDeadband = 0.1;
+  public static final double azimuthStickDeadband = 0.3;
   public static final int kLongCANTimeoutMs = 1;
   public static final double kMaxDriveVoltage = 1;
   public static final double kMk4DriveVelocityKp = 1;
@@ -36,10 +40,13 @@ public final class Constants {
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
 
+  public static final boolean fieldRelative = true;
+  public static final boolean openLoop = true;
+
   public static final class IntakeConstants {
     public static final int intakeMotorID = 14;
-    public static final double kIntakeForwardSpeed = 0.5;
-    public static final double kOuttakeSpeed = -0.5;
+    public static final double kIntakeConeSpeed = 0.5;
+    public static final double kIntakeCubeSpeed = -0.5;
   }
 
   public static final class ElevatorConstants {
@@ -90,9 +97,9 @@ public final class Constants {
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
-    // TODO: Update these constants later
-    public static final double trackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
-    public static final double wheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
+    // TODO: Update Constants
+    public static final double trackWidth = Units.inchesToMeters(24.25);
+    public static final double wheelBase = Units.inchesToMeters(24.25);
     public static final double wheelDiameter = Units.inchesToMeters(3.94);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
@@ -101,6 +108,9 @@ public final class Constants {
 
     public static final double driveGearRatio = (6.86 / 1.0); // 6.86:1
     public static final double angleGearRatio = (12.8 / 1.0); // 12.8:1
+    
+    public static final double[] lockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
+    
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
@@ -121,7 +131,8 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = 11.5;
+    public static final double maxAngularVelocity = Math.PI * 1.5;
+    public static final double maxAngularAcceleration = Math.PI * 0.5;
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -133,6 +144,11 @@ public final class Constants {
 
     /* Angle Encoder Invert */
     public static final boolean canCoderInvert = false;
+
+    /* PID Constants Trapezoid Profile for the Azimuth Control */
+    public static final double kAzimuthP = 0.09;
+    public static final double kAzimuthI = 0.00;
+    public static final double kAzimuthD = 0.01;
 
     /* Module Specific Constants */
     public static final class FrontLeft {
@@ -176,12 +192,14 @@ public final class Constants {
 
   public static final class AutoConstants {
     public static final boolean AUTO_DEBUG = false;
-    public static final double TRAJECTORY_DURATION_FACTOR = 1.11;
     public static final double COMMAND_MARKER_THRESHOLD = 0.05; // meters
 
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+    // Max velocity
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    // Max acceleration
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     // Constraint for the motion profiled robot angle controller
@@ -331,9 +349,11 @@ public final class Constants {
         }
       }
 
-      // Complex low layout (shifted to account for cube vs cone rows and wide edge nodes)
+      // Complex low layout (shifted to account for cube vs cone rows and wide edge
+      // nodes)
       public static final double complexLowXCones =
-          outerX - Units.inchesToMeters(16.0) / 2.0; // Centered X under cone nodes
+          outerX - Units.inchesToMeters(16.0) / 2.0; // Centered X under cone
+      // nodes
       public static final double complexLowXCubes = lowX; // Centered X under cube nodes
       public static final double complexLowOuterYOffset =
           nodeFirstY - Units.inchesToMeters(3.0) - (Units.inchesToMeters(25.75) / 2.0);
