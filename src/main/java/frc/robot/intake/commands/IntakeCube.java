@@ -21,7 +21,7 @@ public class IntakeCube extends CommandBase {
 
   @Override
   public void initialize() {
-    intake.forward();
+    intake.intakeCube();
   }
 
   @Override

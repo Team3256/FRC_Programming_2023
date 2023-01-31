@@ -20,6 +20,9 @@ import java.util.Map;
 
 public final class Constants {
   public static final boolean DEBUG = false;
+  public static final boolean INTAKE = true;
+  public static final boolean ELEVATOR = true;
+  public static final boolean SWERVE = true;
   public static final double stickDeadband = 0.1;
   public static final double azimuthStickDeadband = 0.3;
   public static final int kLongCANTimeoutMs = 1;
@@ -41,8 +44,8 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final int intakeMotorID = 14;
-    public static final double kIntakeForwardSpeed = 0.5;
-    public static final double kIntakeBackwardSpeed = -0.5;
+    public static final double kIntakeConeSpeed = 0.5;
+    public static final double kIntakeCubeSpeed = -0.5;
   }
 
   public static final class ArmConstants {

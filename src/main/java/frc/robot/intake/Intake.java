@@ -32,14 +32,14 @@ public class Intake extends SubsystemBase implements CANTestable {
     System.out.println("Intake initialized");
   }
 
-  public void forward() {
+  public void intakeCone() {
     System.out.println("Intake forward");
-    intakeMotor.set(ControlMode.PercentOutput, kIntakeForwardSpeed);
+    intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
   }
 
-  public void backward() {
+  public void intakeCube() {
     System.out.println("Intake backward");
-    intakeMotor.set(ControlMode.PercentOutput, kIntakeBackwardSpeed);
+    intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
   public void off() {

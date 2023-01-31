@@ -7,8 +7,7 @@
 
 package frc.robot.intake.commands;
 
-import static frc.robot.Constants.IntakeConstants.kIntakeForwardSpeed;
-import static frc.robot.Constants.IntakeConstants.kOuttakeSpeed;
+import static frc.robot.Constants.IntakeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.wpi.first.hal.HAL;
@@ -18,7 +17,7 @@ import frc.robot.intake.Intake;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class IntakeUnitTests {
+public class IntakeTests {
   public final double DELTA = 0.05;
 
   private static Intake intakeSubsystem;
@@ -31,25 +30,24 @@ public class IntakeUnitTests {
     intakeSubsystem = new Intake();
   }
 
-  // TODO: run schedule instead of initialize
   @Test
-  public void testForward() {
-    IntakeForward command = new IntakeForward(intakeSubsystem);
+  public void testIntakeCube() {
+    IntakeCube command = new IntakeCube(intakeSubsystem);
     command.initialize();
     runScheduler(1);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
-    assertEquals(kIntakeForwardSpeed, velocity, DELTA);
+    assertEquals(kIntakeCubeSpeed, velocity, DELTA);
   }
 
   @Test
-  public void testOuttake() {
-    Outtake command = new Outtake(intakeSubsystem);
+  public void testIntakeCone() {
+    IntakeCone command = new IntakeCone(intakeSubsystem);
     command.initialize();
     runScheduler(1);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
-    assertEquals(kOuttakeSpeed, velocity, DELTA);
+    assertEquals(kIntakeConeSpeed, velocity, DELTA);
   }
 
   private static void runScheduler(double seconds) {
