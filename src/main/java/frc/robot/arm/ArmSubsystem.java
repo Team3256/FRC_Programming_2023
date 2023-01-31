@@ -19,6 +19,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.drivers.CanDeviceId;
+import frc.robot.drivers.TalonFXFactory;
+
+import static frc.robot.Constants.ArmConstants.ARM_MOTOR_ID;
 
 // TODO: Add
 public class ArmSubsystem extends SubsystemBase {
@@ -40,7 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
     periodicIO = new PeriodicIO();
     if (Robot.isReal()) {
       // Configure REAL HW
-      armMotor = new TalonFX(Constants.ArmConstants.ARM_MOTOR_ID);
+      armMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(ARM_MOTOR_ID));
       armMotor.enableVoltageCompensation(true);
       System.out.println("Arm initalized");
     } else {
