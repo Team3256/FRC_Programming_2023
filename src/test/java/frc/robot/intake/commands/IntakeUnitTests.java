@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 public class IntakeUnitTests {
   public final double DELTA = 0.05;
 
-  static Intake intakeSubsystem;
+  private static Intake intakeSubsystem;
 
   @BeforeAll
   public static void setup() {
