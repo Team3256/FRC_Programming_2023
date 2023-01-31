@@ -10,9 +10,9 @@ package frc.robot.swerve.commands;
 import static frc.robot.Constants.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.swerve.SwerveDrive;
+import java.util.function.DoubleSupplier;
 
 // TODO: Use our own teleop command
 public class TeleopSwerveLimited extends CommandBase {
@@ -23,24 +23,22 @@ public class TeleopSwerveLimited extends CommandBase {
   private boolean openLoop;
 
   private SwerveDrive swerveDrive;
-  private Joystick controller;
-  private int translationAxis;
-  private int strafeAxis;
-  private int rotationAxis;
+  private DoubleSupplier translationAxis;
+  private DoubleSupplier strafeAxis;
+  private DoubleSupplier rotationAxis;
 
   /** Driver control */
   public TeleopSwerveLimited(
       SwerveDrive swerveDrive,
-      Joystick controller,
-      int translationAxis,
-      int strafeAxis,
-      int rotationAxis,
+      DoubleSupplier translationAxis,
+      DoubleSupplier strafeAxis,
+      DoubleSupplier rotationAxis,
       boolean fieldRelative,
       boolean openLoop) {
+
     this.swerveDrive = swerveDrive;
     addRequirements(swerveDrive);
 
-    this.controller = controller;
     this.translationAxis = translationAxis;
     this.strafeAxis = strafeAxis;
     this.rotationAxis = rotationAxis;
@@ -50,9 +48,9 @@ public class TeleopSwerveLimited extends CommandBase {
 
   @Override
   public void execute() {
-    double yAxis = -controller.getRawAxis(translationAxis) * kSensitivityScale;
-    double xAxis = -controller.getRawAxis(strafeAxis) * kSensitivityScale;
-    double rAxis = -controller.getRawAxis(rotationAxis) * kSensitivityScale;
+    double yAxis = -translationAxis.getAsDouble() * kSensitivityScale;
+    double xAxis = -strafeAxis.getAsDouble() * kSensitivityScale;
+    double rAxis = -rotationAxis.getAsDouble() * kSensitivityScale;
 
     /* No deadbands since sensitivity is so low */
 
