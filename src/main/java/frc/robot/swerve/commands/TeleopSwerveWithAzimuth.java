@@ -12,11 +12,11 @@ import static frc.robot.Constants.SwerveConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
+import java.util.function.DoubleSupplier;
 
 public class TeleopSwerveWithAzimuth extends CommandBase {
 
@@ -25,27 +25,24 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
   private boolean openLoop;
 
   private SwerveDrive swerveDrive;
-  private Joystick controller;
-  private int translationAxis;
-  private int strafeAxis;
+  private DoubleSupplier translationAxis;
+  private DoubleSupplier strafeAxis;
+  private DoubleSupplier rotationXAxis;
+  private DoubleSupplier rotationYAxis;
   private PIDController azimuthController;
-  private int rotationXAxis;
-  private int rotationYAxis;
 
   /** Driver control */
   public TeleopSwerveWithAzimuth(
       SwerveDrive swerveDrive,
-      Joystick controller,
-      int translationAxis,
-      int strafeAxis,
-      int rotationXAxis,
-      int rotationYAxis,
+      DoubleSupplier translationAxis,
+      DoubleSupplier strafeAxis,
+      DoubleSupplier rotationXAxis,
+      DoubleSupplier rotationYAxis,
       boolean fieldRelative,
       boolean openLoop) {
     this.swerveDrive = swerveDrive;
     addRequirements(swerveDrive);
 
-    this.controller = controller;
     this.translationAxis = translationAxis;
     this.strafeAxis = strafeAxis;
     this.rotationXAxis = rotationXAxis;
@@ -58,13 +55,13 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
 
   @Override
   public void execute() {
-    double yAxis = -controller.getRawAxis(translationAxis);
-    double xAxis = -controller.getRawAxis(strafeAxis);
+    double yAxis = -translationAxis.getAsDouble();
+    double xAxis = -strafeAxis.getAsDouble();
     // Obtains axis values for x and y for translation command
 
-    double rAxisX = controller.getRawAxis(rotationXAxis);
+    double rAxisX = rotationXAxis.getAsDouble();
     // Gets position of joystick input on the x axis of the total stick area
-    double rAxisY = -controller.getRawAxis(rotationYAxis);
+    double rAxisY = -rotationYAxis.getAsDouble();
     // Gets position of joystick input on the y axis of the total stick area
 
     // Safety area, insures that joystick movement will not be tracked within a

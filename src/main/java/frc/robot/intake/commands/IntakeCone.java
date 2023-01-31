@@ -21,7 +21,7 @@ public class IntakeCone extends CommandBase {
 
   @Override
   public void initialize() {
-    intake.backward();
+    intake.intakeCone();
   }
 
   @Override
