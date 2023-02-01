@@ -49,7 +49,10 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    public static final int elevatorID = -1;
+    public static final int elevatorID = 15;
+    public static final double elevatorMotorDiameter = 1;
+    public static final double elevatorGearRatio = 1 / 1;
+
     public static final int kP = 1;
     public static final int kI = 1;
     public static final int kD = 1;

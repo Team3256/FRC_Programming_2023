@@ -8,7 +8,8 @@
 package frc.robot.elevator;
 
 import static frc.robot.Constants.ElevatorConstants;
-import static frc.robot.Constants.ElevatorConstants.kEncoderToMetersConversionFactor;
+import static frc.robot.Constants.ElevatorConstants.*;
+import static frc.robot.swerve.helpers.Conversions.falconToDistance;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -31,7 +32,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public static double getPosition() {
-    return elevatorMotor.getSelectedSensorPosition() * kEncoderToMetersConversionFactor;
+    return falconToDistance(
+        elevatorMotor.getSelectedSensorPosition(), elevatorMotorDiameter, elevatorGearRatio);
   }
 
   public void off() {

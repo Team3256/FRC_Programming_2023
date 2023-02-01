@@ -28,11 +28,15 @@ public class Conversions {
     return ticks;
   }
 
-  public static double falconToDistance(
-      double encoderPosition, double circumference, double gearRatio) {
-    // TODO: Check math
+  /**
+   * @param encoderPosition Current encoder count
+   * @param diameter Diameter of motor in meters
+   * @param gearRatio Gear Ratio between Falcon and Mechanism
+   * @return Distance of Falcon Motor
+   */
+  public static double falconToDistance(double encoderPosition, double diameter, double gearRatio) {
     double rotations = falconToDegrees(encoderPosition, gearRatio) / 360;
-    return rotations * circumference;
+    return 2 * Math.PI * diameter * rotations;
   }
 
   /**

@@ -16,11 +16,11 @@ import frc.robot.elevator.Elevator;
 public class ElevatorSetHeight extends PIDCommand {
   Elevator elevatorSubsystem;
 
-  public ElevatorSetHeight(Elevator elevatorSubsystem, double target) {
+  public ElevatorSetHeight(Elevator elevatorSubsystem, double setpoint) {
     super(
         new PIDController(kP, kI, kD),
         Elevator::getPosition,
-        target,
+        setpoint,
         elevatorSubsystem::setSpeed,
         elevatorSubsystem);
     this.elevatorSubsystem = elevatorSubsystem;
