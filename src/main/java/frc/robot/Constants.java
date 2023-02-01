@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
-import java.util.Hashtable;
 import java.util.Map;
 
 public final class Constants {
@@ -85,14 +84,6 @@ public final class Constants {
     public static int kYAccelRateLimit = 15;
 
     public static int kYDecelRateLimit = 10;
-
-    public static Hashtable<Double, Integer[]> X_RATE_LIMIT_DICT =
-        new Hashtable<Double, Integer[]>();
-    public static Hashtable<Double, Integer[]> Y_RATE_LIMIT_DICT =
-        new Hashtable<Double, Integer[]>();
-
-    public static final int POSITION_DIST_DELTA = 0;
-
     public static final int pigeonID = 1;
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
@@ -108,9 +99,9 @@ public final class Constants {
 
     public static final double driveGearRatio = (6.86 / 1.0); // 6.86:1
     public static final double angleGearRatio = (12.8 / 1.0); // 12.8:1
-    
+
     public static final double[] lockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
-    
+
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0),

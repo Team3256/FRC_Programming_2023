@@ -19,9 +19,9 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.helper.AdaptiveSlewRateLimiter;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
+import frc.robot.helper.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
@@ -108,7 +108,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
         adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
 
     SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(chassisSpeeds);
-    
+
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
 
     for (SwerveModule mod : swerveModules) {

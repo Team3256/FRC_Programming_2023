@@ -7,9 +7,10 @@
 
 package frc.robot.elevator.commands;
 
+import static frc.robot.Constants.ElevatorConstants.*;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.elevator.Elevator;
 
 public class ElevatorSetHeight extends PIDCommand {
@@ -17,14 +18,13 @@ public class ElevatorSetHeight extends PIDCommand {
 
   public ElevatorSetHeight(Elevator elevatorSubsystem, double target) {
     super(
-        new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD),
+        new PIDController(kP, kI, kD),
         Elevator::getPosition,
         target,
         elevatorSubsystem::setSpeed,
         elevatorSubsystem);
     this.elevatorSubsystem = elevatorSubsystem;
-    getController()
-        .setTolerance(ElevatorConstants.kTolerancePosition, ElevatorConstants.kToleranceRate);
+    getController().setTolerance(kTolerancePosition, kToleranceRate);
   }
 
   @Override
