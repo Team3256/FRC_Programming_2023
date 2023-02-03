@@ -60,6 +60,9 @@ public final class Constants {
     public static final int kToleranceRate = 1;
     public static final double kRateLimiting = 0.05;
     public static final double kEncoderToMetersConversionFactor = -1;
+    public static final double kElevatorCurrentThreshold = 1; // amps
+    public static final double kElevatorUpSpeed = 0.3;
+    public static final double kElevatorDownSpeed = -0.3;
   }
 
   public static final class ArmConstants {

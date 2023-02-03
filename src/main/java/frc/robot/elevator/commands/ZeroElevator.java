@@ -10,6 +10,8 @@ package frc.robot.elevator.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.elevator.Elevator;
 
+import static frc.robot.Constants.ElevatorConstants.kElevatorDownSpeed;
+
 public class ZeroElevator extends CommandBase {
   Elevator elevatorSubsystem;
 
@@ -20,7 +22,7 @@ public class ZeroElevator extends CommandBase {
 
   @Override
   public void initialize() {
-    elevatorSubsystem.zeroElevator();
+    elevatorSubsystem.setSpeed(kElevatorDownSpeed);
   }
 
   @Override
@@ -29,5 +31,10 @@ public class ZeroElevator extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     elevatorSubsystem.off();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return elevatorSubsystem.isMotorCurrentSpiking();
   }
 }
