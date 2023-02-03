@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.helpers;
 
-import static frc.robot.swerve.SwerveDriveConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.NeutralMode;

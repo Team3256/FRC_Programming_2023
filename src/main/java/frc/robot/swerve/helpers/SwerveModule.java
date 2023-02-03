@@ -7,10 +7,11 @@
 
 package frc.robot.swerve.helpers;
 
-import static frc.robot.swerve.SwerveDriveConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -22,10 +23,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModule {
   public int moduleNumber;
-  private double angleOffset;
-  private TalonFX mAngleMotor;
-  private TalonFX mDriveMotor;
-  private CANCoder angleEncoder;
+  private final double angleOffset;
+  private final TalonFX mAngleMotor;
+  private final TalonFX mDriveMotor;
+  private final CANCoder angleEncoder;
   private double lastAngle;
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kDriveKS, kDriveKV, kDriveKA);
@@ -81,6 +82,18 @@ public class SwerveModule {
     lastAngle = angle;
   }
 
+  public void setDesiredAngleState(SwerveModuleState desiredState) {
+    desiredState = CTREModuleState.optimize(desiredState, getPosition().angle);
+
+    double angle =
+        (Math.abs(desiredState.speedMetersPerSecond) <= (kMaxSpeed * 0.01))
+            ? lastAngle
+            : desiredState.angle.getDegrees();
+
+    mAngleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(angle, kAngleGearRatio));
+    lastAngle = angle;
+  }
+
   private void resetToAbsolute() {
     double absolutePosition =
         Conversions.degreesToFalcon(getCanCoder().getDegrees() - angleOffset, kAngleGearRatio);
@@ -106,6 +119,14 @@ public class SwerveModule {
     mDriveMotor.setInverted(kDriveMotorInvert);
     mDriveMotor.setNeutralMode(kDriveNeutralMode);
     mDriveMotor.setSelectedSensorPosition(0);
+  }
+
+  public void setDriveMotorNeutralMode(NeutralMode neutralMode) {
+    mDriveMotor.setNeutralMode(neutralMode);
+  }
+
+  public void setAngleMotorNeutralMode(NeutralMode neutralMode) {
+    mAngleMotor.setNeutralMode(neutralMode);
   }
 
   public Rotation2d getCanCoder() {

@@ -13,7 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 
-public final class SwerveDriveConstants {
+public final class SwerveConstants {
 
   /* Angle Motor PID Values */
   public static final double kAngleKP = 0.6;
@@ -62,6 +62,8 @@ public final class SwerveDriveConstants {
 
   public static final double kDriveGearRatio = (6.86); // 6.86:1
   public static final double kAngleGearRatio = (12.8); // 12.8:1
+
+  public static final double[] kLockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
 
   public static final SwerveDriveKinematics kSwerveKinematics =
       new SwerveDriveKinematics(

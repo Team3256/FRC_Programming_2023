@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.swerve.SwerveDriveConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
@@ -47,6 +47,12 @@ public class TeleopSwerve extends CommandBase {
     this.rotationAxis = rotationAxis;
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
+  }
+
+  @Override
+  public void initialize() {
+    swerveDrive.setAngleMotorsNeutralMode(kAngleNeutralMode);
+    swerveDrive.setDriveMotorsNeutralMode(kDriveNeutralMode);
   }
 
   @Override
