@@ -50,7 +50,7 @@ public class SwerveDrive extends SubsystemBase {
 
     odometry =
         new SwerveDriveOdometry(
-                kSwerveKinematics,
+            kSwerveKinematics,
             getYaw(),
             new SwerveModulePosition[] {
               frontLeftModule.getPosition(),

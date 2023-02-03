@@ -109,10 +109,10 @@ public final class Constants {
           kMidTranslations[i] = new Translation2d(kMidX, kNodeFirstY + kNodeSeparationY * i);
           kMid3dTranslations[i] =
               new Translation3d(
-                      kMidX, kNodeFirstY + kNodeSeparationY * i, isCube ? kMidCubeZ : kMidConeZ);
+                  kMidX, kNodeFirstY + kNodeSeparationY * i, isCube ? kMidCubeZ : kMidConeZ);
           kHigh3dTranslations[i] =
               new Translation3d(
-                      kHighX, kNodeFirstY + kNodeSeparationY * i, isCube ? kHighCubeZ : kHighConeZ);
+                  kHighX, kNodeFirstY + kNodeSeparationY * i, isCube ? kHighCubeZ : kHighConeZ);
           kHighTranslations[i] = new Translation2d(kHighX, kNodeFirstY + kNodeSeparationY * i);
         }
       }
@@ -137,7 +137,7 @@ public final class Constants {
             new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 6),
             new Translation2d(kComplexLowXCubes, kNodeFirstY + kNodeSeparationY * 7),
             new Translation2d(
-                    kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 8 + kComplexLowOuterYOffset),
+                kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 8 + kComplexLowOuterYOffset),
           };
     }
 
@@ -154,7 +154,7 @@ public final class Constants {
       public static final Translation2d[] kRegionCorners =
           new Translation2d[] {
             new Translation2d(
-                    kMidX, kRightY), // Start at lower left next to border with opponent community
+                kMidX, kRightY), // Start at lower left next to border with opponent community
             new Translation2d(kMidX, kMidY),
             new Translation2d(kOuterX, kMidY),
             new Translation2d(kOuterX, kLeftY),
