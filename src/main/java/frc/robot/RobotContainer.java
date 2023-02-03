@@ -7,17 +7,20 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
+import static frc.robot.Constants.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.drivers.CANTestable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
+import frc.robot.swerve.commands.TeleopSwerveLimited;
+import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
+import java.util.ArrayList;
 
 
 /**
@@ -27,77 +30,86 @@ import frc.robot.swerve.commands.TeleopSwerve;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  /* Controllers */
-  private final Joystick driver = new Joystick(0);
+  private final CommandXboxController driver = new CommandXboxController(0);
+  private final CommandXboxController operator = new CommandXboxController(1);
 
-  /* Drive Controls */
-  private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
   private final boolean fieldRelative = true;
   private final boolean openLoop = true;
 
-  /* Driver Buttons */
-  private final JoystickButton zeroGyro =
-      new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton intakeCube =
-      new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton intakeCone =
-      new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton sensitivityToggle =
-      new JoystickButton(driver, XboxController.Button.kB.value);
+  private SwerveDrive swerveDrive;
+  private Intake intakeSubsystem;
 
-  /* Subsystems */
-  private final SwerveDrive swerveDrive = new SwerveDrive();
-  private final Intake intakeSubsystem = new Intake();
+  private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    if (INTAKE) {
+      configureIntake();
+      testables.add(intakeSubsystem);
+    }
+    if (SWERVE) {
+      configureSwerve();
+      testables.add(swerveDrive);
+    }
+    if (ELEVATOR) {
+      configureElevator();
+    }
+  }
+
+  private void configureIntake() {
+    this.intakeSubsystem = new Intake();
+
+    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
+    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
+  }
+
+  private void configureSwerve() {
+    this.swerveDrive = new SwerveDrive();
+
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
-            driver,
-            translationAxis,
-            strafeAxis,
-            rotationAxis,
+            () -> driver.getRightY(),
+            () -> driver.getRightX(),
+            () -> driver.getLeftX(),
             fieldRelative,
             openLoop));
 
-    // Configure the button bindings
-    configureButtonBindings();
+    driver
+        .rightBumper()
+        .whileTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveDrive,
+                () -> driver.getRightY(),
+                () -> driver.getRightX(),
+                () -> driver.getLeftX(),
+                () -> driver.getLeftY(),
+                Constants.fieldRelative,
+                Constants.openLoop));
+
+    driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
+    driver
+        .b()
+        .toggleOnTrue(
+            new TeleopSwerveLimited(
+                swerveDrive,
+                () -> driver.getRightY(),
+                () -> driver.getRightX(),
+                () -> driver.getLeftX(),
+                fieldRelative,
+                openLoop));
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    /* Driver Buttons */
-    zeroGyro.onTrue(new InstantCommand(swerveDrive::zeroGyro));
-    //    sensitivityToggle.toggleOnTrue(
-    //        new TeleopSwerveLimited(
-    //            swerveDrive,
-    //            driver,
-    //            translationAxis,
-    //            strafeAxis,
-    //            rotationAxis,
-    //            fieldRelative,
-    //            openLoop));
+  public void configureElevator() {}
 
-    // intake buttons for testing
-    intakeCube.whileTrue(new IntakeCube(intakeSubsystem));
-    intakeCone.whileTrue(new IntakeCone(intakeSubsystem));
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
     return new InstantCommand();
+  }
+
+  public void test() {
+    System.out.println("Testing CAN connections:");
+    boolean result = true;
+    for (CANTestable subsystem : testables) result &= subsystem.test();
+    System.out.println("CAN fully connected: " + result);
   }
 
   public void zeroGyro() {
