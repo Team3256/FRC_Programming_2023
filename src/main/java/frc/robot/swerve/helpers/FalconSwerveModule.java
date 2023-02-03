@@ -41,10 +41,10 @@ public class FalconSwerveModule extends SubsystemBase {
   private Rotation2d mTalonOffset;
 
   private final double kDrivePositionCoefficient =
-      Math.PI * wheelDiameter * driveReduction / 2048.0;
+      Math.PI * kWheelDiameter * kDriveReduction / 2048.0;
   private final double kDriveVelocityCoefficient = kDrivePositionCoefficient * 10.0;
 
-  private final double kSteerPositionCoefficient = 2.0 * Math.PI / 2048.0 * steerReduction;
+  private final double kSteerPositionCoefficient = 2.0 * Math.PI / 2048.0 * kSteerReduction;
 
   public FalconSwerveModule(
       CanDeviceId driveId, CanDeviceId steeringId, CANCoder cancoder, Rotation2d encoderZero) {

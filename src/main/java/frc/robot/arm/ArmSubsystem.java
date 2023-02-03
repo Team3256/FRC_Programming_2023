@@ -41,7 +41,7 @@ public class ArmSubsystem extends SubsystemBase {
     periodicIO = new PeriodicIO();
     if (Robot.isReal()) {
       // Configure REAL HW
-      armMotor = new TalonFX(ARM_MOTOR_ID);
+      armMotor = new TalonFX(kArmMotorID);
       armMotor.enableVoltageCompensation(true);
       System.out.println("Arm initalized");
     } else {

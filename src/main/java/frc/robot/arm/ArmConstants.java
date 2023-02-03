@@ -9,7 +9,7 @@ package frc.robot.arm;
 
 public final class ArmConstants {
   // TODO: Fix these to comply to the mechanical ppls kg
-  public static final int ARM_MOTOR_ID = -1;
+  public static final int kArmMotorID = -1;
   public static final double kArmGearing = 1;
   public static final double kArmInertia =
       1; // https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/simulation/SingleJointedArmSim.html#%3Cinit%3E(edu.wpi.first.math.system.plant.DCMotor,double,double,double,double,double,double,boolean)

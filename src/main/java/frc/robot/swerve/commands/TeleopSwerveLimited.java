@@ -56,8 +56,8 @@ public class TeleopSwerveLimited extends CommandBase {
 
     /* No deadbands since sensitivity is so low */
 
-    translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
-    rotation = rAxis * maxAngularVelocity;
+    translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
+    rotation = rAxis * kMaxAngularVelocity;
     swerveDrive.drive(translation, rotation, fieldRelative, openLoop);
   }
 }

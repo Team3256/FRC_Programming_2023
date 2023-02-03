@@ -7,7 +7,7 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.PIDConstants.TRANSLATION_FF;
+import static frc.robot.auto.AutoConstants.kTranslationFF;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -68,7 +68,7 @@ public class SwerveDriveController {
       }
     }
 
-    if (Constants.DEBUG) {
+    if (Constants.kDebug) {
       SmartDashboard.putNumber("Current Rotation", currentRotation * 180 / Math.PI);
       SmartDashboard.putNumber("Current Pose Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber(
@@ -76,12 +76,12 @@ public class SwerveDriveController {
     }
 
     // Calculate feedforward velocities (field-relative).
-    double xFF = linearVelocityRefMeters * poseRef.getRotation().getCos() * TRANSLATION_FF;
-    double yFF = linearVelocityRefMeters * poseRef.getRotation().getSin() * TRANSLATION_FF;
+    double xFF = linearVelocityRefMeters * poseRef.getRotation().getCos() * kTranslationFF;
+    double yFF = linearVelocityRefMeters * poseRef.getRotation().getSin() * kTranslationFF;
 
     double thetaFF = thetaController.calculate(currentRotation, angleRef.getRadians());
 
-    if (Constants.DEBUG) {
+    if (Constants.kDebug) {
       SmartDashboard.putNumber("Theta Current", currentRotation * 180 / Math.PI);
       SmartDashboard.putNumber("Theta Setpoint", angleRef.getDegrees());
     }

@@ -19,7 +19,7 @@ public class Intake extends SubsystemBase {
   private final TalonFX intakeMotor;
 
   public Intake() {
-    intakeMotor = new TalonFX(intakeMotorID);
+    intakeMotor = new TalonFX(kIntakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     off();
     System.out.println("Intake initialized");
