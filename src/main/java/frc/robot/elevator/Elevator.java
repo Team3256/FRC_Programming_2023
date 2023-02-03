@@ -7,14 +7,15 @@
 
 package frc.robot.elevator;
 
-import static frc.robot.Constants.ElevatorConstants;
-import static frc.robot.Constants.ElevatorConstants.*;
-import static frc.robot.swerve.helpers.Conversions.falconToDistance;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import static frc.robot.Constants.ElevatorConstants;
+import static frc.robot.Constants.ElevatorConstants.elevatorGearRatio;
+import static frc.robot.Constants.ElevatorConstants.elevatorMotorDiameter;
+import static frc.robot.swerve.helpers.Conversions.falconToDistance;
 
 public class Elevator extends SubsystemBase {
   private static TalonFX elevatorMotor;
@@ -34,6 +35,10 @@ public class Elevator extends SubsystemBase {
   public static double getPosition() {
     return falconToDistance(
         elevatorMotor.getSelectedSensorPosition(), elevatorMotorDiameter, elevatorGearRatio);
+  }
+
+  public void zeroElevator() {
+    elevatorMotor.set(ControlMode.Position, 0);
   }
 
   public void off() {
