@@ -16,11 +16,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.swerve.SwerveDrive;
 
 public class LockSwerve extends CommandBase {
-  private final SwerveDrive swerveDrive;
+  private final SwerveDrive swerveSubsystem;
 
-  public LockSwerve(SwerveDrive swerveDrive) {
-    this.swerveDrive = swerveDrive;
-    addRequirements(swerveDrive);
+  public LockSwerve(SwerveDrive swerveSubsystem) {
+    this.swerveSubsystem = swerveSubsystem;
+    addRequirements(swerveSubsystem);
   }
 
   @Override
@@ -32,16 +32,10 @@ public class LockSwerve extends CommandBase {
       states[mod] = new SwerveModuleState(1, new Rotation2d(inwardAngle + kLockAngleOffsets[mod]));
     }
 
-    swerveDrive.setDesiredAngleState(states);
-    swerveDrive.setDriveMotorsNeutralMode(NeutralMode.Brake);
-    swerveDrive.setAngleMotorsNeutralMode(NeutralMode.Brake);
+    swerveSubsystem.setDesiredAngleState(states);
+    swerveSubsystem.setDriveMotorsNeutralMode(NeutralMode.Brake);
+    swerveSubsystem.setAngleMotorsNeutralMode(NeutralMode.Brake);
   }
-
-  @Override
-  public void execute() {}
-
-  @Override
-  public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {

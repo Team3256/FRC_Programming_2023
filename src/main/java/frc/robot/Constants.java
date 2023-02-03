@@ -15,8 +15,212 @@ import edu.wpi.first.math.util.Units;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebug = false;
+  public static final boolean DEBUG = false;
+  public static final boolean INTAKE = true;
+  public static final boolean ELEVATOR = true;
+  public static final boolean SWERVE = true;
   public static final double kStickDeadband = 0.1;
+  public static final double azimuthStickDeadband = 0.3;
+  public static final int kLongCANTimeoutMs = 1;
+  public static final double kMaxDriveVoltage = 1;
+  public static final double kMk4DriveVelocityKp = 1;
+  public static final double kMk4DriveVelocityKi = 1;
+  public static final double kMk4DriveVelocityKd = 1;
+  public static final double kMk4DriveVelocityKf = 1;
+
+  public static final double kMk4AziKp = 1;
+  public static final double kMk4AziKi = 1;
+  public static final double kMk4AziKd = 1;
+
+  public static final double driveReduction = 1;
+  public static final double steerReduction = 1;
+
+  public static final boolean fieldRelative = true;
+  public static final boolean openLoop = true;
+
+  public static final class IntakeConstants {
+    public static final int intakeMotorID = 14;
+    public static final double kIntakeConeSpeed = 0.5;
+    public static final double kIntakeCubeSpeed = -0.5;
+  }
+
+  public static final class ArmConstants {
+    // TODO: Fix these to comply to the mechanical ppls kg
+    public static final int ARM_MOTOR_ID = -1;
+    public static final double kArmGearing = 1;
+    public static final double kArmInertia =
+        1; // https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/simulation/SingleJointedArmSim.html#%3Cinit%3E(edu.wpi.first.math.system.plant.DCMotor,double,double,double,double,double,double,boolean)
+    public static final double kArmLengthMeters = 1;
+    public static final double kMinAngleRads = 1;
+    public static final double kMaxAngleRads = 1;
+    public static final double kArmMassKg = 1;
+    public static final boolean kArmSimGravity = true;
+
+    public static final double kP = 1;
+    public static final double kI = 1;
+    public static final double kD = 1;
+    public static final double kFF = 1;
+  }
+
+  public static final class SwerveConstants {
+
+    public static final int pigeonID = 1;
+    public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
+
+    /* Drivetrain Constants */
+    // TODO: Update Constants
+    public static final double trackWidth = Units.inchesToMeters(24.25);
+    public static final double wheelBase = Units.inchesToMeters(24.25);
+    public static final double wheelDiameter = Units.inchesToMeters(3.94);
+    public static final double wheelCircumference = wheelDiameter * Math.PI;
+
+    public static final double openLoopRamp = 0.25;
+    public static final double closedLoopRamp = 0.0;
+
+    public static final double driveGearRatio = (6.86 / 1.0); // 6.86:1
+    public static final double angleGearRatio = (12.8 / 1.0); // 12.8:1
+
+    public static final double[] lockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
+
+    public static final SwerveDriveKinematics swerveKinematics =
+        new SwerveDriveKinematics(
+            new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+            new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+
+    /* Swerve Current Limiting */
+    public static final int angleContinuousCurrentLimit = 25;
+    public static final int anglePeakCurrentLimit = 40;
+    public static final double anglePeakCurrentDuration = 0.1;
+    public static final boolean angleEnableCurrentLimit = true;
+
+    public static final int driveContinuousCurrentLimit = 35;
+    public static final int drivePeakCurrentLimit = 60;
+    public static final double drivePeakCurrentDuration = 0.1;
+    public static final boolean driveEnableCurrentLimit = true;
+
+    /* Swerve Profiling Values */
+    public static final double maxSpeed = 4.5; // meters per second
+    public static final double maxAngularVelocity = Math.PI * 1.5;
+    public static final double maxAngularAcceleration = Math.PI * 0.5;
+
+    /* Neutral Modes */
+    public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
+    public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+
+    /* Motor Inverts */
+    public static final boolean driveMotorInvert = false;
+    public static final boolean angleMotorInvert = false;
+
+    /* Angle Encoder Invert */
+    public static final boolean canCoderInvert = false;
+
+    /* PID Constants Trapezoid Profile for the Azimuth Control */
+    public static final double kAzimuthP = 0.09;
+    public static final double kAzimuthI = 0.00;
+    public static final double kAzimuthD = 0.01;
+
+    /* Module Specific Constants */
+    public static final class FrontLeft {
+      public static final int driveMotorID = 3;
+      public static final int angleMotorID = 4;
+      public static final int canCoderID = 2;
+      public static final double angleOffset = 531.6064455; // 531 or 171 (ziptide constants)
+      public static final SwerveModuleConstants constants =
+          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+    }
+
+    public static final class FrontRight {
+      public static final int driveMotorID = 6;
+      public static final int angleMotorID = 7;
+      public static final int canCoderID = 5;
+      public static final double angleOffset = 48.691406; // (ziptide constants)
+      public static final SwerveModuleConstants constants =
+          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+    }
+
+    public static final class BackLeft {
+      public static final int driveMotorID = 9;
+      public static final int angleMotorID = 10;
+      public static final int canCoderID = 8;
+      public static final double angleOffset = 174.770508; // (ziptide constants)
+      public static final SwerveModuleConstants constants =
+          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+    }
+
+    public static final class BackRight {
+      public static final int driveMotorID = 12;
+      public static final int angleMotorID = 13;
+      public static final int canCoderID = 11;
+      public static final double angleOffset = 233.0419925; // (ziptide constants)
+      public static final SwerveModuleConstants constants =
+          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+    }
+
+    public static final double kSensitivityScale = 0.20;
+  }
+
+  public static final class AutoConstants {
+    public static final boolean AUTO_DEBUG = false;
+    public static final double COMMAND_MARKER_THRESHOLD = 0.05; // meters
+
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+    // Max velocity
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    // Max acceleration
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+        new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  }
+
+  public static final class PIDConstants {
+
+    /* Angle Motor PID Values */
+    public static final double angleKP = 0.6;
+    public static final double angleKI = 0.0;
+    public static final double angleKD = 12.0;
+    public static final double angleKF = 0.0;
+
+    /* Drive Motor PID Values */
+    public static final double driveKP = 0.10;
+    public static final double driveKI = 0.0;
+    public static final double driveKD = 0.0;
+    public static final double driveKF = 0.0;
+
+    /* Drive Motor Characterization Values */
+    public static final double driveKS =
+        (0.667 / 12); // divide by 12 to convert from volts to percent output for CTRE
+    public static final double driveKV = (2.44 / 12);
+    public static final double driveKA = (0.27 / 12);
+
+    /* Auto translation constants */
+
+    public static double kAutoXTranslationP = 2.2;
+    public static double kAutoXTranslationI = 0.025;
+    public static double kAutoXTranslationD = 0;
+
+    public static double kAutoYTranslationP = 2.2;
+    public static double kAutoYTranslationI = 0.025;
+    public static double kAutoYTranslationD = 0;
+
+    public static double TRANSLATION_FF = 0.3;
+
+    /* ThetaController constants */
+    public static double kAutoThetaControllerP = 5.4;
+    public static double kAutoThetaControllerI = 0.02;
+    public static double kAutoThetaControllerD = 1.5;
+    public static TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
+        new TrapezoidProfile.Constraints(
+            AutoConstants.kMaxAngularSpeedRadiansPerSecond,
+            AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
+  }
+
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);
@@ -119,6 +323,7 @@ public final class Constants {
 
       // Complex low layout (shifted to account for cube vs cone rows and wide edge
       // nodes)
+
       public static final double kComplexLowXCones =
           kOuterX - Units.inchesToMeters(16.0) / 2.0; // Centered X under cone
       // nodes

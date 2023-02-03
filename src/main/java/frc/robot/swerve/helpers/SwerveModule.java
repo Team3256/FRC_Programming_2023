@@ -20,6 +20,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.drivers.CANDeviceTester;
 
 public class SwerveModule {
   public int moduleNumber;
@@ -141,5 +143,16 @@ public class SwerveModule {
         Rotation2d.fromDegrees(
             Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), kAngleGearRatio));
     return new SwerveModulePosition(velocity, angle);
+  }
+
+  public boolean test() {
+    System.out.println("Testing swerve module CAN:");
+    boolean result =
+        CANDeviceTester.testTalonFX(mDriveMotor)
+            && CANDeviceTester.testTalonFX(mAngleMotor)
+            && CANDeviceTester.testCANCoder(angleEncoder);
+    System.out.println("Swerve module CAN connected: " + result);
+    SmartDashboard.putBoolean("Swerve module CAN connected", result);
+    return result;
   }
 }
