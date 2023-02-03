@@ -18,21 +18,22 @@ public class SetArmFromPID extends PIDCommand {
   DoubleSupplier velocity;
   ArmSubsystem armSubsystem;
   boolean movingSetpoint = false;
+
   // TODO: Use ArmK
   public SetArmFromPID(ArmSubsystem armSubsystem) {
     super(
         new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD),
         armSubsystem::getAngularVelocityRPM,
         SmartDashboard.getNumber("Velocity Setpoint", 1200),
-        voltage ->
-            armSubsystem.setInputVoltage(
-                voltage
-                    + SmartDashboard.getNumber("Velocity Setpoint", 1200)
-                        * SmartDashboard.getNumber("Arm KFF", ArmConstants.kFF)),
+        voltage -> armSubsystem.setInputVoltage(
+            voltage
+                + SmartDashboard.getNumber("Velocity Setpoint", 1200)
+                    * SmartDashboard.getNumber("Arm KFF", ArmConstants.kFF)),
         armSubsystem);
 
     this.velocity = () -> SmartDashboard.getNumber("Velocity Setpoint", 1200);
     this.armSubsystem = armSubsystem;
+    addRequirements(armSubsystem);
   }
 
   public SetArmFromPID(ArmSubsystem armSubsystem, double velocity) {
@@ -45,6 +46,7 @@ public class SetArmFromPID extends PIDCommand {
 
     this.velocity = () -> velocity;
     this.armSubsystem = armSubsystem;
+    addRequirements(armSubsystem);
   }
 
   @Override
@@ -54,8 +56,8 @@ public class SetArmFromPID extends PIDCommand {
     SmartDashboard.putNumber("Arm KFF", ArmConstants.kFF);
   }
 
-  // @Override // ?
-  public void end() {
+  @Override
+  public void end(boolean interrupted) {
     armSubsystem.setInputVoltage(0);
   }
 

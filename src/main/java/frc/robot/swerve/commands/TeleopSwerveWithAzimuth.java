@@ -19,12 +19,11 @@ import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
 public class TeleopSwerveWithAzimuth extends CommandBase {
-
   private Translation2d translation;
   private boolean fieldRelative;
   private boolean openLoop;
 
-  private SwerveDrive swerveDrive;
+  private SwerveDrive swerveSubsystem;
   private DoubleSupplier translationAxis;
   private DoubleSupplier strafeAxis;
   private DoubleSupplier rotationXAxis;
@@ -33,15 +32,15 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
 
   /** Driver control */
   public TeleopSwerveWithAzimuth(
-      SwerveDrive swerveDrive,
+      SwerveDrive swerveSubsystem,
       DoubleSupplier translationAxis,
       DoubleSupplier strafeAxis,
       DoubleSupplier rotationXAxis,
       DoubleSupplier rotationYAxis,
       boolean fieldRelative,
       boolean openLoop) {
-    this.swerveDrive = swerveDrive;
-    addRequirements(swerveDrive);
+    this.swerveSubsystem = swerveSubsystem;
+    addRequirements(swerveSubsystem);
 
     this.translationAxis = translationAxis;
     this.strafeAxis = strafeAxis;
@@ -55,14 +54,14 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
 
   @Override
   public void execute() {
+    // Obtains axis values for x and y for translation command
     double yAxis = -translationAxis.getAsDouble();
     double xAxis = -strafeAxis.getAsDouble();
-    // Obtains axis values for x and y for translation command
 
-    double rAxisX = rotationXAxis.getAsDouble();
     // Gets position of joystick input on the x axis of the total stick area
-    double rAxisY = -rotationYAxis.getAsDouble();
+    double rAxisX = rotationXAxis.getAsDouble();
     // Gets position of joystick input on the y axis of the total stick area
+    double rAxisY = -rotationYAxis.getAsDouble();
 
     // Safety area, insures that joystick movement will not be tracked within a
     // certain area,
@@ -75,25 +74,23 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     SmartDashboard.putNumber("rAxisX", rAxisX);
     SmartDashboard.putNumber("rAxisY", rAxisY);
 
-    SmartDashboard.putNumber("Rotation Angle", swerveDrive.getYaw().getDegrees());
+    SmartDashboard.putNumber("Rotation Angle", swerveSubsystem.getYaw().getDegrees());
 
     translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
     if (rAxisX == 0 && rAxisY == 0) {
-      swerveDrive.drive(translation, 0, fieldRelative, openLoop);
+      swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
       return;
     }
 
-    double azimuthAngle = (Math.atan2(rAxisY, rAxisX) * 180 / Math.PI) - 90;
     // Converts from coordinates to angle, sets joystick forward input as 0,
     // converts angle to
     // degrees
+    double azimuthAngle = (Math.atan2(rAxisY, rAxisX) * 180 / Math.PI) - 90;
 
-    // azimuthController.setGoal(azimuthAngle);
-    double rotationPIDOutput =
-        azimuthController.calculate(swerveDrive.getYaw().getDegrees(), azimuthAngle);
     // PID controller takes current robot position (getYaw) and compares to the
     // azimuth angle to
     // calculate error
+    double rotationPIDOutput = azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
 
     SmartDashboard.putNumber("Setpoint Angle", azimuthAngle);
     SmartDashboard.putNumber("Rotation Velocity", rotationPIDOutput);
@@ -101,7 +98,7 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
 
     translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
     rotationPIDOutput = MathUtil.clamp(rotationPIDOutput, -maxAngularVelocity, maxAngularVelocity);
-    swerveDrive.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
     // Sets motors to the velocities defined here
+    swerveSubsystem.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
   }
 }

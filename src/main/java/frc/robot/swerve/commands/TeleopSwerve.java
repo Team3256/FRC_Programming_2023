@@ -15,29 +15,26 @@ import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
-// TODO: Use our own teleop command
 public class TeleopSwerve extends CommandBase {
-
   private double rotation;
   private Translation2d translation;
   private boolean fieldRelative;
   private boolean openLoop;
 
-  private SwerveDrive swerveDrive;
+  private SwerveDrive swerveSubsystem;
   private DoubleSupplier translationAxis;
   private DoubleSupplier strafeAxis;
   private DoubleSupplier rotationAxis;
 
-  /** Driver control */
   public TeleopSwerve(
-      SwerveDrive swerveDrive,
+      SwerveDrive swerveSubsystem,
       DoubleSupplier translationAxis,
       DoubleSupplier strafeAxis,
       DoubleSupplier rotationAxis,
       boolean fieldRelative,
       boolean openLoop) {
-    this.swerveDrive = swerveDrive;
-    addRequirements(swerveDrive);
+    this.swerveSubsystem = swerveSubsystem;
+    addRequirements(swerveSubsystem);
 
     this.translationAxis = translationAxis;
     this.strafeAxis = strafeAxis;
@@ -48,8 +45,8 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void initialize() {
-    swerveDrive.setAngleMotorsNeutralMode(angleNeutralMode);
-    swerveDrive.setDriveMotorsNeutralMode(driveNeutralMode);
+    swerveSubsystem.setAngleMotorsNeutralMode(angleNeutralMode);
+    swerveSubsystem.setDriveMotorsNeutralMode(driveNeutralMode);
   }
 
   @Override
@@ -65,6 +62,6 @@ public class TeleopSwerve extends CommandBase {
 
     translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
     rotation = rAxis * maxAngularVelocity * 0.25;
-    swerveDrive.drive(translation, rotation, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }
