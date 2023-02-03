@@ -90,7 +90,8 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     // PID controller takes current robot position (getYaw) and compares to the
     // azimuth angle to
     // calculate error
-    double rotationPIDOutput = azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
+    double rotationPIDOutput =
+        azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
 
     SmartDashboard.putNumber("Setpoint Angle", azimuthAngle);
     SmartDashboard.putNumber("Rotation Velocity", rotationPIDOutput);

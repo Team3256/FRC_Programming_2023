@@ -25,10 +25,11 @@ public class SetArmFromPID extends PIDCommand {
         new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD),
         armSubsystem::getAngularVelocityRPM,
         SmartDashboard.getNumber("Velocity Setpoint", 1200),
-        voltage -> armSubsystem.setInputVoltage(
-            voltage
-                + SmartDashboard.getNumber("Velocity Setpoint", 1200)
-                    * SmartDashboard.getNumber("Arm KFF", ArmConstants.kFF)),
+        voltage ->
+            armSubsystem.setInputVoltage(
+                voltage
+                    + SmartDashboard.getNumber("Velocity Setpoint", 1200)
+                        * SmartDashboard.getNumber("Arm KFF", ArmConstants.kFF)),
         armSubsystem);
 
     this.velocity = () -> SmartDashboard.getNumber("Velocity Setpoint", 1200);
