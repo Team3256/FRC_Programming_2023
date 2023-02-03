@@ -43,31 +43,48 @@ public class LEDTester extends SubsystemBase {
     LED.setData(LEDBuffer);
   }
 
-  int iH = 208;
-  int iS = 87;
-  int iV = 30;
-  int fH = 0;
-  int fS = 0;
-  int fV = 100;
-  int kT = 60;
-  int t = 0;
+  double tH = 0;
+  int iH = 100;
+  int dH = 50;
+  int flip = 1;
 
-  public void spirit() {
-    t = (t + 1) % kT;
-
-    double mH = (double) (fS - iS) / kT;
-    double mS = (double) (fS - iS) / kT;
-    double mV = (double) (fV - iV) / kT;
-
-    int h = (int) (iH + mH * t);
-    int s = (int) (iS + mS * t);
-    int v = (int) (iV + mV * t);
-
+  public void gradientBlue() {
     for (int i = 0; i < LEDBuffer.getLength(); i++) {
-      LEDBuffer.setHSV(i, h, s, v);
+      double hue = iH + (dH + tH + flip * 0.7 * i * dH / LEDBuffer.getLength()) % dH;
+      LEDBuffer.setHSV(i, (int) hue, 255, 255);
     }
+    tH += 0.3 * flip;
+    tH = (tH + dH) % dH;
+    if (flip == 1 && tH > 49) flip *= -1;
+    if (flip == -1 && tH < 1) flip *= -1;
     LED.setData(LEDBuffer);
   }
+
+  //  int iH = 208;
+  //  int iS = 87;
+  //  int iV = 30;
+  //  int fH = 0;
+  //  int fS = 0;
+  //  int fV = 100;
+  //  int kT = 60;
+  //  int t = 0;
+  //
+  //  public void spirit() {
+  //    t = (t + 1) % kT;
+  //
+  //    double mH = (double) (fS - iS) / kT;
+  //    double mS = (double) (fS - iS) / kT;
+  //    double mV = (double) (fV - iV) / kT;
+  //
+  //    int h = (int) (iH + mH * t);
+  //    int s = (int) (iS + mS * t);
+  //    int v = (int) (iV + mV * t);
+  //
+  //    for (int i = 0; i < LEDBuffer.getLength(); i++) {
+  //      LEDBuffer.setHSV(i, h, s, v);
+  //    }
+  //    LED.setData(LEDBuffer);
+  //  }
 
   public void off() {
     for (int i = 0; i < LEDBuffer.getLength(); i++) {
