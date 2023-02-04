@@ -82,8 +82,8 @@ public class RobotContainer {
                 () -> driver.getRightX(),
                 () -> driver.getLeftX(),
                 () -> driver.getLeftY(),
-                Constants.fieldRelative,
-                Constants.openLoop));
+                Constants.kFieldRelative,
+                Constants.kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     driver
