@@ -17,16 +17,14 @@ import frc.robot.intake.Intake;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class IntakeTests {
+public class IntakeTests extends UnitTestSuperclass {
   public final double DELTA = 0.05;
 
   private static Intake intakeSubsystem;
 
   @BeforeAll
   public static void setup() {
-    assert HAL.initialize(500, 0); // initialize the HAL, crash if failed
-    CommandScheduler.getInstance().enable();
-    DriverStationSim.setEnabled(true);
+    setupFinal();
     intakeSubsystem = new Intake();
   }
 
@@ -51,14 +49,6 @@ public class IntakeTests {
   }
 
   private static void runScheduler(double seconds) {
-    try {
-      for (int i = 0; i < seconds * 1000 / 20; ++i) {
-        com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
-        CommandScheduler.getInstance().run();
-        Thread.sleep(20);
-      }
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    runSchedulerFinal(seconds);
   }
 }
