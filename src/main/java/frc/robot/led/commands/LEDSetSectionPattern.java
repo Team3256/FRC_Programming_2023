@@ -18,14 +18,14 @@ public class LEDSetSectionPattern extends CommandBase {
 
   public LEDSetSectionPattern(LEDStrip ledStrip, int sectionID, LEDPattern ledPattern) {
     addRequirements(ledStrip);
-    this.ledStrip= ledStrip;
-    this.sectionId= sectionID;
-    this.ledPattern= ledPattern;
+    this.ledStrip = ledStrip;
+    this.sectionId = sectionID;
+    this.ledPattern = ledPattern;
   }
 
   @Override
   public void initialize() {
-    ledStrip.set(sectionId,ledPattern);
+    ledStrip.set(sectionId, ledPattern);
   }
 
   @Override
