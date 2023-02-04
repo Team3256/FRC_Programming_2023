@@ -14,6 +14,6 @@ import frc.robot.led.patternBases.LEDPattern;
 public class CubePattern extends LEDPattern {
   public CubePattern() {
     super();
-    setRange(1, 100, LEDConstants.kPurple);
+    setRangeOfPixels(1, 100, LEDConstants.kPurple);
   }
 }

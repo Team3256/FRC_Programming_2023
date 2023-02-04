@@ -15,9 +15,9 @@ public class SpiritPattern extends AnimatedPattern {
   public SpiritPattern() {
     super(100);
     LEDPattern blue = new LEDPattern();
-    blue.setRange(1, 100, LEDConstants.kBlue);
+    blue.setRangeOfPixels(1, 100, LEDConstants.kBlue);
     LEDPattern white = new LEDPattern();
-    white.setRange(1, 100, LEDConstants.kWhite);
+    white.setRangeOfPixels(1, 100, LEDConstants.kWhite);
     setEvent(0, blue);
     setEvent(50, white);
   }
