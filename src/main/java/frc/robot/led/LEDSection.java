@@ -41,6 +41,7 @@ public class LEDSection {
       if (ledId < 0 || ledId >= buffer.getLength()) continue;
       // set the buffer ledId to the corresponding pixel's color
       Color color = ledPattern.getPixel(pixel);
+      if (color == null) color = new Color(0, 0, 0);
       buffer.setLED(ledId, color);
     }
   }
