@@ -8,8 +8,10 @@
 package frc.robot.auto.commands;
 
 import static frc.robot.Constants.AutoConstants.AUTO_DEBUG;
+import static frc.robot.Constants.SwerveConstants.pigeonID;
 // import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
 
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -35,6 +37,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   private final double trajectoryDuration;
   private Pose2d startPose;
   private AutoCommandRunner autoCommandRunner;
+  private final Pigeon2 gyro = new Pigeon2(pigeonID);
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
@@ -87,6 +90,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       swerveSubsystem.setTrajectory(trajectory);
     }
     if (this.startPose != null) { // use existing pose for more accuracy if it is the first path
+      swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }
 
