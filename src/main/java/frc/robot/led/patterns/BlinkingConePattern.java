@@ -12,7 +12,7 @@ import frc.robot.led.patternBases.BlinkingPattern;
 public class BlinkingConePattern extends BlinkingPattern {
 
   public BlinkingConePattern() {
-    super(50, 50);
+    super(35, 5);
     setMainLEDPattern(new ConePattern());
   }
 }
