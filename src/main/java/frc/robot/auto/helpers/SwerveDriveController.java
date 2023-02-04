@@ -7,6 +7,7 @@
 
 package frc.robot.auto.helpers;
 
+import static frc.robot.Constants.*;
 import static frc.robot.auto.AutoConstants.kTranslationFF;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -16,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 
 public class SwerveDriveController {
   PIDController xPositionController;
@@ -69,7 +69,7 @@ public class SwerveDriveController {
       }
     }
 
-    if (Constants.kDebugEnabled) {
+    if (kDebugEnabled) {
       SmartDashboard.putNumber("Current Rotation", currentRotation * 180 / Math.PI);
       SmartDashboard.putNumber("Current Pose Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber(
@@ -82,7 +82,7 @@ public class SwerveDriveController {
 
     double thetaFF = thetaController.calculate(currentRotation, angleRef.getRadians());
 
-    if (Constants.kDebugEnabled) {
+    if (kDebugEnabled) {
       SmartDashboard.putNumber("Theta Current", currentRotation * 180 / Math.PI);
       SmartDashboard.putNumber("Theta Setpoint", angleRef.getDegrees());
     }
