@@ -19,6 +19,7 @@ public final class Constants {
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
   public static final boolean kSwerveEnabled = true;
+  public static final boolean kLedStripEnabled = true;
 
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;

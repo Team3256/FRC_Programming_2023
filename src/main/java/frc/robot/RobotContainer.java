@@ -13,20 +13,16 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeForward;
-import frc.robot.intake.commands.Outtake;
-import frc.robot.led.LEDStrip;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patternBases.ColorChaseBluePattern;
-import frc.robot.led.patterns.BlinkingConePattern;
-import frc.robot.led.patterns.BlinkingCubePattern;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.led.LEDStrip;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.patternBases.ColorChaseBluePattern;
+import frc.robot.led.patterns.BlinkingConePattern;
+import frc.robot.led.patterns.BlinkingCubePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -46,6 +42,9 @@ public class RobotContainer {
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
+  private LEDStrip ledStrip;
+
+  boolean cubePiece = true;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -60,6 +59,9 @@ public class RobotContainer {
     }
     if (kElevatorEnabled) {
       configureElevator();
+    }
+    if (kLedStripEnabled) {
+      configureLEDStrip();
     }
   }
 
@@ -105,17 +107,21 @@ public class RobotContainer {
                 () -> driver.getLeftX(),
                 kFieldRelative,
                 kOpenLoop));
-                
-    // led button for testing
-    gamePieceToggle.onTrue(
-        new SequentialCommandGroup(
-            new LEDSetAllSectionsPattern(
-                LEDSubsystem, cubePiece ? new BlinkingCubePattern() : new BlinkingConePattern()),
-            new InstantCommand(() -> cubePiece = !cubePiece)));
-    spirit.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new ColorChaseBluePattern()));
   }
 
   public void configureElevator() {}
+
+  public void configureLEDStrip() {
+    ledStrip = new LEDStrip(0, new int[] {100});
+    driver
+        .a()
+        .onTrue(
+            new SequentialCommandGroup(
+                new LEDSetAllSectionsPattern(
+                    ledStrip, cubePiece ? new BlinkingCubePattern() : new BlinkingConePattern()),
+                new InstantCommand(() -> cubePiece = !cubePiece)));
+    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
+  }
 
   public Command getAutonomousCommand() {
     return new InstantCommand();
