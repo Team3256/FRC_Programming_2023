@@ -20,6 +20,6 @@ public class DrivingPattern extends BlinkingPattern {
     main.setRangeOfPixels(26, 50, LEDConstants.kOff);
     main.setRangeOfPixels(51, 75, LEDConstants.kRed);
     main.setRangeOfPixels(76, 100, LEDConstants.kOff);
-    setMainPattern(main.getPattern());
+    setMainLEDPattern(main);
   }
 }

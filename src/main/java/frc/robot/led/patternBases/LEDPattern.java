@@ -7,10 +7,9 @@
 
 package frc.robot.led.patternBases;
 
-import frc.robot.Constants.LEDConstants;
-import frc.robot.drivers.Color;
-
 import static frc.robot.Constants.LEDConstants.kResolution;
+
+import frc.robot.drivers.Color;
 
 /** Base class of LEDPattern */
 public class LEDPattern {
@@ -23,20 +22,22 @@ public class LEDPattern {
 
   public void update() {}
 
-  public void setPixel(int pixel,Color color) {
+  public void setPixel(int pixel, Color color) {
     if (pixel < 1 || pixel > kResolution) return;
     pattern[pixel].set(color);
   }
 
-  public void setRangeOfPixels(int start,int end,Color color) {
+  public void setRangeOfPixels(int start, int end, Color color) {
     for (int percent = start; percent <= end; percent++) {
       setPixel(percent, color);
     }
   }
 
+  public void setPattern(LEDPattern pattern) {
+    this.pattern = pattern.getPattern();
+  }
+
   public void setPattern(Color[] pattern) {
-    if (pattern != null)
-      ;
     this.pattern = pattern;
   }
 

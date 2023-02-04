@@ -13,6 +13,6 @@ public class BlinkingConePattern extends BlinkingPattern {
 
   public BlinkingConePattern() {
     super(50, 50);
-    setMainPattern(new ConePattern().getPattern());
+    setMainLEDPattern(new ConePattern());
   }
 }
