@@ -21,20 +21,20 @@ public class ColorChaseBluePattern extends TimeFunctionPattern {
     super(true);
   }
 
-  private final double cycleTicks = 20;
+  private final double cycleTicks = 10;
 
   @Override
   protected double calculateA(int ticks) {
-    return 0.5 + 0.5 * Math.cos(ticks / cycleTicks);
+    return 0.25 + 0.25 * Math.cos(ticks / cycleTicks);
   }
 
   @Override
   protected double calculateB(int ticks) {
-    return 0.5 + 0.5 * Math.cos(ticks / cycleTicks);
+    return 0.25 + 0.25 * Math.cos(ticks / cycleTicks);
   }
 
   @Override
   protected double calculateC(int ticks) {
-    return 255;
+    return 1;
   }
 }
