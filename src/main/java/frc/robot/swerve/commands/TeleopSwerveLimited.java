@@ -14,30 +14,27 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
-// TODO: Use our own teleop command
 public class TeleopSwerveLimited extends CommandBase {
-
   private double rotation;
   private Translation2d translation;
   private boolean fieldRelative;
   private boolean openLoop;
 
-  private SwerveDrive swerveDrive;
+  private SwerveDrive swerveSubsystem;
   private DoubleSupplier translationAxis;
   private DoubleSupplier strafeAxis;
   private DoubleSupplier rotationAxis;
 
-  /** Driver control */
   public TeleopSwerveLimited(
-      SwerveDrive swerveDrive,
+      SwerveDrive swerveSubsystem,
       DoubleSupplier translationAxis,
       DoubleSupplier strafeAxis,
       DoubleSupplier rotationAxis,
       boolean fieldRelative,
       boolean openLoop) {
 
-    this.swerveDrive = swerveDrive;
-    addRequirements(swerveDrive);
+    this.swerveSubsystem = swerveSubsystem;
+    addRequirements(swerveSubsystem);
 
     this.translationAxis = translationAxis;
     this.strafeAxis = strafeAxis;
@@ -53,9 +50,8 @@ public class TeleopSwerveLimited extends CommandBase {
     double rAxis = -rotationAxis.getAsDouble() * kSensitivityScale;
 
     /* No deadbands since sensitivity is so low */
-
     translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
     rotation = rAxis * maxAngularVelocity;
-    swerveDrive.drive(translation, rotation, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }
