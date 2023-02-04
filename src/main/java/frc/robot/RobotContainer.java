@@ -56,7 +56,7 @@ public class RobotContainer {
   /* Operator Buttons */
   private final JoystickButton gamePieceToggle =
       new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton spirit = new JoystickButton(driver,XboxController.Button.kB.value);
+  private final JoystickButton spirit = new JoystickButton(driver, XboxController.Button.kB.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
@@ -111,7 +111,7 @@ public class RobotContainer {
             new LEDSetAllSectionsPattern(
                 LEDSubsystem, cubePiece ? new BlinkingCubePattern() : new BlinkingConePattern()),
             new InstantCommand(() -> cubePiece = !cubePiece)));
-    spirit.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem,new ColorChaseBluePattern()));
+    spirit.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new ColorChaseBluePattern()));
   }
 
   /**
