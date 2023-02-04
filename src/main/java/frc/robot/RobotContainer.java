@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
@@ -48,17 +49,19 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton outtake =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
-  private final JoystickButton cube = new JoystickButton(driver, XboxController.Button.kB.value);
-  private final JoystickButton cone = new JoystickButton(driver, XboxController.Button.kY.value);
-
   private final JoystickButton sensitivityToggle =
       new JoystickButton(driver, XboxController.Button.kY.value);
+
+  /* Operator Buttons */
+  private final JoystickButton gamePieceToggle = new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
-  private final LEDStrip LEDSubsystem = new LEDStrip(0, 100);
+  private final LEDStrip LEDSubsystem = new LEDStrip(0,new int[]{25,25,25,25});
+
+  /* States */
+  boolean cubePiece = true;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -99,9 +102,9 @@ public class RobotContainer {
     intake.whileTrue(new IntakeForward(intakeSubsystem));
     outtake.whileTrue(new Outtake(intakeSubsystem));
 
-    // led buttons for fun
-    cone.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new BlinkingConePattern()));
-    cube.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new BlinkingCubePattern()));
+    // led button for testing
+    gamePieceToggle.onTrue(new SequentialCommandGroup(
+            new LEDSetAllSectionsPattern(LEDSubsystem, cubePiece?new BlinkingCubePattern():new BlinkingConePattern()),new InstantCommand(()->cubePiece=!cubePiece)));
   }
 
   /**
