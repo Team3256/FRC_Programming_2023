@@ -19,6 +19,7 @@ import frc.robot.intake.commands.Outtake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.BlinkingConePattern;
+import frc.robot.led.patterns.BlinkingCubePattern;
 import frc.robot.led.patterns.CubePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
@@ -101,7 +102,7 @@ public class RobotContainer {
 
     // led buttons for fun
     cone.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new BlinkingConePattern()));
-    cube.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new CubePattern()));
+    cube.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new BlinkingCubePattern()));
   }
 
   /**
