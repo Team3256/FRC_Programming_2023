@@ -16,11 +16,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
-import frc.robot.led.LED;
+import frc.robot.led.LEDStrip;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.BlinkingConePattern;
 import frc.robot.led.patterns.BlinkingCubePattern;
-import frc.robot.led.patterns.CubePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -59,7 +58,7 @@ public class RobotContainer {
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
-  private final LED LEDSubsystem = new LED(0, 100);
+  private final LEDStrip LEDSubsystem = new LEDStrip(0, 100);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

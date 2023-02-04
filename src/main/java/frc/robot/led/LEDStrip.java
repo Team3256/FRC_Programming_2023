@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.led.patternBases.LEDPattern;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * allocates sections of a full LED strip to multiple strips that display the same image information
@@ -21,22 +22,34 @@ import java.util.ArrayList;
  * periodic will be called in Robot periodic it updates totalPattern, updates ledContainers, and
  * then sets the led
  */
-public class LED extends SubsystemBase {
-  private final ArrayList<LEDSection> ledContainers = new ArrayList<>();
+public class LEDStrip extends SubsystemBase {
+  private final int length;
+  private final int sections;
+  private final LEDSection[] ledSections;
   private final AddressableLED led;
   private final AddressableLEDBuffer buffer;
 
-  public LED(int port, int length) {
+  /** 
+   * Addressable LED strip controller.
+   * @param port PWM port on the RoboRio
+   * @param ledSections An array of LED section lengths
+   */
+  public LEDStrip(int port, int[] ledSectionLengths) {
     // initialize led and buffer
+    length = Arrays.stream(ledSectionLengths).sum();
+    sections = ledSectionLengths.length;
+    ledSections = new LEDSection[sections];
+    
     led = new AddressableLED(port);
+    led.setLength(length);
     buffer = new AddressableLEDBuffer(length);
-    led.setLength(buffer.getLength());
 
     // initialize led containers sequentially
-    ledContainers.add(new LEDSection(0, 24));
-    ledContainers.add(new LEDSection(25, 49));
-    ledContainers.add(new LEDSection(50, 74));
-    ledContainers.add(new LEDSection(75, 99));
+    int cur = 0;
+    for (int i=0;i<sections;i++){
+      ledSections[i]=new LEDSection(cur, cur+ledSectionLengths[i]-1);
+      cur+=ledSectionLengths[i];
+    }
 
     // turn on led to default
     led.start();
@@ -44,21 +57,21 @@ public class LED extends SubsystemBase {
   }
 
   public void set(int sectionId, LEDPattern pattern) {
-    // set a specific container's buffer to a pattern
-    ledContainers.get(sectionId).setPattern(pattern);
+    // set a specific section's buffer to a pattern
+    ledSections[sectionId].setPattern(pattern);
   }
 
   public void setAll(LEDPattern pattern) {
-    // set each container's buffer to the same pattern
-    for (int i = 0; i < ledContainers.size(); i++) {
+    // set each section's buffer to the same pattern
+    for (int i = 0; i < sections; i++) {
       set(i, pattern);
     }
   }
 
   public void periodic() {
     // display the pattern in each container's buffer
-    for (LEDSection container : ledContainers) {
-      container.writeToBuffer(buffer);
+    for (LEDSection section : ledSections) {
+      section.writeToBuffer(buffer);
     }
     led.setData(buffer);
   }
