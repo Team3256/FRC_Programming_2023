@@ -20,6 +20,8 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.Loggable;
 import frc.robot.drivers.TalonFXFactory;
+import frc.robot.intake.commands.IntakeCone;
+import frc.robot.intake.commands.IntakeCube;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private final WPI_TalonFX intakeMotor;
@@ -53,12 +55,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   @Override
   public void startLog() {
     SmartDashboard.putData(this);
-    SmartDashboard.putData("Intake Forward", new IntakeForward(this));
-    SmartDashboard.putData("Outtake", new Outtake(this));
-
-    addChild("Intake Motor", intakeMotor);
-    addChild("Intake Forward", new IntakeForward(this));
-    addChild("Outtake", new Outtake(this));
+    SmartDashboard.putData("Intake Forward", new IntakeCube(this));
+    SmartDashboard.putData("Outtake", new IntakeCone(this));
   }
 
   @Override

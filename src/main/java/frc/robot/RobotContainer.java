@@ -49,6 +49,7 @@ public class RobotContainer {
   private Intake intakeSubsystem;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
+  private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
     if (kIntakeEnabled) {
@@ -116,8 +117,8 @@ public class RobotContainer {
 
   public void startLog() {
     for (Loggable device : loggables) device.startLog();
-    SmartDashboard.putData("Joystick Angle", new GyroSendable(driver::getDirectionDegrees));
-    SmartDashboard.putData("Power Distribution", pdh);
+    //SmartDashboard.putData("Joystick Angle", new GyroSendable(driver::getRawAxis));
+    //SmartDashboard.putData("Power Distribution", pdh);
   }
 
   public void periodicLog() {
