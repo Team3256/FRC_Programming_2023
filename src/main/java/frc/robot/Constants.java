@@ -15,11 +15,18 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public final class Constants {
   public static final boolean DEBUG = false;
+  public static final boolean LOG_DEBUG_TO_CONSOLE = true; // Requires DEBUG to be true
   public static final double stickDeadband = 0.1;
   public static final int kLongCANTimeoutMs = 1;
   public static final double kMaxDriveVoltage = 1;
@@ -34,6 +41,57 @@ public final class Constants {
 
   public static final double driveReduction = 1;
   public static final double steerReduction = 1;
+
+  public static final class LimeLightConstants {
+        // TODO: set distance values
+        public static final double MOUNTING_HEIGHT_INCHES = 0; // Update
+        public static final double TARGET_HEIGHT_INCHES = 19.5; // Ground to center of ApriTag (updated)
+        public static final double MOUNTING_ANGLE_DEG = 0; // Update
+        // TODO:Set value for later
+        public static final double DIST_FROM_BOTTOM_OF_ROBOT_TO_CAMERA = 0.0;
+        
+        public static final int APRIL_TAG_ID_1 = 0;
+        public static final int APRIL_TAG_ID_2 = 1;
+        // TODO: set the values for all of limelght contstants and remove the unchanged comment of that
+        // and change the april tag above if needed(This can be deleted if no changes or necessary)
+        // same line when changed value
+        static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+        static NetworkTableEntry ty = table.getEntry("ty");
+        public static double targetOffsetAngle_Vertical = ty.getDouble(0.0);
+    }
+
+  public static class LimelightAutoCorrectConstants {
+        // TODO: fix values for current robot
+        public static final double MAX_VISION_LOCALIZATION_TRANSLATION_CORRECTION = 0; // in meters
+        public static final double MAX_VISION_LOCALIZATION_HEADING_CORRECTION = 0; // in degrees
+        public static final int PACE_SIZE = 0;
+        public static final int PACES = 0;
+        public static final int POLYNOMIAL_DEGREE = 0;
+
+        public static final List<int[]> LIMELIGHT_TUNED_DATA = Arrays.asList( // {raw, tuned}
+            new int[] {10, 10},
+            new int[] {10, 10}
+        );
+    }
+
+
+    // Camtran constants
+
+    public static double mountingHeight = 0.0;
+
+    // how many degrees back is your limelight rotated from perfectly vertical?
+    public static double limelightMountAngleDegrees = 25.0; // unchanged
+    // unchanged
+    // distance from the center of the Limelight lens to the floor
+    public static double limelightLensHeightInches = 20.0; // unchanged
+
+    // distance from the target to the floor
+    public static double goalHeightInches = 60.0; // unchanged
+
+    public static double angleToGoalDegrees =
+        limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    public static double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+  }
 
   public static final class SwerveConstants {
     public static final int pigeonID = 1;
@@ -423,4 +481,3 @@ public final class Constants {
                 Units.inchesToMeters(18.22),
                 new Rotation3d()));
   }
-}
