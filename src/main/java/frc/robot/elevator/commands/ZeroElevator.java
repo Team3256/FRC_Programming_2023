@@ -7,10 +7,10 @@
 
 package frc.robot.elevator.commands;
 
+import static frc.robot.Constants.ElevatorConstants.kElevatorDownSpeed;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.elevator.Elevator;
-
-import static frc.robot.Constants.ElevatorConstants.kElevatorDownSpeed;
 
 public class ZeroElevator extends CommandBase {
   Elevator elevatorSubsystem;

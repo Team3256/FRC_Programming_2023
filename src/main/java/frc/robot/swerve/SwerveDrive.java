@@ -69,6 +69,26 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
             });
   }
 
+  public void drive(ChassisSpeeds chassisSpeeds, double elevatorHeight) {
+    chassisSpeeds.vxMetersPerSecond =
+        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond, elevatorHeight);
+    chassisSpeeds.vyMetersPerSecond =
+        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond, elevatorHeight);
+
+    SwerveModuleState[] swerveModuleStates =
+        swerveKinematics.toSwerveModuleStates(
+            chassisSpeeds); // same as the older version of drive but takes in the calculated
+    // chassisspeed
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
+
+    for (SwerveModule mod : swerveModules) {
+      // TODO: Optimize the module state using wpilib optimize method
+      // TODO: Check if the optimization is happening in the setDesiredState method
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
+    }
+    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
+  }
+
   public void drive(ChassisSpeeds chassisSpeeds) {
     chassisSpeeds.vxMetersPerSecond =
         adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);

@@ -54,8 +54,8 @@ public final class Constants {
     public static final double elevatorGearRatio = 1 / 1;
 
     public static final int kP = 1;
-    public static final int kI = 1;
-    public static final int kD = 1;
+    public static final int kI = 0;
+    public static final int kD = 0;
     public static final int kTolerancePosition = 1;
     public static final int kToleranceRate = 1;
     public static final double kRateLimiting = 0.05;

@@ -17,7 +17,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-  private static TalonFX elevatorMotor;
+  private TalonFX elevatorMotor;
 
   public Elevator() {
     elevatorMotor = new TalonFX(ElevatorConstants.elevatorID);
@@ -28,10 +28,15 @@ public class Elevator extends SubsystemBase {
 
   public void setSpeed(double speed) {
     elevatorMotor.set(ControlMode.PercentOutput, speed);
-    System.out.println("Elevator speed: " + speed);
+    System.out.println("Elevator speed: " + elevatorMotor.getMotorOutputPercent());
+    System.out.println("Elevator pos: " + elevatorMotor.getSelectedSensorPosition());
+    System.out.println("Elevator veloctity: " + elevatorMotor.getSelectedSensorVelocity());
   }
 
-  public static double getPosition() {
+  public double getPosition() {
+    System.out.println(
+        falconToDistance(
+            elevatorMotor.getSelectedSensorPosition(), elevatorMotorDiameter, elevatorGearRatio));
     return falconToDistance(
         elevatorMotor.getSelectedSensorPosition(), elevatorMotorDiameter, elevatorGearRatio);
   }

@@ -12,7 +12,6 @@ import static frc.robot.Constants.ElevatorConstants.kRateLimiting;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.elevator.Elevator;
 
 public class AdaptiveSlewRateLimiter {
   private final double accelRateLimit;
@@ -34,14 +33,34 @@ public class AdaptiveSlewRateLimiter {
    * @param input
    * @return
    */
+  public double calculate(double input, double elevatorPosition) {
+    double currentTime = WPIUtilJNI.now() * 1e-6;
+    double elapsedTime = currentTime - this.prevTime;
+    // constant kRateLimiting is to adjust the weight of the height of the elevator
+    double currRateLimit =
+        (Math.abs(input) > Math.abs(prevVal)
+            ? kRateLimiting * accelRateLimit * (1 / elevatorPosition)
+            : kRateLimiting * decelRateLimit * (1 / elevatorPosition));
+
+    SmartDashboard.putNumber("Acc(?)", Math.abs(input) > Math.abs(prevVal) ? 1 : 0);
+    SmartDashboard.putNumber("Prev Val", prevVal);
+
+    prevVal +=
+        MathUtil.clamp(input - prevVal, -currRateLimit * elapsedTime, currRateLimit * elapsedTime);
+
+    prevTime = currentTime;
+
+    return prevVal;
+  }
+
   public double calculate(double input) {
     double currentTime = WPIUtilJNI.now() * 1e-6;
     double elapsedTime = currentTime - this.prevTime;
     // constant kRateLimiting is to adjust the weight of the height of the elevator
     double currRateLimit =
         (Math.abs(input) > Math.abs(prevVal)
-            ? kRateLimiting * accelRateLimit * (1 / Elevator.getPosition())
-            : kRateLimiting * decelRateLimit * (1 / Elevator.getPosition()));
+            ? kRateLimiting * accelRateLimit
+            : kRateLimiting * decelRateLimit);
 
     SmartDashboard.putNumber("Acc(?)", Math.abs(input) > Math.abs(prevVal) ? 1 : 0);
     SmartDashboard.putNumber("Prev Val", prevVal);

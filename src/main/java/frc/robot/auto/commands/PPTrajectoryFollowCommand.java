@@ -7,6 +7,8 @@
 
 package frc.robot.auto.commands;
 
+import static frc.robot.Constants.AutoConstants.AUTO_DEBUG;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -23,8 +25,6 @@ import frc.robot.Constants;
 import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.SwerveDriveController;
 import frc.robot.swerve.SwerveDrive;
-
-import static frc.robot.Constants.AutoConstants.AUTO_DEBUG;
 
 // import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
 

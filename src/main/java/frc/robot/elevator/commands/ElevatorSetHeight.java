@@ -19,12 +19,14 @@ public class ElevatorSetHeight extends PIDCommand {
   public ElevatorSetHeight(Elevator elevatorSubsystem, double setpoint) {
     super(
         new PIDController(kP, kI, kD),
-        Elevator::getPosition,
+        elevatorSubsystem::getPosition,
         setpoint,
         elevatorSubsystem::setSpeed,
         elevatorSubsystem);
+
     this.elevatorSubsystem = elevatorSubsystem;
     getController().setTolerance(kTolerancePosition, kToleranceRate);
+    // addRequirements(elevatorSubsystem);
   }
 
   @Override
@@ -32,8 +34,8 @@ public class ElevatorSetHeight extends PIDCommand {
     return getController().atSetpoint();
   }
 
-  @Override
-  public void end(boolean interrupted) {
-    elevatorSubsystem.off();
-  }
+  //  @Override
+  //  public void end(boolean interrupted) {
+  //    elevatorSubsystem.off();
+  //  }
 }
