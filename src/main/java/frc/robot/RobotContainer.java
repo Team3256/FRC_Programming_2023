@@ -19,6 +19,7 @@ import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
 import frc.robot.led.LEDStrip;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.patternBases.ColorChaseBluePattern;
 import frc.robot.led.patterns.BlinkingConePattern;
 import frc.robot.led.patterns.BlinkingCubePattern;
 import frc.robot.swerve.SwerveDrive;
@@ -54,7 +55,8 @@ public class RobotContainer {
 
   /* Operator Buttons */
   private final JoystickButton gamePieceToggle =
-      new JoystickButton(driver, XboxController.Button.kY.value);
+      new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton spirit = new JoystickButton(driver,XboxController.Button.kB.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
@@ -109,6 +111,7 @@ public class RobotContainer {
             new LEDSetAllSectionsPattern(
                 LEDSubsystem, cubePiece ? new BlinkingCubePattern() : new BlinkingConePattern()),
             new InstantCommand(() -> cubePiece = !cubePiece)));
+    spirit.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem,new ColorChaseBluePattern()));
   }
 
   /**

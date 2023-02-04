@@ -29,8 +29,6 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer robotContainer;
 
-  // LEDTester ledTester = new LEDTester(100, 0);
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -85,7 +83,6 @@ public class Robot extends LoggedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    // ledTester.setAll(255, 0, 255);
   }
 
   @Override
@@ -125,13 +122,10 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-    // System.out.println("TEST INITIALIZED!");
-    // ledTester.setAll(0, 0, 255);
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    // ledTester.gradientBlue();
   }
 }
