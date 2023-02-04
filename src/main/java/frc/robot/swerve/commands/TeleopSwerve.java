@@ -45,8 +45,8 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void initialize() {
-    swerveDrive.setAngleMotorsNeutralMode(kAngleNeutralMode);
-    swerveDrive.setDriveMotorsNeutralMode(kDriveNeutralMode);
+    swerveSubsystem.setAngleMotorsNeutralMode(kAngleNeutralMode);
+    swerveSubsystem.setDriveMotorsNeutralMode(kDriveNeutralMode);
   }
 
   @Override
@@ -62,6 +62,6 @@ public class TeleopSwerve extends CommandBase {
 
     translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
     rotation = rAxis * kMaxAngularVelocity;
-    swerveDrive.drive(translation, rotation, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }

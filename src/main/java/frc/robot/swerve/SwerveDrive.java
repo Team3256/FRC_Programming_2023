@@ -68,7 +68,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
         kSwerveKinematics.toSwerveModuleStates(
             chassisSpeeds); // same as the older version of drive but takes in the calculated
     // chassisspeed
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method
@@ -87,7 +87,6 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
                     translation.getX(), translation.getY(), rotation, getYaw())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
-
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method

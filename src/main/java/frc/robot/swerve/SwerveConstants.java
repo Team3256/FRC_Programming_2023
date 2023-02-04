@@ -98,12 +98,18 @@ public final class SwerveConstants {
   /* Angle Encoder Invert */
   public static final boolean kCanCoderInvert = false;
 
+  /* PID Constants Trapezoid Profile for the Azimuth Control */
+  public static final double kAzimuthP = 0.09;
+  public static final double kAzimuthI = 0.00;
+  public static final double kAzimuthD = 0.01;
+
   /* Module Specific Constants */
   public static final class FrontLeft {
     public static final int kDriveMotorID = 3;
     public static final int kAngleMotorID = 4;
     public static final int kCanCoderID = 2;
     public static final double kAngleOffset = 531.6064455; // 531 or 171 (ziptide constants)
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
   }

@@ -41,15 +41,15 @@ public class RobotContainer {
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
   public RobotContainer() {
-    if (INTAKE) {
+    if (kIntake) {
       configureIntake();
       testables.add(intakeSubsystem);
     }
-    if (SWERVE) {
+    if (kSwerve) {
       configureSwerve();
       testables.add(swerveDrive);
     }
-    if (ELEVATOR) {
+    if (kElevator) {
       configureElevator();
     }
   }
