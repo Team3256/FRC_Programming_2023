@@ -185,6 +185,11 @@ public final class Constants {
             AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
+  public static final class LimelightConstants {
+    public static final String limelightName = "Something";
+  }
+
+
   public static final class FieldConstants {
     public static final double fieldLength = Units.inchesToMeters(651.25);
     public static final double fieldWidth = Units.inchesToMeters(315.5);

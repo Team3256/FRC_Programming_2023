@@ -10,6 +10,7 @@ package frc.robot.swerve;
 import static frc.robot.Constants.SwerveConstants.*;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -44,7 +45,8 @@ public class SwerveDrive extends SubsystemBase {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
-  public SwerveDriveOdometry odometry;
+  public SwerveDrivePoseEstimator
+          odometry;
   public PigeonIMU gyro;
 
   public SwerveDrive() {
@@ -53,7 +55,7 @@ public class SwerveDrive extends SubsystemBase {
     zeroGyro();
 
     odometry =
-        new SwerveDriveOdometry(
+        new SwerveDrivePoseEstimator(
             swerveKinematics,
             getYaw(),
             new SwerveModulePosition[] {
@@ -61,7 +63,9 @@ public class SwerveDrive extends SubsystemBase {
               frontRightModule.getPosition(),
               backLeftModule.getPosition(),
               backRightModule.getPosition()
-            });
+            },
+            new Pose2d()
+            );
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -103,8 +107,14 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return odometry.getPoseMeters();
+    return odometry.getEstimatedPosition();
   }
+
+  public void addVisionMeasurement(Pose2d pose,double timestampSeconds)
+  {
+    odometry.addVisionMeasurement(pose,timestampSeconds);
+  }
+
 
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(getYaw(), getPositions(), pose);
@@ -139,6 +149,7 @@ public class SwerveDrive extends SubsystemBase {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
     }
+    field.setRobotPose(odometry.getEstimatedPosition());
   }
 
   public void setTrajectory(Trajectory trajectory) {

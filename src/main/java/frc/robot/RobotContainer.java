@@ -7,14 +7,23 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.limeLight.helper.LimelightHelpers;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
+
+import java.util.Arrays;
+
+import static frc.robot.Constants.LimelightConstants.limelightName;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -74,5 +83,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new InstantCommand();
+  }
+
+  public void robotPeriodic() {
+    double[] poseDoubleArray = frc.robot.limeLight.helper.LimelightHelpers.getBotpose(limelightName);
+    Pose2d pose = new Pose2d(new Translation2d(poseDoubleArray[0],poseDoubleArray[1]), new Rotation2d(poseDoubleArray[3], poseDoubleArray[4]));
+    swerveDrive.addVisionMeasurement(pose, Timer.getFPGATimestamp() );
+
   }
 }
