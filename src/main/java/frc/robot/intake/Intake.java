@@ -11,12 +11,15 @@ import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.CANDeviceTester;
+import frc.robot.drivers.CANTestable;
+import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.Loggable;
-import frc.robot.intake.commands.IntakeForward;
-import frc.robot.intake.commands.Outtake;
+import frc.robot.drivers.TalonFXFactory;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private final WPI_TalonFX intakeMotor;
@@ -26,7 +29,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public Intake() {
-    intakeMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kIntakeMotorID));
+    intakeMotor = new WPI_TalonFX(kIntakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     off();
     System.out.println("Intake initialized");
@@ -61,6 +64,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   @Override
   public void periodicLog() {
     SmartDashboard.putNumber("Intake Motor Voltage", intakeMotor.getBusVoltage());
+  }
 
   public boolean test() {
     System.out.println("Testing intake CAN:");
