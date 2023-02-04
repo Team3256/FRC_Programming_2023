@@ -7,41 +7,35 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
+import java.util.function.DoubleSupplier;
 
-// TODO: Use our own teleop command
 public class TeleopSwerve extends CommandBase {
-
   private double rotation;
   private Translation2d translation;
   private boolean fieldRelative;
   private boolean openLoop;
 
-  private SwerveDrive swerveDrive;
-  private Joystick controller;
-  private int translationAxis;
-  private int strafeAxis;
-  private int rotationAxis;
+  private SwerveDrive swerveSubsystem;
+  private DoubleSupplier translationAxis;
+  private DoubleSupplier strafeAxis;
+  private DoubleSupplier rotationAxis;
 
-  /** Driver control */
   public TeleopSwerve(
-      SwerveDrive swerveDrive,
-      Joystick controller,
-      int translationAxis,
-      int strafeAxis,
-      int rotationAxis,
+      SwerveDrive swerveSubsystem,
+      DoubleSupplier translationAxis,
+      DoubleSupplier strafeAxis,
+      DoubleSupplier rotationAxis,
       boolean fieldRelative,
       boolean openLoop) {
-    this.swerveDrive = swerveDrive;
-    addRequirements(swerveDrive);
+    this.swerveSubsystem = swerveSubsystem;
+    addRequirements(swerveSubsystem);
 
-    this.controller = controller;
     this.translationAxis = translationAxis;
     this.strafeAxis = strafeAxis;
     this.rotationAxis = rotationAxis;
@@ -50,18 +44,24 @@ public class TeleopSwerve extends CommandBase {
   }
 
   @Override
+  public void initialize() {
+    swerveSubsystem.setAngleMotorsNeutralMode(kAngleNeutralMode);
+    swerveSubsystem.setDriveMotorsNeutralMode(kDriveNeutralMode);
+  }
+
+  @Override
   public void execute() {
-    double yAxis = -controller.getRawAxis(translationAxis);
-    double xAxis = -controller.getRawAxis(strafeAxis);
-    double rAxis = -controller.getRawAxis(rotationAxis);
+    double yAxis = -translationAxis.getAsDouble();
+    double xAxis = -strafeAxis.getAsDouble();
+    double rAxis = -rotationAxis.getAsDouble();
 
     /* Deadbands */
-    yAxis = (Math.abs(yAxis) < Constants.stickDeadband) ? 0 : yAxis;
-    xAxis = (Math.abs(xAxis) < Constants.stickDeadband) ? 0 : xAxis;
-    rAxis = (Math.abs(rAxis) < Constants.stickDeadband) ? 0 : rAxis;
+    yAxis = (Math.abs(yAxis) < Constants.kStickDeadband) ? 0 : yAxis;
+    xAxis = (Math.abs(xAxis) < Constants.kStickDeadband) ? 0 : xAxis;
+    rAxis = (Math.abs(rAxis) < Constants.kStickDeadband) ? 0 : rAxis;
 
-    translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
-    rotation = rAxis * maxAngularVelocity;
-    swerveDrive.drive(translation, rotation, fieldRelative, openLoop);
+    translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
+    rotation = rAxis * kMaxAngularVelocity;
+    swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }

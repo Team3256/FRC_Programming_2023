@@ -7,7 +7,7 @@
 
 package frc.robot.intake;
 
-import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -18,25 +18,28 @@ import frc.robot.drivers.Loggable;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
 
-public class Intake extends SubsystemBase implements Loggable {
-
+public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private final WPI_TalonFX intakeMotor;
 
+  public double getIntakeSpeed() {
+    return intakeMotor.getMotorOutputPercent();
+  }
+
   public Intake() {
-    intakeMotor = new WPI_TalonFX(intakeMotorID);
+    intakeMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kIntakeMotorID));
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     off();
     System.out.println("Intake initialized");
   }
 
-  public void forward() {
-    System.out.println("Intake forward");
-    intakeMotor.set(ControlMode.PercentOutput, kIntakeForwardSpeed);
+  public void intakeCone() {
+    System.out.println("Intake cone");
+    intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
   }
 
-  public void backward() {
-    System.out.println("Intake backward");
-    intakeMotor.set(ControlMode.PercentOutput, kOuttakeSpeed);
+  public void intakeCube() {
+    System.out.println("Intake cube");
+    intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
   public void off() {
@@ -58,5 +61,12 @@ public class Intake extends SubsystemBase implements Loggable {
   @Override
   public void periodicLog() {
     SmartDashboard.putNumber("Intake Motor Voltage", intakeMotor.getBusVoltage());
+
+  public boolean test() {
+    System.out.println("Testing intake CAN:");
+    boolean result = CANDeviceTester.testTalonFX(intakeMotor);
+    System.out.println("Intake CAN connected: " + result);
+    SmartDashboard.putBoolean("Intake CAN connected", result);
+    return result;
   }
 }
