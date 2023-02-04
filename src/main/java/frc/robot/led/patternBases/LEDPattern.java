@@ -34,6 +34,8 @@ public class LEDPattern {
   }
 
   public void setPattern(Color[] pattern) {
+    if (pattern != null)
+      ;
     this.pattern = pattern;
   }
 

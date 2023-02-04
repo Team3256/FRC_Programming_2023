@@ -26,7 +26,7 @@ public class AnimatedPattern extends LEDPattern {
 
   @Override
   public void update() {
-    setPattern(eventList[tick].getPattern());
+    if (eventList[tick] != null) setPattern(eventList[tick].getPattern());
     tick = (tick + 1) % ticks;
   }
 
