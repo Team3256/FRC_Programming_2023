@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,11 +25,11 @@ public class LockSwerve extends CommandBase {
 
   @Override
   public void initialize() {
-    double inwardAngle = Math.atan(trackWidth / wheelBase);
+    double inwardAngle = Math.atan(kTrackWidth / kWheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
 
     for (int mod = 0; mod < 4; mod++) {
-      states[mod] = new SwerveModuleState(1, new Rotation2d(inwardAngle + lockAngleOffsets[mod]));
+      states[mod] = new SwerveModuleState(1, new Rotation2d(inwardAngle + kLockAngleOffsets[mod]));
     }
 
     swerveSubsystem.setDesiredAngleState(states);
