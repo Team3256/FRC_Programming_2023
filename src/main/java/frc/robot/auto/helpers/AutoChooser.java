@@ -24,7 +24,7 @@ public class AutoChooser {
     Command path = new InstantCommand();
     for (int i = 0; i < commands.size(); i++) {
       path = path.andThen(commands.get(i));
-      autoChooser.addOption(commandName + "-" + i, path);
+      autoChooser.addOption(commandName + " - " + i, path);
     }
   }
 
