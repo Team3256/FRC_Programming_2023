@@ -20,7 +20,8 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.drivers.CANDeviceTester;
+import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.Loggable;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
@@ -48,7 +49,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   public WPI_PigeonIMU gyro;
 
   public SwerveDrive() {
-    gyro = new WPI_PigeonIMU(pigeonID);
+    gyro = new WPI_PigeonIMU(SwerveConstants.kPigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
 
