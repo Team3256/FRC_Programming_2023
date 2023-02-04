@@ -53,12 +53,13 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Operator Buttons */
-  private final JoystickButton gamePieceToggle = new JoystickButton(driver, XboxController.Button.kY.value);
+  private final JoystickButton gamePieceToggle =
+      new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
-  private final LEDStrip LEDSubsystem = new LEDStrip(0,new int[]{25,25,25,25});
+  private final LEDStrip LEDSubsystem = new LEDStrip(0, new int[] {25, 25, 25, 25});
 
   /* States */
   boolean cubePiece = true;
@@ -103,8 +104,11 @@ public class RobotContainer {
     outtake.whileTrue(new Outtake(intakeSubsystem));
 
     // led button for testing
-    gamePieceToggle.onTrue(new SequentialCommandGroup(
-            new LEDSetAllSectionsPattern(LEDSubsystem, cubePiece?new BlinkingCubePattern():new BlinkingConePattern()),new InstantCommand(()->cubePiece=!cubePiece)));
+    gamePieceToggle.onTrue(
+        new SequentialCommandGroup(
+            new LEDSetAllSectionsPattern(
+                LEDSubsystem, cubePiece ? new BlinkingCubePattern() : new BlinkingConePattern()),
+            new InstantCommand(() -> cubePiece = !cubePiece)));
   }
 
   /**

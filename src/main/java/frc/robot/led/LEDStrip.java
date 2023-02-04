@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.led.patternBases.LEDPattern;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -29,8 +28,9 @@ public class LEDStrip extends SubsystemBase {
   private final AddressableLED led;
   private final AddressableLEDBuffer buffer;
 
-  /** 
+  /**
    * Addressable LED strip controller.
+   *
    * @param port PWM port on the RoboRio
    * @param ledSections An array of LED section lengths
    */
@@ -39,16 +39,16 @@ public class LEDStrip extends SubsystemBase {
     length = Arrays.stream(ledSectionLengths).sum();
     sections = ledSectionLengths.length;
     ledSections = new LEDSection[sections];
-    
+
     led = new AddressableLED(port);
     led.setLength(length);
     buffer = new AddressableLEDBuffer(length);
 
     // initialize led containers sequentially
     int cur = 0;
-    for (int i=0;i<sections;i++){
-      ledSections[i]=new LEDSection(cur, cur+ledSectionLengths[i]-1);
-      cur+=ledSectionLengths[i];
+    for (int i = 0; i < sections; i++) {
+      ledSections[i] = new LEDSection(cur, cur + ledSectionLengths[i] - 1);
+      cur += ledSectionLengths[i];
     }
 
     // turn on led to default
