@@ -111,6 +111,7 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    robotContainer.zeroGyro();
   }
 
   /** This function is called periodically during operator control. */
@@ -121,6 +122,9 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
+    // Run tests
+    robotContainer.test();
   }
 
   /** This function is called periodically during test mode. */
