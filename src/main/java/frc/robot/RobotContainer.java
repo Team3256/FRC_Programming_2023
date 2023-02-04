@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -32,24 +33,21 @@ public class RobotContainer {
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
-  private final boolean fieldRelative = true;
-  private final boolean openLoop = true;
-
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
   public RobotContainer() {
-    if (kIntake) {
+    if (kIntakeEnabled) {
       configureIntake();
       testables.add(intakeSubsystem);
     }
-    if (kSwerve) {
+    if (kSwerveEnabled) {
       configureSwerve();
       testables.add(swerveDrive);
     }
-    if (kElevator) {
+    if (kElevatorEnabled) {
       configureElevator();
     }
   }
@@ -70,8 +68,8 @@ public class RobotContainer {
             () -> driver.getRightY(),
             () -> driver.getRightX(),
             () -> driver.getLeftX(),
-            fieldRelative,
-            openLoop));
+            kFieldRelative,
+            kOpenLoop));
 
     driver
         .rightBumper()
@@ -82,8 +80,8 @@ public class RobotContainer {
                 () -> driver.getRightX(),
                 () -> driver.getLeftX(),
                 () -> driver.getLeftY(),
-                Constants.kFieldRelative,
-                Constants.kOpenLoop));
+                kFieldRelative,
+                kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     driver
@@ -94,8 +92,8 @@ public class RobotContainer {
                 () -> driver.getRightY(),
                 () -> driver.getRightX(),
                 () -> driver.getLeftX(),
-                fieldRelative,
-                openLoop));
+                kFieldRelative,
+                kOpenLoop));
   }
 
   public void configureElevator() {}

@@ -50,7 +50,8 @@ public class SwerveDriveController {
 
   public ChassisSpeeds calculate(
       Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters, Rotation2d angleRef) {
-    // If this is the first run, then we need to reset the theta controller to the current pose's
+    // If this is the first run, then we need to reset the theta controller to the
+    // current pose's
     // heading.
     if (firstIteration) {
       thetaController.reset(currentPose.getRotation().getRadians());
@@ -68,7 +69,7 @@ public class SwerveDriveController {
       }
     }
 
-    if (Constants.kDebug) {
+    if (Constants.kDebugEnabled) {
       SmartDashboard.putNumber("Current Rotation", currentRotation * 180 / Math.PI);
       SmartDashboard.putNumber("Current Pose Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber(
@@ -81,7 +82,7 @@ public class SwerveDriveController {
 
     double thetaFF = thetaController.calculate(currentRotation, angleRef.getRadians());
 
-    if (Constants.kDebug) {
+    if (Constants.kDebugEnabled) {
       SmartDashboard.putNumber("Theta Current", currentRotation * 180 / Math.PI);
       SmartDashboard.putNumber("Theta Setpoint", angleRef.getDegrees());
     }

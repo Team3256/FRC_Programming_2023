@@ -106,7 +106,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     Rotation2d desiredRotation = desired.holonomicRotation;
 
-    if (Constants.kDebug) {
+    if (Constants.kDebugEnabled) {
       SmartDashboard.putNumber("Desired Rotation", desiredRotation.getDegrees());
       SmartDashboard.putNumber("Desired Position", Units.metersToInches(desiredPose.getX()));
     }

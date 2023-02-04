@@ -15,28 +15,13 @@ import edu.wpi.first.math.util.Units;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebug = false;
-  public static final boolean kIntake = true;
-  public static final boolean kElevator = true;
-  public static final boolean kSwerve = true;
+  public static final boolean kDebugEnabled = false;
+  public static final boolean kIntakeEnabled = true;
+  public static final boolean kElevatorEnabled = true;
+  public static final boolean kSwerveEnabled = true;
+
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
-  public static final int kLongCANTimeoutMs = 1;
-  public static final double kMaxDriveVoltage = 1;
-  public static final double kMk4DriveVelocityKp = 1;
-  public static final double kMk4DriveVelocityKi = 1;
-  public static final double kMk4DriveVelocityKd = 1;
-  public static final double kMk4DriveVelocityKf = 1;
-
-  public static final double kMk4AziKp = 1;
-  public static final double kMk4AziKi = 1;
-  public static final double kMk4AziKd = 1;
-
-  public static final double kDriveReduction = 1;
-  public static final double kSteerReduction = 1;
-
-  public static final boolean kFieldRelative = true;
-  public static final boolean kOpenLoop = true;
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);
@@ -99,7 +84,8 @@ public final class Constants {
       // X layout
       public static final double kOuterX = Units.inchesToMeters(54.25);
       public static final double kLowX =
-          kOuterX - (Units.inchesToMeters(14.25) / 2.0); // Centered when under cube nodes
+          kOuterX - (Units.inchesToMeters(14.25) / 2.0); // Centered when under cube
+      // nodes
       public static final double kMidX = kOuterX - Units.inchesToMeters(22.75);
       public static final double kHighX = kOuterX - Units.inchesToMeters(39.75);
 
@@ -141,7 +127,8 @@ public final class Constants {
       // nodes)
 
       public static final double kComplexLowXCones =
-          kOuterX - Units.inchesToMeters(16.0) / 2.0; // Centered X under cone
+          kOuterX - Units.inchesToMeters(16.0) / 2.0; // Centered X under
+      // cone
       // nodes
       public static final double kComplexLowXCubes = kLowX; // Centered X under cube nodes
       public static final double kComplexLowOuterYOffset =

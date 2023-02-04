@@ -14,6 +14,8 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class SwerveConstants {
+  public static final boolean kFieldRelative = true;
+  public static final boolean kOpenLoop = true;
 
   /* Angle Motor PID Values */
   public static final double kAngleKP = 0.6;
