@@ -12,33 +12,36 @@ import frc.robot.drivers.Color;
 import frc.robot.led.patternBases.LEDPattern;
 import frc.robot.led.patterns.OffPattern;
 
-/** displays a pattern onto section of LED */
+import static frc.robot.Constants.LEDConstants.kResolution;
+
 public class LEDSection {
   private final int start;
   private final int length;
-  private LEDPattern pattern;
+  private LEDPattern ledPattern;
 
   public LEDSection(int start, int end) {
     this.start = start;
     length = end - start + 1;
-    pattern = new OffPattern();
+    ledPattern= new OffPattern();
   }
 
-  public void setPattern(LEDPattern pattern) {
-    this.pattern = pattern;
+  // set the section's ledPattern to the one that will be displayed
+  public void setLEDPattern(LEDPattern pattern) {
+    this.ledPattern= pattern;
   }
 
   public void writeToBuffer(AddressableLEDBuffer buffer) {
-    pattern.update();
-    // loop through every percent
-    for (int percent = 1; percent <= 100; percent++) {
-      // convert percentage to pixel
-      int pixel = start + (length * percent / 100);
-      // finesse out of bound errors
-      if (pixel < 0 || pixel >= buffer.getLength()) continue;
-      // set the buffer pixel to the color
-      Color color = pattern.get(percent);
-      buffer.setRGB(pixel, color.R, color.G, color.B);
+    // get LEDPattern current pattern
+    ledPattern.update();
+    // loop through every pixel in the pattern
+    for (int pixel=1;pixel <=kResolution;pixel++) {
+      // LED Id corresponding to current pixel
+      int ledId = start + (length * pixel / kResolution);
+      // protect from out of bounds errors
+      if (ledId < 0 || ledId >= buffer.getLength()) continue;
+      // set the buffer ledId to the corresponding pixel's color
+      Color color = ledPattern.getPixel(pixel);
+      buffer.setRGB(ledId, color.R, color.G, color.B);
     }
   }
 }
