@@ -7,13 +7,15 @@
 
 package frc.robot.led.patterns;
 
-import frc.robot.Constants.LEDConstants;
+import static frc.robot.Constants.LEDConstants.kResolution;
+
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.led.patternBases.LEDPattern;
 
 /** Full Purple */
 public class CubePattern extends LEDPattern {
   public CubePattern() {
     super();
-    setRangeOfPixels(1, 100, LEDConstants.kPurple);
+    setRangeOfPixels(1, kResolution, Color.kBlueViolet);
   }
 }

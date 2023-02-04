@@ -10,6 +10,7 @@ package frc.robot.led.test;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.awt.*;
 
 /** Simple LED class to test LED is working */
 public class LEDTester extends SubsystemBase {

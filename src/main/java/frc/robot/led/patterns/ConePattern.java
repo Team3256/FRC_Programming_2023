@@ -7,13 +7,15 @@
 
 package frc.robot.led.patterns;
 
-import frc.robot.Constants.LEDConstants;
+import static frc.robot.Constants.LEDConstants.kResolution;
+
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.led.patternBases.LEDPattern;
 
 /** Full Yellow */
 public class ConePattern extends LEDPattern {
   public ConePattern() {
     super();
-    setRangeOfPixels(1, 100, LEDConstants.kYellow);
+    setRangeOfPixels(1, kResolution, Color.kYellow);
   }
 }

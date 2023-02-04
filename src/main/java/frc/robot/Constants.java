@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.drivers.Color;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 import java.util.Map;
 
@@ -444,12 +443,6 @@ public final class Constants {
   }
 
   public static final class LEDConstants {
-    public static final Color kPurple = new Color(255, 0, 255);
-    public static final Color kYellow = new Color(255, 255, 0);
-    public static final Color kRed = new Color(255, 0, 0);
-    public static final Color kOff = new Color(0, 0, 0);
-    public static final Color kBlue = new Color(0, 0, 255);
-    public static final Color kWhite = new Color(255, 255, 255);
     public static final int kResolution = 100;
   }
 }

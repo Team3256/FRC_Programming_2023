@@ -9,7 +9,7 @@ package frc.robot.led.patternBases;
 
 import static frc.robot.Constants.LEDConstants.kResolution;
 
-import frc.robot.drivers.Color;
+import edu.wpi.first.wpilibj.util.Color;
 
 /** Base class of LEDPattern */
 public class LEDPattern {
@@ -17,14 +17,13 @@ public class LEDPattern {
 
   public LEDPattern() {
     pattern = new Color[kResolution + 1];
-    for (int pixel = 1; pixel <= kResolution; pixel++) pattern[pixel] = new Color();
   }
 
   public void update() {}
 
   public void setPixel(int pixel, Color color) {
     if (pixel < 1 || pixel > kResolution) return;
-    pattern[pixel].set(color);
+    pattern[pixel] = color;
   }
 
   public void setRangeOfPixels(int start, int end, Color color) {

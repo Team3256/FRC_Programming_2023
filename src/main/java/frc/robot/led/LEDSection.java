@@ -10,7 +10,7 @@ package frc.robot.led;
 import static frc.robot.Constants.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import frc.robot.drivers.Color;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.led.patternBases.LEDPattern;
 import frc.robot.led.patterns.OffPattern;
 
@@ -41,7 +41,7 @@ public class LEDSection {
       if (ledId < 0 || ledId >= buffer.getLength()) continue;
       // set the buffer ledId to the corresponding pixel's color
       Color color = ledPattern.getPixel(pixel);
-      buffer.setRGB(ledId, color.R, color.G, color.B);
+      buffer.setLED(ledId, color);
     }
   }
 }
