@@ -20,11 +20,11 @@ public abstract class TimeFunctionPattern extends LEDPattern {
     this.rgb = rgb;
   }
   // Red/Hue [0,1) as a function of ticks
-  abstract double calculateA(int ticks);
+  protected abstract double calculateA(int ticks);
   // Green/Saturation [0,1] as a function of ticks
-  abstract double calculateB(int ticks);
+  protected abstract double calculateB(int ticks);
   // Blue/Value [0,1] as a function of ticks
-  abstract double calculateC(int ticks);
+  protected abstract double calculateC(int ticks);
 
   @Override
   public void update() {
