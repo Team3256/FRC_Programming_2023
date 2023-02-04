@@ -15,10 +15,10 @@ public class LEDSetAllSectionsPattern extends CommandBase {
   private final LEDStrip led;
   private final LEDPattern ledPattern;
 
-  public LEDSetAllSectionsPattern(LEDStrip led,LEDPattern ledPattern) {
+  public LEDSetAllSectionsPattern(LEDStrip led, LEDPattern ledPattern) {
     addRequirements(led);
-    this.led=led;
-    this.ledPattern= ledPattern;
+    this.led = led;
+    this.ledPattern = ledPattern;
   }
 
   @Override
