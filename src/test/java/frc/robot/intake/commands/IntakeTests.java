@@ -7,7 +7,7 @@
 
 package frc.robot.intake.commands;
 
-import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.intake.IntakeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.wpi.first.hal.HAL;
