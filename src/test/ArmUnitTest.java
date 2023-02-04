@@ -32,22 +32,7 @@ public class ArmUnitTest {
     armSubsystem = new ArmSubsystem();
   }
 
-  // Subsystem tests
-  @Test
-  public void setVoltageTo0Then5Volts() {
-    SetArmFromVoltage setVoltageTo0Command = new SetArmFromVoltage(armSubsystem, 0.0);
-    setVoltageTo0Command().schedule();
-    runScheduler(1);
-    assertEquals("Set input voltage to 0", ArmSubsystem.getVoltage(), 0.0, DELTA);
-    wait(500);
-
-    SetArmFromVoltage setVoltageTo5Command = new SetArmFromVoltage(armSubsystem, 5.0);
-    setVoltageto5VoltsCommand().schedule();
-    runScheduler(1);
-    assertEquals("Set voltage to 5", ArmSubsystem.getVoltage(), 5.0, DELTA);
-  }
-
-  // SetArmFromVoltage tests
+  // SetArmFromVoltage test (one routine)
   @Test
   public void setVoltageRoutine5() {
     SetArmFromVoltage setVoltageTo5Volts = new SetArmFromVoltage(armSubsystem, 5.0);
@@ -69,15 +54,7 @@ public class ArmUnitTest {
     wait(1000);
   }
 
-  // SetArmFromPID
-  @Test
-  public void setArmFromPID() {
-    SetArmFromPID setArmFromPIDCommand = new SetArmFromPID(armSubsystem, 1200);
-    setArmFromPIDCommand.schedule();
-    runScheduler(1);
-    assertEquals(
-        "Set angular velocity to 1200 RPM", ArmSubsystem.getAngularVelocityRPM(), 1200, DELTA);
-  }
+  // SetArmFromPID test (one routine)
 
   @Test
   public void setArmFromPIDRoutine() {
@@ -101,6 +78,8 @@ public class ArmUnitTest {
         "Set angular velocity to 1200 RPM", armSubsystem.getAngularVelocityRPM(), 1200, DELTA);
     setArmPIDTo1200.end();
   }
+
+  // Run scheduler
 
   private static void runScheduler(double seconds) {
     try {
