@@ -13,6 +13,6 @@ public class BlinkingCubePattern extends BlinkingPattern {
 
   public BlinkingCubePattern() {
     super(50, 50);
-    setMainPattern(new CubePattern());
+    setMainPattern(new CubePattern().getPattern());
   }
 }

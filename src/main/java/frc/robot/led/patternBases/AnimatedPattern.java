@@ -7,30 +7,28 @@
 
 package frc.robot.led.patternBases;
 
+import frc.robot.drivers.Color;
+
+import static frc.robot.Constants.LEDConstants.kResolution;
+
 public class AnimatedPattern extends LEDPattern {
-  private LEDPattern[] eventList;
+  private Color[][] eventList;
   private final int ticks;
   private int tick = 0;
-
-  public AnimatedPattern() {
-    super();
-    ticks = 1;
-    eventList = new LEDPattern[ticks];
-  }
 
   public AnimatedPattern(int ticks) {
     super();
     this.ticks = ticks;
-    eventList = new LEDPattern[ticks];
+    eventList = new Color[ticks][kResolution];
   }
 
   @Override
   public void update() {
-    if (eventList[tick] != null) setPattern(eventList[tick].getPattern());
+    if (eventList[tick] != null) setPattern(eventList[tick]);
     tick = (tick + 1) % ticks;
   }
 
-  protected void setEvent(int tick, LEDPattern event) {
+  protected void setEvent(int tick, Color[] event) {
     eventList[tick] = event;
   }
 }

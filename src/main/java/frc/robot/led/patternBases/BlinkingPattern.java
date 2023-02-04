@@ -7,18 +7,19 @@
 
 package frc.robot.led.patternBases;
 
+import frc.robot.drivers.Color;
 import frc.robot.led.patterns.OffPattern;
 
 public class BlinkingPattern extends AnimatedPattern {
-  private int onTicks;
+  private final int onTicks;
 
   public BlinkingPattern(int onTicks, int offTicks) {
     super(onTicks + offTicks);
     this.onTicks = onTicks;
   }
 
-  protected void setMainPattern(LEDPattern pattern) {
+  protected void setMainPattern(Color[] pattern) {
     setEvent(0, pattern);
-    setEvent(onTicks, new OffPattern());
+    setEvent(onTicks, new OffPattern().getPattern());
   }
 }
