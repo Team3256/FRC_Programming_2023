@@ -29,8 +29,8 @@ public class LEDStrip extends SubsystemBase {
   public LEDStrip(int port, int[] LEDSectionLengths) {
     length = Arrays.stream(LEDSectionLengths).sum();
     sections = LEDSectionLengths.length;
-    LEDSections= new LEDSection[sections];
-    addressableLED= new AddressableLED(port);
+    LEDSections = new LEDSection[sections];
+    addressableLED = new AddressableLED(port);
     addressableLED.setLength(length);
     buffer = new AddressableLEDBuffer(length);
 

@@ -7,12 +7,12 @@
 
 package frc.robot.led;
 
+import static frc.robot.Constants.LEDConstants.kResolution;
+
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.drivers.Color;
 import frc.robot.led.patternBases.LEDPattern;
 import frc.robot.led.patterns.OffPattern;
-
-import static frc.robot.Constants.LEDConstants.kResolution;
 
 public class LEDSection {
   private final int start;
@@ -22,19 +22,19 @@ public class LEDSection {
   public LEDSection(int start, int end) {
     this.start = start;
     length = end - start + 1;
-    ledPattern= new OffPattern();
+    ledPattern = new OffPattern();
   }
 
   // set the section's ledPattern to the one that will be displayed
   public void setLEDPattern(LEDPattern pattern) {
-    this.ledPattern= pattern;
+    this.ledPattern = pattern;
   }
 
   public void writeToBuffer(AddressableLEDBuffer buffer) {
     // get LEDPattern current pattern
     ledPattern.update();
     // loop through every pixel in the pattern
-    for (int pixel=1;pixel <=kResolution;pixel++) {
+    for (int pixel = 1; pixel <= kResolution; pixel++) {
       // LED Id corresponding to current pixel
       int ledId = start + (length * pixel / kResolution);
       // protect from out of bounds errors
