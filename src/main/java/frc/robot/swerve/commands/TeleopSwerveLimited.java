@@ -11,11 +11,10 @@ import static frc.robot.Constants.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
-public class TeleopSwerve extends CommandBase {
+public class TeleopSwerveLimited extends CommandBase {
   private double rotation;
   private Translation2d translation;
   private boolean fieldRelative;
@@ -26,13 +25,14 @@ public class TeleopSwerve extends CommandBase {
   private DoubleSupplier strafeAxis;
   private DoubleSupplier rotationAxis;
 
-  public TeleopSwerve(
+  public TeleopSwerveLimited(
       SwerveDrive swerveSubsystem,
       DoubleSupplier translationAxis,
       DoubleSupplier strafeAxis,
       DoubleSupplier rotationAxis,
       boolean fieldRelative,
       boolean openLoop) {
+
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
 
@@ -44,24 +44,14 @@ public class TeleopSwerve extends CommandBase {
   }
 
   @Override
-  public void initialize() {
-    swerveSubsystem.setAngleMotorsNeutralMode(angleNeutralMode);
-    swerveSubsystem.setDriveMotorsNeutralMode(driveNeutralMode);
-  }
-
-  @Override
   public void execute() {
-    double yAxis = -translationAxis.getAsDouble();
-    double xAxis = -strafeAxis.getAsDouble();
-    double rAxis = -rotationAxis.getAsDouble();
+    double yAxis = -translationAxis.getAsDouble() * kSensitivityScale;
+    double xAxis = -strafeAxis.getAsDouble() * kSensitivityScale;
+    double rAxis = -rotationAxis.getAsDouble() * kSensitivityScale;
 
-    /* Deadbands */
-    yAxis = (Math.abs(yAxis) < Constants.stickDeadband) ? 0 : yAxis;
-    xAxis = (Math.abs(xAxis) < Constants.stickDeadband) ? 0 : xAxis;
-    rAxis = (Math.abs(rAxis) < Constants.stickDeadband) ? 0 : rAxis;
-
+    /* No deadbands since sensitivity is so low */
     translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
-    rotation = rAxis * maxAngularVelocity * 0.25;
+    rotation = rAxis * maxAngularVelocity;
     swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }

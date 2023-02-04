@@ -9,23 +9,22 @@ package frc.robot.swerve;
 
 import static frc.robot.Constants.SwerveConstants.*;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.CANDeviceTester;
+import frc.robot.drivers.CANTestable;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveDrive extends SubsystemBase {
+public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
   private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
@@ -69,6 +68,14 @@ public class SwerveDrive extends SubsystemBase {
         swerveKinematics.toSwerveModuleStates(
             chassisSpeeds); // same as the older version of drive but takes in the calculated
     // chassisspeed
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
+
+    for (SwerveModule mod : swerveModules) {
+      // TODO: Optimize the module state using wpilib optimize method
+      // TODO: Check if the optimization is happening in the setDesiredState method
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
+    }
+    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
   }
 
   public void drive(
@@ -79,14 +86,22 @@ public class SwerveDrive extends SubsystemBase {
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
                     translation.getX(), translation.getY(), rotation, getYaw())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method
-      // TODO: Check if the optimization is happening in the setDesiredState method
+      // TODO: Check if the optimization is happening in the setDesiredState and
+      // setDesiredAngleState method
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
     Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
+  }
+
+  public void setDesiredAngleState(SwerveModuleState[] swerveModuleStates) {
+    for (SwerveModule mod : swerveModules) {
+      mod.setDesiredAngleState(swerveModuleStates[mod.moduleNumber]);
+    }
   }
 
   public SwerveDriveKinematics getKinematics() {
@@ -123,9 +138,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Rotation2d getYaw() {
-    double[] ypr = new double[3];
-    gyro.getYawPitchRoll(ypr);
-    return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+    return Rotation2d.fromDegrees(invertGyro ? -gyro.getYaw() : gyro.getYaw());
   }
 
   @Override
@@ -143,5 +156,29 @@ public class SwerveDrive extends SubsystemBase {
 
   public void setTrajectory(Trajectory trajectory) {
     field.getObject("traj").setTrajectory(trajectory);
+  }
+
+  public boolean test() {
+    System.out.println("Testing drivetrain CAN:");
+    boolean result = true;
+    for (SwerveModule device : swerveModules) {
+      result &= device.test();
+    }
+    result &= CANDeviceTester.testPigeon(gyro);
+    System.out.println("Drivetrain CAN connected: " + result);
+    SmartDashboard.putBoolean("Drivetrain CAN connected", result);
+    return result;
+  }
+
+  public void setDriveMotorsNeutralMode(NeutralMode neutralMode) {
+    for (SwerveModule swerveModule : swerveModules) {
+      swerveModule.setDriveMotorNeutralMode(neutralMode);
+    }
+  }
+
+  public void setAngleMotorsNeutralMode(NeutralMode neutralMode) {
+    for (SwerveModule swerveModule : swerveModules) {
+      swerveModule.setAngleMotorNeutralMode(neutralMode);
+    }
   }
 }
