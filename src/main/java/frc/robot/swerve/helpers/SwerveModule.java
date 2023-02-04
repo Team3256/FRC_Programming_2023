@@ -12,7 +12,6 @@ import static frc.robot.swerve.SwerveConstants.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
@@ -156,6 +155,7 @@ public class SwerveModule {
 
   public WPI_CANCoder getAngleEncoder() {
     return angleEncoder;
+  }
   public boolean test() {
     System.out.println("Testing swerve module CAN:");
     boolean result =
