@@ -7,14 +7,14 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.Constants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
@@ -66,17 +66,17 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     // Safety area, insures that joystick movement will not be tracked within a
     // certain area,
     // prevents unintentional drifting
-    yAxis = (Math.abs(yAxis) < Constants.stickDeadband) ? 0 : yAxis;
-    xAxis = (Math.abs(xAxis) < Constants.stickDeadband) ? 0 : xAxis;
-    rAxisX = (Math.abs(rAxisX) < Constants.azimuthStickDeadband) ? 0 : rAxisX;
-    rAxisY = (Math.abs(rAxisY) < Constants.azimuthStickDeadband) ? 0 : rAxisY;
+    yAxis = (Math.abs(yAxis) < kStickDeadband) ? 0 : yAxis;
+    xAxis = (Math.abs(xAxis) < kStickDeadband) ? 0 : xAxis;
+    rAxisX = (Math.abs(rAxisX) < kAzimuthStickDeadband) ? 0 : rAxisX;
+    rAxisY = (Math.abs(rAxisY) < kAzimuthStickDeadband) ? 0 : rAxisY;
 
     SmartDashboard.putNumber("rAxisX", rAxisX);
     SmartDashboard.putNumber("rAxisY", rAxisY);
 
     SmartDashboard.putNumber("Rotation Angle", swerveSubsystem.getYaw().getDegrees());
 
-    translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
+    translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
     if (rAxisX == 0 && rAxisY == 0) {
       swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
       return;
@@ -97,8 +97,9 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     SmartDashboard.putNumber("Rotation Velocity", rotationPIDOutput);
     SmartDashboard.putData("Azimuth PID Controller", azimuthController);
 
-    translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
-    rotationPIDOutput = MathUtil.clamp(rotationPIDOutput, -maxAngularVelocity, maxAngularVelocity);
+    translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
+    rotationPIDOutput =
+        MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
     // Sets motors to the velocities defined here
     swerveSubsystem.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
   }

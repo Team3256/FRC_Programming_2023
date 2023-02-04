@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -45,8 +45,8 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void initialize() {
-    swerveSubsystem.setAngleMotorsNeutralMode(angleNeutralMode);
-    swerveSubsystem.setDriveMotorsNeutralMode(driveNeutralMode);
+    swerveSubsystem.setAngleMotorsNeutralMode(kAngleNeutralMode);
+    swerveSubsystem.setDriveMotorsNeutralMode(kDriveNeutralMode);
   }
 
   @Override
@@ -56,12 +56,12 @@ public class TeleopSwerve extends CommandBase {
     double rAxis = -rotationAxis.getAsDouble();
 
     /* Deadbands */
-    yAxis = (Math.abs(yAxis) < Constants.stickDeadband) ? 0 : yAxis;
-    xAxis = (Math.abs(xAxis) < Constants.stickDeadband) ? 0 : xAxis;
-    rAxis = (Math.abs(rAxis) < Constants.stickDeadband) ? 0 : rAxis;
+    yAxis = (Math.abs(yAxis) < Constants.kStickDeadband) ? 0 : yAxis;
+    xAxis = (Math.abs(xAxis) < Constants.kStickDeadband) ? 0 : xAxis;
+    rAxis = (Math.abs(rAxis) < Constants.kStickDeadband) ? 0 : rAxis;
 
-    translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
-    rotation = rAxis * maxAngularVelocity * 0.25;
+    translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
+    rotation = rAxis * kMaxAngularVelocity;
     swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }
