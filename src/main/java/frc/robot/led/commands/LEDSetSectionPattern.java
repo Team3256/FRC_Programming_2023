@@ -12,20 +12,20 @@ import frc.robot.led.LEDStrip;
 import frc.robot.led.patternBases.LEDPattern;
 
 public class LEDSetSectionPattern extends CommandBase {
-  private final LEDStrip LEDSubsystem;
-  private final LEDPattern pattern;
-  private int sectionID;
+  private final LEDStrip ledStrip;
+  private final LEDPattern ledPattern;
+  private final int sectionId;
 
-  public LEDSetSectionPattern(LEDStrip LEDSubsystem, int sectionID, LEDPattern pattern) {
-    addRequirements(LEDSubsystem);
-    this.LEDSubsystem = LEDSubsystem;
-    this.sectionID = sectionID;
-    this.pattern = pattern;
+  public LEDSetSectionPattern(LEDStrip ledStrip, int sectionID, LEDPattern ledPattern) {
+    addRequirements(ledStrip);
+    this.ledStrip= ledStrip;
+    this.sectionId= sectionID;
+    this.ledPattern= ledPattern;
   }
 
   @Override
   public void initialize() {
-    LEDSubsystem.set(sectionID, pattern);
+    ledStrip.set(sectionId,ledPattern);
   }
 
   @Override
