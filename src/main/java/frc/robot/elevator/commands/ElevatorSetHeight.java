@@ -10,6 +10,7 @@ package frc.robot.elevator.commands;
 import static frc.robot.Constants.ElevatorConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.elevator.Elevator;
 
@@ -19,14 +20,18 @@ public class ElevatorSetHeight extends PIDCommand {
   public ElevatorSetHeight(Elevator elevatorSubsystem, double setpoint) {
     super(
         new PIDController(kP, kI, kD),
-        elevatorSubsystem::getPosition,
+        elevatorSubsystem::getElevatorPosition,
         setpoint,
-        elevatorSubsystem::setSpeed,
+        (percentSpeed) ->
+            elevatorSubsystem.setPercentSpeed(
+                percentSpeed
+                    + elevatorSubsystem.calculateFeedForward(percentSpeed * maxVelocity / 12)),
         elevatorSubsystem);
 
     this.elevatorSubsystem = elevatorSubsystem;
     getController().setTolerance(kTolerancePosition, kToleranceRate);
-    // addRequirements(elevatorSubsystem);
+    SmartDashboard.putData(getController());
+    addRequirements(elevatorSubsystem);
   }
 
   @Override
@@ -34,8 +39,8 @@ public class ElevatorSetHeight extends PIDCommand {
     return getController().atSetpoint();
   }
 
-  //  @Override
-  //  public void end(boolean interrupted) {
-  //    elevatorSubsystem.off();
-  //  }
+  @Override
+  public void end(boolean interrupted) {
+    elevatorSubsystem.off();
+  }
 }

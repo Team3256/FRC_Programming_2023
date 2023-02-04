@@ -14,6 +14,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ElevatorSetHeight;
 import org.junit.jupiter.api.BeforeAll;
@@ -39,19 +40,20 @@ public class ElevatorTests {
   public void testElevatorSetHeight() {
     ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 1);
     CommandScheduler.getInstance().schedule(command);
-    //    command.execute();
-    runScheduler(5, command);
-    double height = elevatorSubsystem.getPosition();
+    runScheduler(1, command, elevatorSubsystem);
+    double height = elevatorSubsystem.getElevatorPosition();
+    System.out.println(height);
     assertEquals(1, height, DELTA, "Setting elevator setpoint to 1");
   }
 
-  private static void runScheduler(double seconds, Command command) {
+  private static void runScheduler(double seconds, Command command, Subsystem subsystem) {
     command.initialize();
     try {
       for (int i = 0; i < seconds * 1000 / 20; ++i) {
         HAL.simPeriodicBefore();
         com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
         command.execute();
+        subsystem.simulationPeriodic();
         if (command.isFinished()) command.end(false);
         Thread.sleep(20);
         HAL.simPeriodicAfter();

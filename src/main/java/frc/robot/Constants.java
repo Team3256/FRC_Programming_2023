@@ -51,18 +51,22 @@ public final class Constants {
   public static final class ElevatorConstants {
     public static final int elevatorID = 15;
     public static final double elevatorMotorDiameter = 1;
-    public static final double elevatorGearRatio = 1 / 1;
-
-    public static final int kP = 1;
-    public static final int kI = 0;
-    public static final int kD = 0;
+    public static final double elevatorDrumRadius = (5.5) / (2 * Math.PI);
+    public static final double kMinElevatorHeight = Units.inchesToMeters(0.125); // meters 0.003175
+    public static final double kMaxElevatorHeight = Units.inchesToMeters(38.5); // meters 0.9779
+    public static final double elevatorGearRatio = 5;
+    public static final double kCarriageMass = 4.0; // kg
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double maxVelocity = 10;
     public static final int kTolerancePosition = 1;
     public static final int kToleranceRate = 1;
     public static final double kRateLimiting = 0.05;
     public static final double kEncoderToMetersConversionFactor = -1;
     public static final double kElevatorCurrentThreshold = 1; // amps
-    public static final double kElevatorUpSpeed = 0.3;
-    public static final double kElevatorDownSpeed = -0.3;
+    public static final double kElevatorUpSpeedVolts = 3.6;
+    public static final double kElevatorDownSpeedVolts = -3.6;
   }
 
   public static final class ArmConstants {

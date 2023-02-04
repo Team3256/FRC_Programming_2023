@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
+import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.ElevatorSetHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -37,6 +39,7 @@ public class RobotContainer {
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
+  private Elevator elevatorSubsystem;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -98,10 +101,12 @@ public class RobotContainer {
                 openLoop));
   }
 
-  public void configureElevator() {}
+  public void configureElevator() {
+    elevatorSubsystem = new Elevator();
+  }
 
   public Command getAutonomousCommand() {
-    return new InstantCommand();
+    return new ElevatorSetHeight(elevatorSubsystem, 1);
   }
 
   public void test() {
