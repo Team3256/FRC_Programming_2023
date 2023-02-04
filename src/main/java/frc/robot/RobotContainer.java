@@ -16,6 +16,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeForward;
 import frc.robot.intake.commands.Outtake;
+import frc.robot.led.LED;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.patterns.BlinkingConePattern;
+import frc.robot.led.patterns.CubePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -45,8 +49,8 @@ public class RobotContainer {
   private final JoystickButton outtake =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-  private final JoystickButton driving = new JoystickButton(driver, XboxController.Button.kB.value);
-  private final JoystickButton bussin = new JoystickButton(driver, XboxController.Button.kY.value);
+  private final JoystickButton cube = new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton cone = new JoystickButton(driver, XboxController.Button.kY.value);
 
   private final JoystickButton sensitivityToggle =
       new JoystickButton(driver, XboxController.Button.kY.value);
@@ -54,7 +58,7 @@ public class RobotContainer {
   /* Subsystems */
   private final SwerveDrive swerveDrive = new SwerveDrive();
   private final Intake intakeSubsystem = new Intake();
-  // private final LED LEDSubsystem = new LED(0, 75);
+  private final LED LEDSubsystem = new LED(0, 100);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -96,8 +100,8 @@ public class RobotContainer {
     outtake.whileTrue(new Outtake(intakeSubsystem));
 
     // led buttons for fun
-    // driving.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new DrivingPattern()));
-    // bussin.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new SpiritPattern()));
+    cone.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new BlinkingConePattern()));
+    cube.onTrue(new LEDSetAllSectionsPattern(LEDSubsystem, new CubePattern()));
   }
 
   /**

@@ -44,17 +44,19 @@ public class LED extends SubsystemBase {
   }
 
   public void set(int sectionId, LEDPattern pattern) {
+    // set a specific container's buffer to a pattern
     ledContainers.get(sectionId).setPattern(pattern);
   }
 
   public void setAll(LEDPattern pattern) {
+    // set each container's buffer to the same pattern
     for (int i = 0; i < ledContainers.size(); i++) {
       set(i, pattern);
     }
   }
 
   public void periodic() {
-    // display pattern in each container
+    // display the pattern in each container's buffer
     for (LEDSection container : ledContainers) {
       container.writeToBuffer(buffer);
     }

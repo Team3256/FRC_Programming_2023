@@ -15,7 +15,7 @@ public class LEDPattern {
   private Color[] pattern;
 
   public LEDPattern() {
-    pattern = new Color[LEDConstants.kResolution];
+    pattern = new Color[LEDConstants.kResolution + 1];
     for (int i = 1; i <= LEDConstants.kResolution; i++) pattern[i] = new Color();
   }
 
