@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.led.patternBases.LEDPattern;
+import frc.robot.led.patterns.BlinkingConePattern;
+import frc.robot.led.patterns.BlinkingCubePattern;
 import java.util.Arrays;
 
 public class LEDStrip extends SubsystemBase {
@@ -64,5 +66,16 @@ public class LEDStrip extends SubsystemBase {
       section.writeToBuffer(buffer);
     }
     addressableLED.setData(buffer);
+  }
+
+  private boolean isCubePiece = true;
+
+  public void toggleGamePiece() {
+    if (isCubePiece) {
+      setAll(new BlinkingCubePattern());
+    } else {
+      setAll(new BlinkingConePattern());
+    }
+    isCubePiece = !isCubePiece;
   }
 }
