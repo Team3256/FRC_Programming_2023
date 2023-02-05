@@ -7,7 +7,7 @@
 
 package frc.robot.arm;
 
-import static frc.robot.Constants.ArmConstants.ARM_MOTOR_ID;
+import static frc.robot.arm.ArmConstants.*;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.TalonFXFactory;
@@ -44,7 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
     periodicIO = new PeriodicIO();
     if (Robot.isReal()) {
       // Configure REAL HW
-      armMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(ARM_MOTOR_ID));
+      armMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kArmMotorID));
       armMotor.enableVoltageCompensation(true);
       System.out.println("Arm initalized");
     } else {
@@ -52,13 +51,13 @@ public class ArmSubsystem extends SubsystemBase {
       armSim =
           new SingleJointedArmSim(
               DCMotor.getFalcon500(1),
-              Constants.ArmConstants.kArmGearing,
-              Constants.ArmConstants.kArmInertia,
-              Constants.ArmConstants.kArmLengthMeters,
-              Constants.ArmConstants.kMinAngleRads,
-              Constants.ArmConstants.kMaxAngleRads,
-              Constants.ArmConstants.kArmMassKg,
-              Constants.ArmConstants.kArmSimGravity);
+              kArmGearing,
+              kArmInertia,
+              kArmLengthMeters,
+              kMinAngleRads,
+              kMaxAngleRads,
+              kArmMassKg,
+              kArmSimGravity);
     }
   }
 
