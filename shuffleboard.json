@@ -187,6 +187,51 @@
               "_showGlyph": false,
               "Visuals/Show voltage and current values": true
             }
+          },
+          "7,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Intake CAN connected",
+              "_title": "Intake CAN connected",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Swerve module CAN connected",
+              "_title": "Swerve module CAN connected",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Drivetrain CAN connected",
+              "_title": "Drivetrain CAN connected",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
@@ -484,6 +529,29 @@
                   "_glyph": 148,
                   "_showGlyph": false,
                   "Visuals/Orientation": "HORIZONTAL"
+                },
+                {
+                  "_type": "PDP",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]",
+                  "_title": "/LiveWindow/Ungrouped/PowerDistribution[0]",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Visuals/Show voltage and current values": true
+                },
+                {
+                  "_type": "PID Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PIDController[1]",
+                  "_title": "/LiveWindow/Ungrouped/PIDController[1]",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Motor Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Talon FX [14]",
+                  "_title": "/LiveWindow/Ungrouped/Talon FX [14]",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Visuals/Orientation": "HORIZONTAL"
                 }
               ]
             }
@@ -518,41 +586,12 @@
           }
         }
       }
-    },
-    {
-      "title": "Driver",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {
-          "0,0": {
-            "size": [
-              2,
-              4
-            ],
-            "content": {
-              "_type": "Subsystem Layout",
-              "_source0": "network_table:///LiveWindow/SwerveDrive",
-              "_title": "LiveWindow/SwerveDrive",
-              "_glyph": 149,
-              "_showGlyph": false,
-              "Layout/Label position": "BOTTOM",
-              "_children": []
-            }
-          }
-        }
-      }
     }
   ],
   "windowGeometry": {
-    "x": 0.0,
-    "y": 38.0,
-    "width": 1512.0,
-    "height": 872.0
+    "x": 35.0,
+    "y": 48.0,
+    "width": 1264.0,
+    "height": 772.0
   }
 }
