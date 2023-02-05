@@ -17,6 +17,10 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.led.LEDStrip;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
+import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -30,11 +34,15 @@ import java.util.ArrayList;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
+  private LEDStrip ledStrip;
+
+  boolean cubePiece = true;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -49,6 +57,9 @@ public class RobotContainer {
     }
     if (kElevatorEnabled) {
       configureElevator();
+    }
+    if (kLedStripEnabled) {
+      configureLEDStrip();
     }
   }
 
@@ -98,6 +109,12 @@ public class RobotContainer {
 
   public void configureElevator() {}
 
+  public void configureLEDStrip() {
+    ledStrip = new LEDStrip(0, new int[] {100});
+    driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
+  }
+
   public Command getAutonomousCommand() {
     return new InstantCommand();
   }
@@ -107,9 +124,5 @@ public class RobotContainer {
     boolean result = true;
     for (CANTestable subsystem : testables) result &= subsystem.test();
     System.out.println("CAN fully connected: " + result);
-  }
-
-  public void zeroGyro() {
-    swerveDrive.zeroGyro();
   }
 }
