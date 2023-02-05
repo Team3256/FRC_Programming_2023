@@ -262,8 +262,4 @@ public final class Constants {
                 Units.inchesToMeters(18.22),
                 new Rotation3d()));
   }
-
-  public static final class LEDConstants {
-    public static final int kResolution = 100;
-  }
 }
