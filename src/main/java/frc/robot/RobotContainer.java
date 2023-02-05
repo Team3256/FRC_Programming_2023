@@ -8,14 +8,17 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Constants.ShuffleboardConstants.driverTab;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
+import frc.robot.drivers.GyroSendable;
 import frc.robot.drivers.Loggable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
@@ -38,7 +41,6 @@ public class RobotContainer {
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
-  private PowerDistribution pdh;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
@@ -57,7 +59,7 @@ public class RobotContainer {
     if (kElevatorEnabled) {
       configureElevator();
     }
-    pdh = new PowerDistribution(1, ModuleType.kRev);
+    PowerDistribution pdp = new PowerDistribution(1, ModuleType.kRev);
   }
 
   private void configureIntake() {
@@ -112,8 +114,9 @@ public class RobotContainer {
 
   public void startLog() {
     for (Loggable device : loggables) device.startLog();
-    // SmartDashboard.putData("Joystick Angle", new GyroSendable(driver::getRawAxis));
-    // Shuffleboard.getTab(driverTab).add("PDP", pdh).withWidget(BuiltInWidgets.kPowerDistribution);
+    Shuffleboard.getTab(driverTab)
+        .add(
+            "Joystick", new GyroSendable(() -> Math.atan2(driver.getRightX(), driver.getRightY())));
   }
 
   public void periodicLog() {
