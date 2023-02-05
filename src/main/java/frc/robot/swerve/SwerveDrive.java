@@ -7,6 +7,7 @@
 
 package frc.robot.swerve;
 
+import static frc.robot.Constants.ShuffleboardConstants.driverTab;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -16,6 +17,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -162,19 +166,22 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   @Override
   public void startLog() {
-    SmartDashboard.putData(this);
-    SmartDashboard.putData("Gyro Angle", gyro);
-
-    addChild("Gyro", gyro);
+    getLayout(driverTab).add("1", this);
+    getLayout(driverTab).add("2", gyro);
     for (int i = 0; i < swerveModules.length; i++) {
-      addChild("Swerve Module " + i + " Encoder", swerveModules[i].getAngleEncoder());
-      // addChild("Swerve Module " + i + " Angle Motor", swerveModules[i].getAngleMotor());
-      // addChild("Swerve Module" + i + " Drive Motor", swerveModules[i].getDriveMotor());
+      getLayout(driverTab).add("Encoder " + i, swerveModules[i].getAngleEncoder());
+    }
+    for (int i = 0; i < swerveModules.length; i++) {
+      swerveModules[i].startLog();
     }
   }
 
   @Override
   public void periodicLog() {}
+
+  public ShuffleboardLayout getLayout(String tab) {
+    return Shuffleboard.getTab(tab).getLayout("Swerve", BuiltInLayouts.kList).withSize(2, 4);
+  }
 
   public boolean test() {
     System.out.println("Testing drivetrain CAN:");
