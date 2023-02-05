@@ -7,7 +7,7 @@
 
 package frc.robot.led.patternBases;
 
-import static frc.robot.Constants.LEDConstants.kResolution;
+import static frc.robot.led.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -19,10 +19,13 @@ public abstract class TimeFunctionPattern extends LEDPattern {
   public TimeFunctionPattern(boolean rgb) {
     this.rgb = rgb;
   }
+
   // Red/Hue [0,1) as a function of ticks
   protected abstract double calculateA(int ticks);
+
   // Green/Saturation [0,1] as a function of ticks
   protected abstract double calculateB(int ticks);
+
   // Blue/Value [0,1] as a function of ticks
   protected abstract double calculateC(int ticks);
 

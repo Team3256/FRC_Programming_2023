@@ -7,7 +7,7 @@
 
 package frc.robot.led.patternBases;
 
-import static frc.robot.Constants.LEDConstants.kResolution;
+import static frc.robot.led.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.util.Color;
 
