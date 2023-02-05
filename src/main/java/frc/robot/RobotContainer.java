@@ -21,6 +21,10 @@ import frc.robot.ezled.patterns.ColorChaseBluePattern;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.led.LEDStrip;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
+import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -122,9 +126,5 @@ public class RobotContainer {
     boolean result = true;
     for (CANTestable subsystem : testables) result &= subsystem.test();
     System.out.println("CAN fully connected: " + result);
-  }
-
-  public void zeroGyro() {
-    swerveDrive.zeroGyro();
   }
 }
