@@ -25,6 +25,7 @@ public final class Constants {
 
   public static final class ShuffleboardConstants {
     public static final String driverTab = "Driver";
+    public static final String electricalTab = "Electrical";
   }
 
   public static final class FieldConstants {
