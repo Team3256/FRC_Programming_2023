@@ -5,10 +5,13 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.ezled.patterns;
 
-import frc.robot.led.patternBases.BlinkingPattern;
+import frc.robot.ezled.patternBases.BlinkingPattern;
 
+/**
+ * Blinking Yellow
+ */
 public class BlinkingConePattern extends BlinkingPattern {
 
   public BlinkingConePattern() {

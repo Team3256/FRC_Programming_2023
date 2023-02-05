@@ -5,16 +5,16 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.test;
+package frc.robot.ezled.test;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * Simple bare-bones LED class to test if your Addressable LED is working
- * Call turnOn in robotInit and turnOff in robotDisabled
- * */
+ * Simple bare-bones LED class to test if your Addressable LED is working Call turnOn in robotInit
+ * and turnOff in robotDisabled
+ */
 public class LEDTester extends SubsystemBase {
   private final AddressableLED LED;
   private final AddressableLEDBuffer LEDBuffer;

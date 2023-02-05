@@ -2,21 +2,22 @@
 Documentation on how to use our EZ-LED Framework
 ## Quickstart
 * Plug in your AddressableLED into 5V, GND, PWM port
-* Create patterns
+* Create a EZLED object in RobotContainer
+* Create LED patterns using our LED pattern bases. Use the LED patterns under our patterns folder as examples.
+* Attach your custom LED patterns to sections using the LEDSetSectionPattern command.
+* Have fun!!
 ### patternBases
 * LED Pattern
 * Animated Pattern
 * Blinking Pattern
 * Time Function Pattern
 ### LED Section:
-* Custom length
-* Renders a pattern in any length
+* Holds the LEDPattern that will be displayed
+* Renders a pattern by scaling it to it's length
 ### LED Subsystem:
-* Collection of sections
-* Each section displays same pattern
+* A collection of disjoint sections
+* Each section displays a user controlled pattern
 ### Note:
-* Patterns are in percentages
-* LED is in pixels
-* 1 indexed
-* endpoints inclusive
-* follow convention when creating new Custom Patterns
+* pixels are NOT LEDs
+* patterns are NOT LEDPatterns
+* Most classes and methods have java docs
