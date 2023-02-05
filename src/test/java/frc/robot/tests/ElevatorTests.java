@@ -31,20 +31,53 @@ public class ElevatorTests {
 
     CommandScheduler.getInstance().enable();
     DriverStationSim.setEnabled(true);
-    elevatorSubsystem = new Elevator();
   }
 
   // TODO: Elevator command tests
 
   @Test
-  public void testElevatorSetHeight() {
+  public void testElevatorSetHeight1() { // 1 meter
+    elevatorSubsystem = new Elevator();
     ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 1);
     CommandScheduler.getInstance().schedule(command);
-    runScheduler(1, command, elevatorSubsystem);
+    runScheduler(3, command, elevatorSubsystem);
     double height = elevatorSubsystem.getElevatorPosition();
     System.out.println(height);
     assertEquals(1, height, DELTA, "Setting elevator setpoint to 1");
   }
+
+  //  @Test
+  //  public void testElevatorSetHeight2() { // 0.5 meters
+  //    elevatorSubsystem = new Elevator();
+  //    ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 0.5);
+  //    CommandScheduler.getInstance().schedule(command);
+  //    runScheduler(3, command, elevatorSubsystem);
+  //    double height = elevatorSubsystem.getElevatorPosition();
+  //    System.out.println(height);
+  //    assertEquals(0.5, height, DELTA, "Setting elevator setpoint to 0.5");
+  //  }
+  //
+  //  @Test
+  //  public void testElevatorSetHeight3() { // 0.25 meters
+  //    elevatorSubsystem = new Elevator();
+  //    ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 0.25);
+  //    CommandScheduler.getInstance().schedule(command);
+  //    runScheduler(3, command, elevatorSubsystem);
+  //    double height = elevatorSubsystem.getElevatorPosition();
+  //    System.out.println(height);
+  //    assertEquals(0.25, height, DELTA, "Setting elevator setpoint to 0.25");
+  //  }
+  //
+  //  @Test
+  //  public void testElevatorSetHeight4() { // 0.75 meters
+  //    elevatorSubsystem = new Elevator();
+  //    ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 0.75);
+  //    CommandScheduler.getInstance().schedule(command);
+  //    runScheduler(3, command, elevatorSubsystem);
+  //    double height = elevatorSubsystem.getElevatorPosition();
+  //    System.out.println(height);
+  //    assertEquals(0.75, height, DELTA, "Setting elevator setpoint to 0.75");
+  //  }
 
   private static void runScheduler(double seconds, Command command, Subsystem subsystem) {
     command.initialize();
