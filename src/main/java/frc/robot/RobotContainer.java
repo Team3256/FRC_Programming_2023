@@ -125,8 +125,4 @@ public class RobotContainer {
     for (CANTestable subsystem : testables) result &= subsystem.test();
     System.out.println("CAN fully connected: " + result);
   }
-
-  public void zeroGyro() {
-    swerveDrive.zeroGyro();
-  }
 }
