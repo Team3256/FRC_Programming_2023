@@ -9,7 +9,6 @@ package frc.robot.auto.commands;
 
 import static frc.robot.auto.AutoConstants.kAutoDebug;
 
-import com.ctre.phoenix.sensors.Pigeon2;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -34,7 +33,6 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   private final double trajectoryDuration;
   private Pose2d startPose;
   private AutoCommandRunner autoCommandRunner;
-  private final Pigeon2 gyro = new Pigeon2(pigeonID);
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
@@ -108,7 +106,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     Rotation2d desiredRotation = desired.holonomicRotation;
 
-    if (kDebugEnabled) {
+    if (kAutoDebug) {
       SmartDashboard.putNumber("Desired Rotation", desiredRotation.getDegrees());
       SmartDashboard.putNumber("Desired Position", Units.metersToInches(desiredPose.getX()));
     }
