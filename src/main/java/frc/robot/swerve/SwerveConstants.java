@@ -15,6 +15,7 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class SwerveConstants {
   public static final boolean kFieldRelative = true;
+  public static final double kPeriodicDeltaTime = 0.02;
   public static final boolean kOpenLoop = true;
 
   /* Angle Motor PID Values */

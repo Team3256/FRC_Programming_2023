@@ -11,9 +11,11 @@ import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.google.flatbuffers.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -80,12 +82,21 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+    ChassisSpeeds desiredChassisSpeeds = fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            translation.getX(), translation.getY(), rotation, getYaw())
+            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+
+    Pose2d robotPoseVelocity = new Pose2d(desiredChassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
+            desiredChassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
+            Rotation2d.fromRadians(desiredChassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
+    Twist2d twist_vel = robotPoseVelocity.log(robotPoseVelocity);
+    ChassisSpeeds updatedChassisSpeeds = new ChassisSpeeds(
+            twist_vel.dx / kPeriodicDeltaTime, twist_vel.dy / kPeriodicDeltaTime, twist_vel.dtheta / kPeriodicDeltaTime);
+
     SwerveModuleState[] swerveModuleStates =
-        kSwerveKinematics.toSwerveModuleStates(
-            fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getYaw())
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+        kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
+
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
     for (SwerveModule mod : swerveModules) {
