@@ -15,7 +15,7 @@ import frc.robot.led.patterns.BlinkingConePattern;
 import frc.robot.led.patterns.BlinkingCubePattern;
 import java.util.Arrays;
 
-public class LEDStrip extends SubsystemBase {
+public class EZLED extends SubsystemBase {
   private final int length;
   private final int sections;
   private final LEDSection[] LEDSections;
@@ -28,7 +28,7 @@ public class LEDStrip extends SubsystemBase {
    * @param port PWM port on the RoboRio
    * @param LEDSectionLengths An array of LED section lengths
    */
-  public LEDStrip(int port, int[] LEDSectionLengths) {
+  public EZLED(int port,int[] LEDSectionLengths) {
     length = Arrays.stream(LEDSectionLengths).sum();
     sections = LEDSectionLengths.length;
     LEDSections = new LEDSection[sections];

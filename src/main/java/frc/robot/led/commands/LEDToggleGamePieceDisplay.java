@@ -8,12 +8,12 @@
 package frc.robot.led.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.led.LEDStrip;
+import frc.robot.led.EZLED;
 
 public class LEDToggleGamePieceDisplay extends CommandBase {
-  private final LEDStrip ledStrip;
+  private final EZLED ledStrip;
 
-  public LEDToggleGamePieceDisplay(LEDStrip ledStrip) {
+  public LEDToggleGamePieceDisplay(EZLED ledStrip) {
     addRequirements(ledStrip);
     this.ledStrip = ledStrip;
   }

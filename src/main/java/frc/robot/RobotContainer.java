@@ -17,7 +17,7 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
-import frc.robot.led.LEDStrip;
+import frc.robot.led.EZLED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.commands.LEDToggleGamePieceDisplay;
 import frc.robot.led.patterns.ColorChaseBluePattern;
@@ -40,7 +40,7 @@ public class RobotContainer {
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
-  private LEDStrip ledStrip;
+  private EZLED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -108,7 +108,7 @@ public class RobotContainer {
   public void configureElevator() {}
 
   public void configureLEDStrip() {
-    ledStrip = new LEDStrip(0, new int[] {100});
+    ledStrip = new EZLED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }

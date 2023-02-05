@@ -8,14 +8,14 @@
 package frc.robot.led.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.led.LEDStrip;
+import frc.robot.led.EZLED;
 import frc.robot.led.patternBases.LEDPattern;
 
 public class LEDSetAllSectionsPattern extends CommandBase {
-  private final LEDStrip led;
+  private final EZLED led;
   private final LEDPattern ledPattern;
 
-  public LEDSetAllSectionsPattern(LEDStrip led, LEDPattern ledPattern) {
+  public LEDSetAllSectionsPattern(EZLED led,LEDPattern ledPattern) {
     addRequirements(led);
     this.led = led;
     this.ledPattern = ledPattern;
