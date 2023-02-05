@@ -5,18 +5,13 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-// Use command scheduler function
 package frc.robot.arm;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.arm.commands.SetArmFromPID;
 import frc.robot.arm.commands.SetArmFromVoltage;
-
-import java.sql.Driver;
-
 import org.junit.*;
 import org.junit.Assert.*;
 

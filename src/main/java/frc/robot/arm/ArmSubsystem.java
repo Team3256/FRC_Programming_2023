@@ -52,6 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
       System.out.println("Arm initalized");
     } else {
       // Configure Sim HW
+      System.out.println("Arm initalized in simulation.");
       armSim =
           new SingleJointedArmSim(
               DCMotor.getFalcon500(1),
