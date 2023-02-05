@@ -7,6 +7,7 @@
 
 package frc.robot.swerve.helpers;
 
+import static frc.robot.Constants.ShuffleboardConstants.electricalTab;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -20,6 +21,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.drivers.CANDeviceTester;
 
@@ -155,6 +159,23 @@ public class SwerveModule {
 
   public WPI_CANCoder getAngleEncoder() {
     return angleEncoder;
+  }
+
+  public void startLog() {
+    getLayout(electricalTab).add("Turn Motor Bus Voltage", getAngleMotor().getBusVoltage());
+    getLayout(electricalTab)
+        .add("Turn Motor Output Voltage", getAngleMotor().getMotorOutputVoltage());
+    getLayout(electricalTab).add("Drive Motor Bus Voltage", getDriveMotor().getBusVoltage());
+    getLayout(electricalTab)
+        .add("Drive Motor Output Voltage", getDriveMotor().getMotorOutputVoltage());
+  }
+
+  public void periodicLog() {}
+
+  public ShuffleboardLayout getLayout(String tabName) {
+    return Shuffleboard.getTab(tabName)
+        .getLayout("Mod " + moduleNumber, BuiltInLayouts.kList)
+        .withSize(2, 2);
   }
 
   public boolean test() {
