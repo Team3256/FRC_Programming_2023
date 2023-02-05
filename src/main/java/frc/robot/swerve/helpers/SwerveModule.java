@@ -156,6 +156,7 @@ public class SwerveModule {
   public WPI_CANCoder getAngleEncoder() {
     return angleEncoder;
   }
+
   public boolean test() {
     System.out.println("Testing swerve module CAN:");
     boolean result =

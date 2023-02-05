@@ -9,8 +9,8 @@ package frc.robot.swerve;
 
 import static frc.robot.swerve.SwerveConstants.*;
 
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -175,6 +175,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   @Override
   public void periodicLog() {}
+
   public boolean test() {
     System.out.println("Testing drivetrain CAN:");
     boolean result = true;

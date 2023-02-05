@@ -7,19 +7,20 @@
 
 package frc.robot.intake;
 
+import static frc.robot.Constants.ShuffleboardConstants.driverTab;
 import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
-import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.Loggable;
-import frc.robot.drivers.TalonFXFactory;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 
@@ -47,6 +48,10 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
+  public ShuffleboardLayout getLayout(String tab) {
+    return Shuffleboard.getTab(tab).getLayout("Intake Sub", BuiltInLayouts.kList).withSize(2, 4);
+  }
+
   public void off() {
     System.out.println("Intake off");
     intakeMotor.neutralOutput();
@@ -54,14 +59,14 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void startLog() {
-    SmartDashboard.putData(this);
-    SmartDashboard.putData("Intake Forward", new IntakeCube(this));
-    SmartDashboard.putData("Outtake", new IntakeCone(this));
+    getLayout(driverTab).add(this);
+    getLayout(driverTab).add(new IntakeCube(this));
+    getLayout(driverTab).add(new IntakeCone(this));
   }
 
   @Override
   public void periodicLog() {
-    SmartDashboard.putNumber("Intake Motor Voltage", intakeMotor.getBusVoltage());
+    // SmartDashboard.putNumber("Intake Motor Voltage", intakeMotor.getBusVoltage());
   }
 
   public boolean test() {

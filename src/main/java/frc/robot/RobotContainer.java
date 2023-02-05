@@ -7,25 +7,16 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.drivers.GyroSendable;
-import frc.robot.drivers.Loggable;
-
 import static frc.robot.Constants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
-
+import frc.robot.drivers.Loggable;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -47,6 +38,7 @@ public class RobotContainer {
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
+  private PowerDistribution pdh;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
@@ -55,14 +47,17 @@ public class RobotContainer {
     if (kIntakeEnabled) {
       configureIntake();
       testables.add(intakeSubsystem);
+      loggables.add(intakeSubsystem);
     }
     if (kSwerveEnabled) {
       configureSwerve();
       testables.add(swerveDrive);
+      loggables.add(swerveDrive);
     }
     if (kElevatorEnabled) {
       configureElevator();
     }
+    pdh = new PowerDistribution(1, ModuleType.kRev);
   }
 
   private void configureIntake() {
@@ -117,12 +112,13 @@ public class RobotContainer {
 
   public void startLog() {
     for (Loggable device : loggables) device.startLog();
-    //SmartDashboard.putData("Joystick Angle", new GyroSendable(driver::getRawAxis));
-    //SmartDashboard.putData("Power Distribution", pdh);
+    // SmartDashboard.putData("Joystick Angle", new GyroSendable(driver::getRawAxis));
+    // Shuffleboard.getTab(driverTab).add("PDP", pdh).withWidget(BuiltInWidgets.kPowerDistribution);
   }
 
   public void periodicLog() {
     for (Loggable device : loggables) device.periodicLog();
+  }
 
   public void test() {
     System.out.println("Testing CAN connections:");
@@ -133,6 +129,5 @@ public class RobotContainer {
 
   public void zeroGyro() {
     swerveDrive.zeroGyro();
-
   }
 }
