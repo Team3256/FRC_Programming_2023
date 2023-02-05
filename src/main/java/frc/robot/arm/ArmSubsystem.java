@@ -7,9 +7,12 @@
 
 package frc.robot.arm;
 
+import static frc.robot.Constants.ArmConstants.*;
+
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -28,19 +31,23 @@ public class ArmSubsystem extends SubsystemBase {
     public double lastUpdateTime = -1;
 
     // Outputs
-    public double angularVelocity = 0;
+    public double angleRad = 0;
     public double currentDrawAmps = 0;
+    public double angularVelocityRadPerSec = 0;
+    public double angularAccelerationRadPerSecSq = 0;
   }
 
   private TalonFX armMotor;
   private SingleJointedArmSim armSim;
   private PeriodicIO periodicIO;
 
+  private ArmFeedforward armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+
   public ArmSubsystem() {
     periodicIO = new PeriodicIO();
     if (Robot.isReal()) {
       // Configure REAL HW
-      armMotor = new TalonFX(Constants.ArmConstants.ARM_MOTOR_ID);
+      armMotor = new TalonFX(ARM_MOTOR_ID);
       armMotor.enableVoltageCompensation(true);
       System.out.println("Arm initalized");
     } else {
@@ -67,26 +74,36 @@ public class ArmSubsystem extends SubsystemBase {
     }
   }
 
-  public double getAngularVelocityRPM() {
-    return periodicIO.angularVelocity;
+  public double getAngle() {
+    return periodicIO.angleRad;
+  }
+
+  public double calculateFFVelocity(double desiredAngle, double desiredVelocity) {
+    return armFeedforward.calculate(desiredAngle, desiredVelocity);
   }
 
   @Override
   public void simulationPeriodic() {
-    double cT = Timer.getFPGATimestamp();
-    armSim.update(cT);
+    double currentTime = Timer.getFPGATimestamp();
+    armSim.update(currentTime);
 
-    periodicIO.lastUpdateTime = cT;
-    periodicIO.angularVelocity = armSim.getVelocityRadPerSec();
+    periodicIO.angleRad = armSim.getAngleRads();
     periodicIO.currentDrawAmps = armSim.getCurrentDrawAmps();
+    periodicIO.angularAccelerationRadPerSecSq =
+        (armSim.getVelocityRadPerSec() - periodicIO.angularVelocityRadPerSec)
+            / (currentTime - periodicIO.lastUpdateTime);
+    periodicIO.angularVelocityRadPerSec = armSim.getVelocityRadPerSec();
+    periodicIO.lastUpdateTime = currentTime;
 
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
   }
 
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm Angular Velocity", periodicIO.angularVelocity);
+    SmartDashboard.putNumber("Arm Angle", periodicIO.angleRad);
     SmartDashboard.putNumber("Current Draw", periodicIO.currentDrawAmps);
     SmartDashboard.putNumber("Arm Sim Voltage", periodicIO.voltage);
+    SmartDashboard.putNumber("Arm Velocity", periodicIO.angularVelocityRadPerSec);
+    SmartDashboard.putNumber("Arm Acceleration", periodicIO.angularAccelerationRadPerSecSq);
   }
 }

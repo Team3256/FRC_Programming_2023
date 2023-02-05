@@ -22,23 +22,23 @@ public class SetArmFromPID extends PIDCommand {
   public SetArmFromPID(ArmSubsystem armSubsystem) {
     super(
         new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD),
-        armSubsystem::getAngularVelocityRPM,
-        SmartDashboard.getNumber("Velocity Setpoint", 1200),
+        armSubsystem::getAngle,
+        SmartDashboard.getNumber("Arm Angle", 0),
         voltage ->
             armSubsystem.setInputVoltage(
                 voltage
-                    + SmartDashboard.getNumber("Velocity Setpoint", 1200)
+                    + SmartDashboard.getNumber("Arm Angle", 0)
                         * SmartDashboard.getNumber("Arm KFF", ArmConstants.kFF)),
         armSubsystem);
 
-    this.velocity = () -> SmartDashboard.getNumber("Velocity Setpoint", 1200);
+    this.velocity = () -> SmartDashboard.getNumber("Arm Angle", 0);
     this.armSubsystem = armSubsystem;
   }
 
   public SetArmFromPID(ArmSubsystem armSubsystem, double velocity) {
     super(
         new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD),
-        armSubsystem::getAngularVelocityRPM,
+        armSubsystem::getAngle,
         velocity,
         voltage -> armSubsystem.setInputVoltage(voltage + velocity * ArmConstants.kFF),
         armSubsystem);
@@ -50,7 +50,7 @@ public class SetArmFromPID extends PIDCommand {
   @Override
   public void initialize() {
     SmartDashboard.putData(getController());
-    SmartDashboard.putNumber("Velocity Setpoint", 1200);
+    SmartDashboard.putNumber("Arm Angle", 0);
     SmartDashboard.putNumber("Arm KFF", ArmConstants.kFF);
   }
 
@@ -63,7 +63,7 @@ public class SetArmFromPID extends PIDCommand {
   public void execute() {
     super.execute();
     if (movingSetpoint) {
-      SmartDashboard.putNumber("Velocity Setpoint", velocity.getAsDouble());
+      SmartDashboard.putNumber("Arm Angle", velocity.getAsDouble());
     }
   }
 }

@@ -84,7 +84,7 @@ public class ArmUnitTest {
   private static void runScheduler(double seconds) {
     try {
       for (int i = 0; i < seconds * 1000 / 20; ++i) {
-        com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100); 
+        com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
         // TODO: Change to motor the arm is using
         CommandScheduler.getInstance().run();
         Thread.sleep(20);

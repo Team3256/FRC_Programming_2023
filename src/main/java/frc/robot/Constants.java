@@ -57,6 +57,14 @@ public final class Constants {
     public static final double kI = 1;
     public static final double kD = 1;
     public static final double kFF = 1;
+
+    public static final double kS = 0;
+
+    public static final double kG = 0;
+
+    public static final double kV = 0;
+
+    public static final double kA = 0;
   }
 
   public static final class SwerveConstants {

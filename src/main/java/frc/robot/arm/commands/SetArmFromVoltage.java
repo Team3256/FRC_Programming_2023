@@ -41,7 +41,7 @@ public class SetArmFromVoltage extends CommandBase {
   @Override
   public void execute() {
     armSubsystem.setInputVoltage(voltage.getAsDouble());
-    SmartDashboard.putNumber("Arm Voltage", armSubsystem.getAngularVelocityRPM());
+    SmartDashboard.putNumber("Arm Voltage", armSubsystem.getAngle());
   }
 
   @Override
