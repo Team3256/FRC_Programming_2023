@@ -48,10 +48,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
-  public ShuffleboardLayout getLayout(String tab) {
-    return Shuffleboard.getTab(tab).getLayout("Intake Sub", BuiltInLayouts.kList).withSize(2, 4);
-  }
-
   public void off() {
     System.out.println("Intake off");
     intakeMotor.neutralOutput();
@@ -59,14 +55,17 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void startLog() {
-    getLayout(driverTab).add(this);
-    getLayout(driverTab).add(new IntakeCube(this));
-    getLayout(driverTab).add(new IntakeCone(this));
+    getLayout(driverTab).add("1", this);
+    getLayout(driverTab).add("2", new IntakeCube(this));
+    getLayout(driverTab).add("3", new IntakeCone(this));
+    getLayout(driverTab).add("4", intakeMotor);
   }
 
   @Override
-  public void periodicLog() {
-    // SmartDashboard.putNumber("Intake Motor Voltage", intakeMotor.getBusVoltage());
+  public void periodicLog() {}
+
+  public ShuffleboardLayout getLayout(String tab) {
+    return Shuffleboard.getTab(tab).getLayout("Intake", BuiltInLayouts.kList).withSize(2, 4);
   }
 
   public boolean test() {
