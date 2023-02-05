@@ -42,8 +42,6 @@ public class RobotContainer {
   private Intake intakeSubsystem;
   private LEDStrip ledStrip;
 
-  boolean cubePiece = true;
-
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
   public RobotContainer() {
