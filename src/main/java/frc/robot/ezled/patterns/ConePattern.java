@@ -12,9 +12,7 @@ import static frc.robot.Constants.LEDConstants.kResolution;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.ezled.patternBases.LEDPattern;
 
-/**
- * Full Yellow
- */
+/** Full Yellow */
 public class ConePattern extends LEDPattern {
   public ConePattern() {
     super();

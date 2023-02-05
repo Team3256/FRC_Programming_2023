@@ -9,9 +9,7 @@ package frc.robot.ezled.patterns;
 
 import frc.robot.ezled.patternBases.TimeFunctionPattern;
 
-/**
- * Blue Sin Wave Animation
- */
+/** Blue Sin Wave Animation */
 public class ColorChaseBluePattern extends TimeFunctionPattern {
   public ColorChaseBluePattern() {
     super(true);

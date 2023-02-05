@@ -9,9 +9,7 @@ package frc.robot.ezled.patterns;
 
 import frc.robot.ezled.patternBases.BlinkingPattern;
 
-/**
- * Blinking Yellow
- */
+/** Blinking Yellow */
 public class BlinkingConePattern extends BlinkingPattern {
 
   public BlinkingConePattern() {

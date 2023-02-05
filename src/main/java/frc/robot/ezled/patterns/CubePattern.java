@@ -12,9 +12,7 @@ import static frc.robot.Constants.LEDConstants.kResolution;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.ezled.patternBases.LEDPattern;
 
-/**
- * Full Purple
- */
+/** Full Purple */
 public class CubePattern extends LEDPattern {
   public CubePattern() {
     super();

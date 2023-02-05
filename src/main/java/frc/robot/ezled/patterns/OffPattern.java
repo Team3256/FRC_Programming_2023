@@ -9,9 +9,7 @@ package frc.robot.ezled.patterns;
 
 import frc.robot.ezled.patternBases.LEDPattern;
 
-/**
- * No display
- */
+/** No display */
 public class OffPattern extends LEDPattern {
   public OffPattern() {
     super();
