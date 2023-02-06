@@ -70,6 +70,10 @@ public class ArmSubsystem extends SubsystemBase {
     }
   }
 
+  public double getVoltage() {
+    return periodicIO.voltage;
+  }
+
   public double getAngularVelocityRPM() {
     return periodicIO.angularVelocity;
   }
