@@ -54,7 +54,8 @@ public class Robot extends LoggedRobot {
     Logger.getInstance()
         .start(); // Start logging! No more data receivers, replay sources, or metadata values may
     // be added.
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
     robotContainer.startLog();
@@ -67,11 +68,17 @@ public class Robot extends LoggedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
+  // updated every 20 ms by default
+  // this can be changed by calling the superclass constructor with the new
+  // desired update rate
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     robotContainer.periodicLog();
@@ -107,9 +114,6 @@ public class Robot extends LoggedRobot {
     // this line or comment it out.
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
-    }
-    if (Constants.kSwerveEnabled) {
-      robotContainer.zeroGyro();
     }
   }
 
