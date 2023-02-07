@@ -8,19 +8,24 @@
 package frc.robot.swerve;
 
 import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.Constants.VisionConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
+import frc.robot.limelight.Limelight;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
@@ -29,7 +34,10 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
   private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
+  private SwerveDrivePoseEstimator poseEstimator;
+
   private final Field2d field = new Field2d();
+  private final Field2d limelightLocalizationField = new Field2d();
 
   private static final SwerveDriveKinematics kinematics =
       new SwerveDriveKinematics(
@@ -61,6 +69,20 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
               backLeftModule.getPosition(),
               backRightModule.getPosition()
             });
+
+    this.poseEstimator =
+        new SwerveDrivePoseEstimator(
+            swerveKinematics,
+            getYaw(),
+            new SwerveModulePosition[] {
+              frontLeftModule.getPosition(),
+              frontRightModule.getPosition(),
+              backLeftModule.getPosition(),
+              backRightModule.getPosition()
+            },
+            getPose());
+
+    SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -141,10 +163,47 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     return Rotation2d.fromDegrees(invertGyro ? -gyro.getYaw() : gyro.getYaw());
   }
 
+  public boolean canAddVisionMeasurement(Pose2d limelightPose) {
+    if (Math.abs(
+                limelightPose
+                    .getTranslation()
+                    .getDistance(poseEstimator.getEstimatedPosition().getTranslation()))
+            < kLimelightTranslationThreshold
+        && Math.abs(
+                limelightPose.getRotation().getRadians() - limelightPose.getRotation().getRadians())
+            < kLimelightRotationThreshold) return true;
+    return false;
+  }
+
   @Override
   public void periodic() {
     odometry.update(getYaw(), getPositions());
+    poseEstimator.update(getYaw(), getPositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
+    double[] visionBotPose = Limelight.getBotpose(kLimelightNetworkTablesName);
+
+    double tx = visionBotPose[0];
+    double ty = visionBotPose[1];
+    double tz = visionBotPose[2];
+
+    // botpose from network tables uses degrees, not radians, so need to convert
+    double rx = Units.degreesToRadians(visionBotPose[3]);
+    double ry = Units.degreesToRadians(visionBotPose[4]);
+    double rz = Units.degreesToRadians((visionBotPose[5] + 360) % 360);
+
+    double tl = Limelight.getLatency_Pipeline(kLimelightNetworkTablesName);
+
+    Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), new Rotation2d(rx, ry));
+
+    if (Limelight.hasValidTargets(kLimelightNetworkTablesName)
+        && tx != 0
+        && ty != 0
+        && canAddVisionMeasurement(limelightPose)) {
+      poseEstimator.addVisionMeasurement(
+          limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+    }
+
+    limelightLocalizationField.setRobotPose(limelightPose);
 
     for (SwerveModule mod : swerveModules) {
       SmartDashboard.putNumber(

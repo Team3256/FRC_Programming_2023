@@ -8,11 +8,14 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
@@ -459,5 +462,12 @@ public final class Constants {
                 Units.inchesToMeters(42.19),
                 Units.inchesToMeters(18.22),
                 new Rotation3d()));
+  }
+
+  public static class VisionConstants {
+    public static final String kLimelightNetworkTablesName = "limelight";
+    public static final double kLimelightTranslationThreshold = 1; // 1 meter
+    public static final double kLimelightRotationThreshold = 0.1;
+    Matrix<N3, N1> visionMeasurementStdDevs;
   }
 }
