@@ -10,12 +10,14 @@ package frc.robot.swerve;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.Pigeon2;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,80 +33,63 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
   private final Field2d field = new Field2d();
 
-  private static final SwerveDriveKinematics kinematics =
-      new SwerveDriveKinematics(
-          new Translation2d(kTrackWidth / 2.0, kWheelBase / 2.0), // Front Right
-          new Translation2d(kTrackWidth / 2.0, -kWheelBase / 2.0), // Back right
-          new Translation2d(-kTrackWidth / 2.0, kWheelBase / 2.0), // Front left
-          new Translation2d(-kTrackWidth / 2.0, -kWheelBase / 2.0) // Back right
-          );
-
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
-  public SwerveDriveOdometry odometry;
-  public PigeonIMU gyro;
+  public SwerveDrivePoseEstimator poseEstimator;
+  public Pigeon2 gyro;
 
   public SwerveDrive() {
-    gyro = new PigeonIMU(kPigeonID);
+    gyro = new Pigeon2(kPigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
 
-    odometry =
-        new SwerveDriveOdometry(
-            kSwerveKinematics,
-            getYaw(),
-            new SwerveModulePosition[] {
-              frontLeftModule.getPosition(),
-              frontRightModule.getPosition(),
-              backLeftModule.getPosition(),
-              backRightModule.getPosition()
-            });
+    /*
+     * By pausing init for a second before setting module offsets, we avoid a bug
+     * with inverting motors.
+     * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+     */
+    Timer.delay(1.0);
+    resetModulesToAbsolute();
+
+    poseEstimator =
+        new SwerveDrivePoseEstimator(
+            kSwerveKinematics, getYaw(), getModulePositions(), new Pose2d());
   }
 
-  public void drive(ChassisSpeeds chassisSpeeds) {
-    SwerveModuleState[] swerveModuleStates =
-        kSwerveKinematics.toSwerveModuleStates(
-            chassisSpeeds); // same as the older version of drive but takes in the calculated
-    // chassisspeed
+  public void resetModulesToAbsolute() {
+    for (SwerveModule mod : swerveModules) {
+      mod.resetToAbsolute();
+    }
+  }
+
+  public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    SwerveModuleState[] swerveModuleStates = kSwerveKinematics.toSwerveModuleStates(chassisSpeeds);
+
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
     for (SwerveModule mod : swerveModules) {
-      // TODO: Optimize the module state using wpilib optimize method
-      // TODO: Check if the optimization is happening in the setDesiredState method
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
     Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
   }
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates =
-        kSwerveKinematics.toSwerveModuleStates(
-            fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getYaw())
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+    ChassisSpeeds swerveChassisSpeed =
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, getYaw())
+            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
-    for (SwerveModule mod : swerveModules) {
-      // TODO: Optimize the module state using wpilib optimize method
-      // TODO: Check if the optimization is happening in the setDesiredState and
-      // setDesiredAngleState method
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-    }
-    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
+    drive(swerveChassisSpeed, isOpenLoop);
   }
 
   public void setDesiredAngleState(SwerveModuleState[] swerveModuleStates) {
     for (SwerveModule mod : swerveModules) {
       mod.setDesiredAngleState(swerveModuleStates[mod.moduleNumber]);
     }
-  }
-
-  public SwerveDriveKinematics getKinematics() {
-    return kinematics;
   }
 
   /* Used by SwerveControllerCommand in Auto */
@@ -117,14 +102,14 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   }
 
   public Pose2d getPose() {
-    return odometry.getPoseMeters();
+    return poseEstimator.getEstimatedPosition();
   }
 
   public void resetOdometry(Pose2d pose) {
-    odometry.resetPosition(getYaw(), getPositions(), pose);
+    poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
   }
 
-  public SwerveModulePosition[] getPositions() {
+  public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] states = new SwerveModulePosition[4];
     for (SwerveModule mod : swerveModules) {
       states[mod.moduleNumber] = mod.getPosition();
@@ -148,7 +133,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
   @Override
   public void periodic() {
-    odometry.update(getYaw(), getPositions());
+    poseEstimator.update(getYaw(), getModulePositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
     for (SwerveModule mod : swerveModules) {
