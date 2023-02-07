@@ -10,5 +10,5 @@ package frc.robot.drivers;
 public interface Loggable {
   public void logInit();
 
-  public void periodicLog();
+  public void logPeriodic();
 }

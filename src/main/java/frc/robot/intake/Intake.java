@@ -62,7 +62,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   @Override
-  public void periodicLog() {}
+  public void logPeriodic() {}
 
   public ShuffleboardLayout getLayout(String tab) {
     return Shuffleboard.getTab(tab).getLayout("Intake", BuiltInLayouts.kList).withSize(2, 4);

@@ -138,7 +138,7 @@ public class RobotContainer {
   }
 
   public void periodicLog() {
-    for (Loggable device : loggables) device.periodicLog();
+    for (Loggable device : loggables) device.logPeriodic();
   }
 
   public void test() {
