@@ -26,10 +26,10 @@ public final class Constants {
   public static final double kAzimuthStickDeadband = 0.3;
 
   public static final class ShuffleboardConstants {
-    public static final String driverTabName = "Driver";
-    public static final String electricalTabName = "Electrical";
-    public static final String intakeLayoutName = "Intake";
-    public static final String swerveLayoutName = "Swerve";
+    public static final String kDriverTabName = "Driver";
+    public static final String kElectricalTabName = "Electrical";
+    public static final String kIntakeLayoutName = "Intake";
+    public static final String kSwerveLayoutName = "Swerve";
   }
 
   public static final class FieldConstants {
