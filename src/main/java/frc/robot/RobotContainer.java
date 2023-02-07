@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.ShuffleboardConstants.driverTab;
+import static frc.robot.Constants.ShuffleboardConstants.driverTabName;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -132,7 +132,7 @@ public class RobotContainer {
 
   public void startLog() {
     for (Loggable device : loggables) device.logInit();
-    Shuffleboard.getTab(driverTab)
+    Shuffleboard.getTab(driverTabName)
         .add(
             "Joystick", new GyroSendable(() -> Math.atan2(driver.getRightX(), driver.getRightY())));
   }

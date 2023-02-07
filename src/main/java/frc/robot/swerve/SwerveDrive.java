@@ -7,7 +7,7 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.ShuffleboardConstants.driverTab;
+import static frc.robot.Constants.ShuffleboardConstants.driverTabName;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -170,10 +170,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   @Override
   public void logInit() {
-    getLayout(driverTab).add("1", this);
-    getLayout(driverTab).add("2", gyro);
+    getLayout(driverTabName).add("1", this);
+    getLayout(driverTabName).add("2", gyro);
     for (int i = 0; i < swerveModules.length; i++) {
-      getLayout(driverTab).add("Encoder " + i, swerveModules[i].getAngleEncoder());
+      getLayout(driverTabName).add("Encoder " + i, swerveModules[i].getAngleEncoder());
     }
     for (int i = 0; i < swerveModules.length; i++) {
       swerveModules[i].logInit();

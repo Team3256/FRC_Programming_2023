@@ -7,7 +7,7 @@
 
 package frc.robot.intake;
 
-import static frc.robot.Constants.ShuffleboardConstants.driverTab;
+import static frc.robot.Constants.ShuffleboardConstants.driverTabName;
 import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -55,10 +55,10 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void logInit() {
-    getLayout(driverTab).add("1", this);
-    getLayout(driverTab).add("2", new IntakeCube(this));
-    getLayout(driverTab).add("3", new IntakeCone(this));
-    getLayout(driverTab).add("4", intakeMotor);
+    getLayout(driverTabName).add("1", this);
+    getLayout(driverTabName).add("2", new IntakeCube(this));
+    getLayout(driverTabName).add("3", new IntakeCone(this));
+    getLayout(driverTabName).add("4", intakeMotor);
   }
 
   @Override

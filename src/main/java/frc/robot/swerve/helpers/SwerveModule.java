@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.helpers;
 
-import static frc.robot.Constants.ShuffleboardConstants.electricalTab;
+import static frc.robot.Constants.ShuffleboardConstants.electricalTabName;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -162,11 +162,11 @@ public class SwerveModule {
   }
 
   public void logInit() {
-    getLayout(electricalTab).add("Turn Motor Bus Voltage", getAngleMotor().getBusVoltage());
-    getLayout(electricalTab)
+    getLayout(electricalTabName).add("Turn Motor Bus Voltage", getAngleMotor().getBusVoltage());
+    getLayout(electricalTabName)
         .add("Turn Motor Output Voltage", getAngleMotor().getMotorOutputVoltage());
-    getLayout(electricalTab).add("Drive Motor Bus Voltage", getDriveMotor().getBusVoltage());
-    getLayout(electricalTab)
+    getLayout(electricalTabName).add("Drive Motor Bus Voltage", getDriveMotor().getBusVoltage());
+    getLayout(electricalTabName)
         .add("Drive Motor Output Voltage", getDriveMotor().getMotorOutputVoltage());
   }
 
