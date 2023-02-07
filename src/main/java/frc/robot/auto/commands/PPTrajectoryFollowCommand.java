@@ -7,7 +7,6 @@
 
 package frc.robot.auto.commands;
 
-import static frc.robot.Constants.*;
 import static frc.robot.auto.AutoConstants.kAutoDebug;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -86,6 +85,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       swerveSubsystem.setTrajectory(trajectory);
     }
     if (this.startPose != null) { // use existing pose for more accuracy if it is the first path
+      swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }
 
@@ -106,7 +106,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     Rotation2d desiredRotation = desired.holonomicRotation;
 
-    if (kDebugEnabled) {
+    if (kAutoDebug) {
       SmartDashboard.putNumber("Desired Rotation", desiredRotation.getDegrees());
       SmartDashboard.putNumber("Desired Position", Units.metersToInches(desiredPose.getX()));
     }

@@ -136,6 +136,10 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     gyro.setYaw(0);
   }
 
+  public void setGyro(double yaw) {
+    gyro.setYaw(yaw);
+  }
+
   public Rotation2d getYaw() {
     double[] ypr = new double[3];
     gyro.getYawPitchRoll(ypr);
