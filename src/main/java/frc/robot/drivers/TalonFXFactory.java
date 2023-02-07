@@ -10,6 +10,7 @@ package frc.robot.drivers;
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
@@ -70,7 +71,7 @@ public class TalonFXFactory {
   }
 
   // create a CANTalon with the default (out of the box) configuration
-  public static TalonFX createDefaultTalon(CanDeviceId id) {
+  public static WPI_TalonFX createDefaultTalon(CanDeviceId id) {
     return createTalon(id, kDefaultConfiguration);
   }
 
@@ -83,8 +84,8 @@ public class TalonFXFactory {
     return talon;
   }
 
-  public static TalonFX createTalon(CanDeviceId id, Configuration config) {
-    TalonFX talon = new LazyTalonFX(id);
+  public static WPI_TalonFX createTalon(CanDeviceId id, Configuration config) {
+    WPI_TalonFX talon =new WPI_TalonFX(id.getDeviceNumber());
     talon.set(ControlMode.PercentOutput, 0.0);
 
     talon.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
