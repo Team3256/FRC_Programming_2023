@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +20,10 @@ import frc.robot.elevator.commands.ElevatorSetHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.led.LEDStrip;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
+import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -32,29 +37,33 @@ import java.util.ArrayList;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-
-  private final boolean fieldRelative = true;
-  private final boolean openLoop = true;
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
+  private LEDStrip ledStrip;
+
+  boolean cubePiece = true;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
   public RobotContainer() {
-    if (INTAKE) {
+    if (kIntakeEnabled) {
       configureIntake();
       testables.add(intakeSubsystem);
     }
-    if (SWERVE) {
+    if (kSwerveEnabled) {
       configureSwerve();
       testables.add(swerveDrive);
     }
-    if (ELEVATOR) {
+    if (kElevatorEnabled) {
       configureElevator();
+    }
+    if (kLedStripEnabled) {
+      configureLEDStrip();
     }
   }
 
@@ -74,8 +83,8 @@ public class RobotContainer {
             () -> driver.getRightY(),
             () -> driver.getRightX(),
             () -> driver.getLeftX(),
-            fieldRelative,
-            openLoop));
+            kFieldRelative,
+            kOpenLoop));
 
     driver
         .rightBumper()
@@ -86,8 +95,8 @@ public class RobotContainer {
                 () -> driver.getRightX(),
                 () -> driver.getLeftX(),
                 () -> driver.getLeftY(),
-                Constants.fieldRelative,
-                Constants.openLoop));
+                kFieldRelative,
+                kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     driver
@@ -98,12 +107,18 @@ public class RobotContainer {
                 () -> driver.getRightY(),
                 () -> driver.getRightX(),
                 () -> driver.getLeftX(),
-                fieldRelative,
-                openLoop));
+                kFieldRelative,
+                kOpenLoop));
   }
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
+  }
+
+  public void configureLEDStrip() {
+    ledStrip = new LEDStrip(0, new int[] {100});
+    driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
 
   public Command getAutonomousCommand() {
@@ -116,9 +131,5 @@ public class RobotContainer {
     boolean result = true;
     for (CANTestable subsystem : testables) result &= subsystem.test();
     System.out.println("CAN fully connected: " + result);
-  }
-
-  public void zeroGyro() {
-    swerveDrive.zeroGyro();
   }
 }

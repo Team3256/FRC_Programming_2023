@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,32 +16,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.swerve.SwerveDrive;
 
 public class LockSwerve extends CommandBase {
-  private final SwerveDrive swerveDrive;
+  private final SwerveDrive swerveSubsystem;
 
-  public LockSwerve(SwerveDrive swerveDrive) {
-    this.swerveDrive = swerveDrive;
-    addRequirements(swerveDrive);
+  public LockSwerve(SwerveDrive swerveSubsystem) {
+    this.swerveSubsystem = swerveSubsystem;
+    addRequirements(swerveSubsystem);
   }
 
   @Override
   public void initialize() {
-    double inwardAngle = Math.atan(trackWidth / wheelBase);
+    double inwardAngle = Math.atan(kTrackWidth / kWheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
 
     for (int mod = 0; mod < 4; mod++) {
-      states[mod] = new SwerveModuleState(1, new Rotation2d(inwardAngle + lockAngleOffsets[mod]));
+      states[mod] = new SwerveModuleState(1, new Rotation2d(inwardAngle + kLockAngleOffsets[mod]));
     }
 
-    swerveDrive.setDesiredAngleState(states);
-    swerveDrive.setDriveMotorsNeutralMode(NeutralMode.Brake);
-    swerveDrive.setAngleMotorsNeutralMode(NeutralMode.Brake);
+    swerveSubsystem.setDesiredAngleState(states);
+    swerveSubsystem.setDriveMotorsNeutralMode(NeutralMode.Brake);
+    swerveSubsystem.setAngleMotorsNeutralMode(NeutralMode.Brake);
   }
-
-  @Override
-  public void execute() {}
-
-  @Override
-  public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {

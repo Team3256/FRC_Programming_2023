@@ -7,7 +7,7 @@
 
 package frc.robot.elevator;
 
-import static frc.robot.Constants.ElevatorConstants.*;
+import static frc.robot.elevator.ElevatorConstants.*;
 import static frc.robot.swerve.helpers.Conversions.falconToDistance;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;

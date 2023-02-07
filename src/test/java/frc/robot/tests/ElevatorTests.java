@@ -7,7 +7,6 @@
 
 package frc.robot.tests;
 
-import static frc.robot.Constants.IntakeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.wpi.first.hal.HAL;
@@ -59,8 +58,7 @@ public class ElevatorTests {
         command.execute();
         subsystem.simulationPeriodic();
 
-        if (command.isFinished())
-          command.end(false);
+        if (command.isFinished()) command.end(false);
 
         Thread.sleep(20);
       }

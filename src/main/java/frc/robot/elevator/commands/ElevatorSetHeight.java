@@ -7,7 +7,7 @@
 
 package frc.robot.elevator.commands;
 
-import static frc.robot.Constants.ElevatorConstants.*;
+import static frc.robot.elevator.ElevatorConstants.*;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;

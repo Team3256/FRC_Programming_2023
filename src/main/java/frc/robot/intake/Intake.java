@@ -7,7 +7,7 @@
 
 package frc.robot.intake;
 
-import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase implements CANTestable {
   }
 
   public Intake() {
-    intakeMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(intakeMotorID));
+    intakeMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kIntakeMotorID));
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     off();
     System.out.println("Intake initialized");

@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.helpers;
 
-import static frc.robot.Constants.ElevatorConstants.kRateLimiting;
+import static frc.robot.elevator.ElevatorConstants.kRateLimiting;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.WPIUtilJNI;
