@@ -10,21 +10,18 @@ package frc.robot.intake.commands;
 import static frc.robot.intake.IntakeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.wpi.first.hal.HAL;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.intake.Intake;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class IntakeTests extends UnitTestSuperclass {
+public class IntakeTests extends UnitTestBase {
   public final double DELTA = 0.05;
 
   private static Intake intakeSubsystem;
 
   @BeforeAll
   public static void setup() {
-    setupFinal();
+    initilizeSetup();
     intakeSubsystem = new Intake();
   }
 
@@ -32,7 +29,7 @@ public class IntakeTests extends UnitTestSuperclass {
   public void testIntakeCube() {
     IntakeCube command = new IntakeCube(intakeSubsystem);
     command.initialize();
-    runScheduler(1);
+    runScheduler(1, command, intakeSubsystem);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
     assertEquals(kIntakeCubeSpeed, velocity, DELTA);
@@ -42,13 +39,9 @@ public class IntakeTests extends UnitTestSuperclass {
   public void testIntakeCone() {
     IntakeCone command = new IntakeCone(intakeSubsystem);
     command.initialize();
-    runScheduler(1);
+    runScheduler(1, command, intakeSubsystem);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
     assertEquals(kIntakeConeSpeed, velocity, DELTA);
-  }
-
-  private static void runScheduler(double seconds) {
-    runSchedulerFinal(seconds);
   }
 }

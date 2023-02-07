@@ -9,22 +9,28 @@ package frc.robot.intake.commands;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class TestBase {
-  public static void setupFinal() {
+public class UnitTestBase {
+  public static void initilizeSetup() {
     assert HAL.initialize(500, 0); // initialize the HAL, crash if failed
     CommandScheduler.getInstance().enable();
     DriverStationSim.setEnabled(true);
-    //        intakeSubsystem = new Intake();
   }
 
-  static void runSchedulerFinal(double seconds) {
+  static void runScheduler(double seconds, Command command, Subsystem subsystem) {
+    command.initialize();
     try {
       for (int i = 0; i < seconds * 1000 / 20; ++i) {
+        HAL.simPeriodicBefore();
         com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
-        CommandScheduler.getInstance().run();
+        command.execute();
+        subsystem.simulationPeriodic();
+        if (command.isFinished()) command.end(false);
         Thread.sleep(20);
+        HAL.simPeriodicAfter();
       }
     } catch (InterruptedException e) {
       e.printStackTrace();
