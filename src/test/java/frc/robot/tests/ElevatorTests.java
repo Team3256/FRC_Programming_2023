@@ -11,6 +11,7 @@ import static frc.robot.Constants.IntakeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,7 +24,7 @@ import org.junit.jupiter.api.Test;
 public class ElevatorTests {
   public final double DELTA = 0.05;
 
-  private static Elevator elevatorSubsystem;
+  // private static Elevator elevatorSubsystem;
 
   @BeforeAll
   public static void setup() {
@@ -36,60 +37,32 @@ public class ElevatorTests {
   // TODO: Elevator command tests
 
   @Test
-  public void testElevatorSetHeight1() { // 1 meter
-    elevatorSubsystem = new Elevator();
-    ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 1);
-    CommandScheduler.getInstance().schedule(command);
+  public void testElevatorSetHeight() { // 1 meter
+    double heightInches = 40;
+    Elevator elevatorSubsystem = new Elevator();
+    Command command = new ElevatorSetHeight(elevatorSubsystem, Units.inchesToMeters(25));
+    command.schedule();
+
     runScheduler(3, command, elevatorSubsystem);
     double height = elevatorSubsystem.getElevatorPosition();
-    System.out.println(height);
-    assertEquals(1, height, DELTA, "Setting elevator setpoint to 1");
+    System.out.println("Height" + height);
+    assertEquals(heightInches, height, DELTA, "Setting elevator setpoint to 1");
   }
-
-  //  @Test
-  //  public void testElevatorSetHeight2() { // 0.5 meters
-  //    elevatorSubsystem = new Elevator();
-  //    ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 0.5);
-  //    CommandScheduler.getInstance().schedule(command);
-  //    runScheduler(3, command, elevatorSubsystem);
-  //    double height = elevatorSubsystem.getElevatorPosition();
-  //    System.out.println(height);
-  //    assertEquals(0.5, height, DELTA, "Setting elevator setpoint to 0.5");
-  //  }
-  //
-  //  @Test
-  //  public void testElevatorSetHeight3() { // 0.25 meters
-  //    elevatorSubsystem = new Elevator();
-  //    ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 0.25);
-  //    CommandScheduler.getInstance().schedule(command);
-  //    runScheduler(3, command, elevatorSubsystem);
-  //    double height = elevatorSubsystem.getElevatorPosition();
-  //    System.out.println(height);
-  //    assertEquals(0.25, height, DELTA, "Setting elevator setpoint to 0.25");
-  //  }
-  //
-  //  @Test
-  //  public void testElevatorSetHeight4() { // 0.75 meters
-  //    elevatorSubsystem = new Elevator();
-  //    ElevatorSetHeight command = new ElevatorSetHeight(elevatorSubsystem, 0.75);
-  //    CommandScheduler.getInstance().schedule(command);
-  //    runScheduler(3, command, elevatorSubsystem);
-  //    double height = elevatorSubsystem.getElevatorPosition();
-  //    System.out.println(height);
-  //    assertEquals(0.75, height, DELTA, "Setting elevator setpoint to 0.75");
-  //  }
 
   private static void runScheduler(double seconds, Command command, Subsystem subsystem) {
     command.initialize();
     try {
       for (int i = 0; i < seconds * 1000 / 20; ++i) {
-        HAL.simPeriodicBefore();
         com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
+
+        CommandScheduler.getInstance().run();
         command.execute();
         subsystem.simulationPeriodic();
-        if (command.isFinished()) command.end(false);
+
+        if (command.isFinished())
+          command.end(false);
+
         Thread.sleep(20);
-        HAL.simPeriodicAfter();
       }
     } catch (InterruptedException e) {
       e.printStackTrace();

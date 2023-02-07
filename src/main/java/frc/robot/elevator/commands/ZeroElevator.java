@@ -7,7 +7,7 @@
 
 package frc.robot.elevator.commands;
 
-import static frc.robot.Constants.ElevatorConstants.kElevatorDownSpeedVolts;
+import static frc.robot.Constants.ElevatorConstants.*;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.elevator.Elevator;
@@ -22,16 +22,13 @@ public class ZeroElevator extends CommandBase {
 
   @Override
   public void initialize() {
-    elevatorSubsystem.setPercentSpeed(kElevatorDownSpeedVolts);
+    elevatorSubsystem.setInputVoltage(kDownSpeedVolts);
   }
-
-  @Override
-  public void execute() {}
 
   @Override
   public void end(boolean interrupted) {
     elevatorSubsystem.off();
-    elevatorSubsystem.zeroElevator();
+    if (!interrupted) elevatorSubsystem.zeroElevator();
   }
 
   @Override

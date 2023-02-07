@@ -41,22 +41,24 @@ public class Robot extends LoggedRobot {
       Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
     } else {
-      //      setUseTiming(false); // Run as fast as possible
-      //      String logPath =
-      //          LogFileUtil
-      //              .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the
+      // setUseTiming(false); // Run as fast as possible
+      // String logPath =
+      // LogFileUtil
+      // .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the
       // user)
-      //      Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
-      //      Logger.getInstance()
-      //          .addDataReceiver(
-      //              new WPILOGWriter(
-      //                  LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+      // Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read
+      // replay log
+      // Logger.getInstance()
+      // .addDataReceiver(
+      // new WPILOGWriter(
+      // LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
     }
 
     Logger.getInstance()
         .start(); // Start logging! No more data receivers, replay sources, or metadata values may
     // be added.
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
   }
@@ -70,9 +72,12 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }

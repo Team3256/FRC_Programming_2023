@@ -7,45 +7,62 @@
 
 package frc.robot.elevator;
 
-import static frc.robot.Constants.ElevatorConstants;
 import static frc.robot.Constants.ElevatorConstants.*;
 import static frc.robot.swerve.helpers.Conversions.falconToDistance;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
+  private WPI_TalonFX elevatorMotor;
+  private ElevatorFeedforward elevatorFeedforward =
+      new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
 
-  private TalonFX elevatorMotor;
-  private ElevatorSim elevatorSim;
-  private double lastUpdateTime = 0;
-  private ElevatorFeedforward feedforward = new ElevatorFeedforward(0.1, 3, 1);
+  private ElevatorSim elevatorSim =
+      new ElevatorSim(
+          DCMotor.getFalcon500(kNumElevatorMotors),
+          kElevatorGearing,
+          kCarriageMass,
+          kDrumRadius,
+          kMinHeight,
+          kMaxHeight,
+          true);
+
+  private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
+  private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Elevator Root", 10, 0);
+  private final MechanismLigament2d elevatorMech2d =
+      mechanism2dRoot.append(
+          new MechanismLigament2d(
+              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
 
   public Elevator() {
-    elevatorMotor = new TalonFX(ElevatorConstants.elevatorID);
+    elevatorMotor = new WPI_TalonFX(elevatorID);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
 
-    if (RobotBase.isReal()) {
-      configureRealHardware();
-    } else {
-      configureSimHardware();
-    }
+    if (RobotBase.isReal()) configureRealHardware();
+    else SmartDashboard.putData("Elevator Sim", mechanism2d);
+
     System.out.println("Elevator initialized");
     off();
   }
 
-  public double calculateFeedForward(double setpoint) {
-    return feedforward.calculate(setpoint * maxVelocity);
+  private void configureRealHardware() {
+    elevatorMotor = new WPI_TalonFX(elevatorID);
+    elevatorMotor.enableVoltageCompensation(true);
   }
 
   public void zeroElevator() {
@@ -57,60 +74,39 @@ public class Elevator extends SubsystemBase {
   }
 
   public void off() {
-    if (RobotBase.isReal()) elevatorMotor.neutralOutput();
-    else elevatorSim.setInputVoltage(0);
+    elevatorMotor.neutralOutput();
     System.out.println("Elevator off");
   }
 
-  private void configureRealHardware() {
-    elevatorMotor = new TalonFX(elevatorID);
-    elevatorMotor.enableVoltageCompensation(true);
+  public double calculateFeedForward(double velocity) {
+    return elevatorFeedforward.calculate(velocity);
   }
 
-  private void configureSimHardware() {
-    elevatorSim =
-        new ElevatorSim(
-            DCMotor.getFalcon500(1),
-            elevatorGearRatio,
-            kCarriageMass,
-            elevatorDrumRadius,
-            kMinElevatorHeight,
-            kMaxElevatorHeight,
-            true);
-  }
-
-  public void stopElevator() {
-    elevatorMotor.neutralOutput();
-  }
-
-  public void setPercentSpeed(double percentSpeed) {
-    elevatorMotor.set(ControlMode.PercentOutput, percentSpeed);
-    if (RobotBase.isSimulation()) elevatorSim.setInputVoltage(percentSpeed * 12);
+  public void setInputVoltage(double voltage) {
+    elevatorMotor.setVoltage(voltage);
   }
 
   public double getElevatorPosition() {
     if (RobotBase.isReal()) {
       return falconToDistance(
-          elevatorMotor.getSelectedSensorPosition(), elevatorMotorDiameter, elevatorGearRatio);
+          elevatorMotor.getSelectedSensorPosition(), kDrumRadius, kElevatorGearing);
     } else return elevatorSim.getPositionMeters();
   }
 
   @Override
   public void simulationPeriodic() {
-    double currentTime = Timer.getFPGATimestamp();
-    if (lastUpdateTime != 0) elevatorSim.update(currentTime - lastUpdateTime);
-    else elevatorSim.update(0.2);
+    elevatorSim.setInput(
+        elevatorMotor.getMotorOutputPercent() * RobotController.getBatteryVoltage());
+    elevatorSim.update(0.020);
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
+    elevatorMech2d.setLength(Units.metersToInches(elevatorSim.getPositionMeters()));
 
     simulationOutputToDashboard();
-    lastUpdateTime = currentTime;
   }
 
   @Override
-  public void periodic() {
-    double currentTime = Timer.getFPGATimestamp();
-  }
+  public void periodic() {}
 
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());

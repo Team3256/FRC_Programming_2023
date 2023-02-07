@@ -9,38 +9,32 @@ package frc.robot.elevator.commands;
 
 import static frc.robot.Constants.ElevatorConstants.*;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.elevator.Elevator;
 
-public class ElevatorSetHeight extends PIDCommand {
-  Elevator elevatorSubsystem;
+public class ElevatorSetHeight extends ProfiledPIDCommand {
+  private Elevator elevatorSubsystem;
 
-  public ElevatorSetHeight(Elevator elevatorSubsystem, double setpoint) {
+  public ElevatorSetHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
     super(
-        new PIDController(kP, kI, kD),
+        new ProfiledPIDController(kP, kI, kD, kElevatorContraints),
         elevatorSubsystem::getElevatorPosition,
-        setpoint,
-        (percentSpeed) ->
-            elevatorSubsystem.setPercentSpeed(
-                percentSpeed
-                    + elevatorSubsystem.calculateFeedForward(percentSpeed * maxVelocity / 12)),
+        setpointPositionMeters,
+        (output, setpoint) ->
+            elevatorSubsystem.setInputVoltage(
+                output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
         elevatorSubsystem);
 
     this.elevatorSubsystem = elevatorSubsystem;
-    getController().setTolerance(kTolerancePosition, kToleranceRate);
-    SmartDashboard.putData(getController());
+
+    getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);
   }
 
   @Override
-  public boolean isFinished() {
-    return getController().atSetpoint();
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    elevatorSubsystem.off();
+  public void execute() {
+    super.execute();
+    System.out.println("Height: " + elevatorSubsystem.getElevatorPosition());
   }
 }
