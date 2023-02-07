@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.intake.commands;
+package frc.robot;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -14,13 +14,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class UnitTestBase {
-  public static void initilizeSetup() {
+  public static void setup() {
     assert HAL.initialize(500, 0); // initialize the HAL, crash if failed
     CommandScheduler.getInstance().enable();
     DriverStationSim.setEnabled(true);
   }
 
-  static void runScheduler(double seconds, Command command, Subsystem subsystem) {
+  protected void runScheduler(double seconds, Command command, Subsystem subsystem) {
     command.initialize();
     try {
       for (int i = 0; i < seconds * 1000 / 20; ++i) {

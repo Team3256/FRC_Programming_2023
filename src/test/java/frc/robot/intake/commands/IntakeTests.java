@@ -10,6 +10,7 @@ package frc.robot.intake.commands;
 import static frc.robot.intake.IntakeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import frc.robot.UnitTestBase;
 import frc.robot.intake.Intake;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class IntakeTests extends UnitTestBase {
 
   @BeforeAll
   public static void setup() {
-    initilizeSetup();
+    UnitTestBase.setup();
     intakeSubsystem = new Intake();
   }
 
