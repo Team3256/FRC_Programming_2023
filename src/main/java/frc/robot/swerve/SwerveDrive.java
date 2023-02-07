@@ -52,7 +52,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   public WPI_PigeonIMU gyro;
 
   public SwerveDrive() {
-    gyro = new WPI_PigeonIMU(SwerveConstants.kPigeonID);
+    gyro = new WPI_PigeonIMU(kPigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
 

@@ -85,7 +85,7 @@ public class TalonFXFactory {
   }
 
   public static WPI_TalonFX createTalon(CanDeviceId id, Configuration config) {
-    WPI_TalonFX talon =new WPI_TalonFX(id.getDeviceNumber());
+    WPI_TalonFX talon = new WPI_TalonFX(id.getDeviceNumber());
     talon.set(ControlMode.PercentOutput, 0.0);
 
     talon.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
