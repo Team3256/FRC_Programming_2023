@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
+import static frc.robot.Constants.kAdvatageKitReplayEnabled;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -39,7 +39,7 @@ public class Robot extends LoggedRobot {
     if (isReal()) {
       Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
       Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    } else if (false) {
+    } else if (kAdvatageKitReplayEnabled) {
       setUseTiming(false); // Run as fast as possible
       String logPath =
           LogFileUtil
