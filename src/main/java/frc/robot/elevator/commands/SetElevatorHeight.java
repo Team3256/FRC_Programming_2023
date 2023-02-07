@@ -13,10 +13,10 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.elevator.Elevator;
 
-public class ElevatorSetHeight extends ProfiledPIDCommand {
+public class SetElevatorHeight extends ProfiledPIDCommand {
   private Elevator elevatorSubsystem;
 
-  public ElevatorSetHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
+  public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
     super(
         new ProfiledPIDController(kP, kI, kD, kElevatorContraints),
         elevatorSubsystem::getElevatorPosition,
@@ -35,6 +35,8 @@ public class ElevatorSetHeight extends ProfiledPIDCommand {
   @Override
   public void execute() {
     super.execute();
-    System.out.println("Height: " + elevatorSubsystem.getElevatorPosition());
+    // System.out.println("Velocity: " + getController().getSetpoint().velocity);
+    // System.out.println("Position: " + getController().getSetpoint().position);
+    // System.out.println("Height: " + elevatorSubsystem.getElevatorPosition());
   }
 }

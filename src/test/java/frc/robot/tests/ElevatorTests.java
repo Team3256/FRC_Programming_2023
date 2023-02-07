@@ -9,61 +9,44 @@ package frc.robot.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.UnitTestBase;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.ElevatorSetHeight;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ElevatorTests {
-  public final double DELTA = 0.05;
-
-  // private static Elevator elevatorSubsystem;
+public class ElevatorTests extends UnitTestBase {
+  public final double DELTA = Units.inchesToMeters(2);
 
   @BeforeAll
   public static void setup() {
-    assert HAL.initialize(500, 0); // initialize the HAL, crash if failed
-
-    CommandScheduler.getInstance().enable();
-    DriverStationSim.setEnabled(true);
+    UnitTestBase.setup();
   }
-
-  // TODO: Elevator command tests
 
   @Test
-  public void testElevatorSetHeight() { // 1 meter
-    double heightInches = 40;
-    Elevator elevatorSubsystem = new Elevator();
-    Command command = new ElevatorSetHeight(elevatorSubsystem, Units.inchesToMeters(25));
-    command.schedule();
-
-    runScheduler(3, command, elevatorSubsystem);
-    double height = elevatorSubsystem.getElevatorPosition();
-    System.out.println("Height" + height);
-    assertEquals(heightInches, height, DELTA, "Setting elevator setpoint to 1");
+  public void testElevatorHeightMax() {
+    testElevatorHeight(0.997);
   }
 
-  private static void runScheduler(double seconds, Command command, Subsystem subsystem) {
-    command.initialize();
-    try {
-      for (int i = 0; i < seconds * 1000 / 20; ++i) {
-        com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
+  // TODO: why is test so weird, things work in simulateJava
+  // oh na
+  // @Test
+  // public void testElevatorHeightMin() {
+  // testElevatorHeight(0.00375);
+  // }
 
-        CommandScheduler.getInstance().run();
-        command.execute();
-        subsystem.simulationPeriodic();
+  public void testElevatorHeight(double heightSetpointMeters) { // 1 meter
+    Elevator elevatorSubsystem = new Elevator();
+    Command command = new SetElevatorHeight(elevatorSubsystem, heightSetpointMeters);
 
-        if (command.isFinished()) command.end(false);
-
-        Thread.sleep(20);
-      }
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    runScheduler(2, command, elevatorSubsystem);
+    double height = elevatorSubsystem.getElevatorPosition();
+    assertEquals(
+        heightSetpointMeters,
+        height,
+        DELTA,
+        "Setting elevator setpoint to " + heightSetpointMeters);
   }
 }

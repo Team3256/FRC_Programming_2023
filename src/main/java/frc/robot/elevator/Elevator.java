@@ -17,7 +17,6 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -95,9 +94,9 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    elevatorSim.setInput(
-        elevatorMotor.getMotorOutputPercent() * RobotController.getBatteryVoltage());
+    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * 12);
     elevatorSim.update(0.020);
+
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
     elevatorMech2d.setLength(Units.metersToInches(elevatorSim.getPositionMeters()));

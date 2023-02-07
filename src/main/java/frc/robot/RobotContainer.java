@@ -10,13 +10,12 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.ElevatorSetHeight;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -122,7 +121,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new ElevatorSetHeight(elevatorSubsystem, Units.inchesToMeters(25));
+    return new SetElevatorHeight(elevatorSubsystem, 0.25);
     // return new InstantCommand();
   }
 
