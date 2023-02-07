@@ -148,7 +148,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     field.getObject("traj").setTrajectory(trajectory);
   }
 
-  public boolean test() {
+  public boolean CANTest() {
     System.out.println("Testing drivetrain CAN:");
     boolean result = true;
     for (SwerveModule device : swerveModules) {

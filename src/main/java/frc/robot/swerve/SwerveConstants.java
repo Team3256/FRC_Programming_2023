@@ -118,6 +118,8 @@ public final class SwerveConstants {
     public static final int kAngleMotorID = 4;
     public static final int kCanCoderID = 2;
     public static final Rotation2d kAngleOffset = Rotation2d.fromDegrees(0);
+    // public static final double kAngleOffset = 531.6064455; // 531 or 171 (ziptide
+    // constants)
 
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
@@ -128,6 +130,8 @@ public final class SwerveConstants {
     public static final int kAngleMotorID = 7;
     public static final int kCanCoderID = 5;
     public static final Rotation2d kAngleOffset = Rotation2d.fromDegrees(0);
+    // public static final double kAngleOffset = 48.691406; // (ziptide constants)
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
   }
@@ -137,6 +141,8 @@ public final class SwerveConstants {
     public static final int kAngleMotorID = 10;
     public static final int kCanCoderID = 8;
     public static final Rotation2d kAngleOffset = Rotation2d.fromDegrees(0);
+    // public static final double kAngleOffset = 174.770508; // (ziptide constants)
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
   }
@@ -146,6 +152,8 @@ public final class SwerveConstants {
     public static final int kAngleMotorID = 13;
     public static final int kCanCoderID = 11;
     public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0);
+    // public static final double angleOffset = 233.0419925; // (ziptide constants)
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, angleOffset);
   }
