@@ -131,7 +131,7 @@ public class RobotContainer {
   }
 
   public void startLog() {
-    for (Loggable device : loggables) device.startLog();
+    for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(driverTab)
         .add(
             "Joystick", new GyroSendable(() -> Math.atan2(driver.getRightX(), driver.getRightY())));

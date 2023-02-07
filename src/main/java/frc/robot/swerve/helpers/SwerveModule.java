@@ -161,7 +161,7 @@ public class SwerveModule {
     return angleEncoder;
   }
 
-  public void startLog() {
+  public void logInit() {
     getLayout(electricalTab).add("Turn Motor Bus Voltage", getAngleMotor().getBusVoltage());
     getLayout(electricalTab)
         .add("Turn Motor Output Voltage", getAngleMotor().getMotorOutputVoltage());

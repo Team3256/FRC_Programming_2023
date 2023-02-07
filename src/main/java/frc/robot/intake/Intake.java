@@ -54,7 +54,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   @Override
-  public void startLog() {
+  public void logInit() {
     getLayout(driverTab).add("1", this);
     getLayout(driverTab).add("2", new IntakeCube(this));
     getLayout(driverTab).add("3", new IntakeCone(this));
