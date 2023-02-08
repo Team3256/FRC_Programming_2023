@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorHigh;
+import frc.robot.elevator.commands.SetElevatorLow;
+import frc.robot.elevator.commands.SetElevatorMid;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -111,6 +114,10 @@ public class RobotContainer {
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
+
+    operator.a().onTrue(new SetElevatorHigh(elevatorSubsystem));
+    operator.b().onTrue(new SetElevatorMid(elevatorSubsystem));
+    operator.x().onTrue(new SetElevatorLow(elevatorSubsystem));
   }
 
   public void configureLEDStrip() {
