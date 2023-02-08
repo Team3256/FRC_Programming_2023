@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -50,8 +50,8 @@ public class TeleopSwerveLimited extends CommandBase {
     double rAxis = -rotationAxis.getAsDouble() * kSensitivityScale;
 
     /* No deadbands since sensitivity is so low */
-    translation = new Translation2d(yAxis, xAxis).times(maxSpeed);
-    rotation = rAxis * maxAngularVelocity;
+    translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
+    rotation = rAxis * kMaxAngularVelocity;
     swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }
