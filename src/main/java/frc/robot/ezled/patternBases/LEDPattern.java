@@ -5,9 +5,9 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patternBases;
+package frc.robot.ezled.patternBases;
 
-import static frc.robot.led.LEDConstants.kResolution;
+import static frc.robot.ezled.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -19,14 +19,14 @@ public class LEDPattern {
     pattern = new Color[kResolution + 1];
   }
 
-  public void update() {}
+  public void updatePattern() {}
 
   public void setPixel(int pixel, Color color) {
     if (pixel < 1 || pixel > kResolution) return;
     pattern[pixel] = color;
   }
 
-  public void setRangeOfPixels(int start, int end, Color color) {
+  public void setPixelRange(int start, int end, Color color) {
     for (int percent = start; percent <= end; percent++) {
       setPixel(percent, color);
     }
