@@ -224,3 +224,4 @@ local.properties
 **/*/.DS_Store
 .datalogtool/*
 **/*/.factorypath
+.factorypath

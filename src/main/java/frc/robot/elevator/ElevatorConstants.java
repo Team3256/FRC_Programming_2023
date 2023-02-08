@@ -14,6 +14,11 @@ public final class ElevatorConstants {
   public static final int elevatorID = 15;
   public static final int kNumElevatorMotors = 1;
 
+  // TODO: Change to real values
+  public static final double kElevatorHighPositionMeters = Units.inchesToMeters(30);
+  public static final double kElevatorMidPositionMeters = Units.inchesToMeters(15);
+  public static final double kElevatorLowPositionMeters = Units.inchesToMeters(3);
+
   // https://www.reca.lc/linear
   // gradle simulateJava working constants
   // for some reason the elevator acts differntly in unit tests vs sim

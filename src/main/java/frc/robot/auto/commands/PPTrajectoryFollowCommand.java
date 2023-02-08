@@ -94,8 +94,6 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     this.controller.reset();
     timer.reset();
     timer.start();
-
-    swerveSubsystem.zeroGyro();
   }
 
   @Override
