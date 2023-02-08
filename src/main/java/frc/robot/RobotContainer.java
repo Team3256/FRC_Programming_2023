@@ -76,9 +76,9 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
-            () -> driver.getRightY(),
-            () -> driver.getRightX(),
+            () -> driver.getLeftY(),
             () -> driver.getLeftX(),
+            () -> driver.getRightX(),
             kFieldRelative,
             kOpenLoop));
 
