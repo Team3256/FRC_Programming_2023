@@ -7,8 +7,7 @@
 
 package frc.robot.auto.commands;
 
-import static frc.robot.Constants.AutoConstants.AUTO_DEBUG;
-// import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
+import static frc.robot.auto.AutoConstants.kAutoDebug;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
@@ -22,7 +21,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.SwerveDriveController;
 import frc.robot.swerve.SwerveDrive;
@@ -83,10 +81,11 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    if (AUTO_DEBUG) {
+    if (kAutoDebug) {
       swerveSubsystem.setTrajectory(trajectory);
     }
     if (this.startPose != null) { // use existing pose for more accuracy if it is the first path
+      swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }
 
@@ -107,7 +106,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     Rotation2d desiredRotation = desired.holonomicRotation;
 
-    if (Constants.DEBUG) {
+    if (kAutoDebug) {
       SmartDashboard.putNumber("Desired Rotation", desiredRotation.getDegrees());
       SmartDashboard.putNumber("Desired Position", Units.metersToInches(desiredPose.getX()));
     }

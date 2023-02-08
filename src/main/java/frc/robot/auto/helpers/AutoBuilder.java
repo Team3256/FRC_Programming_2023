@@ -7,7 +7,7 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.PIDConstants.*;
+import static frc.robot.auto.AutoConstants.*;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;

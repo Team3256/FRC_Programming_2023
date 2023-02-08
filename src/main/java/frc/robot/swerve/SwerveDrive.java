@@ -9,7 +9,6 @@ package frc.robot.swerve;
 
 import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.VisionConstants.*;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -41,10 +40,10 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
   private static final SwerveDriveKinematics kinematics =
       new SwerveDriveKinematics(
-          new Translation2d(trackWidth / 2.0, wheelBase / 2.0), // Front Right
-          new Translation2d(trackWidth / 2.0, -wheelBase / 2.0), // Back right
-          new Translation2d(-trackWidth / 2.0, wheelBase / 2.0), // Front left
-          new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // Back right
+          new Translation2d(kTrackWidth / 2.0, kWheelBase / 2.0), // Front Right
+          new Translation2d(kTrackWidth / 2.0, -kWheelBase / 2.0), // Back right
+          new Translation2d(-kTrackWidth / 2.0, kWheelBase / 2.0), // Front left
+          new Translation2d(-kTrackWidth / 2.0, -kWheelBase / 2.0) // Back right
           );
 
   private final SwerveModule[] swerveModules = {
@@ -55,13 +54,13 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   public PigeonIMU gyro;
 
   public SwerveDrive() {
-    gyro = new PigeonIMU(pigeonID);
+    gyro = new PigeonIMU(kPigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
 
     odometry =
         new SwerveDriveOdometry(
-            swerveKinematics,
+            kSwerveKinematics,
             getYaw(),
             new SwerveModulePosition[] {
               frontLeftModule.getPosition(),
@@ -87,10 +86,10 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
   public void drive(ChassisSpeeds chassisSpeeds) {
     SwerveModuleState[] swerveModuleStates =
-        swerveKinematics.toSwerveModuleStates(
+        kSwerveKinematics.toSwerveModuleStates(
             chassisSpeeds); // same as the older version of drive but takes in the calculated
     // chassisspeed
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method
@@ -103,13 +102,12 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates =
-        swerveKinematics.toSwerveModuleStates(
+        kSwerveKinematics.toSwerveModuleStates(
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
                     translation.getX(), translation.getY(), rotation, getYaw())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
-
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
     for (SwerveModule mod : swerveModules) {
       // TODO: Optimize the module state using wpilib optimize method
@@ -132,7 +130,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, kMaxSpeed);
 
     for (SwerveModule mod : swerveModules) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
@@ -159,8 +157,14 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     gyro.setYaw(0);
   }
 
+  public void setGyro(double yaw) {
+    gyro.setYaw(yaw);
+  }
+
   public Rotation2d getYaw() {
-    return Rotation2d.fromDegrees(invertGyro ? -gyro.getYaw() : gyro.getYaw());
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return (kInvertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
 
   public boolean canAddVisionMeasurement(Pose2d limelightPose) {
