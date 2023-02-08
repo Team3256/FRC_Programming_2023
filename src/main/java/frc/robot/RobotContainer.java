@@ -45,8 +45,7 @@ public class RobotContainer {
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
-  
-  private LEDStrip ledStrip;
+
   boolean cubePiece = true;
   private EZLED ledStrip;
 
