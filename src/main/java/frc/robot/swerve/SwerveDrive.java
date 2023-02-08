@@ -7,9 +7,6 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.SwerveConstants.*;
-import static frc.robot.Constants.VisionConstants.*;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -28,6 +25,9 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.limelight.Limelight;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.Constants.VisionConstants.*;
 
 public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
