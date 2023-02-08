@@ -68,8 +68,9 @@ public class SwerveModule {
       double percentOutput = desiredState.speedMetersPerSecond / kMaxSpeed;
       mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
     } else {
-      double velocity = Conversions.MPSToFalcon(
-          desiredState.speedMetersPerSecond, kWheelCircumference, kDriveGearRatio);
+      double velocity =
+          Conversions.MPSToFalcon(
+              desiredState.speedMetersPerSecond, kWheelCircumference, kDriveGearRatio);
       mDriveMotor.set(
           ControlMode.Velocity,
           velocity,
@@ -79,9 +80,11 @@ public class SwerveModule {
   }
 
   private void setAngle(SwerveModuleState desiredState) {
-    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (kMaxSpeed * 0.01))
-        ? lastAngle
-        : desiredState.angle; // Prevent rotating module if speed is less than 1%. Prevents Jittering.
+    Rotation2d angle =
+        (Math.abs(desiredState.speedMetersPerSecond) <= (kMaxSpeed * 0.01))
+            ? lastAngle
+            : desiredState
+                .angle; // Prevent rotating module if speed is less than 1%. Prevents Jittering.
 
     mAngleMotor.set(
         ControlMode.Position, Conversions.degreesToFalcon(angle.getDegrees(), kAngleGearRatio));
@@ -98,8 +101,9 @@ public class SwerveModule {
   }
 
   public void resetToAbsolute() {
-    double absolutePosition = Conversions.degreesToFalcon(
-        getCanCoder().getDegrees() - angleOffset.getDegrees(), kAngleGearRatio);
+    double absolutePosition =
+        Conversions.degreesToFalcon(
+            getCanCoder().getDegrees() - angleOffset.getDegrees(), kAngleGearRatio);
     mAngleMotor.setSelectedSensorPosition(absolutePosition);
   }
 
@@ -141,9 +145,10 @@ public class SwerveModule {
   public void setDesiredAngleState(SwerveModuleState desiredState) {
     desiredState = CTREModuleState.optimize(desiredState, getPosition().angle);
 
-    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (kMaxSpeed * 0.01))
-        ? lastAngle
-        : desiredState.angle;
+    Rotation2d angle =
+        (Math.abs(desiredState.speedMetersPerSecond) <= (kMaxSpeed * 0.01))
+            ? lastAngle
+            : desiredState.angle;
 
     mAngleMotor.set(
         ControlMode.Position, Conversions.degreesToFalcon(angle.getDegrees(), kAngleGearRatio));
@@ -160,9 +165,10 @@ public class SwerveModule {
 
   public boolean test() {
     System.out.println("Testing swerve module CAN:");
-    boolean result = CANDeviceTester.testTalonFX(mDriveMotor)
-        && CANDeviceTester.testTalonFX(mAngleMotor)
-        && CANDeviceTester.testCANCoder(angleEncoder);
+    boolean result =
+        CANDeviceTester.testTalonFX(mDriveMotor)
+            && CANDeviceTester.testTalonFX(mAngleMotor)
+            && CANDeviceTester.testCANCoder(angleEncoder);
 
     System.out.println("Swerve module CAN connected: " + result);
     SmartDashboard.putBoolean("Swerve module CAN connected", result);
