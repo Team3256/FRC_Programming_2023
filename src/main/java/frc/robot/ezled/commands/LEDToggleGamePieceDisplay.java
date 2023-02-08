@@ -5,15 +5,15 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.commands;
+package frc.robot.ezled.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.led.LEDStrip;
+import frc.robot.ezled.EZLED;
 
 public class LEDToggleGamePieceDisplay extends CommandBase {
-  private final LEDStrip ledStrip;
+  private final EZLED ledStrip;
 
-  public LEDToggleGamePieceDisplay(LEDStrip ledStrip) {
+  public LEDToggleGamePieceDisplay(EZLED ledStrip) {
     addRequirements(ledStrip);
     this.ledStrip = ledStrip;
   }

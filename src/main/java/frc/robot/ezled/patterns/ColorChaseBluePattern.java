@@ -5,17 +5,11 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.ezled.patterns;
 
-// Copyright (c) 2023 FRC 3256
-// https://github.com/Team3256
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file at
-// the root directory of this project.
+import frc.robot.ezled.patternBases.TimeFunctionPattern;
 
-import frc.robot.led.patternBases.TimeFunctionPattern;
-
+/** Blue Sin Wave Animation */
 public class ColorChaseBluePattern extends TimeFunctionPattern {
   public ColorChaseBluePattern() {
     super(true);
