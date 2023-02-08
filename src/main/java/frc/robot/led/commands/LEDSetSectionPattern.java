@@ -5,18 +5,18 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.ezled.commands;
+package frc.robot.led.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.ezled.EZLED;
-import frc.robot.ezled.patternBases.LEDPattern;
+import frc.robot.led.LED;
+import frc.robot.led.patternBases.LEDPattern;
 
 public class LEDSetSectionPattern extends CommandBase {
-  private final EZLED ledStrip;
+  private final LED ledStrip;
   private final LEDPattern ledPattern;
   private final int sectionId;
 
-  public LEDSetSectionPattern(EZLED ledStrip, int sectionID, LEDPattern ledPattern) {
+  public LEDSetSectionPattern(LED ledStrip, int sectionID, LEDPattern ledPattern) {
     addRequirements(ledStrip);
     this.ledStrip = ledStrip;
     this.sectionId = sectionID;

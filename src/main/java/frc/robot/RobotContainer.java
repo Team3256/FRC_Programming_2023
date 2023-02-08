@@ -14,13 +14,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
-import frc.robot.ezled.EZLED;
-import frc.robot.ezled.commands.LEDSetAllSectionsPattern;
-import frc.robot.ezled.commands.LEDToggleGamePieceDisplay;
-import frc.robot.ezled.patterns.ColorChaseBluePattern;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.led.LED;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
+import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -40,7 +40,7 @@ public class RobotContainer {
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
-  private EZLED ledStrip;
+  private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -108,7 +108,7 @@ public class RobotContainer {
   public void configureElevator() {}
 
   public void configureLEDStrip() {
-    ledStrip = new EZLED(0, new int[] {100});
+    ledStrip = new LED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }

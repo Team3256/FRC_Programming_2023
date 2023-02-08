@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.ezled;
+package frc.robot.led;
 
 public class LEDConstants {
   public static final int kResolution = 100;
