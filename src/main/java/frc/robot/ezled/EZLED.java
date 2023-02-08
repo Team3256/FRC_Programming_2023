@@ -5,17 +5,17 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led;
+package frc.robot.ezled;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.led.patternBases.LEDPattern;
-import frc.robot.led.patterns.BlinkingConePattern;
-import frc.robot.led.patterns.BlinkingCubePattern;
+import frc.robot.ezled.patternBases.LEDPattern;
+import frc.robot.ezled.patterns.BlinkingConePattern;
+import frc.robot.ezled.patterns.BlinkingCubePattern;
 import java.util.Arrays;
 
-public class LEDStrip extends SubsystemBase {
+public class EZLED extends SubsystemBase {
   private final int length;
   private final int sections;
   private final LEDSection[] LEDSections;
@@ -28,7 +28,8 @@ public class LEDStrip extends SubsystemBase {
    * @param port PWM port on the RoboRio
    * @param LEDSectionLengths An array of LED section lengths
    */
-  public LEDStrip(int port, int[] LEDSectionLengths) {
+  public EZLED(int port, int[] LEDSectionLengths) {
+    // initialize object
     length = Arrays.stream(LEDSectionLengths).sum();
     sections = LEDSectionLengths.length;
     LEDSections = new LEDSection[sections];
@@ -43,25 +44,25 @@ public class LEDStrip extends SubsystemBase {
       cur += LEDSectionLengths[i];
     }
 
-    // start LEDs
+    // start the LEDs
     addressableLED.start();
     addressableLED.setData(buffer);
   }
 
-  public void set(int sectionId, LEDPattern pattern) {
-    // set a specific section's buffer to a pattern
-    LEDSections[sectionId].setLEDPattern(pattern);
+  // set a specific section's buffer to a LEDPattern
+  public void set(int sectionId, LEDPattern ledPattern) {
+    LEDSections[sectionId].setLEDPattern(ledPattern);
   }
 
-  public void setAll(LEDPattern pattern) {
-    // set each section's buffer to the same pattern
+  // set each section's buffer to the same LEDPattern
+  public void setAll(LEDPattern ledPattern) {
     for (int i = 0; i < sections; i++) {
-      set(i, pattern);
+      set(i, ledPattern);
     }
   }
 
+  /** set each container's display to the pattern in it's buffer */
   public void periodic() {
-    // set each container's display to the pattern in it's buffer
     for (LEDSection section : LEDSections) {
       section.writeToBuffer(buffer);
     }
@@ -70,6 +71,7 @@ public class LEDStrip extends SubsystemBase {
 
   private boolean isCubePiece = true;
 
+  /** Toggle whether a cone or cube pattern will be displayed */
   public void toggleGamePiece() {
     if (isCubePiece) {
       setAll(new BlinkingCubePattern());

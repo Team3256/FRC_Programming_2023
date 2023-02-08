@@ -5,17 +5,17 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.ezled.patterns;
 
-import static frc.robot.led.LEDConstants.kResolution;
+import static frc.robot.ezled.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.led.patternBases.LEDPattern;
+import frc.robot.ezled.patternBases.LEDPattern;
 
 /** Full Purple */
 public class CubePattern extends LEDPattern {
   public CubePattern() {
     super();
-    setRangeOfPixels(1, kResolution, Color.kBlueViolet);
+    setPixelRange(1, kResolution, Color.kBlueViolet);
   }
 }
