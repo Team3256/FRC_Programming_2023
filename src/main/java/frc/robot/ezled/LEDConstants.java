@@ -5,12 +5,8 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.ezled;
 
-import frc.robot.led.patternBases.LEDPattern;
-
-public class OffPattern extends LEDPattern {
-  public OffPattern() {
-    super();
-  }
+public class LEDConstants {
+  public static final int kResolution = 100;
 }
