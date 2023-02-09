@@ -21,6 +21,13 @@ public final class SwerveConstants {
   public static final boolean kFieldRelative = true;
   public static final boolean kOpenLoop = true;
 
+  /* Meters per second squared */
+  public static int kXAccelRateLimit = 15;
+  public static int kXDecelRateLimit = 10;
+
+  public static int kYAccelRateLimit = 15;
+  public static int kYDecelRateLimit = 10;
+
   public static final COTSFalconSwerveConstants
       kChosenModule = // TODO: This must be tuned to specific robot
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);

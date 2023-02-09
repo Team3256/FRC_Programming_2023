@@ -5,13 +5,15 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.intake.commands;
+package frc.robot.tests;
 
 import static frc.robot.intake.IntakeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import frc.robot.UnitTestBase;
 import frc.robot.intake.Intake;
+import frc.robot.intake.commands.IntakeCone;
+import frc.robot.intake.commands.IntakeCube;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

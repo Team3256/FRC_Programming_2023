@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
+import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -40,6 +42,7 @@ public class RobotContainer {
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
+  private Elevator elevatorSubsystem;
   private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
@@ -71,14 +74,27 @@ public class RobotContainer {
   private void configureSwerve() {
     this.swerveDrive = new SwerveDrive();
 
-    swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            swerveDrive,
-            () -> driver.getLeftY(),
-            () -> driver.getLeftX(),
-            () -> driver.getRightX(),
-            kFieldRelative,
-            kOpenLoop));
+    if (kElevatorEnabled) {
+      // Enable elevator acceleration limiting
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              elevatorSubsystem,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    } else {
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    }
 
     driver
         .rightBumper()
@@ -105,7 +121,13 @@ public class RobotContainer {
                 kOpenLoop));
   }
 
-  public void configureElevator() {}
+  public void configureElevator() {
+    elevatorSubsystem = new Elevator();
+
+    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
+    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+  }
 
   public void configureLEDStrip() {
     ledStrip = new LED(0, new int[] {100});

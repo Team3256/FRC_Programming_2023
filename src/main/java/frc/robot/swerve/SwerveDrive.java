@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
+import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
@@ -32,6 +33,11 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
   private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
   private final Field2d field = new Field2d();
+
+  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
+      new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
+  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
+      new AdaptiveSlewRateLimiter(kYAccelRateLimit, kYDecelRateLimit);
 
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
@@ -84,6 +90,30 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
+  }
+
+  public void drive(
+      Translation2d translation,
+      double rotation,
+      boolean fieldRelative,
+      boolean isOpenLoop,
+      double elevatorHeight) {
+    ChassisSpeeds swerveChassisSpeed =
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, getYaw())
+            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+
+    drive(swerveChassisSpeed, isOpenLoop, elevatorHeight);
+  }
+
+  public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop, double elevatorHeight) {
+    chassisSpeeds.vxMetersPerSecond =
+        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond, elevatorHeight);
+    chassisSpeeds.vyMetersPerSecond =
+        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond, elevatorHeight);
+
+    drive(chassisSpeeds, isOpenLoop);
   }
 
   public void setDesiredAngleState(SwerveModuleState[] swerveModuleStates) {
