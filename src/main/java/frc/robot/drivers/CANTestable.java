@@ -8,5 +8,5 @@
 package frc.robot.drivers;
 
 public interface CANTestable {
-  public boolean test();
+  public boolean CANTest();
 }

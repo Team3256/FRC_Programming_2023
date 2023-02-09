@@ -8,12 +8,16 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.robot.swerve.helpers.COTSFalconSwerveConstants;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class SwerveConstants {
+  public static final int kPigeonID = 1;
+
   public static final boolean kFieldRelative = true;
   public static final boolean kOpenLoop = true;
 
@@ -24,62 +28,39 @@ public final class SwerveConstants {
   public static int kYAccelRateLimit = 15;
   public static int kYDecelRateLimit = 10;
 
-  /* Angle Motor PID Values */
-  public static final double kAngleKP = 0.6;
-  public static final double kAngleKI = 0.0;
-  public static final double kAngleKD = 12.0;
-  public static final double kAngleKF = 0.0;
+  public static final COTSFalconSwerveConstants
+      kChosenModule = // TODO: This must be tuned to specific robot
+      COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
-  /* Drive Motor PID Values */
-  public static final double kDriveKP = 0.10;
-  public static final double kDriveKI = 0.0;
-  public static final double kDriveKD = 0.0;
-  public static final double kDriveKF = 0.0;
-
-  /* Drive Motor Characterization Values */
-  public static final double kDriveKS =
-      (0.667 / 12); // divide by 12 to convert from volts to percent output for CTRE
-  public static final double kDriveKV = (2.44 / 12);
-  public static final double kDriveKA = (0.27 / 12);
-
-  public static final int kLongCANTimeoutMs = 1;
-  public static final double kMaxDriveVoltage = 1;
-  public static final double kMk4DriveVelocityKp = 1;
-  public static final double kMk4DriveVelocityKi = 1;
-  public static final double kMk4DriveVelocityKd = 1;
-  public static final double kMk4DriveVelocityKf = 1;
-
-  public static final double kMk4AziKp = 1;
-  public static final double kMk4AziKi = 1;
-  public static final double kMk4AziKd = 1;
-
-  public static final double kDriveReduction = 1;
-  public static final double kSteerReduction = 1;
-
-  public static final int kPigeonID = 1;
-  public static final boolean kInvertGyro = false; // Always ensure Gyro is CCW+ CW-
 
   /* Drivetrain Constants */
-  // TODO: Update these constants later
   public static final double kTrackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
   public static final double kWheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
   public static final double kWheelDiameter = Units.inchesToMeters(3.94);
   public static final double kWheelCircumference = kWheelDiameter * Math.PI;
 
-  public static final double kOpenLoopRamp = 0.25;
-  public static final double kClosedLoopRamp = 0.0;
-
-  public static final double kDriveGearRatio = (6.86); // 6.86:1
-  public static final double kAngleGearRatio = (12.8); // 12.8:1
-
-  public static final double[] kLockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
-
+  /*
+   * Swerve Kinematics
+   * No need to ever change this unless you are not doing a traditional
+   * rectangular/square 4 module swerve
+   */
   public static final SwerveDriveKinematics kSwerveKinematics =
       new SwerveDriveKinematics(
           new Translation2d(kWheelBase / 2.0, kTrackWidth / 2.0),
           new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0),
           new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0),
           new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0));
+
+  /* Module Gear Ratios */
+  public static final double kDriveGearRatio = kChosenModule.driveGearRatio;
+  public static final double kAngleGearRatio = kChosenModule.angleGearRatio;
+
+  /* Motor Inverts */
+  public static final boolean kAngleMotorInvert = kChosenModule.angleMotorInvert;
+  public static final boolean kDriveMotorInvert = kChosenModule.driveMotorInvert;
+
+  /* Angle Encoder Invert */
+  public static final boolean kCanCoderInvert = kChosenModule.canCoderInvert;
 
   /* Swerve Current Limiting */
   public static final int kAngleContinuousCurrentLimit = 25;
@@ -92,20 +73,47 @@ public final class SwerveConstants {
   public static final double kDrivePeakCurrentDuration = 0.1;
   public static final boolean kDriveEnableCurrentLimit = true;
 
+  /*
+   * These values are used by the drive falcon to ramp in open loop and closed
+   * loop driving.
+   * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
+   */
+  public static final double kOpenLoopRamp = 0.25;
+  public static final double kClosedLoopRamp = 0.0;
+
+  /* Angle Motor PID Values */
+  public static final double kAngleKP = kChosenModule.angleKP;
+  public static final double kAngleKI = kChosenModule.angleKI;
+  public static final double kAngleKD = kChosenModule.angleKD;
+  public static final double kAngleKF = kChosenModule.angleKF;
+
+  /* Drive Motor PID Values */
+  public static final double kDriveKP = 0.05; // TODO: This must be tuned to specific robot
+  public static final double kDriveKI = 0.0;
+  public static final double kDriveKD = 0.0;
+  public static final double kDriveKF = 0.0;
+
+  public static final double[] kLockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
+
+  /*
+   * Drive Motor Characterization Values
+   * Divide SYSID values by 12 to convert from volts to percent output for CTRE
+   */
+  public static final double kDriveKS = (0.32 / 12); // TODO: This must be tuned to specific robot
+  public static final double kDriveKV = (1.51 / 12);
+  public static final double kDriveKA = (0.27 / 12);
+
   /* Swerve Profiling Values */
-  public static final double kMaxSpeed = 4.5; // meters per second
-  public static final double kMaxAngularVelocity = 11.5;
+  /** Meters per Second */
+  public static final double kMaxSpeed = 4.5; // TODO: This must be tuned to specific robot
+  /** Radians per Second */
+  public static final double kMaxAngularVelocity =
+      10.0; // TODO: This must be tuned to specific robot
 
   /* Neutral Modes */
   public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
   public static final NeutralMode kDriveNeutralMode = NeutralMode.Brake;
-
-  /* Motor Inverts */
-  public static final boolean kDriveMotorInvert = false;
-  public static final boolean kAngleMotorInvert = false;
-
-  /* Angle Encoder Invert */
-  public static final boolean kCanCoderInvert = false;
+  public static final boolean kInvertGyro = false; // Always ensure Gyro is CCW+ CW-
 
   /* PID Constants Trapezoid Profile for the Azimuth Control */
   public static final double kAzimuthP = 0.09;
@@ -117,7 +125,9 @@ public final class SwerveConstants {
     public static final int kDriveMotorID = 3;
     public static final int kAngleMotorID = 4;
     public static final int kCanCoderID = 2;
-    public static final double kAngleOffset = 531.6064455; // 531 or 171 (ziptide constants)
+    public static final Rotation2d kAngleOffset = Rotation2d.fromDegrees(258.8379);
+    // public static final double kAngleOffset = 531.6064455; // 531 or 171 (ziptide
+    // constants)
 
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
@@ -127,7 +137,9 @@ public final class SwerveConstants {
     public static final int kDriveMotorID = 6;
     public static final int kAngleMotorID = 7;
     public static final int kCanCoderID = 5;
-    public static final double kAngleOffset = 48.691406; // (ziptide constants)
+    public static final Rotation2d kAngleOffset = Rotation2d.fromDegrees(320.7129);
+    // public static final double kAngleOffset = 48.691406; // (ziptide constants)
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
   }
@@ -136,7 +148,9 @@ public final class SwerveConstants {
     public static final int kDriveMotorID = 9;
     public static final int kAngleMotorID = 10;
     public static final int kCanCoderID = 8;
-    public static final double kAngleOffset = 174.770508; // (ziptide constants)
+    public static final Rotation2d kAngleOffset = Rotation2d.fromDegrees(197.8418);
+    // public static final double kAngleOffset = 174.770508; // (ziptide constants)
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
   }
@@ -145,7 +159,9 @@ public final class SwerveConstants {
     public static final int kDriveMotorID = 12;
     public static final int kAngleMotorID = 13;
     public static final int kCanCoderID = 11;
-    public static final double angleOffset = 233.0419925; // (ziptide constants)
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(88.9453);
+    // public static final double angleOffset = 233.0419925; // (ziptide constants)
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, angleOffset);
   }

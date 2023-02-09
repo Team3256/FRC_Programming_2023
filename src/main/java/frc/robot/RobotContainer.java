@@ -23,6 +23,10 @@ import frc.robot.ezled.patterns.ColorChaseBluePattern;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.led.LED;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
+import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -77,9 +81,9 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             swerveDrive,
-            () -> driver.getRightY(),
-            () -> driver.getRightX(),
+            () -> driver.getLeftY(),
             () -> driver.getLeftX(),
+            () -> driver.getRightX(),
             kFieldRelative,
             kOpenLoop));
 
@@ -117,7 +121,7 @@ public class RobotContainer {
   }
 
   public void configureLEDStrip() {
-    ledStrip = new EZLED(0, new int[] {100});
+    ledStrip = new LED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
@@ -129,7 +133,7 @@ public class RobotContainer {
   public void test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables) result &= subsystem.test();
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
   }
 }

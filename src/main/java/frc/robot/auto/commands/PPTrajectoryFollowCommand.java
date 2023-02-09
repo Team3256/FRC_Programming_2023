@@ -116,7 +116,8 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     }
 
     swerveSubsystem.drive(
-        controller.calculate(currentPose, desiredPose, desiredLinearVelocity, desiredRotation));
+        controller.calculate(currentPose, desiredPose, desiredLinearVelocity, desiredRotation),
+        false);
   }
 
   // TODO: Fix to give a little more time to be in the right place
@@ -132,7 +133,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       // .atReference();
       autoCommandRunner.end();
     }
-    swerveSubsystem.drive(new ChassisSpeeds());
+    swerveSubsystem.drive(new ChassisSpeeds(), false);
   }
 
   private Pose2d poseTolerance = new Pose2d();

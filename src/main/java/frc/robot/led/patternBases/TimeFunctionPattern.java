@@ -5,9 +5,9 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.ezled.patternBases;
+package frc.robot.led.patternBases;
 
-import static frc.robot.ezled.LEDConstants.kResolution;
+import static frc.robot.led.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.util.Color;
 
