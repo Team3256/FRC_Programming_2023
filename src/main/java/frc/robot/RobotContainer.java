@@ -15,9 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHigh;
-import frc.robot.elevator.commands.SetElevatorLow;
-import frc.robot.elevator.commands.SetElevatorMid;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.ezled.EZLED;
 import frc.robot.ezled.commands.LEDSetAllSectionsPattern;
 import frc.robot.ezled.commands.LEDToggleGamePieceDisplay;
@@ -45,8 +43,6 @@ public class RobotContainer {
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
-
-  boolean cubePiece = true;
   private EZLED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
@@ -115,9 +111,9 @@ public class RobotContainer {
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
-    operator.a().onTrue(new SetElevatorHigh(elevatorSubsystem));
-    operator.b().onTrue(new SetElevatorMid(elevatorSubsystem));
-    operator.x().onTrue(new SetElevatorLow(elevatorSubsystem));
+    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
+    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
   }
 
   public void configureLEDStrip() {

@@ -27,4 +27,8 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);
   }
+
+  public SetElevatorHeight(Elevator elevatorSubsystem, Elevator.ElevatorPosition elevatorPosition) {
+    this(elevatorSubsystem, elevatorPosition.position);
+  }
 }

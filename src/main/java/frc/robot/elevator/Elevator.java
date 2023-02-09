@@ -27,6 +27,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
+  public enum ElevatorPosition {
+    HIGH(ElevatorConstants.kElevatorHighPositionMeters),
+    MID(ElevatorConstants.kElevatorMidPositionMeters),
+    LOW(ElevatorConstants.kElevatorLowPositionMeters);
+
+    public double position;
+
+    private ElevatorPosition(double position) {
+      this.position = position;
+    }
+  }
+
   private WPI_TalonFX elevatorMotor;
   private ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);

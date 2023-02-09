@@ -25,8 +25,6 @@ import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.SwerveDriveController;
 import frc.robot.swerve.SwerveDrive;
 
-// import static frc.robot.Constants.AutoConstants.TRAJECTORY_DURATION_FACTOR;
-
 public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
   private final PathPlannerTrajectory trajectory;
