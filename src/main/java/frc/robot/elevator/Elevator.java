@@ -8,7 +8,7 @@
 package frc.robot.elevator;
 
 import static frc.robot.elevator.ElevatorConstants.*;
-import static frc.robot.swerve.helpers.Conversions.falconToDistance;
+import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -99,8 +99,8 @@ public class Elevator extends SubsystemBase {
 
   public double getElevatorPosition() {
     if (RobotBase.isReal()) {
-      return falconToDistance(
-          elevatorMotor.getSelectedSensorPosition(), kDrumRadius, kElevatorGearing);
+      return falconToMeters(
+          elevatorMotor.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
     } else return elevatorSim.getPositionMeters();
   }
 

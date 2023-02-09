@@ -12,6 +12,7 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.elevator.Elevator;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
@@ -22,6 +23,7 @@ public class TeleopSwerve extends CommandBase {
   private boolean openLoop;
 
   private SwerveDrive swerveSubsystem;
+  private Elevator elevatorSubsystem;
   private DoubleSupplier translationAxis;
   private DoubleSupplier strafeAxis;
   private DoubleSupplier rotationAxis;
@@ -43,6 +45,18 @@ public class TeleopSwerve extends CommandBase {
     this.openLoop = openLoop;
   }
 
+  public TeleopSwerve(
+      SwerveDrive swerveSubsystem,
+      Elevator elevatorSubsystem,
+      DoubleSupplier translationAxis,
+      DoubleSupplier strafeAxis,
+      DoubleSupplier rotationAxis,
+      boolean fieldRelative,
+      boolean openLoop) {
+    this(swerveSubsystem, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop);
+    this.elevatorSubsystem = elevatorSubsystem;
+  }
+
   @Override
   public void initialize() {
     swerveSubsystem.setAngleMotorsNeutralMode(kAngleNeutralMode);
@@ -62,6 +76,10 @@ public class TeleopSwerve extends CommandBase {
 
     translation = new Translation2d(Math.pow(yAxis, 3), Math.pow(xAxis, 3)).times(kMaxSpeed);
     rotation = rAxis * kMaxAngularVelocity;
-    swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
+
+    if (elevatorSubsystem != null)
+      swerveSubsystem.drive(
+          translation, rotation, fieldRelative, openLoop, elevatorSubsystem.getElevatorPosition());
+    else swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }

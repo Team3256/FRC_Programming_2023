@@ -32,7 +32,6 @@ public final class SwerveConstants {
       kChosenModule = // TODO: This must be tuned to specific robot
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
-
   /* Drivetrain Constants */
   public static final double kTrackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
   public static final double kWheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants

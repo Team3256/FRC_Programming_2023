@@ -16,10 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
-import frc.robot.ezled.EZLED;
-import frc.robot.ezled.commands.LEDSetAllSectionsPattern;
-import frc.robot.ezled.commands.LEDToggleGamePieceDisplay;
-import frc.robot.ezled.patterns.ColorChaseBluePattern;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -47,7 +43,7 @@ public class RobotContainer {
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
-  private EZLED ledStrip;
+  private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -78,14 +74,27 @@ public class RobotContainer {
   private void configureSwerve() {
     this.swerveDrive = new SwerveDrive();
 
-    swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            swerveDrive,
-            () -> driver.getLeftY(),
-            () -> driver.getLeftX(),
-            () -> driver.getRightX(),
-            kFieldRelative,
-            kOpenLoop));
+    if (kElevatorEnabled) {
+      // Enable elevator acceleration limiting
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              elevatorSubsystem,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    } else {
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    }
 
     driver
         .rightBumper()
