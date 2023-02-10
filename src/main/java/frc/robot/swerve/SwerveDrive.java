@@ -35,13 +35,13 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
   private final Field2d field = new Field2d();
 
-  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
-      new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
-  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
-      new AdaptiveSlewRateLimiter(kYAccelRateLimit, kYDecelRateLimit);
+  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter = new AdaptiveSlewRateLimiter(kXAccelRateLimit,
+      kXDecelRateLimit);
+  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter = new AdaptiveSlewRateLimiter(kYAccelRateLimit,
+      kYDecelRateLimit);
 
   private final SwerveModule[] swerveModules = {
-    frontLeftModule, frontRightModule, backLeftModule, backRightModule
+      frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
   public SwerveDrivePoseEstimator poseEstimator;
@@ -60,9 +60,8 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     Timer.delay(1.0);
     resetModulesToAbsolute();
 
-    poseEstimator =
-        new SwerveDrivePoseEstimator(
-            kSwerveKinematics, getYaw(), getModulePositions(), new Pose2d());
+    poseEstimator = new SwerveDrivePoseEstimator(
+        kSwerveKinematics, getYaw(), getModulePositions(), new Pose2d());
   }
 
   public void resetModulesToAbsolute() {
@@ -72,19 +71,16 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
-    Pose2d robotPoseVelocity =
-        new Pose2d(
-            chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
-            chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
-            Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
-    Twist2d twistVelocity = robotPoseVelocity.log(new Pose2d());
-    ChassisSpeeds updatedChassisSpeeds =
-        new ChassisSpeeds(
-            twistVelocity.dx / kPeriodicDeltaTime,
-            twistVelocity.dy / kPeriodicDeltaTime,
-            twistVelocity.dtheta / kPeriodicDeltaTime);
-    SwerveModuleState[] swerveModuleStates =
-        kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
+    Pose2d robotPoseVelocity = new Pose2d(
+        chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
+        chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
+        Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
+    Twist2d twistVelocity = (new Pose2d()).log(robotPoseVelocity);
+    ChassisSpeeds updatedChassisSpeeds = new ChassisSpeeds(
+        twistVelocity.dx / kPeriodicDeltaTime,
+        twistVelocity.dy / kPeriodicDeltaTime,
+        twistVelocity.dtheta / kPeriodicDeltaTime);
+    SwerveModuleState[] swerveModuleStates = kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
@@ -96,11 +92,10 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    ChassisSpeeds swerveChassisSpeed =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getYaw())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds swerveChassisSpeed = fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            translation.getX(), translation.getY(), rotation, getYaw())
+        : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
   }
@@ -111,20 +106,17 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
       boolean fieldRelative,
       boolean isOpenLoop,
       double elevatorHeight) {
-    ChassisSpeeds swerveChassisSpeed =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getYaw())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds swerveChassisSpeed = fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            translation.getX(), translation.getY(), rotation, getYaw())
+        : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop, elevatorHeight);
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop, double elevatorHeight) {
-    chassisSpeeds.vxMetersPerSecond =
-        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond, elevatorHeight);
-    chassisSpeeds.vyMetersPerSecond =
-        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond, elevatorHeight);
+    chassisSpeeds.vxMetersPerSecond = adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond, elevatorHeight);
+    chassisSpeeds.vyMetersPerSecond = adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond, elevatorHeight);
 
     drive(chassisSpeeds, isOpenLoop);
   }
