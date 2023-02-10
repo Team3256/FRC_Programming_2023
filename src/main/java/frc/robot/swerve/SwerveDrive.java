@@ -77,7 +77,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
             chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
             chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
             Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
-    Twist2d twistVelocity = robotPoseVelocity.log(robotPoseVelocity);
+    Twist2d twistVelocity = robotPoseVelocity.log(new Pose2d());
     ChassisSpeeds updatedChassisSpeeds =
         new ChassisSpeeds(
             twistVelocity.dx / kPeriodicDeltaTime,
