@@ -14,9 +14,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
+import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.led.LED;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
+import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -30,11 +36,14 @@ import java.util.ArrayList;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
+  private Elevator elevatorSubsystem;
+  private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -50,6 +59,9 @@ public class RobotContainer {
     if (kElevatorEnabled) {
       configureElevator();
     }
+    if (kLedStripEnabled) {
+      configureLEDStrip();
+    }
   }
 
   private void configureIntake() {
@@ -62,14 +74,27 @@ public class RobotContainer {
   private void configureSwerve() {
     this.swerveDrive = new SwerveDrive();
 
-    swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            swerveDrive,
-            () -> driver.getRightY(),
-            () -> driver.getRightX(),
-            () -> driver.getLeftX(),
-            kFieldRelative,
-            kOpenLoop));
+    if (kElevatorEnabled) {
+      // Enable elevator acceleration limiting
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              elevatorSubsystem,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    } else {
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    }
 
     driver
         .rightBumper()
@@ -96,7 +121,19 @@ public class RobotContainer {
                 kOpenLoop));
   }
 
-  public void configureElevator() {}
+  public void configureElevator() {
+    elevatorSubsystem = new Elevator();
+
+    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
+    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+  }
+
+  public void configureLEDStrip() {
+    ledStrip = new LED(0, new int[] {100});
+    driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
+  }
 
   public Command getAutonomousCommand() {
     return new InstantCommand();
@@ -105,11 +142,7 @@ public class RobotContainer {
   public void test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables) result &= subsystem.test();
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
-  }
-
-  public void zeroGyro() {
-    swerveDrive.zeroGyro();
   }
 }

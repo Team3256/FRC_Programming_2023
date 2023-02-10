@@ -5,8 +5,13 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.drivers;
+package frc.robot.led.patterns;
 
-public interface CANTestable {
-  public boolean CANTest();
+import frc.robot.led.patternBases.LEDPattern;
+
+/** No display */
+public class OffPattern extends LEDPattern {
+  public OffPattern() {
+    super();
+  }
 }
