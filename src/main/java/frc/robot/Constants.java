@@ -64,6 +64,8 @@ public final class Constants {
     public static final double kI = 1;
     public static final double kD = 1;
     public static final double kFF = 1;
+
+    public static final TrapezoidProfile.Constraints trapezoidProfileConstraints = new TrapezoidProfile.Constraints(0.5, 0.5);
   }
 
   public static final class SwerveConstants {
