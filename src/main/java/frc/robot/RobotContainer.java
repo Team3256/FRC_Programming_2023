@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
+import static frc.robot.Constants.ShuffleboardConstants.kElectricalTabName;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -25,10 +26,6 @@ import frc.robot.ezled.patterns.ColorChaseBluePattern;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
-import frc.robot.led.LEDStrip;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.logging.GyroSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
@@ -74,6 +71,8 @@ public class RobotContainer {
     if (kLedStripEnabled) {
       configureLEDStrip();
     }
+
+    Shuffleboard.getTab(kElectricalTabName).add(pdp);
   }
 
   private void configureIntake() {
@@ -136,7 +135,9 @@ public class RobotContainer {
     for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
-            "Joystick", new GyroSendable(() -> Math.atan2(driver.getRightX(), driver.getRightY())));
+            "Joystick",
+            new GyroSendable(
+                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY()))));
   }
 
   public void periodicLog() {
