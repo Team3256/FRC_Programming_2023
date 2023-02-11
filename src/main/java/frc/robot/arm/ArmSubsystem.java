@@ -7,104 +7,121 @@
 
 package frc.robot.arm;
 
-import static frc.robot.Constants.ArmConstants.*;
-
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import edu.wpi.first.math.MathUtil;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Robot;
+
+import static frc.robot.arm.ArmConstants.*;
 
 // TODO: Add
 public class ArmSubsystem extends SubsystemBase {
-  public class PeriodicIO {
-    // Inputs
-    public double voltage = 0;
-    public double lastUpdateTime = -1;
+  public enum ArmPosition {
+    HIGH(ArmConstants.kArmHighPositionMeters),
+    MID(ArmConstants.kArmMidPositionMeters),
+    LOW(ArmConstants.kArmLowPositionMeters);
 
-    // Outputs
-    public double angleRad = 0;
-    public double currentDrawAmps = 0;
-    public double angularVelocityRadPerSec = 0;
-    public double angularAccelerationRadPerSecSq = 0;
+    public double position;
+
+    private ArmPosition(double position) {
+      this.position = position;
+    }
   }
 
-  private TalonFX armMotor;
-  private SingleJointedArmSim armSim;
-  private PeriodicIO periodicIO;
+  private WPI_TalonFX armMotor;
+  private ArmFeedforward armFeedforward =
+          new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
-  private ArmFeedforward armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+  private SingleJointedArmSim armSim =
+          new SingleJointedArmSim(
+                  DCMotor.getFalcon500(kNumArmMotors),
+                  kArmGearing,
+                  jKgMetersSquared,
+                  kArmLengthMeters,
+                  minAngleRads,
+                  maxAngleRads,
+                  armMassKg,
+                  true);
+
+  private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
+  private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Arm Root", 10, 0);
+  private final MechanismLigament2d armMech2d =
+          mechanism2dRoot.append(
+                  new MechanismLigament2d(
+                          "arm", Units.metersToInches(armSim.getAngleRads()), 90));
 
   public ArmSubsystem() {
-    periodicIO = new PeriodicIO();
-    if (Robot.isReal()) {
-      // Configure REAL HW
-      armMotor = new TalonFX(ARM_MOTOR_ID);
-      armMotor.enableVoltageCompensation(true);
-      System.out.println("Arm initalized");
-    } else {
-      // Configure Sim HW
-      System.out.println("Arm initalized in simulation.");
-      armSim =
-          new SingleJointedArmSim(
-              DCMotor.getFalcon500(1),
-              Constants.ArmConstants.kArmGearing,
-              Constants.ArmConstants.kArmInertia,
-              Constants.ArmConstants.kArmLengthMeters,
-              Constants.ArmConstants.kMinAngleRads,
-              Constants.ArmConstants.kMaxAngleRads,
-              Constants.ArmConstants.kArmMassKg,
-              Constants.ArmConstants.kArmSimGravity);
-    }
+    armMotor = new WPI_TalonFX(armID);
+    armMotor.setNeutralMode(NeutralMode.Brake);
+
+    if (RobotBase.isReal()) configureRealHardware();
+    else SmartDashboard.putData("Arm Sim", mechanism2d);
+
+    System.out.println("Arm initialized");
+    off();
+  }
+
+  private void configureRealHardware() {
+    armMotor = new WPI_TalonFX(armID);
+    armMotor.enableVoltageCompensation(true);
+  }
+
+  public void zeroArm() {
+    armMotor.set(ControlMode.Position, 0);
+  }
+
+  public boolean isMotorCurrentSpiking() {
+    return armMotor.getSupplyCurrent() >= kArmCurrentThreshold;
+  }
+
+  public void off() {
+    armMotor.neutralOutput();
+    System.out.println("arm off");
+  }
+
+  public double calculateFeedForward(double velocity) {
+    return armFeedforward.calculate(armSim.getAngleRads(), armSim.getVelocityRadPerSec());
   }
 
   public void setInputVoltage(double voltage) {
-    periodicIO.voltage = MathUtil.clamp(voltage, 0, 12);
-    if (Robot.isSimulation()) {
-      armSim.setInputVoltage(periodicIO.voltage);
-    } else {
-      armMotor.set(TalonFXControlMode.PercentOutput, periodicIO.voltage / 12);
-    }
+    armMotor.setVoltage(voltage);
   }
 
-  public double getAngle() {
-    return periodicIO.angleRad;
-  }
-
-  public double calculateFFVelocity(double desiredAngle, double desiredVelocity) {
-    return armFeedforward.calculate(desiredAngle, desiredVelocity);
+  public double getArmPosition() {
+    //TODO add falconToMeters
+    if (RobotBase.isReal()) return 0;
+      else return armSim.getAngleRads();
   }
 
   @Override
   public void simulationPeriodic() {
-    double currentTime = Timer.getFPGATimestamp();
-    armSim.update(currentTime);
-
-    periodicIO.angleRad = armSim.getAngleRads();
-    periodicIO.currentDrawAmps = armSim.getCurrentDrawAmps();
-    periodicIO.angularAccelerationRadPerSecSq =
-        (armSim.getVelocityRadPerSec() - periodicIO.angularVelocityRadPerSec)
-            / (currentTime - periodicIO.lastUpdateTime);
-    periodicIO.angularVelocityRadPerSec = armSim.getVelocityRadPerSec();
-    periodicIO.lastUpdateTime = currentTime;
+    armSim.setInput(armMotor.getMotorOutputPercent() * 12);
+    armSim.update(0.020);
 
     RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+            BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    armMech2d.setLength(Units.metersToInches(armSim.getAngleRads()));
+
+    simulationOutputToDashboard();
   }
 
+  @Override
+  public void periodic() {}
+
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm Angle", periodicIO.angleRad);
-    SmartDashboard.putNumber("Current Draw", periodicIO.currentDrawAmps);
-    SmartDashboard.putNumber("Arm Sim Voltage", periodicIO.voltage);
-    SmartDashboard.putNumber("Arm Velocity", periodicIO.angularVelocityRadPerSec);
-    SmartDashboard.putNumber("Arm Acceleration", periodicIO.angularAccelerationRadPerSecSq);
+    SmartDashboard.putNumber("Arm position", armSim.getAngleRads());
+    SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
+    SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }
 }
