@@ -23,7 +23,7 @@ public class DynamicPathGenerator {
   private final Pose2d startPose;
   private final Pose2d goalPose;
   private double[][] graph;
-  static boolean debug = true;
+  static boolean debug = false;
 
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     this.startPose = startPose;
@@ -88,5 +88,44 @@ public class DynamicPathGenerator {
       graph[startNodeIndex][i] = startNodeDistance;
       graph[i][goalNodeIndex] = goalNodeDistance;
     }
+  }
+
+  public Translation2d[] findControlPoints(
+      Translation2d startPoint, Translation2d desiredPoint, Translation2d endPoint) {
+    Translation2d desiredToStartVector = startPoint.minus(desiredPoint);
+    Translation2d desiredToEndVector = endPoint.minus(desiredPoint);
+
+    Rotation2d beta = angleBetweenVectors(desiredToStartVector, desiredToEndVector);
+    Rotation2d alpha = Rotation2d.fromDegrees((180 - beta.getDegrees()) / 2);
+    System.out.println(alpha);
+    System.out.println(beta);
+
+    Translation2d desiredToStartTransformed = desiredToStartVector.rotateBy(alpha.unaryMinus());
+    Translation2d startPointControlPoint =
+        desiredPoint
+            .plus(projectUonV(desiredToStartVector, desiredToStartTransformed))
+            .times(kControlPointScalar);
+
+    Translation2d desiredToEndTransformed = desiredToEndVector.rotateBy(alpha);
+    Translation2d endPointControlPoint =
+        desiredPoint
+            .plus(projectUonV(desiredToEndVector, desiredToEndTransformed))
+            .times(kControlPointScalar);
+
+    return new Translation2d[] {startPointControlPoint, endPointControlPoint};
+  }
+
+  private Rotation2d angleBetweenVectors(Translation2d u, Translation2d v) {
+    double numerator = u.getX() * v.getX() + u.getY() * v.getY();
+    double denominator = u.getNorm() * v.getNorm();
+
+    return Rotation2d.fromRadians(Math.acos(numerator / denominator));
+  }
+
+  private Translation2d projectUonV(Translation2d u, Translation2d v) {
+    double vMagnitude = v.getNorm();
+    Translation2d vUnitVector = v.div(vMagnitude);
+    double uDotVOverMagnitudeV = (u.getX() * v.getX() + u.getY() * v.getY()) / vMagnitude;
+    return vUnitVector.times(uDotVOverMagnitudeV);
   }
 }

@@ -20,6 +20,20 @@ import org.junit.jupiter.api.Test;
 
 public class DynamicPathGenerationTest {
   @Test
+  public void testControlPointFinder() {
+    Pose2d src = new Pose2d(new Translation2d(6, 0.5), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(7.5, 2), new Rotation2d(0));
+    Pose2d desiredPoint = new Pose2d(new Translation2d(6, 2), new Rotation2d(0));
+    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
+    Translation2d[] controlPoints =
+        generator.findControlPoints(
+            src.getTranslation(), desiredPoint.getTranslation(), sink.getTranslation());
+
+    System.out.println(controlPoints[0]);
+    System.out.println(controlPoints[1]);
+  }
+
+  // @Test
   public void testGeneratePath() {
     Pose2d src = new Pose2d(new Translation2d(8.46, 0.78), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
