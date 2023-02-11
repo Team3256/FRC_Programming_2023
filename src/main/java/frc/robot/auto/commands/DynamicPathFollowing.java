@@ -14,7 +14,7 @@ import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.DynamicPathGenerator;
 import frc.robot.swerve.SwerveDrive;
 
-// TODO Extend PPTrajectoryFollowCommand 
+// TODO Extend PPTrajectoryFollowCommand
 public class DynamicPathFollowing extends CommandBase {
   private SwerveDrive swerveSubsystem;
   private Pose2d goalPose;
@@ -44,8 +44,7 @@ public class DynamicPathFollowing extends CommandBase {
   }
 
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   @Override
   public boolean isFinished() {

@@ -11,39 +11,27 @@ import static frc.robot.Constants.DynamicPathGenerationConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.BiFunction;
 
-// TODO: Look into optimizations like Bi Directional A*
 /**
- * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/
- * Adapted for Team 3256's
- * needs Used to perform the A-Star (A*) Algorithm to find the shortest path
- * from a start to a
+ * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/ Adapted for Team 3256's
+ * needs Used to perform the A-Star (A*) Algorithm to find the shortest path from a start to a
  * target node.
  */
-public class AStar {
+public class DynamicPathFinder {
   /**
    * Finds the shortest distance between two nodes using the A-star algorithm
    *
-   * @param graph     an adjacency-matrix-representation of the graph where (x,y)
-   *                  is the weight of the
-   *                  edge or 0 if there is no edge.
-   * @param heuristic an estimation of distance from node x to y that is
-   *                  guaranteed to be lower than
-   *                  the actual distance. E.g. straight-line distance
-   * @param start     the node to start from.
-   * @param goal      the node we're searching for
-   * @return The shortest distance to the goal node. Can be easily modified to
-   *         return the path.
+   * @param graph an adjacency-matrix-representation of the graph where (x,y) is the weight of the
+   *     edge or 0 if there is no edge.
+   * @param heuristic an estimation of distance from node x to y that is guaranteed to be lower than
+   *     the actual distance. E.g. straight-line distance
+   * @param start the node to start from.
+   * @param goal the node we're searching for
+   * @return The shortest distance to the goal node. Can be easily modified to return the path.
    */
-  public static ArrayList<Integer> findPath(
-      double[][] graph,
-      BiFunction<Pose2d, Pose2d, Double> heuristic,
-      int start,
-      int goal) {
+  public static ArrayList<Integer> findPath(double[][] graph, int start, int goal) {
     // This contains the distances from the start node to all other nodes
     double[] distances = new double[graph.length];
     // Initializing with a distance of "Infinity"
@@ -58,7 +46,7 @@ public class AStar {
     Arrays.fill(priorities, Double.MAX_VALUE);
     // start node has a priority equal to straight line distance to goal. It will be
     // the first to be expanded.
-    priorities[start] = heuristic.apply(poseIndexes[start], poseIndexes[goal]);
+    priorities[start] = heuristic(poseIndexes[start], poseIndexes[goal]);
 
     // This contains whether a node was already visited
     boolean[] visited = new boolean[graph.length];
@@ -118,5 +106,14 @@ public class AStar {
       // Arrays.toString(distances));
 
     }
+  }
+
+  private static double heuristic(Pose2d pose1, Pose2d pose2) {
+    return pose1.getTranslation().getDistance(pose2.getTranslation());
+  }
+
+  private static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
+    Translation2d translation1 = pose1.getTranslation();
+    Translation2d translation2 = pose2.getTranslation();
   }
 }
