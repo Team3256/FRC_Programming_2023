@@ -25,8 +25,6 @@ public class DynamicPathFinder {
    *
    * @param graph an adjacency-matrix-representation of the graph where (x,y) is the weight of the
    *     edge or 0 if there is no edge.
-   * @param heuristic an estimation of distance from node x to y that is guaranteed to be lower than
-   *     the actual distance. E.g. straight-line distance
    * @param start the node to start from.
    * @param goal the node we're searching for
    * @return The shortest distance to the goal node. Can be easily modified to return the path.
@@ -67,7 +65,7 @@ public class DynamicPathFinder {
 
       if (lowestPriorityIndex == -1) {
         // There was no node not yet visited --> Node not found
-        return -1;
+        return null;
       } else if (lowestPriorityIndex == goal) {
         // Goal node found
         // System.out.println("Goal node found!");
@@ -87,7 +85,7 @@ public class DynamicPathFinder {
             // ...save this path as new shortest path
             distances[i] = distances[lowestPriorityIndex] + graph[lowestPriorityIndex][i];
             // ...and set the priority with which we should continue with this node
-            priorities[i] = distances[i] + heuristic.apply(poseIndexes[i], poseIndexes[goal]);
+            priorities[i] = distances[i] + heuristic(poseIndexes[i], poseIndexes[goal]);
             System.out.println(
                 "Updating distance of node "
                     + i
@@ -108,6 +106,10 @@ public class DynamicPathFinder {
     }
   }
 
+  /**
+   * an estimation of distance from node x to y that is guaranteed to be lower than the actual distance
+   * E.g. straight-line distance
+   *  */  
   private static double heuristic(Pose2d pose1, Pose2d pose2) {
     return pose1.getTranslation().getDistance(pose2.getTranslation());
   }
@@ -115,5 +117,6 @@ public class DynamicPathFinder {
   private static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
+    return true;
   }
 }

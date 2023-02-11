@@ -40,7 +40,7 @@ public class DynamicPathGenerator {
 
     // The last two nodes are the start and goal nodes in the updatedGraph
     ArrayList<Integer> pathIndexes =
-        AStar.findPath(updatedGraph, heuristic, updatedGraph.length - 2, updatedGraph.length - 1);
+        DynamicPathFinder.findPath(updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1);
 
     List<PathPoint> waypoints = new ArrayList<>();
     waypoints.add(
