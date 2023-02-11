@@ -180,30 +180,32 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     odometry.update(getYaw(), getPositions());
     poseEstimator.update(getYaw(), getPositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
-    double[] visionBotPose = Limelight.getBotpose(kLimelightNetworkTablesName);
 
-    double tx = visionBotPose[0];
-    double ty = visionBotPose[1];
-    double tz = visionBotPose[2];
+    if (Limelight.hasValidTargets(kLimelightNetworkTablesName)) {
+      double[] visionBotPose = Limelight.getBotpose(kLimelightNetworkTablesName);
 
-    // botpose from network tables uses degrees, not radians, so need to convert
-    double rx = Units.degreesToRadians(visionBotPose[3]);
-    double ry = Units.degreesToRadians(visionBotPose[4]);
-    double rz = Units.degreesToRadians((visionBotPose[5] + 360) % 360);
+      if (visionBotPose.length != 0) {
+        double tx = visionBotPose[0] + kFieldTranslationOffsetX;
+        double ty = visionBotPose[1] + kFieldTranslationOffsetY;
+        double tz = visionBotPose[2];
 
-    double tl = Limelight.getLatency_Pipeline(kLimelightNetworkTablesName);
+        // botpose from network tables uses degrees, not radians, so need to convert
+        double rx = visionBotPose[3];
+        double ry = visionBotPose[4];
+        double rz = ((visionBotPose[5] + 360) % 360);
 
-    Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), new Rotation2d(rx, ry));
+        double tl = Limelight.getLatency_Pipeline(kLimelightNetworkTablesName);
 
-    if (Limelight.hasValidTargets(kLimelightNetworkTablesName)
-        && tx != 0
-        && ty != 0
-        && canAddVisionMeasurement(limelightPose)) {
-      poseEstimator.addVisionMeasurement(
-          limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+        Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
+
+        if (canAddVisionMeasurement(limelightPose)) {
+          poseEstimator.addVisionMeasurement(
+              limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+        }
+
+        limelightLocalizationField.setRobotPose(limelightPose);
+      }
     }
-
-    limelightLocalizationField.setRobotPose(limelightPose);
 
     for (SwerveModule mod : swerveModules) {
       SmartDashboard.putNumber(

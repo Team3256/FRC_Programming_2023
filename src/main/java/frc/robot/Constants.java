@@ -468,6 +468,8 @@ public final class Constants {
     public static final String kLimelightNetworkTablesName = "limelight";
     public static final double kLimelightTranslationThreshold = 1; // 1 meter
     public static final double kLimelightRotationThreshold = 0.1;
+    public static final double kFieldTranslationOffsetX = 6;
+    public static final double kFieldTranslationOffsetY = 5;
     Matrix<N3, N1> visionMeasurementStdDevs;
   }
 }
