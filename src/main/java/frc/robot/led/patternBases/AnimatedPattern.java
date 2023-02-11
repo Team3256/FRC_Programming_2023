@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.ezled.patternBases;
+package frc.robot.led.patternBases;
 
 public class AnimatedPattern extends LEDPattern {
   private LEDPattern[] keyFrames;

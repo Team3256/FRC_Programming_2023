@@ -5,9 +5,9 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.ezled.patternBases;
+package frc.robot.led.patternBases;
 
-import frc.robot.ezled.patterns.OffPattern;
+import frc.robot.led.patterns.OffPattern;
 
 public class BlinkingPattern extends AnimatedPattern {
   private final int onFrames;

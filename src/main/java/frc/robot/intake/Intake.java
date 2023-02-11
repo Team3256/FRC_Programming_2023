@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase implements CANTestable {
     intakeMotor.neutralOutput();
   }
 
-  public boolean test() {
+  public boolean CANTest() {
     System.out.println("Testing intake CAN:");
     boolean result = CANDeviceTester.testTalonFX(intakeMotor);
     System.out.println("Intake CAN connected: " + result);

@@ -5,17 +5,17 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.ezled;
+package frc.robot.led;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.ezled.patternBases.LEDPattern;
-import frc.robot.ezled.patterns.BlinkingConePattern;
-import frc.robot.ezled.patterns.BlinkingCubePattern;
+import frc.robot.led.patternBases.LEDPattern;
+import frc.robot.led.patterns.BlinkingConePattern;
+import frc.robot.led.patterns.BlinkingCubePattern;
 import java.util.Arrays;
 
-public class EZLED extends SubsystemBase {
+public class LED extends SubsystemBase {
   private final int length;
   private final int sections;
   private final LEDSection[] LEDSections;
@@ -28,7 +28,7 @@ public class EZLED extends SubsystemBase {
    * @param port PWM port on the RoboRio
    * @param LEDSectionLengths An array of LED section lengths
    */
-  public EZLED(int port, int[] LEDSectionLengths) {
+  public LED(int port, int[] LEDSectionLengths) {
     // initialize object
     length = Arrays.stream(LEDSectionLengths).sum();
     sections = LEDSectionLengths.length;

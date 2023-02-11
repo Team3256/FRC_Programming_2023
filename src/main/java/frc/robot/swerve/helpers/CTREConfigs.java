@@ -39,7 +39,6 @@ public final class CTREConfigs {
     swerveAngleFXConfig.slot0.kD = kAngleKD;
     swerveAngleFXConfig.slot0.kF = kAngleKF;
     swerveAngleFXConfig.supplyCurrLimit = angleSupplyLimit;
-    swerveAngleFXConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
     /* Swerve Drive Motor Configuration */
     SupplyCurrentLimitConfiguration driveSupplyLimit =
@@ -54,7 +53,6 @@ public final class CTREConfigs {
     swerveDriveFXConfig.slot0.kD = kDriveKD;
     swerveDriveFXConfig.slot0.kF = kDriveKF;
     swerveDriveFXConfig.supplyCurrLimit = driveSupplyLimit;
-    swerveDriveFXConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
     swerveDriveFXConfig.openloopRamp = kOpenLoopRamp;
     swerveDriveFXConfig.closedloopRamp = kClosedLoopRamp;
 
