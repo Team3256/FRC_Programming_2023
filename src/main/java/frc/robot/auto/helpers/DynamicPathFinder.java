@@ -7,19 +7,15 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.DynamicPathGenerationConstants.*;
+import static frc.robot.Constants.FieldConstants;
+import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
 
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.swerve.SwerveConstants;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/ Adapted for Team 3256's
@@ -34,32 +30,36 @@ public class DynamicPathFinder {
   double[] dist;
   int[] pre;
   double[] priority;
+
   /**
    * Finds the shortest distance between two nodes using Warrior-star algorithm
+   *
    * @param graph an adj matrix: graph[i][j] is cost from i->j, if graph[i][j] is 0 then no edge
    * @param src start node
    * @param sink end node
    */
-  public DynamicPathFinder (double[][] graph, int src, int sink){
-    this.src=src;
-    this.sink=sink;
-    this.graph=graph;
+  public DynamicPathFinder(double[][] graph, int src, int sink) {
+    this.src = src;
+    this.sink = sink;
+    this.graph = graph;
   }
+
   public ArrayList<Integer> findPath() {
-    //time to travel from src to to all other nodes
-    dist= new double[graph.length];
+    // This contains the time to travel from src to to all other nodes
+    dist = new double[graph.length];
+    pre = new int[graph.length];
+
+    // Initializing with a distance of "Infinity"
     Arrays.fill(dist, Double.MAX_VALUE);
     dist[src] = 0;
 
-    //previous node for each node's best path
-    pre = new int[graph.length];
-
-    // This contains the priorities with which to visit the nodes, calculated using the heuristic.
+    // This contains the priorities with which to visit the nodes, calculated using
+    // the heuristic.
     priority = new double[graph.length];
     Arrays.fill(priority, Double.MAX_VALUE);
     priority[src] = heuristic(poseIndexes[src], poseIndexes[sink]);
 
-    //track which nodes are visited
+    // track which nodes are visited
     boolean[] vis = new boolean[graph.length];
 
     // run until reached termination state
@@ -77,7 +77,7 @@ public class DynamicPathFinder {
       // no paths available: return null
       if (cur == -1) {
         return null;
-      } 
+      }
 
       // at goal node: generate path and return it
       else if (cur == sink) {
@@ -104,36 +104,65 @@ public class DynamicPathFinder {
     }
   }
 
-  private double getPathTime(ArrayList<Integer> path){
-    List<PathPoint> waypoints = new ArrayList<>();
-    for (int node : path) waypoints.add(new PathPoint(poseIndexes[node].getTranslation(), poseIndexes[node].getRotation()));
-    PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, waypoints);
+  private double getPathTime(ArrayList<Integer> path) {
+    PathPlannerTrajectory trajectory = new PathPlannerTrajectory();
     return trajectory.getTotalTimeSeconds();
   }
 
-  private ArrayList<Integer> getBestPathTo(int node){
+  private ArrayList<Integer> getBestPathTo(int node) {
     ArrayList<Integer> ret = new ArrayList<>();
     int cur = node;
-    while (cur!=src){
+    while (cur != src) {
       ret.add(cur);
-      cur=pre[cur];
+      cur = pre[cur];
     }
     ret.add(cur);
     return ret;
   }
 
   /**
-   * estimate time p1->p2, lower than real
-   * currently simply time to travel euclidean dist
-   *  */  
-  private static double heuristic(Pose2d pose1, Pose2d pose2) {
-    return pose1.getTranslation().getDistance(pose2.getTranslation())/SwerveConstants.kMaxSpeed;
+   * an estimation of distance from node x to y that is guaranteed to be lower than the actual
+   * distance E.g. straight-line distance
+   */
+  public static double heuristic(Pose2d pose1, Pose2d pose2) {
+    if (isPathConnectionValid(pose1, pose2))
+      return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
+    else return Double.MAX_VALUE;
   }
 
-  //TODO: Implement method to detect if there is an obstacle in between 2 poses
-  private static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
+  // TODO: Implement method to detect if there is an obstacle in between 2 poses
+  public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
+
+    for (Translation2d[] chargingStationCorner :
+        FieldConstants.Community.kChargingStationSegments) {
+      if (lineSegmentsIntersecting(
+          chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
+        return false;
+      }
+    }
     return true;
+  }
+
+  public static boolean lineSegmentsIntersecting(
+      Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
+    if (start1.getX() > end1.getX()) {
+      if ((start1.getX() > start2.getX() && start2.getX() > end1.getX())
+          || (start1.getX() > end2.getX() && end2.getX() > end1.getX())) return true;
+    } else {
+      if ((end1.getX() > start2.getX() && start2.getX() > start1.getX())
+          || (end1.getX() > end2.getX() && end2.getX() > start1.getX())) return true;
+    }
+
+    if (start2.getX() > end2.getX()) {
+      if ((start2.getX() > start1.getX() && start1.getX() > end2.getX())
+          || (start2.getX() > end1.getX() && end1.getX() > end2.getX())) return true;
+    } else {
+      if ((end2.getX() > start1.getX() && start1.getX() > start2.getX())
+          || (end2.getX() > end1.getX() && end1.getX() > start2.getX())) return true;
+    }
+
+    return false;
   }
 }

@@ -7,7 +7,7 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -39,7 +39,8 @@ public class DynamicPathGenerator {
             pathAdjacencyGraph, startPose.getTranslation(), goalPose.getTranslation());
 
     // The last two nodes are the start and goal nodes in the updatedGraph
-    DynamicPathFinder pathFinder = new DynamicPathFinder(updatedGraph, updatedGraph.length-2,updatedGraph.length-1);
+    DynamicPathFinder pathFinder =
+        new DynamicPathFinder(updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1);
     ArrayList<Integer> pathIndexes = pathFinder.findPath();
 
     List<PathPoint> waypoints = new ArrayList<>();
