@@ -16,6 +16,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.swerve.SwerveConstants;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/ Adapted for Team 3256's
@@ -53,7 +55,6 @@ public class DynamicPathFinder {
     // Previous node in maximal math to node
     pre = new int[graph.length];
 
-
     // priorities with which to visit the nodes
     priority = new double[graph.length];
     Arrays.fill(priority, Double.MAX_VALUE);
@@ -86,9 +87,11 @@ public class DynamicPathFinder {
 
       // update all unvisited neighboring nodes
       for (int node = 0; node < graph[cur].length; node++) {
+        List<Integer> path = getBestPathTo(cur);
         if (graph[cur][node] != 0 && !vis[node]) {
+          path.add(node);
           // if path over this edge is shorter
-          if (dist[cur] + graph[cur][node] < dist[node]) {
+          if (getPathTime(getBestPathTo()) < dist[node]) {
             // save this path as new shortest path
             dist[node] = dist[cur] + graph[cur][node];
             pre[node] = cur;
@@ -117,6 +120,7 @@ public class DynamicPathFinder {
       cur = pre[cur];
     }
     ret.add(cur);
+    Collections.reverse(ret);
     return ret;
   }
 
@@ -146,7 +150,6 @@ public class DynamicPathFinder {
 
   public static boolean lineSegmentsIntersecting(
       Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
-    // TODO: add buffer
     if (start1.getX() > end1.getX()) {
       if ((start1.getX() > start2.getX() && start2.getX() > end1.getX())
           || (start1.getX() > end2.getX() && end2.getX() > end1.getX())) return true;
