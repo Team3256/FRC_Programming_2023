@@ -81,9 +81,9 @@ public final class AutoConstants {
         };
 
     // Will be filled by start and end pose
-    private static final double emptyRow[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private static final double[] emptyRow= {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    public static final double adjacencyGraph[][] =
+    public static final double[][] origGraph=
         new double[][] {
           {0.0000, 1.4431, 0.0000, 0.0000, 0.0000, 3.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
           {1.4431, 0.0000, 1.2000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
@@ -94,8 +94,8 @@ public final class AutoConstants {
           {0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.5232, 0.0000, 1.2000, 0.0000, 0.0000, 0.0000},
           {0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.2000, 0.0000, 1.1402, 0.0000, 0.0000},
           {0.0000, 0.0000, 0.0000, 0.0000, 1.7000, 0.0000, 0.0000, 1.1402, 0.0000, 0.0000, 0.0000},
-          emptyRow,
-          emptyRow
+          emptyRow.clone(),
+          emptyRow.clone()
         };
 
     public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 5);

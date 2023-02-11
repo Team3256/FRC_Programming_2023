@@ -39,7 +39,7 @@ public class DynamicPathGenerationTest {
       pw.println(json.toJSONString());
       pw.close();
     } catch (IOException e) {
-      System.out.println("An error occured.");
+      System.out.println("IO error occurred.");
       e.printStackTrace();
     }
   }

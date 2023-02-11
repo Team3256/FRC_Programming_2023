@@ -21,19 +21,18 @@ import java.util.List;
 public class DynamicPathGenerator {
   private final Pose2d startPose;
   private final Pose2d goalPose;
-  private AutoCommandRunner commandRunner;
-  private double[][] pathAdjacencyGraph = adjacencyGraph;
-  private PathPlannerTrajectory pathToScoringLocation;
+  private double[][] graph;
 
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     this.startPose = startPose;
     this.goalPose = goalPose;
+    graph= new double[origGraph.length][origGraph[0].length];
+    for (int i=0;i<origGraph.length;i++) graph[i]=origGraph[i].clone();
   }
 
   public List<Pose2d> computePath() {
-    double[][] updatedGraph =
-        addStartAndEndNodes(
-            pathAdjacencyGraph, startPose.getTranslation(), goalPose.getTranslation());
+    addStartAndEndNodes(
+                graph, startPose.getTranslation(), goalPose.getTranslation());
 
     ArrayList<Pose2d> poses = new ArrayList<>();
     for (Pose2d pose : poseIndexes) poses.add(pose);
@@ -66,31 +65,16 @@ public class DynamicPathGenerator {
     return PathPlanner.generatePath(dynamicPathConstraints, waypoints);
   }
 
-  private double[][] addStartAndEndNodes(
+  private void addStartAndEndNodes(
       double[][] graph, Translation2d start, Translation2d goal) {
     int length = graph[0].length;
-    // Second last index
-    int startNodeIndex = length - 2 - 1;
-    // Last index
-    int goalNodeIndex = length - 1 - 1;
-
-    double startNodeRow[] = new double[length - 2];
-    double goalNodeRow[] = new double[length - 2];
-
+    int startNodeIndex = length-2;
+    int goalNodeIndex = length-1;
     for (int i = 0; i < poseIndexes.length; ++i) {
       double startNodeDistance = start.getDistance(poseIndexes[i].getTranslation());
       double goalNodeDistance = goal.getDistance(poseIndexes[i].getTranslation());
-
-      startNodeRow[i] = startNodeDistance;
       graph[i][startNodeIndex] = startNodeDistance;
-
-      goalNodeRow[i] = goalNodeDistance;
       graph[i][goalNodeIndex] = goalNodeDistance;
     }
-
-    graph[startNodeIndex] = startNodeRow;
-    graph[goalNodeIndex] = goalNodeRow;
-
-    return graph;
   }
 }
