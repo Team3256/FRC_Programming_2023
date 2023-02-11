@@ -10,13 +10,16 @@ package frc.robot.auto.helpers;
 import static frc.robot.Constants.FieldConstants;
 import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
 
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.swerve.SwerveConstants;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * CREDIT FOR CODE: <a href="https://www.algorithms-and-technologies.com/a_star/java/">...</a>
@@ -110,7 +113,9 @@ public class DynamicPathFinder {
   }
 
   private double getPathTime(ArrayList<Integer> path) {
-    PathPlannerTrajectory trajectory = new PathPlannerTrajectory();
+    List<PathPoint> waypoints = new ArrayList<>();
+    for (int node : path) waypoints.add(new PathPoint(poseIndexes[node].getTranslation(), poseIndexes[node].getRotation()));
+    PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, waypoints);
     return trajectory.getTotalTimeSeconds();
   }
 
@@ -152,6 +157,7 @@ public class DynamicPathFinder {
 
   public static boolean lineSegmentsIntersecting(
       Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
+    // TODO: add buffer
     if (start1.getX() > end1.getX()) {
       if ((start1.getX() > start2.getX() && start2.getX() > end1.getX())
           || (start1.getX() > end2.getX() && end2.getX() > end1.getX())) return true;
