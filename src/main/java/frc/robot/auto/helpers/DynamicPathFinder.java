@@ -42,10 +42,11 @@ public class DynamicPathFinder {
     // This contains the priorities with which to visit the nodes, calculated using the heuristic.
     double[] priorities = new double[graph.length];
     Arrays.fill(priorities, Double.MAX_VALUE);
-    
-    // start node has a priority equal to straight line distance to goal. It will be
-    // the first to be expanded.
+
+    // start node has a priority equal to straight line distance to goal
     priorities[start] = heuristic(poseIndexes[start], poseIndexes[goal]);
+
+    //track which nodes are visited
     boolean[] visited = new boolean[graph.length];
 
     // While there are nodes left
@@ -64,6 +65,7 @@ public class DynamicPathFinder {
       if (lowestPriorityIndex == -1) {
         return null;
       } 
+
       // at goal node: gen path and ret
       else if (lowestPriorityIndex == goal) {
         ArrayList<Integer> ret = new ArrayList<Integer>();
@@ -76,42 +78,29 @@ public class DynamicPathFinder {
         return ret;
       }
 
-      // System.out
-      // .println("Visiting node " + lowestPriorityIndex + " with currently lowest
-      // priority of " + lowestPriority);
-
-      // ...then, for all neighboring nodes that haven't been visited yet....
+      // for all unvisited neighboring nodes
       for (int i = 0; i < graph[lowestPriorityIndex].length; i++) {
         if (graph[lowestPriorityIndex][i] != 0 && !visited[i]) {
-          // ...if the path over this edge is shorter...
+          // if path over this edge is shorter
           if (distances[lowestPriorityIndex] + graph[lowestPriorityIndex][i] < distances[i]) {
-            // ...save this path as new shortest path
+            // save this path as new shortest path
             distances[i] = distances[lowestPriorityIndex] + graph[lowestPriorityIndex][i];
-            // ...and set the priority with which we should continue with this node
+            prev[i] = lowestPriorityIndex;
+
+            // set the priority for the node
             priorities[i] = distances[i] + heuristic(poseIndexes[i], poseIndexes[goal]);
-            System.out.println(
-                "Updating distance of node "
-                    + i
-                    + " to "
-                    + distances[i]
-                    + " and priority to "
-                    + priorities[i]);
           }
         }
       }
 
-      // Lastly, note that we are finished with this node.
+      // mark as visited
       visited[lowestPriorityIndex] = true;
-      // System.out.println("Visited nodes: " + Arrays.toString(visited));
-      // System.out.println("Currently lowest distances: " +
-      // Arrays.toString(distances));
-
     }
   }
 
   /**
-   * an estimation of distance from node x to y that is guaranteed to be lower than the actual distance
-   * E.g. straight-line distance
+   * An estimation of distance from node x to y that is guaranteed to be lower than the actual distance
+   * Currently it is simply straight-line distance
    *  */  
   private static double heuristic(Pose2d pose1, Pose2d pose2) {
     return pose1.getTranslation().getDistance(pose2.getTranslation());
