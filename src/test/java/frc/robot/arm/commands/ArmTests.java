@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.tests;
+package frc.robot.arm.commands;
 
 import static org.junit.jupiter.api.Assertions;
 
@@ -14,10 +14,9 @@ import java.beans.Transient;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
-import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.arm.ArmSubsystem;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tests;
+import org.junit.jupiter.api.Test;
 
 public class ArmTests extends UnitTestBase {
 

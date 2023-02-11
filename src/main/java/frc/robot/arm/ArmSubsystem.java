@@ -90,8 +90,8 @@ public class ArmSubsystem extends SubsystemBase {
     System.out.println("arm off");
   }
 
-  public double calculateFeedForward(double velocity) {
-    return armFeedforward.calculate(armSim.getAngleRads(), armSim.getVelocityRadPerSec());
+  public double calculateFeedForward(double angle, double velocity) {
+    return armFeedforward.calculate(angle, velocity);
   }
 
   public void setInputVoltage(double voltage) {
