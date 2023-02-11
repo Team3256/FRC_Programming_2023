@@ -9,13 +9,17 @@ package frc.robot.auto.helpers;
 
 import static frc.robot.Constants.DynamicPathGenerationConstants.*;
 
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.swerve.SwerveConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/ Adapted for Team 3256's
@@ -104,9 +108,12 @@ public class DynamicPathFinder {
   }
 
   private double getPathTime(ArrayList<Integer> path){
-    PathPlannerTrajectory trajectory = new PathPlannerTrajectory();
+    List<PathPoint> waypoints = new ArrayList<>();
+    for (int node : path) waypoints.add(new PathPoint(poseIndexes[node].getTranslation(), poseIndexes[node].getRotation()));
+    PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, waypoints);
     return trajectory.getTotalTimeSeconds();
   }
+  
   private ArrayList<Integer> getBestPathTo(int node){
     ArrayList<Integer> ret = new ArrayList<>();
     int cur = node;
