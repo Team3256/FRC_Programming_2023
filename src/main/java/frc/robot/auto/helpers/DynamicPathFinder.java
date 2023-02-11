@@ -37,6 +37,7 @@ public class DynamicPathFinder {
   double[] priority;
 
   static double INF = Double.MAX_VALUE / 10;
+  boolean debug = true;
 
   /**
    * Finds the shortest distance between two nodes using Warrior-star algorithm
@@ -79,7 +80,9 @@ public class DynamicPathFinder {
           cur = node;
         }
       }
-
+      if (debug) {
+        System.out.println("cur:" + cur);
+      }
       // No paths available
       if (cur == -1) {
         ArrayList<Integer> ret = new ArrayList<>();
@@ -90,16 +93,22 @@ public class DynamicPathFinder {
 
       // Found shortest path to sink
       else if (cur == sink) {
+        if (debug) System.out.println("Done!");
         return getStoredPathTo(sink);
       }
 
       // Update all unvisited neighboring nodes
       for (int node = 0; node < graph[cur].length; node++) {
         ArrayList<Integer> path = getStoredPathTo(cur);
-        if (graph[cur][node] != 0 && !vis[node]) {
+        if (poses.get(node).getX() < poses.get(cur).getX() && !vis[node]) {
           path.add(node);
           double pathTime = getPathTime(path);
           // If path over this edge is better
+          if (debug) {
+            System.out.println("try:" + node);
+            System.out.println("path:" + path);
+            System.out.println("pathTime:" + pathTime);
+          }
           if (pathTime < dist[node]) {
             // Save path as new current shortest path
             dist[node] = pathTime;
@@ -107,6 +116,13 @@ public class DynamicPathFinder {
 
             // Update node priority
             priority[node] = dist[node] + heuristic(poses.get(node), poses.get(sink));
+
+            if (debug) {
+              System.out.println("next:" + node);
+              System.out.println("dist:" + dist[node]);
+              System.out.println("heuristic:" + heuristic(poses.get(node), poses.get(sink)));
+              System.out.println("priority:" + priority[node]);
+            }
           }
           path.remove(path.size() - 1);
         }
@@ -118,6 +134,9 @@ public class DynamicPathFinder {
   }
 
   private double getPathTime(ArrayList<Integer> path) {
+    for (int i = 0; i < path.size() - 1; i++) {
+      if (!isPathConnectionValid(poses.get(path.get(i)), poses.get(path.get(i + 1)))) return INF;
+    }
     List<PathPoint> waypoints = new ArrayList<>();
     for (int node : path)
       waypoints.add(new PathPoint(poses.get(node).getTranslation(), poses.get(node).getRotation()));
@@ -142,9 +161,9 @@ public class DynamicPathFinder {
    * travel euclidean distance, without allowing illegal moves
    */
   public static double heuristic(Pose2d pose1, Pose2d pose2) {
-    if (isPathConnectionValid(pose1, pose2))
-      return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
-    else return INF;
+    // if (isPathConnectionValid(pose1, pose2))
+    return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
+    // else return INF;
   }
 
   public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
@@ -153,33 +172,30 @@ public class DynamicPathFinder {
 
     for (Translation2d[] chargingStationCorner :
         FieldConstants.Community.kChargingStationSegments) {
-      if (lineSegmentsIntersecting(
+      if (doIntersect(
           chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
+        System.out.println("Pose1:" + pose1 + ", Pose2:" + pose2 + " FAIL");
         return false;
       }
     }
     return true;
   }
 
-  public static boolean lineSegmentsIntersecting(
+  static int orientation(Translation2d p, Translation2d q, Translation2d r) {
+    double val =
+        (q.getY() - p.getY()) * (r.getX() - q.getX())
+            - (q.getX() - p.getX()) * (r.getY() - q.getY());
+
+    return (val > 0) ? 1 : 2; // CW/CCW
+  }
+
+  public static boolean doIntersect(
       Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
-    // TODO: add buffer
-    if (start1.getX() > end1.getX()) {
-      if ((start1.getX() > start2.getX() && start2.getX() > end1.getX())
-          || (start1.getX() > end2.getX() && end2.getX() > end1.getX())) return true;
-    } else {
-      if ((end1.getX() > start2.getX() && start2.getX() > start1.getX())
-          || (end1.getX() > end2.getX() && end2.getX() > start1.getX())) return true;
-    }
+    int o1 = orientation(start1, end1, start2);
+    int o2 = orientation(start1, end1, end2);
+    int o3 = orientation(start2, end2, start1);
+    int o4 = orientation(start2, end2, end1);
 
-    if (start2.getX() > end2.getX()) {
-      if ((start2.getX() > start1.getX() && start1.getX() > end2.getX())
-          || (start2.getX() > end1.getX() && end1.getX() > end2.getX())) return true;
-    } else {
-      if ((end2.getX() > start1.getX() && start1.getX() > start2.getX())
-          || (end2.getX() > end1.getX() && end1.getX() > start2.getX())) return true;
-    }
-
-    return false;
+    return (o1 != o2 && o3 != o4);
   }
 }
