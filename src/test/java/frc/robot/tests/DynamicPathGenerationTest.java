@@ -15,8 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.simple.*;
 import org.junit.jupiter.api.Test;
 
 public class DynamicPathGenerationTest {
@@ -36,7 +35,8 @@ public class DynamicPathGenerationTest {
       PrintWriter pw =
           new PrintWriter(
               new FileWriter("src/main/deploy/pathplanner/DynamicPathGenerationTest.path"));
-      pw.println(json.toJSONString());
+
+      json.writeJSONString(pw);
       pw.close();
     } catch (IOException e) {
       System.out.println("IO error occurred.");
@@ -72,6 +72,12 @@ public class DynamicPathGenerationTest {
     ret.put("velOverride", null);
     ret.put("isLocked", true);
     ret.put("isStopPoint", false);
+    JSONObject stopEvent = new JSONObject();
+    stopEvent.put("names", new JSONArray());
+    stopEvent.put("executionBehavior", "parallel");
+    stopEvent.put("waitBehavior", "none");
+    stopEvent.put("waitTime", 0);
+    ret.put("stopEvent", stopEvent);
     return ret;
   }
 

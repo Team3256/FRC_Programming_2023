@@ -41,7 +41,9 @@ public class DynamicPathGenerator {
     poses.add(goalPose);
 
     if (debug) {
-      System.out.println("Poses:" + poses);
+      System.out.println("Poses:");
+      System.out.println(poses);
+      System.out.println("Graph:");
       for (int r = 0; r < graph.length; r++) {
         System.out.println(Arrays.toString(graph[r]));
       }
@@ -54,7 +56,11 @@ public class DynamicPathGenerator {
     List<Pose2d> ret = new ArrayList<>();
     ArrayList<Integer> pathIndexes = pathFinder.findPath();
     for (int index : pathIndexes) {
-      ret.add(poseIndexes[index]);
+      ret.add(poses.get(index));
+    }
+    if (debug) {
+      System.out.println("pathIndexes:");
+      System.out.println(pathIndexes);
     }
     return ret;
   }
