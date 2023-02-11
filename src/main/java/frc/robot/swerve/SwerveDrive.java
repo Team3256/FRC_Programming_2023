@@ -28,10 +28,10 @@ import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase implements CANTestable {
-  private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
-  private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
-  private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
-  private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
+  public final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
+  public final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
+  public final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
+  public final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
   private final Field2d field = new Field2d();
 
   private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
@@ -159,6 +159,17 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     double[] ypr = new double[3];
     gyro.getYawPitchRoll(ypr);
     return (kInvertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    System.out.println("In SP");
+
+    for (SwerveModule mod : swerveModules) {
+      
+    }
+
+    periodic();
   }
 
   @Override

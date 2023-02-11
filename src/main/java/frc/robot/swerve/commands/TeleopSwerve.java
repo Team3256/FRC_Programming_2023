@@ -77,6 +77,8 @@ public class TeleopSwerve extends CommandBase {
     translation = new Translation2d(Math.pow(yAxis, 3), Math.pow(xAxis, 3)).times(kMaxSpeed);
     rotation = rAxis * kMaxAngularVelocity;
 
+    //    System.out.println("In Execute");
+
     if (elevatorSubsystem != null)
       swerveSubsystem.drive(
           translation, rotation, fieldRelative, openLoop, elevatorSubsystem.getElevatorPosition());

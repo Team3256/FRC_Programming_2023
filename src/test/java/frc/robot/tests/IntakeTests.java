@@ -31,7 +31,6 @@ public class IntakeTests extends UnitTestBase {
   @Test
   public void testIntakeCube() {
     IntakeCube command = new IntakeCube(intakeSubsystem);
-    command.initialize();
     runScheduler(1, command, intakeSubsystem);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
@@ -41,7 +40,6 @@ public class IntakeTests extends UnitTestBase {
   @Test
   public void testIntakeCone() {
     IntakeCone command = new IntakeCone(intakeSubsystem);
-    command.initialize();
     runScheduler(1, command, intakeSubsystem);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
