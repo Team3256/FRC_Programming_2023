@@ -16,7 +16,8 @@ import frc.robot.UnitTestBase;
 import frc.robot.auto.helpers.DynamicPathFinder;
 import org.junit.jupiter.api.Test;
 
-//TODO: make testIntersection() function that is called multiple times by testIntersections() to create cleaner code
+// TODO: make testIntersection() function that is called multiple times by testIntersections() to
+// create cleaner code
 public class DynamicPathFinderTest extends UnitTestBase {
   @Test
   public void testIntersections() {

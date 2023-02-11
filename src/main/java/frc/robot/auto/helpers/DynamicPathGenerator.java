@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DynamicPathGenerator {
-  private Pose2d startPose;
-  private Pose2d goalPose;
+  private final Pose2d startPose;
+  private final Pose2d goalPose;
   private AutoCommandRunner commandRunner;
   private double[][] pathAdjacencyGraph = adjacencyGraph;
   private PathPlannerTrajectory pathToScoringLocation;
@@ -32,17 +32,21 @@ public class DynamicPathGenerator {
 
   public List<Pose2d> computePath() {
     double[][] updatedGraph =
-            addStartAndEndNodes(
-                    pathAdjacencyGraph, startPose.getTranslation(), goalPose.getTranslation());
+        addStartAndEndNodes(
+            pathAdjacencyGraph, startPose.getTranslation(), goalPose.getTranslation());
 
+    ArrayList<Pose2d> poses = new ArrayList<>();
+    for (Pose2d pose : poseIndexes)poses.add(pose);
+    poses.add(startPose);
+    poses.add(goalPose);
     // The last two nodes are the start and goal nodes in the updatedGraph
     DynamicPathFinder pathFinder =
-            new DynamicPathFinder(updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1);
+        new DynamicPathFinder(updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1,  poses);
 
     // Path List
     List<Pose2d> ret = new ArrayList<>();
     ArrayList<Integer> pathIndexes = pathFinder.findPath();
-    for (int index : pathIndexes){
+    for (int index : pathIndexes) {
       ret.add(poseIndexes[index]);
     }
     return ret;
@@ -52,12 +56,12 @@ public class DynamicPathGenerator {
     List<Pose2d> path = computePath();
     List<PathPoint> waypoints = new ArrayList<>();
     waypoints.add(
-            new PathPoint(startPose.getTranslation(), new Rotation2d(), startPose.getRotation()));
+        new PathPoint(startPose.getTranslation(), new Rotation2d(), startPose.getRotation()));
     for (Pose2d pointPose : path) {
       waypoints.add(new PathPoint(pointPose.getTranslation(), pointPose.getRotation()));
     }
     waypoints.add(
-            new PathPoint(goalPose.getTranslation(), new Rotation2d(), goalPose.getRotation()));
+        new PathPoint(goalPose.getTranslation(), new Rotation2d(), goalPose.getRotation()));
     return PathPlanner.generatePath(dynamicPathConstraints, waypoints);
   }
 

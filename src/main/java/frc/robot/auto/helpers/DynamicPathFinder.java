@@ -30,6 +30,7 @@ public class DynamicPathFinder {
   double[][] graph;
   int src;
   int sink;
+  ArrayList<Pose2d> poses;
 
   double[] dist;
   int[] pre;
@@ -44,10 +45,11 @@ public class DynamicPathFinder {
    * @param src start node
    * @param sink end node
    */
-  public DynamicPathFinder(double[][] graph, int src, int sink) {
+  public DynamicPathFinder(double[][] graph, int src, int sink, ArrayList<Pose2d> poses) {
     this.src = src;
     this.sink = sink;
     this.graph = graph;
+    this.poses = poses;
   }
 
   public ArrayList<Integer> findPath() {
@@ -62,7 +64,7 @@ public class DynamicPathFinder {
     // Priorities with which to visit the nodes
     priority = new double[graph.length];
     Arrays.fill(priority, Double.MAX_VALUE);
-    priority[src] = heuristic(poseIndexes[src], poseIndexes[sink]);
+    priority[src] = heuristic(poses.get(src), poses.get(sink));
 
     // Visited nodes
     boolean[] vis = new boolean[graph.length];
@@ -101,7 +103,7 @@ public class DynamicPathFinder {
             pre[node] = cur;
 
             // Update node priority
-            priority[node] = dist[node] + heuristic(poseIndexes[node], poseIndexes[sink]);
+            priority[node] = dist[node] + heuristic(poses.get(node), poses.get(sink));
           }
           path.remove(path.size() - 1);
         }
@@ -114,7 +116,9 @@ public class DynamicPathFinder {
 
   private double getPathTime(ArrayList<Integer> path) {
     List<PathPoint> waypoints = new ArrayList<>();
-    for (int node : path) waypoints.add(new PathPoint(poseIndexes[node].getTranslation(), poseIndexes[node].getRotation()));
+    for (int node : path)
+      waypoints.add(
+          new PathPoint(poses.get(node).getTranslation(), poses.get(node).getRotation()));
     PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, waypoints);
     return trajectory.getTotalTimeSeconds();
   }
