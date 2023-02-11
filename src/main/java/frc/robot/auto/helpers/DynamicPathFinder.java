@@ -51,25 +51,24 @@ public class DynamicPathFinder {
   }
 
   public ArrayList<Integer> findPath() {
-    // This contains the time to travel from src to to all other nodes
+    // Time to travel from src to all other nodes
     dist = new double[graph.length];
     Arrays.fill(dist, Double.MAX_VALUE);
     dist[src] = 0;
 
-    // Previous node in maximal math to node
+    // Previous node in current optimal path to node
     pre = new int[graph.length];
 
-    // priorities with which to visit the nodes
+    // Priorities with which to visit the nodes
     priority = new double[graph.length];
     Arrays.fill(priority, Double.MAX_VALUE);
     priority[src] = heuristic(poseIndexes[src], poseIndexes[sink]);
 
-    // which nodes are visited
+    // Visited nodes
     boolean[] vis = new boolean[graph.length];
 
-    // run until reached termination state
     while (true) {
-      // find unvisited lowest priority node
+      // Find unvisited lowest priority node
       double curPriority = Integer.MAX_VALUE;
       int cur = -1;
       for (int node = 0; node < priority.length; node++) {
@@ -79,28 +78,29 @@ public class DynamicPathFinder {
         }
       }
 
-      // no paths available: return null
+      // No paths available
       if (cur == -1) {
         return null;
       }
 
-      // at goal node: return the path stored to it
+      // Found shortest path to sink
       else if (cur == sink) {
         return getStoredPathTo(sink);
       }
 
-      // update all unvisited neighboring nodes
+      // Update all unvisited neighboring nodes
       for (int node = 0; node < graph[cur].length; node++) {
         ArrayList<Integer> path = getStoredPathTo(cur);
         if (graph[cur][node] != 0 && !vis[node]) {
           path.add(node);
-          // if path over this edge is shorter
-          if (getPathTime(path) < dist[node]) {
-            // save path as new shortest path
-            dist[node] = dist[cur] + graph[cur][node];
+          double pathTime = getPathTime(path);
+          // If path over this edge is better
+          if (pathTime < dist[node]) {
+            // Save path as new current shortest path
+            dist[node] = pathTime;
             pre[node] = cur;
 
-            // update priority for the node
+            // Update node priority
             priority[node] = dist[node] + heuristic(poseIndexes[node], poseIndexes[sink]);
           }
           path.remove(path.size() - 1);
