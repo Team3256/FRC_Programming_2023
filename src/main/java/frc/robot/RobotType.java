@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.swerve.SwerveConstants.AlphaOffsets;
-import static frc.robot.swerve.SwerveConstants.ZipTideOffsets;
+import static frc.robot.swerve.SwerveConstants.ZiptideOffsets;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -16,7 +16,7 @@ public enum RobotType {
   ZIPTIDE {
     @Override
     public Rotation2d getOffset(int module) {
-      return ZipTideOffsets[module];
+      return ZiptideOffsets[module];
     }
   },
 
