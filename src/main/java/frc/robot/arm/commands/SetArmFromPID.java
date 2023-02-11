@@ -10,7 +10,7 @@ package frc.robot.arm.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.arm.ArmConstants;
 import frc.robot.arm.ArmSubsystem;
 import java.util.function.DoubleSupplier;
 
@@ -18,6 +18,7 @@ public class SetArmFromPID extends PIDCommand {
   DoubleSupplier velocity;
   ArmSubsystem armSubsystem;
   boolean movingSetpoint = false;
+
   // TODO: Use ArmK
   public SetArmFromPID(ArmSubsystem armSubsystem) {
     super(
@@ -33,6 +34,7 @@ public class SetArmFromPID extends PIDCommand {
 
     this.velocity = () -> SmartDashboard.getNumber("Arm Angle", 0);
     this.armSubsystem = armSubsystem;
+    addRequirements(armSubsystem);
   }
 
   public SetArmFromPID(ArmSubsystem armSubsystem, double velocity) {
@@ -45,6 +47,7 @@ public class SetArmFromPID extends PIDCommand {
 
     this.velocity = () -> velocity;
     this.armSubsystem = armSubsystem;
+    addRequirements(armSubsystem);
   }
 
   @Override
@@ -54,8 +57,8 @@ public class SetArmFromPID extends PIDCommand {
     SmartDashboard.putNumber("Arm KFF", ArmConstants.kFF);
   }
 
-  // @Override // ?
-  public void end() {
+  @Override
+  public void end(boolean interrupted) {
     armSubsystem.setInputVoltage(0);
   }
 

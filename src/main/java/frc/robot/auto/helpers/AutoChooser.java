@@ -9,6 +9,7 @@ package frc.robot.auto.helpers;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.*;
+import java.util.List;
 
 public class AutoChooser {
   private static SendableChooser<Command> autoChooser;
@@ -17,6 +18,22 @@ public class AutoChooser {
 
     autoChooser = new SendableChooser<>();
     return autoChooser;
+  }
+
+  public static void createIncrementalPaths(String commandName, List<Command> commands) {
+    Command path = new InstantCommand();
+    for (int i = 0; i < commands.size(); i++) {
+      path = path.andThen(commands.get(i));
+      autoChooser.addOption(commandName + " - " + i, path);
+    }
+  }
+
+  public static void createIncrementalPaths(List<String> commandNames, List<Command> commands) {
+    Command path = new InstantCommand();
+    for (int i = 0; i < commands.size(); i++) {
+      path = path.andThen(commands.get(i));
+      autoChooser.addOption(commandNames.get(i), path);
+    }
   }
 
   public static Command getCommand() {
