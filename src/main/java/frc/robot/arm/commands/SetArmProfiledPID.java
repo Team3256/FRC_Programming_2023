@@ -26,10 +26,10 @@ public class SetArmProfiledPID extends ProfiledPIDCommand {
             ArmConstants.kP,
             ArmConstants.kI,
             ArmConstants.kD,
-            new TrapezoidProfile.Constraints(0, 0)),
+            ArmConstants.trapezoidProfileConstraints),
         armSubsystem::getAngularVelocityRPM,
         () -> 2000,
-        (output, setpoint) -> armSubsystem.setInputVoltage(output),
+        (output, setpoint) -> armSubsystem.setInputVoltage(output+fee),
         armSubsystem);
     this.armSubsystem = armSubsystem;
     addRequirements(armSubsystem);
