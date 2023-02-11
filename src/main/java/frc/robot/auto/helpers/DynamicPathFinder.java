@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/ Adapted for Team 3256's
+ * CREDIT FOR CODE: <a href="https://www.algorithms-and-technologies.com/a_star/java/">...</a> Adapted for Team 3256's
  * needs Used to perform the A-Star (A*) Algorithm to find the shortest path from a start to a
  * target node.
  */
@@ -32,7 +32,7 @@ public class DynamicPathFinder {
   int[] pre;
   double[] priority;
 
-  static double INF = Double.MAX_VALUE/2;
+  static double INF = Double.MAX_VALUE / 2;
 
   /**
    * Finds the shortest distance between two nodes using Warrior-star algorithm
@@ -100,7 +100,7 @@ public class DynamicPathFinder {
             // update priority for the node
             priority[node] = dist[node] + heuristic(poseIndexes[node], poseIndexes[sink]);
           }
-          path.remove(path.size()-1);
+          path.remove(path.size() - 1);
         }
       }
 
@@ -127,9 +127,8 @@ public class DynamicPathFinder {
   }
 
   /**
-   * an estimation of distance from node x to y that is guaranteed to be lower than the actual
-   * distance E.g. straight-line distance
-   * Currently it is time to travel euclidean distance, with illegal edges punished by INF
+   * estimate cost that is guaranteed to be lower than the actual distance Currently it is time to
+   * travel euclidean distance, without allowing illegal moves
    */
   public static double heuristic(Pose2d pose1, Pose2d pose2) {
     if (isPathConnectionValid(pose1, pose2))
