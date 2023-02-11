@@ -47,19 +47,19 @@ public class DynamicPathFinder {
   public ArrayList<Integer> findPath() {
     // This contains the time to travel from src to to all other nodes
     dist = new double[graph.length];
-    pre = new int[graph.length];
-
-    // Initializing with a distance of "Infinity"
     Arrays.fill(dist, Double.MAX_VALUE);
     dist[src] = 0;
 
-    // This contains the priorities with which to visit the nodes, calculated using
-    // the heuristic.
+    // Previous node in maximal math to node
+    pre = new int[graph.length];
+
+
+    // priorities with which to visit the nodes
     priority = new double[graph.length];
     Arrays.fill(priority, Double.MAX_VALUE);
     priority[src] = heuristic(poseIndexes[src], poseIndexes[sink]);
 
-    // track which nodes are visited
+    // which nodes are visited
     boolean[] vis = new boolean[graph.length];
 
     // run until reached termination state
