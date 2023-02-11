@@ -19,9 +19,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * CREDIT FOR CODE: <a href="https://www.algorithms-and-technologies.com/a_star/java/">...</a> Adapted for Team 3256's
- * needs Used to perform the A-Star (A*) Algorithm to find the shortest path from a start to a
- * target node.
+ * CREDIT FOR CODE: <a href="https://www.algorithms-and-technologies.com/a_star/java/">...</a>
+ * Adapted for Team 3256's needs Used to perform the A-Star (A*) Algorithm to find the shortest path
+ * from a start to a target node.
  */
 public class DynamicPathFinder {
   double[][] graph;
