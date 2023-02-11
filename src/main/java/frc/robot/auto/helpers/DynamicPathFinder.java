@@ -17,7 +17,6 @@ import frc.robot.swerve.SwerveConstants;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/ Adapted for Team 3256's
@@ -32,6 +31,8 @@ public class DynamicPathFinder {
   double[] dist;
   int[] pre;
   double[] priority;
+
+  static double INF = Double.MAX_VALUE/2;
 
   /**
    * Finds the shortest distance between two nodes using Warrior-star algorithm
@@ -80,14 +81,14 @@ public class DynamicPathFinder {
         return null;
       }
 
-      // at goal node: generate path and return it
+      // at goal node: return the path stored to it
       else if (cur == sink) {
-        return getBestPathTo(sink);
+        return getStoredPathTo(sink);
       }
 
       // update all unvisited neighboring nodes
       for (int node = 0; node < graph[cur].length; node++) {
-        ArrayList<Integer> path = getBestPathTo(cur);
+        ArrayList<Integer> path = getStoredPathTo(cur);
         if (graph[cur][node] != 0 && !vis[node]) {
           path.add(node);
           // if path over this edge is shorter
@@ -113,7 +114,7 @@ public class DynamicPathFinder {
     return trajectory.getTotalTimeSeconds();
   }
 
-  private ArrayList<Integer> getBestPathTo(int node) {
+  private ArrayList<Integer> getStoredPathTo(int node) {
     ArrayList<Integer> ret = new ArrayList<>();
     int cur = node;
     while (cur != src) {
@@ -128,11 +129,12 @@ public class DynamicPathFinder {
   /**
    * an estimation of distance from node x to y that is guaranteed to be lower than the actual
    * distance E.g. straight-line distance
+   * Currently it is time to travel euclidean distance, with illegal edges punished by INF
    */
   public static double heuristic(Pose2d pose1, Pose2d pose2) {
     if (isPathConnectionValid(pose1, pose2))
       return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
-    else return Double.MAX_VALUE;
+    else return INF;
   }
 
   public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
