@@ -7,7 +7,8 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.PIDConstants.TRANSLATION_FF;
+import static frc.robot.Constants.*;
+import static frc.robot.auto.AutoConstants.kTranslationFF;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -16,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 
 public class SwerveDriveController {
   PIDController xPositionController;
@@ -50,7 +50,8 @@ public class SwerveDriveController {
 
   public ChassisSpeeds calculate(
       Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters, Rotation2d angleRef) {
-    // If this is the first run, then we need to reset the theta controller to the current pose's
+    // If this is the first run, then we need to reset the theta controller to the
+    // current pose's
     // heading.
     if (firstIteration) {
       thetaController.reset(currentPose.getRotation().getRadians());
@@ -68,7 +69,7 @@ public class SwerveDriveController {
       }
     }
 
-    if (Constants.DEBUG) {
+    if (kDebugEnabled) {
       SmartDashboard.putNumber("Current Rotation", currentRotation * 180 / Math.PI);
       SmartDashboard.putNumber("Current Pose Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber(
@@ -76,12 +77,12 @@ public class SwerveDriveController {
     }
 
     // Calculate feedforward velocities (field-relative).
-    double xFF = linearVelocityRefMeters * poseRef.getRotation().getCos() * TRANSLATION_FF;
-    double yFF = linearVelocityRefMeters * poseRef.getRotation().getSin() * TRANSLATION_FF;
+    double xFF = linearVelocityRefMeters * poseRef.getRotation().getCos() * kTranslationFF;
+    double yFF = linearVelocityRefMeters * poseRef.getRotation().getSin() * kTranslationFF;
 
     double thetaFF = thetaController.calculate(currentRotation, angleRef.getRadians());
 
-    if (Constants.DEBUG) {
+    if (kDebugEnabled) {
       SmartDashboard.putNumber("Theta Current", currentRotation * 180 / Math.PI);
       SmartDashboard.putNumber("Theta Setpoint", angleRef.getDegrees());
     }
