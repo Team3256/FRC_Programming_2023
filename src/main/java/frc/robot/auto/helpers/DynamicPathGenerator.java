@@ -30,30 +30,33 @@ public class DynamicPathGenerator {
     this.goalPose = goalPose;
   }
 
-  public PathPlannerTrajectory computeTrajectory() {
+  public List<PathPoint> computePath() {
     PathPoint currentPoint =
-        new PathPoint(startPose.getTranslation(), new Rotation2d(), startPose.getRotation());
+            new PathPoint(startPose.getTranslation(), new Rotation2d(), startPose.getRotation());
 
     double[][] updatedGraph =
-        addStartAndEndNodes(
-            pathAdjacencyGraph, startPose.getTranslation(), goalPose.getTranslation());
+            addStartAndEndNodes(
+                    pathAdjacencyGraph, startPose.getTranslation(), goalPose.getTranslation());
 
     // The last two nodes are the start and goal nodes in the updatedGraph
     DynamicPathFinder pathFinder =
-        new DynamicPathFinder(updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1);
+            new DynamicPathFinder(updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1);
     ArrayList<Integer> pathIndexes = pathFinder.findPath();
 
     List<PathPoint> waypoints = new ArrayList<>();
     waypoints.add(
-        new PathPoint(startPose.getTranslation(), new Rotation2d(), startPose.getRotation()));
+            new PathPoint(startPose.getTranslation(), new Rotation2d(), startPose.getRotation()));
     for (int index : pathIndexes) {
       Pose2d pointPose = poseIndexes[index];
       waypoints.add(new PathPoint(pointPose.getTranslation(), pointPose.getRotation()));
     }
     waypoints.add(
-        new PathPoint(goalPose.getTranslation(), new Rotation2d(), goalPose.getRotation()));
+            new PathPoint(goalPose.getTranslation(), new Rotation2d(), goalPose.getRotation()));
+    return waypoints;
+  }
 
-    return PathPlanner.generatePath(dynamicPathConstraints, waypoints);
+  public PathPlannerTrajectory computeTrajectory() {
+    return PathPlanner.generatePath(dynamicPathConstraints, computePath());
   }
 
   private double[][] addStartAndEndNodes(

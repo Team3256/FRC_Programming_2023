@@ -21,5 +21,6 @@ public class DynamicPathGenerationTest {
 		Pose2d sink = new Pose2d(new Translation2d(2,3), new Rotation2d(0));
 		DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
 		PathPlannerTrajectory trajectory = generator.computeTrajectory();
+
 	}
 }

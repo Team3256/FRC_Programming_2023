@@ -40,13 +40,14 @@ public class DynamicPathFinder {
   /**
    * Finds the shortest distance between two nodes using Warrior-star algorithm
    *
+   * @param graph an adj matrix: graph[i][j] is cost from i->j, if graph[i][j] is 0 then no edge
    * @param src start node
    * @param sink end node
    */
-  public DynamicPathFinder(int src, int sink) {
+  public DynamicPathFinder(double[][] graph, int src, int sink) {
     this.src = src;
     this.sink = sink;
-    this.graph = adjacencyGraph;
+    this.graph = graph;
   }
 
   public ArrayList<Integer> findPath() {
