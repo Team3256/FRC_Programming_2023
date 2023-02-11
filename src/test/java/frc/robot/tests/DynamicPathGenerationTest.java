@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 public class DynamicPathGenerationTest {
   @Test
   public void testGeneratePath() {
-    Pose2d src = new Pose2d(new Translation2d(6, 3), new Rotation2d(0));
+    Pose2d src = new Pose2d(new Translation2d(8.46, 0.78), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<Pose2d> path = generator.computePath();
