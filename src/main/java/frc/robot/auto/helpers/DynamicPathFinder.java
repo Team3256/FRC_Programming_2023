@@ -87,18 +87,19 @@ public class DynamicPathFinder {
 
       // update all unvisited neighboring nodes
       for (int node = 0; node < graph[cur].length; node++) {
-        List<Integer> path = getBestPathTo(cur);
+        ArrayList<Integer> path = getBestPathTo(cur);
         if (graph[cur][node] != 0 && !vis[node]) {
           path.add(node);
           // if path over this edge is shorter
-          if (getPathTime(getBestPathTo()) < dist[node]) {
-            // save this path as new shortest path
+          if (getPathTime(path) < dist[node]) {
+            // save path as new shortest path
             dist[node] = dist[cur] + graph[cur][node];
             pre[node] = cur;
 
-            // set the priority for the node
+            // update priority for the node
             priority[node] = dist[node] + heuristic(poseIndexes[node], poseIndexes[sink]);
           }
+          path.remove(path.size()-1);
         }
       }
 
