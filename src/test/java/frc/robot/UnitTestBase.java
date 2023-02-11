@@ -28,8 +28,7 @@ public class UnitTestBase {
         com.ctre.phoenix.unmanaged.Unmanaged.feedEnable(100);
         command.execute();
         subsystem.simulationPeriodic();
-        if (command.isFinished())
-          command.end(false);
+        if (command.isFinished()) command.end(false);
         Thread.sleep(20);
         HAL.simPeriodicAfter();
       }

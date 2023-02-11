@@ -20,6 +20,7 @@ public final class SwerveConstants {
 
   public static final boolean kFieldRelative = true;
   public static final boolean kOpenLoop = true;
+  public static final double kPeriodicDeltaTime = 0.02;
 
   /* Meters per second squared */
   public static int kXAccelRateLimit = 15;
@@ -28,8 +29,7 @@ public final class SwerveConstants {
   public static int kYAccelRateLimit = 15;
   public static int kYDecelRateLimit = 10;
 
-  public static final COTSFalconSwerveConstants
-      kChosenModule = // TODO: This must be tuned to specific robot
+  public static final COTSFalconSwerveConstants kChosenModule = // TODO: This must be tuned to specific robot
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Drivetrain Constants */
@@ -43,12 +43,11 @@ public final class SwerveConstants {
    * No need to ever change this unless you are not doing a traditional
    * rectangular/square 4 module swerve
    */
-  public static final SwerveDriveKinematics kSwerveKinematics =
-      new SwerveDriveKinematics(
-          new Translation2d(kWheelBase / 2.0, kTrackWidth / 2.0),
-          new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0),
-          new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0),
-          new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0));
+  public static final SwerveDriveKinematics kSwerveKinematics = new SwerveDriveKinematics(
+      new Translation2d(kWheelBase / 2.0, kTrackWidth / 2.0),
+      new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0),
+      new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0),
+      new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0));
 
   /* Module Gear Ratios */
   public static final double kDriveGearRatio = kChosenModule.driveGearRatio;
@@ -92,7 +91,7 @@ public final class SwerveConstants {
   public static final double kDriveKD = 0.0;
   public static final double kDriveKF = 0.0;
 
-  public static final double[] kLockAngleOffsets = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
+  public static final double[] kLockAngleOffsets = { 0, 3 * Math.PI / 2, Math.PI / 2, Math.PI };
 
   /*
    * Drive Motor Characterization Values
@@ -106,8 +105,7 @@ public final class SwerveConstants {
   /** Meters per Second */
   public static final double kMaxSpeed = 4.5; // TODO: This must be tuned to specific robot
   /** Radians per Second */
-  public static final double kMaxAngularVelocity =
-      10.0; // TODO: This must be tuned to specific robot
+  public static final double kMaxAngularVelocity = 10.0; // TODO: This must be tuned to specific robot
 
   /* Neutral Modes */
   public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
@@ -128,8 +126,8 @@ public final class SwerveConstants {
     // public static final double kAngleOffset = 531.6064455; // 531 or 171 (ziptide
     // constants)
 
-    public static final SwerveModuleConstants constants =
-        new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
+    public static final SwerveModuleConstants constants = new SwerveModuleConstants(kDriveMotorID, kAngleMotorID,
+        kCanCoderID, kAngleOffset);
   }
 
   public static final class FrontRight {
@@ -139,8 +137,8 @@ public final class SwerveConstants {
     public static final Rotation2d kAngleOffset = Rotation2d.fromDegrees(320.7129);
     // public static final double kAngleOffset = 48.691406; // (ziptide constants)
 
-    public static final SwerveModuleConstants constants =
-        new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
+    public static final SwerveModuleConstants constants = new SwerveModuleConstants(kDriveMotorID, kAngleMotorID,
+        kCanCoderID, kAngleOffset);
   }
 
   public static final class BackLeft {
@@ -150,8 +148,8 @@ public final class SwerveConstants {
     public static final Rotation2d kAngleOffset = Rotation2d.fromDegrees(197.8418);
     // public static final double kAngleOffset = 174.770508; // (ziptide constants)
 
-    public static final SwerveModuleConstants constants =
-        new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, kAngleOffset);
+    public static final SwerveModuleConstants constants = new SwerveModuleConstants(kDriveMotorID, kAngleMotorID,
+        kCanCoderID, kAngleOffset);
   }
 
   public static final class BackRight {
@@ -161,8 +159,8 @@ public final class SwerveConstants {
     public static final Rotation2d angleOffset = Rotation2d.fromDegrees(88.9453);
     // public static final double angleOffset = 233.0419925; // (ziptide constants)
 
-    public static final SwerveModuleConstants constants =
-        new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, angleOffset);
+    public static final SwerveModuleConstants constants = new SwerveModuleConstants(kDriveMotorID, kAngleMotorID,
+        kCanCoderID, angleOffset);
   }
 
   public static final double kSensitivityScale = 0.20;

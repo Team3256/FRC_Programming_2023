@@ -7,7 +7,8 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.DynamicPathGenerationConstants.*;
+import static frc.robot.Constants.FieldConstants;
+import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -107,16 +108,46 @@ public class DynamicPathFinder {
   }
 
   /**
-   * an estimation of distance from node x to y that is guaranteed to be lower than the actual distance
-   * E.g. straight-line distance
-   *  */  
-  private static double heuristic(Pose2d pose1, Pose2d pose2) {
-    return pose1.getTranslation().getDistance(pose2.getTranslation());
+   * an estimation of distance from node x to y that is guaranteed to be lower than the actual
+   * distance E.g. straight-line distance
+   */
+  public static double heuristic(Pose2d pose1, Pose2d pose2) {
+    if (isPathConnectionValid(pose1, pose2))
+      return pose1.getTranslation().getDistance(pose2.getTranslation());
+    else return Double.MAX_VALUE;
   }
 
-  private static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
+  public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
+
+    for (Translation2d[] chargingStationCorner :
+        FieldConstants.Community.kChargingStationSegments) {
+      if (lineSegmentsIntersecting(
+          chargingStationCorner[0], chargingStationCorner[1], translation1, translation2))
+        return false;
+    }
     return true;
+  }
+
+  public static boolean lineSegmentsIntersecting(
+      Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
+    if (start1.getX() > end1.getX()) {
+      if ((start1.getX() > start2.getX() && start2.getX() > end1.getX())
+          || (start1.getX() > end2.getX() && end2.getX() > end1.getX())) return true;
+    } else {
+      if ((end1.getX() > start2.getX() && start2.getX() > start1.getX())
+          || (end1.getX() > end2.getX() && end2.getX() > start1.getX())) return true;
+    }
+
+    if (start2.getX() > end2.getX()) {
+      if ((start2.getX() > start1.getX() && start1.getX() > end2.getX())
+          || (start2.getX() > end1.getX() && end1.getX() > end2.getX())) return true;
+    } else {
+      if ((end2.getX() > start1.getX() && start1.getX() > start2.getX())
+          || (end2.getX() > end1.getX() && end1.getX() > start2.getX())) return true;
+    }
+
+    return false;
   }
 }

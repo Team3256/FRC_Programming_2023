@@ -7,7 +7,7 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;

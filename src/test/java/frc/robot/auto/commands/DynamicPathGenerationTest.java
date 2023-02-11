@@ -7,5 +7,4 @@
 
 package frc.robot.auto.commands;
 
-public class DynamicPathGenerationTest {
-}
+public class DynamicPathGenerationTest {}
