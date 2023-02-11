@@ -48,6 +48,8 @@ public final class Constants {
     public static final double kA = 0;
   }
 
+  public static final RobotType kRobotType = RobotType.ALPHA;
+
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
 
