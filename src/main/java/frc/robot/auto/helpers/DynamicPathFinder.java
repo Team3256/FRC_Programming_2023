@@ -29,10 +29,10 @@ public class DynamicPathFinder {
    * @param goal the node we're searching for
    * @return The shortest distance to the goal node. Can be easily modified to return the path.
    */
-  public static ArrayList<Pose2D> findPath(double[][] graph, int start, int goal) {
+  public static ArrayList<Integer> findPath(double[][] graph, int start, int goal) {
     // This contains the distances from the start node to all other nodes
     double[] distances = new double[graph.length];
-    Pose2D[] prev = new Pose2D[graph.length];
+    int[] prev = new int[graph.length];
 
     // Initializing with a distance of "Infinity"
     Arrays.fill(distances, Double.MAX_VALUE);
@@ -53,7 +53,6 @@ public class DynamicPathFinder {
 
     // While there are nodes left to visit...
     while (true) {
-
       // find the node with the currently lowest priority that has not been visited
       double lowestPriority = Integer.MAX_VALUE;
       int lowestPriorityIndex = -1;
@@ -64,13 +63,20 @@ public class DynamicPathFinder {
         }
       }
 
-      // no next node, no paths available return null
+      // no paths available: return null
       if (lowestPriorityIndex == -1) {
         return null;
       } 
-      // at goal node
+      // at goal node: gen path and ret
       else if (lowestPriorityIndex == goal) {
-        return distances[lowestPriorityIndex];
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+        int cur = goal;
+        while (cur!=start){
+          ret.add(cur);
+          cur=prev[cur];
+        }
+        ret.add(cur);
+        return ret;
       }
 
       // System.out
