@@ -24,14 +24,16 @@ public class DynamicPathFinder {
    * Finds the shortest distance between two nodes using the A-star algorithm
    *
    * @param graph an adjacency-matrix-representation of the graph where (x,y) is the weight of the
-   *     edge or 0 if there is no edge.
+   *     edge or 0 if there is no edge. 
    * @param start the node to start from.
    * @param goal the node we're searching for
    * @return The shortest distance to the goal node. Can be easily modified to return the path.
    */
-  public static ArrayList<Integer> findPath(double[][] graph, int start, int goal) {
+  public static ArrayList<Pose2D> findPath(double[][] graph, int start, int goal) {
     // This contains the distances from the start node to all other nodes
     double[] distances = new double[graph.length];
+    Pose2D[] prev = new Pose2D[graph.length];
+
     // Initializing with a distance of "Infinity"
     Arrays.fill(distances, Double.MAX_VALUE);
     // The distance from the start node to itself is of course 0
@@ -52,24 +54,22 @@ public class DynamicPathFinder {
     // While there are nodes left to visit...
     while (true) {
 
-      // ... find the node with the currently lowest priority...
+      // find the node with the currently lowest priority that has not been visited
       double lowestPriority = Integer.MAX_VALUE;
       int lowestPriorityIndex = -1;
       for (int i = 0; i < priorities.length; i++) {
-        // ... by going through all nodes that haven't been visited yet
         if (priorities[i] < lowestPriority && !visited[i]) {
           lowestPriority = priorities[i];
           lowestPriorityIndex = i;
         }
       }
 
+      // no next node, no paths available return null
       if (lowestPriorityIndex == -1) {
-        // There was no node not yet visited --> Node not found
         return null;
-      } else if (lowestPriorityIndex == goal) {
-        // Goal node found
-        // System.out.println("Goal node found!");
-        // TODO Return ArrayList of shortest path
+      } 
+      // at goal node
+      else if (lowestPriorityIndex == goal) {
         return distances[lowestPriorityIndex];
       }
 
