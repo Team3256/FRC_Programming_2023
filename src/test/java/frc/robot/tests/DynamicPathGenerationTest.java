@@ -8,11 +8,14 @@
 package frc.robot.tests;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.helpers.DynamicPathGenerator;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 public class DynamicPathGenerationTest {
 	@Test
@@ -20,7 +23,6 @@ public class DynamicPathGenerationTest {
 		Pose2d src = new Pose2d(new Translation2d(6,3),new Rotation2d(0));
 		Pose2d sink = new Pose2d(new Translation2d(2,3), new Rotation2d(0));
 		DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
-		PathPlannerTrajectory trajectory = generator.computeTrajectory();
-
+		List<PathPoint> path = generator.computePath();
 	}
 }
