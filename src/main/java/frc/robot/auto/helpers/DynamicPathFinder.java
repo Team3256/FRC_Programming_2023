@@ -39,19 +39,16 @@ public class DynamicPathFinder {
     // The distance from the start node to itself is of course 0
     distances[start] = 0;
 
-    // This contains the priorities with which to visit the nodes, calculated using
-    // the heuristic.
+    // This contains the priorities with which to visit the nodes, calculated using the heuristic.
     double[] priorities = new double[graph.length];
-    // Initializing with a priority of "Infinity"
     Arrays.fill(priorities, Double.MAX_VALUE);
+    
     // start node has a priority equal to straight line distance to goal. It will be
     // the first to be expanded.
     priorities[start] = heuristic(poseIndexes[start], poseIndexes[goal]);
-
-    // This contains whether a node was already visited
     boolean[] visited = new boolean[graph.length];
 
-    // While there are nodes left to visit...
+    // While there are nodes left
     while (true) {
       // find the node with the currently lowest priority that has not been visited
       double lowestPriority = Integer.MAX_VALUE;
