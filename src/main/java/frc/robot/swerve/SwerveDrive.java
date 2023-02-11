@@ -11,7 +11,6 @@ import static frc.robot.Constants.VisionConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -49,16 +48,15 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
-
-  public SwerveDrivePoseEstimator poseEstimator;
   public Pigeon2 gyro;
+  public SwerveDriveOdometry odometry;
 
   public SwerveDrive() {
     gyro = new Pigeon2(kPigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
-    
-    odometry =
+
+    this.odometry =
         new SwerveDriveOdometry(
             kSwerveKinematics,
             getYaw(),
@@ -214,9 +212,9 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
   @Override
   public void periodic() {
-    odometry.update(getYaw(), getPositions());
+    this.odometry.update(getYaw(), getModulePositions());
     // poseEstimator.update(getYaw(), getPositions());
-    poseEstimator.update(getYaw(), getModulePositions());
+    this.poseEstimator.update(getYaw(), getModulePositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
     if (Limelight.hasValidTargets(kLimelightNetworkTablesName)) {
