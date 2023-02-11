@@ -7,7 +7,7 @@
 
 package frc.robot.auto.helpers;
 
-import static frc.robot.Constants.AutoConstants.*;
+import static frc.robot.auto.AutoConstants.*;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -89,7 +89,7 @@ public class AutoCommandRunner {
 
     double distance = marker.getDistance(currentPose.getTranslation());
 
-    return distance < COMMAND_MARKER_THRESHOLD;
+    return distance < kCommandMarkerThreshold;
   }
 
   private boolean isAtMarker(Translation2d marker, Pose2d currentPose, Pose2d lastPose) {
