@@ -7,8 +7,9 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.VisionConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -71,7 +72,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
     this.poseEstimator =
         new SwerveDrivePoseEstimator(
-            swerveKinematics,
+            kSwerveKinematics,
             getYaw(),
             new SwerveModulePosition[] {
               frontLeftModule.getPosition(),
