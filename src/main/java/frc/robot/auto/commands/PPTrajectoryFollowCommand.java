@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -27,10 +28,11 @@ import frc.robot.swerve.SwerveDrive;
 
 public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
-  private final PathPlannerTrajectory trajectory;
+  private PathPlannerTrajectory trajectory;
   private final SwerveDriveController controller;
   private final SwerveDrive swerveSubsystem;
   private final double trajectoryDuration;
+  private boolean useAllianceColor;
   private Pose2d startPose;
   private AutoCommandRunner autoCommandRunner;
 
@@ -48,6 +50,29 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     this.swerveSubsystem = swerveSubsystem;
     PathPlannerTrajectory.PathPlannerState start =
         (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
+    Rotation2d rotation = start.holonomicRotation;
+    Translation2d translation = start.poseMeters.getTranslation();
+    this.startPose = new Pose2d(translation, rotation);
+
+    addRequirements(swerveSubsystem);
+  }
+
+  public PPTrajectoryFollowCommand(
+          PathPlannerTrajectory trajectory,
+          PIDController xController,
+          PIDController yController,
+          ProfiledPIDController thetaController,
+          boolean useAllianceColor,
+          SwerveDrive swerveSubsystem) {
+
+    this.trajectory = trajectory;
+    this.trajectoryDuration = trajectory.getTotalTimeSeconds();
+    this.controller = new SwerveDriveController(xController, yController, thetaController);
+    this.useAllianceColor = useAllianceColor;
+
+    this.swerveSubsystem = swerveSubsystem;
+    PathPlannerTrajectory.PathPlannerState start =
+            (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
     Rotation2d rotation = start.holonomicRotation;
     Translation2d translation = start.poseMeters.getTranslation();
     this.startPose = new Pose2d(translation, rotation);
@@ -78,9 +103,14 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       this.startPose = null;
     }
   }
-
+  
   @Override
   public void initialize() {
+    if (this.useAllianceColor) {
+      trajectory =
+              PathPlannerTrajectory.transformTrajectoryForAlliance(
+                      trajectory, DriverStation.getAlliance());
+    }
     if (kAutoDebug) {
       swerveSubsystem.setTrajectory(trajectory);
     }

@@ -58,6 +58,6 @@ public class AutoBuilder {
             kAutoThetaControllerConstraints);
 
     return new PPTrajectoryFollowCommand(
-        trajectory, xController, yController, thetaController, this.swerveSubsystem);
+        trajectory, xController, yController, thetaController, true, this.swerveSubsystem);
   }
 }
