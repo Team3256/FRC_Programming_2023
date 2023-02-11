@@ -53,5 +53,20 @@ public class DynamicPathFinderTest extends UnitTestBase {
     pose2 = new Pose2d(new Translation2d(2.4, 0.7), new Rotation2d());
     isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
     assertEquals(isIntersectingChargeStation, false, "Check valid path is not flagged");
+
+    // paranoia
+    pose1 = new Pose2d(new Translation2d(2.08, 4.55), new Rotation2d());
+    pose2 = new Pose2d(new Translation2d(5.12, 0.78), new Rotation2d());
+    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    assertEquals(
+        isIntersectingChargeStation,
+        false,
+        "Final check normal intersection between charge station");
+
+    pose1 = new Pose2d(new Translation2d(7.53, 6.19), new Rotation2d());
+    pose2 = new Pose2d(new Translation2d(6.10, 2.49), new Rotation2d());
+    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    assertEquals(
+        isIntersectingChargeStation, true, "Final check normal non-collision with charge station");
   }
 }

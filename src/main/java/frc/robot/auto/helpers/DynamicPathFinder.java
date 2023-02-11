@@ -18,10 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/
- * Adapted for Team 3256's
- * needs Used to perform the A-Star (A*) Algorithm to find the shortest path
- * from a start to a
+ * CREDIT FOR CODE: https://www.algorithms-and-technologies.com/a_star/java/ Adapted for Team 3256's
+ * needs Used to perform the A-Star (A*) Algorithm to find the shortest path from a start to a
  * target node.
  */
 public class DynamicPathFinder {
@@ -36,10 +34,9 @@ public class DynamicPathFinder {
   /**
    * Finds the shortest distance between two nodes using Warrior-star algorithm
    *
-   * @param graph an adj matrix: graph[i][j] is cost from i->j, if graph[i][j] is
-   *              0 then no edge
-   * @param src   start node
-   * @param sink  end node
+   * @param graph an adj matrix: graph[i][j] is cost from i->j, if graph[i][j] is 0 then no edge
+   * @param src start node
+   * @param sink end node
    */
   public DynamicPathFinder(double[][] graph, int src, int sink) {
     this.src = src;
@@ -124,22 +121,21 @@ public class DynamicPathFinder {
   }
 
   /**
-   * an estimation of distance from node x to y that is guaranteed to be lower
-   * than the actual
+   * an estimation of distance from node x to y that is guaranteed to be lower than the actual
    * distance E.g. straight-line distance
    */
   public static double heuristic(Pose2d pose1, Pose2d pose2) {
     if (isPathConnectionValid(pose1, pose2))
       return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
-    else
-      return Double.MAX_VALUE;
+    else return Double.MAX_VALUE;
   }
 
   public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
 
-    for (Translation2d[] chargingStationCorner : FieldConstants.Community.kChargingStationSegments) {
+    for (Translation2d[] chargingStationCorner :
+        FieldConstants.Community.kChargingStationSegments) {
       if (lineSegmentsIntersecting(
           chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
         return false;
@@ -153,22 +149,18 @@ public class DynamicPathFinder {
     // TODO: add buffer
     if (start1.getX() > end1.getX()) {
       if ((start1.getX() > start2.getX() && start2.getX() > end1.getX())
-          || (start1.getX() > end2.getX() && end2.getX() > end1.getX()))
-        return true;
+          || (start1.getX() > end2.getX() && end2.getX() > end1.getX())) return true;
     } else {
       if ((end1.getX() > start2.getX() && start2.getX() > start1.getX())
-          || (end1.getX() > end2.getX() && end2.getX() > start1.getX()))
-        return true;
+          || (end1.getX() > end2.getX() && end2.getX() > start1.getX())) return true;
     }
 
     if (start2.getX() > end2.getX()) {
       if ((start2.getX() > start1.getX() && start1.getX() > end2.getX())
-          || (start2.getX() > end1.getX() && end1.getX() > end2.getX()))
-        return true;
+          || (start2.getX() > end1.getX() && end1.getX() > end2.getX())) return true;
     } else {
       if ((end2.getX() > start1.getX() && start1.getX() > start2.getX())
-          || (end2.getX() > end1.getX() && end1.getX() > start2.getX()))
-        return true;
+          || (end2.getX() > end1.getX() && end1.getX() > start2.getX())) return true;
     }
 
     return false;
