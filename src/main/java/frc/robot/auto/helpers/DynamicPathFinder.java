@@ -82,6 +82,8 @@ public class DynamicPathFinder {
 
       // No paths available
       if (cur == -1) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        ret.add(graph.length - 2, graph.length - 1);
         return new ArrayList<>();
       }
 

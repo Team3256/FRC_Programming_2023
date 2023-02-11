@@ -16,32 +16,39 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DynamicPathGenerator {
   private final Pose2d startPose;
   private final Pose2d goalPose;
   private double[][] graph;
+  static boolean debug = true;
 
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     this.startPose = startPose;
     this.goalPose = goalPose;
-    graph= new double[origGraph.length][origGraph[0].length];
-    for (int i=0;i<origGraph.length;i++) graph[i]=origGraph[i].clone();
+    graph = new double[origGraph.length][origGraph[0].length];
+    for (int i = 0; i < origGraph.length; i++) graph[i] = origGraph[i].clone();
   }
 
   public List<Pose2d> computePath() {
-    addStartAndEndNodes(
-                graph, startPose.getTranslation(), goalPose.getTranslation());
+    addStartAndEndNodes(graph, startPose.getTranslation(), goalPose.getTranslation());
 
     ArrayList<Pose2d> poses = new ArrayList<>();
     for (Pose2d pose : poseIndexes) poses.add(pose);
     poses.add(startPose);
     poses.add(goalPose);
+
+    if (debug) {
+      System.out.println("Poses:" + poses);
+      for (int r = 0; r < graph.length; r++) {
+        System.out.println(Arrays.toString(graph[r]));
+      }
+    }
     // The last two nodes are the start and goal nodes in the updatedGraph
     DynamicPathFinder pathFinder =
-        new DynamicPathFinder(
-            updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1, poses);
+        new DynamicPathFinder(graph, graph.length - 2, graph.length - 1, poses);
 
     // Path List
     List<Pose2d> ret = new ArrayList<>();
@@ -65,15 +72,14 @@ public class DynamicPathGenerator {
     return PathPlanner.generatePath(dynamicPathConstraints, waypoints);
   }
 
-  private void addStartAndEndNodes(
-      double[][] graph, Translation2d start, Translation2d goal) {
+  private void addStartAndEndNodes(double[][] graph, Translation2d start, Translation2d goal) {
     int length = graph[0].length;
-    int startNodeIndex = length-2;
-    int goalNodeIndex = length-1;
-    for (int i = 0; i < poseIndexes.length; ++i) {
+    int startNodeIndex = length - 2;
+    int goalNodeIndex = length - 1;
+    for (int i = 0; i < poseIndexes.length - 2; i++) {
       double startNodeDistance = start.getDistance(poseIndexes[i].getTranslation());
       double goalNodeDistance = goal.getDistance(poseIndexes[i].getTranslation());
-      graph[i][startNodeIndex] = startNodeDistance;
+      graph[startNodeIndex][i] = startNodeDistance;
       graph[i][goalNodeIndex] = goalNodeDistance;
     }
   }

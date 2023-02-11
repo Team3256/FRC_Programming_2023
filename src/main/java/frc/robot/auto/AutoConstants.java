@@ -81,9 +81,9 @@ public final class AutoConstants {
         };
 
     // Will be filled by start and end pose
-    private static final double[] emptyRow= {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private static final double[] emptyRow = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    public static final double[][] origGraph=
+    public static final double[][] origGraph =
         new double[][] {
           {0.0000, 1.4431, 0.0000, 0.0000, 0.0000, 3.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
           {1.4431, 0.0000, 1.2000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
