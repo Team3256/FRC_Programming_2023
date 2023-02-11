@@ -65,12 +65,12 @@ public class DynamicPathGenerationTest {
   public JSONObject poseJson(List<Pose2d> path, int poseIndex) {
     JSONObject ret = new JSONObject();
     ret.put("anchorPoint", pointJson(path.get(poseIndex)));
-    ret.put("prevControl", poseIndex - 1 > 0 ? pointJson(path.get(poseIndex - 1)) : null);
+    ret.put("prevControl", poseIndex - 1 >= 0 ? pointJson(path.get(poseIndex - 1)) : null);
     ret.put("nextControl", poseIndex + 1 < path.size() ? pointJson(path.get(poseIndex + 1)) : null);
     ret.put("holonomicAngle", path.get(poseIndex).getRotation().getDegrees());
     ret.put("isReversal", false);
     ret.put("velOverride", null);
-    ret.put("isLocked", true);
+    ret.put("isLocked", false);
     ret.put("isStopPoint", false);
     JSONObject stopEvent = new JSONObject();
     stopEvent.put("names", new JSONArray());
