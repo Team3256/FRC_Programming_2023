@@ -130,7 +130,6 @@ public class DynamicPathFinder {
     else return Double.MAX_VALUE;
   }
 
-  // TODO: Implement method to detect if there is an obstacle in between 2 poses
   public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
