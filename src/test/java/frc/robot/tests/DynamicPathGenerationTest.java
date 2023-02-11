@@ -33,7 +33,9 @@ public class DynamicPathGenerationTest {
 
   public void saveJson(JSONObject json) {
     try {
-      PrintWriter pw = new PrintWriter(new FileWriter("DynamicPathGenerationTest.path"));
+      PrintWriter pw =
+          new PrintWriter(
+              new FileWriter("src/main/deploy/pathplanner/DynamicPathGenerationTest.path"));
       pw.println(json.toJSONString());
       pw.close();
     } catch (IOException e) {

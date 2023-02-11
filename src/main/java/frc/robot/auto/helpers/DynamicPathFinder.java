@@ -36,7 +36,7 @@ public class DynamicPathFinder {
   int[] pre;
   double[] priority;
 
-  static double INF = Double.MAX_VALUE / 2;
+  static double INF = Double.MAX_VALUE / 10;
 
   /**
    * Finds the shortest distance between two nodes using Warrior-star algorithm
@@ -55,7 +55,7 @@ public class DynamicPathFinder {
   public ArrayList<Integer> findPath() {
     // Time to travel from src to all other nodes
     dist = new double[graph.length];
-    Arrays.fill(dist, Double.MAX_VALUE);
+    Arrays.fill(dist, INF);
     dist[src] = 0;
 
     // Previous node in current optimal path to node
@@ -63,7 +63,7 @@ public class DynamicPathFinder {
 
     // Priorities with which to visit the nodes
     priority = new double[graph.length];
-    Arrays.fill(priority, Double.MAX_VALUE);
+    Arrays.fill(priority, INF);
     priority[src] = heuristic(poses.get(src), poses.get(sink));
 
     // Visited nodes
@@ -71,7 +71,7 @@ public class DynamicPathFinder {
 
     while (true) {
       // Find unvisited lowest priority node
-      double curPriority = Integer.MAX_VALUE;
+      double curPriority = INF;
       int cur = -1;
       for (int node = 0; node < priority.length; node++) {
         if (priority[node] < curPriority && !vis[node]) {
@@ -82,7 +82,7 @@ public class DynamicPathFinder {
 
       // No paths available
       if (cur == -1) {
-        return null;
+        return new ArrayList<>();
       }
 
       // Found shortest path to sink
@@ -117,8 +117,7 @@ public class DynamicPathFinder {
   private double getPathTime(ArrayList<Integer> path) {
     List<PathPoint> waypoints = new ArrayList<>();
     for (int node : path)
-      waypoints.add(
-          new PathPoint(poses.get(node).getTranslation(), poses.get(node).getRotation()));
+      waypoints.add(new PathPoint(poses.get(node).getTranslation(), poses.get(node).getRotation()));
     PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, waypoints);
     return trajectory.getTotalTimeSeconds();
   }

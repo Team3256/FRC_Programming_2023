@@ -36,12 +36,13 @@ public class DynamicPathGenerator {
             pathAdjacencyGraph, startPose.getTranslation(), goalPose.getTranslation());
 
     ArrayList<Pose2d> poses = new ArrayList<>();
-    for (Pose2d pose : poseIndexes)poses.add(pose);
+    for (Pose2d pose : poseIndexes) poses.add(pose);
     poses.add(startPose);
     poses.add(goalPose);
     // The last two nodes are the start and goal nodes in the updatedGraph
     DynamicPathFinder pathFinder =
-        new DynamicPathFinder(updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1,  poses);
+        new DynamicPathFinder(
+            updatedGraph, updatedGraph.length - 2, updatedGraph.length - 1, poses);
 
     // Path List
     List<Pose2d> ret = new ArrayList<>();
