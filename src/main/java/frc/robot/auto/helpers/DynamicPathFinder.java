@@ -92,7 +92,7 @@ public class DynamicPathFinder {
       else if (cur == sink) {
         if (debug) {
           System.out.println("Done!");
-          System.out.println("Shortest Path Found:"+getStoredPathIdsTo(sink));
+          System.out.println("Shortest Path Found:" + getStoredPathIdsTo(sink));
         }
         return getPathPosesFromPathIds(getStoredPathIdsTo(sink));
       }
