@@ -7,14 +7,12 @@
 
 package frc.robot.arm;
 
+import static frc.robot.arm.ArmConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -27,49 +25,36 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static frc.robot.arm.ArmConstants.*;
-
+// TODO: delete below imports if they remain unused after fixes
+/*
 import frc.robot.Robot;
 import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.TalonFXFactory;
+*/
 
-// TODO: Add
-public class ArmSubsystem extends SubsystemBase {
-  public enum ArmPosition {
-    HIGH(ArmConstants.kArmHighPositionMeters),
-    MID(ArmConstants.kArmMidPositionMeters),
-    LOW(ArmConstants.kArmLowPositionMeters);
+public class Arm extends SubsystemBase {
 
-    public double position;
+  private static WPI_TalonFX armMotor;
+  private ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
-    private ArmPosition(double position) {
-      this.position = position;
-    }
-  }
-
-  private WPI_TalonFX armMotor;
-  private ArmFeedforward armFeedforward =
-          new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
-
-  private SingleJointedArmSim armSim =
-          new SingleJointedArmSim(
-                  DCMotor.getFalcon500(kNumArmMotors),
-                  kArmGearing,
-                  jKgMetersSquared,
-                  kArmLengthMeters,
-                  minAngleRads,
-                  maxAngleRads,
-                  armMassKg,
-                  true);
+  private static SingleJointedArmSim armSim =
+      new SingleJointedArmSim(
+          DCMotor.getFalcon500(kNumArmMotors),
+          kArmGearing,
+          jKgMetersSquared,
+          kArmLengthMeters,
+          minAngleRads,
+          maxAngleRads,
+          armMassKg,
+          true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
   private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Arm Root", 10, 0);
   private final MechanismLigament2d armMech2d =
-          mechanism2dRoot.append(
-                  new MechanismLigament2d(
-                          "arm", Units.metersToInches(armSim.getAngleRads()), 90));
+      mechanism2dRoot.append(
+          new MechanismLigament2d("arm", Units.metersToInches(armSim.getAngleRads()), 90));
 
-  public ArmSubsystem() {
+  public Arm() {
     armMotor = new WPI_TalonFX(armID);
     armMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -106,10 +91,11 @@ public class ArmSubsystem extends SubsystemBase {
     armMotor.setVoltage(voltage);
   }
 
+  // use in test
   public double getArmPosition() {
-    //TODO add falconToMeters
+    // TODO add falconToMeters
     if (RobotBase.isReal()) return 0;
-      else return armSim.getAngleRads();
+    else return armSim.getAngleRads();
   }
 
   @Override
@@ -118,7 +104,7 @@ public class ArmSubsystem extends SubsystemBase {
     armSim.update(0.020);
 
     RoboRioSim.setVInVoltage(
-            BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
     armMech2d.setLength(Units.metersToInches(armSim.getAngleRads()));
 
     simulationOutputToDashboard();

@@ -21,7 +21,7 @@ public final class Constants {
   public static final boolean kSwerveEnabled = true;
   public static final boolean kLedStripEnabled = true;
   public static final boolean kAdvatageKitReplayEnabled = false;
-  
+
   public static final class ArmConstants {
     // TODO: Fix these to comply to the mechanical ppls kg
     public static final int ARM_MOTOR_ID = -1;

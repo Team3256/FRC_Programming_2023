@@ -9,24 +9,24 @@ package frc.robot.arm.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.arm.ArmSubsystem;
+import frc.robot.arm.Arm;
 import java.util.function.DoubleSupplier;
 
 public class SetArmFromVoltage extends CommandBase {
-  ArmSubsystem armSubsystem;
+  Arm Arm;
   DoubleSupplier voltage;
   boolean usingDashboard;
 
-  public SetArmFromVoltage(ArmSubsystem armSubsystem, DoubleSupplier voltage) {
-    this.voltage = voltage;
-    this.armSubsystem = armSubsystem;
-    addRequirements(armSubsystem);
+  public SetArmFromVoltage(Arm Arm, DoubleSupplier set) {
+    this.voltage = set;
+    this.Arm = Arm;
+    addRequirements(Arm);
   }
 
-  public SetArmFromVoltage(ArmSubsystem armSubsystem) {
+  public SetArmFromVoltage(Arm Arm) {
     this.voltage = () -> SmartDashboard.getNumber("Arm Voltage", 0);
-    this.armSubsystem = armSubsystem;
-    addRequirements(armSubsystem);
+    this.Arm = Arm;
+    addRequirements(Arm);
   }
 
   @Override
@@ -40,12 +40,12 @@ public class SetArmFromVoltage extends CommandBase {
 
   @Override
   public void execute() {
-    armSubsystem.setInputVoltage(voltage.getAsDouble());
-    SmartDashboard.putNumber("Arm Voltage", armSubsystem.getAngle());
+    Arm.setInputVoltage(voltage.getAsDouble());
+    SmartDashboard.putNumber("Arm Voltage", voltage.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    armSubsystem.setInputVoltage(0);
+    Arm.setInputVoltage(0);
   }
 }
