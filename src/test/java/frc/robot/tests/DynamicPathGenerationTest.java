@@ -11,94 +11,22 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.helpers.DynamicPathGenerator;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import frc.robot.helpers.FileHelper;
+import frc.robot.helpers.Path;
 import java.util.List;
 import org.json.simple.*;
 import org.junit.jupiter.api.Test;
 
 public class DynamicPathGenerationTest {
   @Test
-  public void testControlPointFinder() {
-    Pose2d src = new Pose2d(new Translation2d(6, 0.5), new Rotation2d(0));
-    Pose2d sink = new Pose2d(new Translation2d(7.5, 2), new Rotation2d(0));
-    Pose2d desiredPoint = new Pose2d(new Translation2d(6, 2), new Rotation2d(0));
-    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
-    Translation2d[] controlPoints =
-        generator.findControlPoints(
-            src.getTranslation(), desiredPoint.getTranslation(), sink.getTranslation());
-
-    System.out.println(controlPoints[0]);
-    System.out.println(controlPoints[1]);
-  }
-
-  // @Test
   public void testGeneratePath() {
     Pose2d src = new Pose2d(new Translation2d(8.46, 0.78), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<Pose2d> path = generator.computePath();
-    JSONObject json = getJson(path);
-    saveJson(json);
+    Path pathPath = new Path(path);
+    JSONObject json = pathPath.getJson();
+    FileHelper.saveJson(json, "src/main/deploy/pathplanner/DynamicPathGenerationTest.path");
     assert (true);
-  }
-
-  public void saveJson(JSONObject json) {
-    try {
-      PrintWriter pw =
-          new PrintWriter(
-              new FileWriter("src/main/deploy/pathplanner/DynamicPathGenerationTest.path"));
-
-      json.writeJSONString(pw);
-      pw.close();
-    } catch (IOException e) {
-      System.out.println("IO error occurred.");
-      e.printStackTrace();
-    }
-  }
-
-  public JSONObject getJson(List<Pose2d> path) {
-    JSONObject ret = new JSONObject();
-
-    // waypoints
-    JSONArray pathJson = new JSONArray();
-    for (int poseIndex = 0; poseIndex < path.size(); poseIndex++) {
-      pathJson.add(poseJson(path, poseIndex));
-    }
-    ret.put("waypoints", pathJson);
-
-    // markers
-    JSONArray markerJson = new JSONArray();
-    ret.put("markers", markerJson);
-
-    // ret
-    return ret;
-  }
-
-  public JSONObject poseJson(List<Pose2d> path, int poseIndex) {
-    JSONObject ret = new JSONObject();
-    ret.put("anchorPoint", pointJson(path.get(poseIndex)));
-    ret.put("prevControl", poseIndex - 1 >= 0 ? pointJson(path.get(poseIndex - 1)) : null);
-    ret.put("nextControl", poseIndex + 1 < path.size() ? pointJson(path.get(poseIndex + 1)) : null);
-    ret.put("holonomicAngle", path.get(poseIndex).getRotation().getDegrees());
-    ret.put("isReversal", false);
-    ret.put("velOverride", null);
-    ret.put("isLocked", false);
-    ret.put("isStopPoint", false);
-    JSONObject stopEvent = new JSONObject();
-    stopEvent.put("names", new JSONArray());
-    stopEvent.put("executionBehavior", "parallel");
-    stopEvent.put("waitBehavior", "none");
-    stopEvent.put("waitTime", 0);
-    ret.put("stopEvent", stopEvent);
-    return ret;
-  }
-
-  public JSONObject pointJson(Pose2d pose) {
-    JSONObject ret = new JSONObject();
-    ret.put("x", pose.getX());
-    ret.put("y", pose.getY());
-    return ret;
   }
 }
