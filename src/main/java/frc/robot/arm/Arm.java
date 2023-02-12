@@ -81,11 +81,10 @@ public class Arm extends SubsystemBase {
     armMotor.setVoltage(voltage);
   }
 
-
   public double getArmPosition() {
-      if (RobotBase.isReal()) {
-        return falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing);
-      } else return armSim.getAngleRads();
+    if (RobotBase.isReal()) {
+      return falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing);
+    } else return armSim.getAngleRads();
   }
 
   @Override
