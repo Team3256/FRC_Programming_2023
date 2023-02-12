@@ -24,10 +24,11 @@ public class DynamicPathGenerationTest {
   // Turn sanity
   @Test
   public void testSimpleLeftTurnPath0() {
-    List<Pose2d> path = new ArrayList<>();
-    path.add(new Pose2d(new Translation2d(6, 0.5), new Rotation2d(0)));
-    path.add(new Pose2d(new Translation2d(6, 2), new Rotation2d(0)));
-    path.add(new Pose2d(new Translation2d(7.5, 2), new Rotation2d(0)));
+    List<Translation2d> positions = new ArrayList<>();
+    positions.add(new Translation2d(6, 0.5));
+    positions.add(new Translation2d(6, 2));
+    positions.add(new Translation2d(7.5, 2));
+    Path path = new Path(positions, new Rotation2d(0), new Rotation2d(0));
     testInterpolatePathBase(path, 0);
   }
 
@@ -57,14 +58,14 @@ public class DynamicPathGenerationTest {
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, int id) {
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
-    List<Pose2d> poseList = generator.getPath();
-    System.out.println("Generated pose list:" + poseList);
-    testInterpolatePathBase(poseList, id);
+    List<Translation2d> positions = generator.getPath();
+    System.out.println("Generated pose list:" + positions);
+    Path path = new Path(positions, src.getRotation(), sink.getRotation());
+    testInterpolatePathBase(path, id);
   }
 
-  public void testInterpolatePathBase(List<Pose2d> poseList, int id) {
-    System.out.println("Pose List id" + id + ":" + poseList);
-    Path path = new Path(poseList);
+  public void testInterpolatePathBase(Path path, int id) {
+    System.out.println("Path " + id + ":" + path.getWaypoints());
     JSONObject json = path.getJson();
 
     String pathPlannerJsonPath =
