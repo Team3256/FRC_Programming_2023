@@ -25,9 +25,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class DynamicPathFinder {
-  double[][] graph;
   int src;
   int sink;
+  int nodes;
   ArrayList<Pose2d> poses;
 
   double[] dist;
@@ -35,38 +35,36 @@ public class DynamicPathFinder {
   double[] priority;
 
   static final double INF = Double.MAX_VALUE / 10;
-  boolean debug = true;
+  final boolean debug = true;
 
   /**
-   * Finds the shortest distance between two nodes using Warrior-star algorithm
-   *
-   * @param graph an adj matrix: graph[i][j] is cost from i->j, if graph[i][j] is 0 then no edge
+   * Finds the fastest path between two nodes using Warrior-star algorithm
    * @param src start node
    * @param sink end node
    */
-  public DynamicPathFinder(double[][] graph, int src, int sink, ArrayList<Pose2d> poses) {
+  public DynamicPathFinder(int src, int sink, ArrayList<Pose2d> poses) {
     this.src = src;
     this.sink = sink;
-    this.graph = graph;
     this.poses = poses;
+    this.nodes=poses.size();
   }
 
   public ArrayList<Integer> findPath() {
     // Time to travel from src to all other nodes
-    dist = new double[graph.length];
+    dist = new double[nodes];
     Arrays.fill(dist, INF);
     dist[src] = 0;
 
     // Previous node in current optimal path to node
-    pre = new int[graph.length];
+    pre = new int[nodes];
 
     // Priorities with which to visit the nodes
-    priority = new double[graph.length];
+    priority = new double[nodes];
     Arrays.fill(priority, INF);
     priority[src] = heuristic(poses.get(src), poses.get(sink));
 
     // Visited nodes
-    boolean[] vis = new boolean[graph.length];
+    boolean[] vis = new boolean[nodes];
 
     while (true) {
       // Find unvisited lowest priority node
@@ -84,8 +82,8 @@ public class DynamicPathFinder {
       // No paths available
       if (cur == -1) {
         ArrayList<Integer> ret = new ArrayList<>();
-        ret.add(graph.length - 2);
-        ret.add(graph.length - 1);
+        ret.add(nodes-2);
+        ret.add(nodes-1);
         return ret;
       }
 
@@ -96,7 +94,7 @@ public class DynamicPathFinder {
       }
 
       // Update all unvisited neighboring nodes
-      for (int node = 0; node < graph[cur].length; node++) {
+      for (int node = 0; node < nodes; node++) {
         ArrayList<Integer> path = getStoredPathTo(cur);
         if (poses.get(node).getX() < poses.get(cur).getX() && !vis[node]) {
           path.add(node);
@@ -131,6 +129,7 @@ public class DynamicPathFinder {
     }
   }
 
+  //calculate time to travel list of pathIds
   private double getPathTime(ArrayList<Integer> pathIds) {
     // convert pathIds into pathPoints
     for (int i = 0; i < pathIds.size() - 1; i++) {
@@ -145,11 +144,12 @@ public class DynamicPathFinder {
       pathPoints.add(way.toPathPoint());
     }
 
-    // calculate trajectory time
+    // calc trajectory time
     PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
     return trajectory.getTotalTimeSeconds();
   }
 
+  //get the path stored from src to node
   private ArrayList<Integer> getStoredPathTo(int node) {
     ArrayList<Integer> ret = new ArrayList<>();
     int cur = node;
@@ -162,16 +162,12 @@ public class DynamicPathFinder {
     return ret;
   }
 
-  /**
-   * estimate cost that is guaranteed to be lower than the actual distance Currently it is time to
-   * travel euclidean distance, without allowing illegal moves
-   */
+  //heuristic estimate of time to travel 1->2 that is guaranteed to be lower than actual
   public static double heuristic(Pose2d pose1, Pose2d pose2) {
-    // if (isPathConnectionValid(pose1, pose2))
     return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
-    // else return INF;
   }
 
+ //make sure line segments don't intersect obstacles
   public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();

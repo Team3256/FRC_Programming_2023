@@ -15,10 +15,15 @@ public class TransHelper {
   public static Rotation2d angleBetweenVectorsCCW(Translation2d u, Translation2d v) {
     double dot = u.getX() * v.getX() + u.getY() * v.getY();
     double det = u.getX() * v.getY() - u.getY() * v.getX();
-    // double numerator = u.getX() * v.getX() + u.getY() * v.getY();
-    // double denominator = u.getNorm() * v.getNorm();
 
     return Rotation2d.fromRadians((Math.atan2(det, dot) + Math.PI * 2) % (Math.PI * 2));
+  }
+
+  // return angle between u and v in degrees
+  public static Rotation2d angleBetweenVectors(Translation2d u, Translation2d v){
+    double numerator = u.getX() * v.getX() + u.getY() * v.getY();
+    double denominator = u.getNorm() * v.getNorm();
+    return Rotation2d.fromRadians(Math.acos(numerator/denominator));
   }
 
   // return vector of proju->v
