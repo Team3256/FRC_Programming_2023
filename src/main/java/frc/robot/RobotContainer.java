@@ -10,11 +10,14 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.arm.Arm;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
@@ -45,6 +48,7 @@ public class RobotContainer {
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
+  private Arm armSubsystem;
   private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
@@ -63,6 +67,9 @@ public class RobotContainer {
     }
     if (kElevatorEnabled) {
       configureElevator();
+    }
+    if (kArmEnabled) {
+      configureArm();
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -134,6 +141,13 @@ public class RobotContainer {
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
   }
 
+  private void configureArm() {
+    this.armSubsystem = new Arm();
+
+    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
+    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
+  }
+
   public void configureLEDStrip() {
     ledStrip = new LED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
@@ -141,7 +155,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new InstantCommand();
+    return new SetArmAngle(armSubsystem, new Rotation2d(2));
   }
 
   public void test() {

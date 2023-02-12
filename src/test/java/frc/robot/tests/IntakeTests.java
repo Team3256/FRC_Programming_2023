@@ -14,7 +14,7 @@ import frc.robot.UnitTestBase;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class IntakeTests extends UnitTestBase {
@@ -22,9 +22,9 @@ public class IntakeTests extends UnitTestBase {
 
   private static Intake intakeSubsystem;
 
-  @BeforeAll
-  public static void setup() {
-    UnitTestBase.setup();
+  @BeforeEach
+  public void setup() {
+    super.setup();
     intakeSubsystem = new Intake();
   }
 

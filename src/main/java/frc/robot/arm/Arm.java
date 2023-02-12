@@ -8,8 +8,8 @@
 package frc.robot.arm;
 
 import static frc.robot.arm.ArmConstants.*;
+import static frc.robot.swerve.helpers.Conversions.*;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -25,19 +25,12 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// TODO: delete below imports if they remain unused after fixes
-/*
-import frc.robot.Robot;
-import frc.robot.drivers.CanDeviceId;
-import frc.robot.drivers.TalonFXFactory;
-*/
-
 public class Arm extends SubsystemBase {
 
   private static WPI_TalonFX armMotor;
-  private ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
+  private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
-  private static SingleJointedArmSim armSim =
+  private static final SingleJointedArmSim armSim =
       new SingleJointedArmSim(
           DCMotor.getFalcon500(kNumArmMotors),
           kArmGearing,
@@ -52,7 +45,8 @@ public class Arm extends SubsystemBase {
   private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Arm Root", 10, 0);
   private final MechanismLigament2d armMech2d =
       mechanism2dRoot.append(
-          new MechanismLigament2d("arm", Units.metersToInches(armSim.getAngleRads()), 90));
+          new MechanismLigament2d(
+              "arm", kArmLengthMeters, Units.radiansToDegrees(armSim.getAngleRads())));
 
   public Arm() {
     armMotor = new WPI_TalonFX(armID);
@@ -68,10 +62,6 @@ public class Arm extends SubsystemBase {
   private void configureRealHardware() {
     armMotor = new WPI_TalonFX(armID);
     armMotor.enableVoltageCompensation(true);
-  }
-
-  public void zeroArm() {
-    armMotor.set(ControlMode.Position, 0);
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -91,11 +81,11 @@ public class Arm extends SubsystemBase {
     armMotor.setVoltage(voltage);
   }
 
-  // use in test
+
   public double getArmPosition() {
-    // TODO add falconToMeters
-    if (RobotBase.isReal()) return 0;
-    else return armSim.getAngleRads();
+      if (RobotBase.isReal()) {
+        return falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing);
+      } else return armSim.getAngleRads();
   }
 
   @Override
@@ -114,7 +104,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {}
 
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm position", armSim.getAngleRads());
+    SmartDashboard.putNumber("Arm angle position", armSim.getAngleRads());
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }

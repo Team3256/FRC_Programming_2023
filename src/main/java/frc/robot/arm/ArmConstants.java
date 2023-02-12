@@ -43,8 +43,8 @@ public final class ArmConstants {
   public static final double kArmGearing = 1;
   public static final double jKgMetersSquared = 1;
   public static final double kArmLengthMeters = 1;
-  public static final double minAngleRads = 1;
-  public static final double maxAngleRads = 1;
+  public static final double minAngleRads = 0;
+  public static final double maxAngleRads = Math.PI;
   public static final double armMassKg = 1;
   public static final double kArmCurrentThreshold = 1;
 }

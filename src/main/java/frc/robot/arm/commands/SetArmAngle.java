@@ -18,7 +18,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
         new ProfiledPIDController(kP, kI, kD, kArmContraints),
-        //
         armSubsystem::getArmPosition,
         angleRotation2d.getRadians(),
         (output, setpoint) ->
