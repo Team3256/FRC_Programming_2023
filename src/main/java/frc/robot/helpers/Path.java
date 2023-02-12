@@ -18,7 +18,7 @@ import org.json.simple.JSONObject;
 public class Path {
   List<WayPoint> waypoints;
   int length;
-  double kControlPointScalar = 0.5;
+  double kControlPointScalar = 0.3;
 
   public Path(List<Pose2d> poses) {
     length = poses.size();
@@ -35,15 +35,15 @@ public class Path {
       // set control
       if (i == 0) {
         waypoints.get(i).prevControl = null;
-        waypoints.get(i).nextControl = poses.get(i + 1).getTranslation();
+        waypoints.get(i).nextControl = poses.get(i + 1).getTranslation().times(kControlPointScalar);
       } else if (i == length - 1) {
-        waypoints.get(i).prevControl = poses.get(i - 1).getTranslation();
+        waypoints.get(i).prevControl = poses.get(i - 1).getTranslation().times(kControlPointScalar);
         waypoints.get(i).nextControl = null;
       } else {
         Translation2d[] controlPoints =
             findControlPoints(
-                poses.get(i).getTranslation(),
                 poses.get(i - 1).getTranslation(),
+                poses.get(i).getTranslation(),
                 poses.get(i + 1).getTranslation());
         waypoints.get(i).prevControl = controlPoints[0];
         waypoints.get(i).nextControl = controlPoints[1];
@@ -76,8 +76,6 @@ public class Path {
 
     Rotation2d beta = TransHelper.angleBetweenVectors(desiredToStartVector, desiredToEndVector);
     Rotation2d alpha = Rotation2d.fromDegrees((180 - beta.getDegrees()) / 2);
-    System.out.println(alpha);
-    System.out.println(beta);
 
     Translation2d desiredToStartTransformed = desiredToStartVector.rotateBy(alpha.unaryMinus());
     Translation2d startPointControlPoint =

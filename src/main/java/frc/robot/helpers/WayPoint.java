@@ -38,7 +38,7 @@ public class WayPoint {
     ret.put("anchorPoint", getTransJson(anchorPoint));
     ret.put("prevControl", getTransJson(prevControl));
     ret.put("nextControl", getTransJson(nextControl));
-    ret.put("holonomicAngle", holonomicAngle);
+    ret.put("holonomicAngle", holonomicAngle.getDegrees());
     // default
     ret.put("isReversal", false);
     ret.put("velOverride", null);
@@ -58,6 +58,7 @@ public class WayPoint {
   }
 
   public JSONObject getTransJson(Translation2d point) {
+    if (point == null) return null;
     JSONObject ret = new JSONObject();
     ret.put("x", point.getX());
     ret.put("y", point.getY());

@@ -24,9 +24,13 @@ public class DynamicPathGenerationTest {
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<Pose2d> path = generator.computePath();
+    System.out.println("TEST Final path:" + path);
     Path pathPath = new Path(path);
+    System.out.println(pathPath);
     JSONObject json = pathPath.getJson();
+
     FileHelper.saveJson(json, "src/main/deploy/pathplanner/DynamicPathGenerationTest.path");
+    System.out.println("json:" + json);
     assert (true);
   }
 }
