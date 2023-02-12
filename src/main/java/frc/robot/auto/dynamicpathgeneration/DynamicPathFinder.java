@@ -19,10 +19,7 @@ import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
 import frc.robot.swerve.SwerveConstants;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class DynamicPathFinder {
   private int src;
@@ -34,9 +31,12 @@ public class DynamicPathFinder {
 
   private double[] distanceToTravelToNodeN;
   private int[] previousNodesInCurrentPath;
-  private double[] priorityQueue;
+  private double[] priorities;
+  private PriorityQueue<Integer> pq =
+      new PriorityQueue<>((a, b) -> Double.compare(priorities[a], priorities[b]));
 
-  static final double INF = Double.MAX_VALUE / 10;
+  static final double ILLEGAL_COST = Double.MAX_VALUE / 10;
+  static final double INF = Double.MAX_VALUE / 2;
 
   /**
    * Finds the fastest path between two nodes using Warrior-star algorithm
@@ -72,31 +72,21 @@ public class DynamicPathFinder {
     previousNodesInCurrentPath = new int[nodes];
 
     // Priorities with which to visit the nodes
-    priorityQueue = new double[nodes];
-    Arrays.fill(priorityQueue, INF);
-    priorityQueue[src] = heuristic(positions.get(src), positions.get(sink));
+    priorities = new double[nodes];
+    Arrays.fill(priorities, INF);
+    priorities[src] = heuristic(positions.get(src), positions.get(sink));
+    pq.add(src);
 
     // Visited nodes
     boolean[] visitedNodes = new boolean[nodes];
 
-    while (true) {
+    while (!pq.isEmpty()) {
       // Find unvisited lowest priority node
-      double currentPriority = INF;
-      int currentNode = -1;
-      for (int node = 0; node < priorityQueue.length; node++) {
-        if (priorityQueue[node] < currentPriority && !visitedNodes[node]) {
-          currentPriority = priorityQueue[node];
-          currentNode = node;
-        }
-      }
+      int currentNode = pq.poll();
+      if (visitedNodes[currentNode]) continue;
+
       if (kDynamicPathGenerationDebug) {
         // System.out.println("explore node:" + currentNode);
-      }
-
-      // No paths available
-      if (currentNode == -1) {
-        ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
-        return getPathPositionsFromPathIds(pathIds);
       }
 
       // Found shortest path to sink
@@ -117,8 +107,10 @@ public class DynamicPathFinder {
             previousNodesInCurrentPath[node] = currentNode;
 
             // Update node priority
-            priorityQueue[node] =
+            priorities[node] =
                 distanceToTravelToNodeN[node] + heuristic(positions.get(node), positions.get(sink));
+            // Add node to Q
+            pq.add(node);
           }
           path.remove(path.size() - 1);
         }
@@ -127,12 +119,15 @@ public class DynamicPathFinder {
       // mark as visited
       visitedNodes[currentNode] = true;
     }
+    // No paths available
+    ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
+    return getPathPositionsFromPathIds(pathIds);
   }
 
   // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
   // actual
   public static double heuristic(Translation2d position1, Translation2d position2) {
-    // if (doesPathHitObstacles(position1, position2)) return INF;
+    if (doesPathHitObstacles(position1, position2)) return ILLEGAL_COST;
     return position1.getDistance(position2) / SwerveConstants.kMaxSpeed;
   }
 
@@ -141,7 +136,7 @@ public class DynamicPathFinder {
     // make sure pathIds are valid (doesn't hit obstacles)
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (doesPathHitObstacles(positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1))))
-        return INF;
+        return ILLEGAL_COST;
     }
 
     // calc trajectory time
