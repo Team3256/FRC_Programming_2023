@@ -39,6 +39,7 @@ public class DynamicPathFinder {
 
   /**
    * Finds the fastest path between two nodes using Warrior-star algorithm
+   *
    * @param src start node
    * @param sink end node
    */
@@ -46,10 +47,10 @@ public class DynamicPathFinder {
     this.src = src;
     this.sink = sink;
     this.poses = poses;
-    this.nodes=poses.size();
+    this.nodes = poses.size();
   }
 
-  public ArrayList<Integer> findPath() {
+  public List<Pose2d> findPath() {
     // Time to travel from src to all other nodes
     dist = new double[nodes];
     Arrays.fill(dist, INF);
@@ -82,20 +83,20 @@ public class DynamicPathFinder {
       // No paths available
       if (cur == -1) {
         ArrayList<Integer> ret = new ArrayList<>();
-        ret.add(nodes-2);
-        ret.add(nodes-1);
-        return ret;
+        ret.add(nodes - 2);
+        ret.add(nodes - 1);
+        return getPathPosesFromPathIds(ret);
       }
 
       // Found shortest path to sink
       else if (cur == sink) {
         if (debug) System.out.println("Done!");
-        return getStoredPathIdsTo(sink);
+        return getPathPosesFromPathIds(getStoredPathIdsTo(sink));
       }
 
       // Update all unvisited neighboring nodes
       for (int node = 0; node < nodes; node++) {
-        ArrayList<Integer> path = getStoredPathIdsTo(cur);
+        List<Integer> path = getStoredPathIdsTo(cur);
         if (poses.get(node).getX() < poses.get(cur).getX() && !vis[node]) {
           path.add(node);
           double pathTime = getPathTime(path);
@@ -129,9 +130,9 @@ public class DynamicPathFinder {
     }
   }
 
-  //calculate time to travel list of pathIds
-  private double getPathTime(ArrayList<Integer> pathIds) {
-    //make sure pathIds are valid (doesn't hit obstacles)
+  // calculate time to travel list of pathIds
+  private double getPathTime(List<Integer> pathIds) {
+    // make sure pathIds are valid (doesn't hit obstacles)
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (!isPathConnectionValid(poses.get(pathIds.get(i)), poses.get(pathIds.get(i + 1))))
         return INF;
@@ -142,23 +143,29 @@ public class DynamicPathFinder {
     return trajectory.getTotalTimeSeconds();
   }
 
-  public PathPlannerTrajectory getTrajectoryFromPathIds(ArrayList<Integer> pathIds){
+  // convert list of pathIds into PathPlannerTrajectory
+  public PathPlannerTrajectory getTrajectoryFromPathIds(List<Integer> pathIds) {
     // convert pathIds into pathPoints
-    List<Pose2d> pathPoses = new ArrayList<>();
-    for (int node : pathIds) pathPoses.add(poses.get(node));
+    List<Pose2d> pathPoses = getPathPosesFromPathIds(pathIds);
     Path path = new Path(pathPoses);
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint way : path.waypoints) {
       pathPoints.add(way.toPathPoint());
     }
 
-    //convert pathPoints into Trajectory we return
-    return PathPlanner.generatePath(dynamicPathConstraints,pathPoints);
+    // convert pathPoints into Trajectory we return
+    return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
   }
 
-  //get the pathIds stored from src to node
-  private ArrayList<Integer> getStoredPathIdsTo(int node) {
-    ArrayList<Integer> ret = new ArrayList<>();
+  // convert list of pathIds into list of pathPoses
+  private List<Pose2d> getPathPosesFromPathIds(List<Integer> pathIds) {
+    List<Pose2d> pathPoses = new ArrayList<>();
+    for (int node : pathIds) pathPoses.add(poses.get(node));
+    return pathPoses;
+  }
+  // get the pathIds stored from src to node
+  private List<Integer> getStoredPathIdsTo(int node) {
+    List<Integer> ret = new ArrayList<>();
     int cur = node;
     while (cur != src) {
       ret.add(cur);
@@ -169,12 +176,12 @@ public class DynamicPathFinder {
     return ret;
   }
 
-  //heuristic estimate of time to travel 1->2 that is guaranteed to be lower than actual
+  // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than actual
   public static double heuristic(Pose2d pose1, Pose2d pose2) {
     return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
   }
 
- //make sure line segments don't intersect obstacles
+  // make sure line segments don't intersect obstacles
   public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
@@ -183,7 +190,6 @@ public class DynamicPathFinder {
         FieldConstants.Community.kChargingStationSegments) {
       if (TransHelper.intersect(
           chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
-        System.out.println("Pose1:" + pose1 + ", Pose2:" + pose2 + " FAIL");
         return false;
       }
     }
