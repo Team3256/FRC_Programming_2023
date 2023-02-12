@@ -43,7 +43,8 @@ public class TransHelper {
     return (val > 0) ? 1 : 2;
   }
 
-  public static boolean doIntersect(
+  // returns whether 2 line segments intersect each other
+  public static boolean intersect(
       Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
     int o1 = orientation(start1, end1, start2);
     int o2 = orientation(start1, end1, end2);

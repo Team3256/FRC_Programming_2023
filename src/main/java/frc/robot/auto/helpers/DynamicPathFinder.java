@@ -174,7 +174,7 @@ public class DynamicPathFinder {
 
     for (Translation2d[] chargingStationCorner :
         FieldConstants.Community.kChargingStationSegments) {
-      if (TransHelper.doIntersect(
+      if (TransHelper.intersect(
           chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
         System.out.println("Pose1:" + pose1 + ", Pose2:" + pose2 + " FAIL");
         return false;
