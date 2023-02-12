@@ -90,7 +90,10 @@ public class DynamicPathFinder {
 
       // Found shortest path to sink
       else if (cur == sink) {
-        if (debug) System.out.println("Done!");
+        if (debug) {
+          System.out.println("Done!");
+          System.out.println("Shortest Path Found:"+getStoredPathIdsTo(sink));
+        }
         return getPathPosesFromPathIds(getStoredPathIdsTo(sink));
       }
 

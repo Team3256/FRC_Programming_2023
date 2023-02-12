@@ -44,6 +44,10 @@ public class DynamicPathGenerator {
 
     DynamicPathFinder pathFinder = new DynamicPathFinder(nodes - 2, nodes - 1, poses);
 
+    if (debug){
+      System.out.println("Path generated:");
+      System.out.println(pathFinder.findPath());
+    }
     return pathFinder.findPath();
   }
 
