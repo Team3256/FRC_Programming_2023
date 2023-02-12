@@ -19,18 +19,25 @@ import org.json.simple.JSONObject;
 
 public class Path {
   private List<Waypoint> waypoints;
-  private int pathLength;
+  private int points;
 
-  public Path(List<Pose2d> poses) {
-    pathLength = poses.size();
+  public Path(List<Translation2d> positions, Rotation2d startRotation, Rotation2d endRotation) {
+    points = positions.size();
+    // convert positions into poses
+    List<Pose2d> poses = new ArrayList<>();
+    for (Translation2d position : positions) {
+      poses.add(new Pose2d(position, new Rotation2d(0)));
+    }
     Pose2d startPose = poses.get(0);
-    Pose2d endPose = poses.get(pathLength - 1);
+    Pose2d endPose = poses.get(points - 1);
+
     // dRotation, similar to dx or dy, representing a small change in rotation
     // throughout the path
-    Rotation2d dRotation = endPose.getRotation().minus(startPose.getRotation()).div(pathLength);
+    Rotation2d dRotation = endPose.getRotation().minus(startPose.getRotation()).div(points);
 
+    // convert poses to waypoints
     waypoints = new ArrayList<>();
-    for (int i = 0; i < pathLength; i++) {
+    for (int i = 0; i < points; i++) {
       Translation2d anchorPoint = poses.get(i).getTranslation();
       Rotation2d holonomicAngle = startPose.getRotation().plus(dRotation.times(i));
 
@@ -39,29 +46,18 @@ public class Path {
       if (i == 0) {
         prevControl = null;
         Translation2d thisPointToNextPoint =
-            poses
-                .get(i + 1)
-                .getTranslation()
-                .minus(poses.get(i).getTranslation())
-                .times(kControlPointScalar);
+            positions.get(i + 1).minus(positions.get(i)).times(kControlPointScalar);
 
         nextControl = anchorPoint.plus(thisPointToNextPoint);
-      } else if (i == pathLength - 1) {
+      } else if (i == points - 1) {
         Translation2d thisPointToPrevPoint =
-            poses
-                .get(i - 1)
-                .getTranslation()
-                .minus(poses.get(i).getTranslation())
-                .times(kControlPointScalar);
+            positions.get(i - 1).minus(positions.get(i)).times(kControlPointScalar);
 
         prevControl = anchorPoint.plus(thisPointToPrevPoint);
         nextControl = null;
       } else {
         Translation2d[] controlPoints =
-            findControlPoints(
-                poses.get(i - 1).getTranslation(),
-                poses.get(i).getTranslation(),
-                poses.get(i + 1).getTranslation());
+            findControlPoints(positions.get(i - 1), positions.get(i), positions.get(i + 1));
 
         prevControl = controlPoints[0];
         nextControl = controlPoints[1];
