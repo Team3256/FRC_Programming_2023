@@ -7,11 +7,11 @@
 
 package frc.robot.helpers;
 
+import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.json.simple.JSONArray;
@@ -36,27 +36,40 @@ public class Path {
       Translation2d nextControl;
       if (i == 0) {
         prevControl = null;
-        Translation2d thisPointToNextPoint = poses.get(i + 1).getTranslation().minus(poses.get(i).getTranslation())
-            .times(kControlPointScalar);
+        Translation2d thisPointToNextPoint =
+            poses
+                .get(i + 1)
+                .getTranslation()
+                .minus(poses.get(i).getTranslation())
+                .times(kControlPointScalar);
 
         nextControl = anchorPoint.plus(thisPointToNextPoint);
       } else if (i == pathLength - 1) {
-        Translation2d thisPointToPrevPoint = poses.get(i - 1).getTranslation().minus(poses.get(i).getTranslation())
-            .times(kControlPointScalar);
+        Translation2d thisPointToPrevPoint =
+            poses
+                .get(i - 1)
+                .getTranslation()
+                .minus(poses.get(i).getTranslation())
+                .times(kControlPointScalar);
 
         prevControl = anchorPoint.plus(thisPointToPrevPoint);
         nextControl = null;
       } else {
-        Translation2d[] controlPoints = findControlPoints(
-            poses.get(i - 1).getTranslation(),
-            poses.get(i).getTranslation(),
-            poses.get(i + 1).getTranslation());
+        Translation2d[] controlPoints =
+            findControlPoints(
+                poses.get(i - 1).getTranslation(),
+                poses.get(i).getTranslation(),
+                poses.get(i + 1).getTranslation());
 
         prevControl = controlPoints[0];
         nextControl = controlPoints[1];
       }
       waypoints.add(new Waypoint(anchorPoint, prevControl, nextControl, holonomicAngle));
     }
+  }
+
+  public List<Waypoint> getWaypoints() {
+    return this.waypoints;
   }
 
   public JSONObject getJson() {
@@ -85,14 +98,17 @@ public class Path {
     System.out.println("alpha:" + alpha.getDegrees());
 
     Translation2d desiredToStartTransformed = desiredToStartVector.rotateBy(alpha.unaryMinus());
-    Translation2d projDesiredToStartOnTransform = TransHelper.projectUonV(desiredToStartVector,
-        desiredToStartTransformed);
-    Translation2d startPointControlPoint = desiredPoint.plus(projDesiredToStartOnTransform.times(kControlPointScalar));
+    Translation2d projDesiredToStartOnTransform =
+        TransHelper.projectUonV(desiredToStartVector, desiredToStartTransformed);
+    Translation2d startPointControlPoint =
+        desiredPoint.plus(projDesiredToStartOnTransform.times(kControlPointScalar));
 
     Translation2d desiredToEndTransformed = desiredToEndVector.rotateBy(alpha);
-    Translation2d projDesiredToEndOnTransform = TransHelper.projectUonV(desiredToEndVector, desiredToEndTransformed);
-    Translation2d endPointControlPoint = desiredPoint.plus(projDesiredToEndOnTransform.times(kControlPointScalar));
+    Translation2d projDesiredToEndOnTransform =
+        TransHelper.projectUonV(desiredToEndVector, desiredToEndTransformed);
+    Translation2d endPointControlPoint =
+        desiredPoint.plus(projDesiredToEndOnTransform.times(kControlPointScalar));
 
-    return new Translation2d[] { startPointControlPoint, endPointControlPoint };
+    return new Translation2d[] {startPointControlPoint, endPointControlPoint};
   }
 }

@@ -14,9 +14,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,12 +27,12 @@ public class DynamicPathGenerator {
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     this.startPose = startPose;
     this.goalPose = goalPose;
-    this.nodes =  poseIndexes.length+2;
+    this.nodes = poseIndexes.length + 2;
   }
 
   public List<Pose2d> computePath() {
     ArrayList<Pose2d> poses = new ArrayList<>();
-    Collections.addAll(poses,poseIndexes);
+    Collections.addAll(poses, poseIndexes);
     poses.add(startPose);
     poses.add(goalPose);
 
@@ -43,8 +41,7 @@ public class DynamicPathGenerator {
       System.out.println(poses);
     }
 
-    DynamicPathFinder pathFinder =
-        new DynamicPathFinder(  nodes- 2, nodes- 1, poses);
+    DynamicPathFinder pathFinder = new DynamicPathFinder(nodes - 2, nodes - 1, poses);
 
     List<Pose2d> ret = new ArrayList<>();
     ArrayList<Integer> pathIndexes = pathFinder.findPath();

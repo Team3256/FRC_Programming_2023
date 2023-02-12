@@ -39,6 +39,7 @@ public class DynamicPathFinder {
 
   /**
    * Finds the fastest path between two nodes using Warrior-star algorithm
+   *
    * @param src start node
    * @param sink end node
    */
@@ -46,7 +47,7 @@ public class DynamicPathFinder {
     this.src = src;
     this.sink = sink;
     this.poses = poses;
-    this.nodes=poses.size();
+    this.nodes = poses.size();
   }
 
   public ArrayList<Integer> findPath() {
@@ -82,8 +83,8 @@ public class DynamicPathFinder {
       // No paths available
       if (cur == -1) {
         ArrayList<Integer> ret = new ArrayList<>();
-        ret.add(nodes-2);
-        ret.add(nodes-1);
+        ret.add(nodes - 2);
+        ret.add(nodes - 1);
         return ret;
       }
 
@@ -129,9 +130,9 @@ public class DynamicPathFinder {
     }
   }
 
-  //calculate time to travel list of pathIds
+  // calculate time to travel list of pathIds
   private double getPathTime(ArrayList<Integer> pathIds) {
-    //make sure pathIds are valid (doesn't hit obstacles)
+    // make sure pathIds are valid (doesn't hit obstacles)
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (!isPathConnectionValid(poses.get(pathIds.get(i)), poses.get(pathIds.get(i + 1))))
         return INF;
@@ -142,21 +143,21 @@ public class DynamicPathFinder {
     return trajectory.getTotalTimeSeconds();
   }
 
-  public PathPlannerTrajectory getTrajectoryFromPathIds(ArrayList<Integer> pathIds){
+  public PathPlannerTrajectory getTrajectoryFromPathIds(ArrayList<Integer> pathIds) {
     // convert pathIds into pathPoints
     List<Pose2d> pathPoses = new ArrayList<>();
     for (int node : pathIds) pathPoses.add(poses.get(node));
     Path path = new Path(pathPoses);
     List<PathPoint> pathPoints = new ArrayList<>();
-    for (Waypoint way : path.waypoints) {
+    for (Waypoint way : path.getWaypoints()) {
       pathPoints.add(way.toPathPoint());
     }
 
-    //convert pathPoints into Trajectory we return
-    return PathPlanner.generatePath(dynamicPathConstraints,pathPoints);
+    // convert pathPoints into Trajectory we return
+    return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
   }
 
-  //get the pathIds stored from src to node
+  // get the pathIds stored from src to node
   private ArrayList<Integer> getStoredPathIdsTo(int node) {
     ArrayList<Integer> ret = new ArrayList<>();
     int cur = node;
@@ -169,12 +170,13 @@ public class DynamicPathFinder {
     return ret;
   }
 
-  //heuristic estimate of time to travel 1->2 that is guaranteed to be lower than actual
+  // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
+  // actual
   public static double heuristic(Pose2d pose1, Pose2d pose2) {
     return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
   }
 
- //make sure line segments don't intersect obstacles
+  // make sure line segments don't intersect obstacles
   public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();

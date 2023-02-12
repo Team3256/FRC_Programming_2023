@@ -20,10 +20,10 @@ public class TransHelper {
   }
 
   // return angle between u and v in degrees
-  public static Rotation2d angleBetweenVectors(Translation2d u, Translation2d v){
+  public static Rotation2d angleBetweenVectors(Translation2d u, Translation2d v) {
     double numerator = u.getX() * v.getX() + u.getY() * v.getY();
     double denominator = u.getNorm() * v.getNorm();
-    return Rotation2d.fromRadians(Math.acos(numerator/denominator));
+    return Rotation2d.fromRadians(Math.acos(numerator / denominator));
   }
 
   // return vector of proju->v
