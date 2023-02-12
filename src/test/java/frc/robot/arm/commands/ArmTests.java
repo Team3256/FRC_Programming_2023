@@ -7,79 +7,58 @@
 
 package frc.robot.arm.commands;
 
-import static org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.beans.Transient;
-
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.UnitTestBase;
-import frc.robot.arm.ArmSubsystem;
+import frc.robot.arm.Arm;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ArmTests extends UnitTestBase {
 
-  static ArmSubsystem armSubsystem;
+  private static final double DELTA = 0.05;
+  static Arm armSubsystem;
 
   @BeforeAll
   public static void setup() {
     UnitTestBase.setup();
   }
 
-  @Test
-  public void voltageRoutine() {
-    voltageRoutine(5.0, 0.0, 5.0);
-  }
-
-  // SetArmFromVoltage test (one routine)
-  @Test
-  public void setVoltageRoutine(double firstSet, double secondSet, double thirdSet) {
-    SetArmFromVoltage setVoltageToFirstSet = new SetArmFromVoltage(armSubsystem, firstSet);
-    setVoltageToFirstSet.schedule();
-    runScheduler(1);
-    assertEquals("Set voltage to " + firstSet, ArmSubsystem.getVoltage(), firstSet, DELTA);
-    wait(1500);
-
-    SetArmFromVoltage setVoltageToSecondSet = new SetArmFromVoltage(armSubsystem, secondSet);
-    setVoltageToSecondSet.schedule();
-    runScheduler(1);
-    assertEquals("Set voltage to " + secondSet, ArmSubsystem.getVoltage(), secondSet, DELTA);
-    wait(1500);
-
-    SetArmFromVoltage setVoltageToThirdSet = new SetArmFromVoltage(armSubsystem, thirdSet);
-    setVoltageToThirdSet.schedule();
-    runScheduler(1);
-    assertEquals("Set voltage to " + thirdSet, ArmSubsystem.getVoltage(), thirdSet, DELTA);
-    wait(1000);
-  }
-
-  // SetArmFromPID test (one routine)
-  @Test
-  public void armPIDRoutine() {
-    setArmFromPIDRoutine(600, 0, 1200);
-  }
+  // SetArmAngle test (one routine)
 
   @Test
-  public void setArmFromPIDRoutine(double firstSet, double secondSet, double thirdSet) {
-    SetArmFromPID setArmPIDToFirstSet = new SetArmFromPID(armSubsystem, firstSet);
-    setArmPIDToFirstSet.schedule();
-    runScheduler(1.5);
+  public void armAngleRoutine() {
+
+    Rotation2d firstSet = new Rotation2d(600.0);
+    Rotation2d secondSet = new Rotation2d(0.0);
+    Rotation2d thirdSet = new Rotation2d(1200);
+    SetArmAngle SetArmAngleToFirstSet = new SetArmAngle(armSubsystem, firstSet);
+    SetArmAngleToFirstSet.schedule();
+    runScheduler(1.5, SetArmAngleToFirstSet, armSubsystem);
     assertEquals(
-        "Set angular velocity to " + firstSet + " RPM", armSubsystem.getAngularVelocityRPM(), firstSet, DELTA);
-    wait(1000);
+        armSubsystem.getArmPosition(),
+        firstSet.getDegrees(),
+        DELTA,
+        "Set angular velocity to " + firstSet.getDegrees() + " RPM");
 
-    SetArmFromPID setArmPIDToSecondSet = new SetArmFromPID(armSubsystem, secondSet);
-    setArmPIDToSecondSet.schedule();
-    runScheduler(1);
-    assertEquals("Set angular velocity to " + secondSet + " RPM", armSubsystem.getAngularVelocityRPM(), secondSet, DELTA);
-    wait(1000);
-
-    SetArmFromPID setArmPIDToThirdSet = new SetArmFromPID(armSubsystem, thirdSet);
-    setArmPIDToThirdSet.schedule();
-    runScheduler(1.5);
+    SetArmAngle SetArmAngleToSecondSet = new SetArmAngle(armSubsystem, secondSet);
+    SetArmAngleToSecondSet.schedule();
+    runScheduler(1, SetArmAngleToSecondSet, armSubsystem);
     assertEquals(
-        "Set angular velocity to " + thirdSet + " RPM", armSubsystem.getAngularVelocityRPM(), thirdSet, DELTA);
-    setArmPIDTo1200.end();
+        armSubsystem.getArmPosition(),
+        secondSet.getDegrees(),
+        DELTA,
+        "Set angular velocity to " + secondSet.getDegrees() + " RPM");
+
+    SetArmAngle SetArmAngleToThirdSet = new SetArmAngle(armSubsystem, thirdSet);
+    SetArmAngleToThirdSet.schedule();
+    runScheduler(1.5, SetArmAngleToThirdSet, armSubsystem);
+    assertEquals(
+        armSubsystem.getArmPosition(),
+        thirdSet.getDegrees(),
+        DELTA,
+        "Set angular velocity to " + thirdSet.getDegrees() + " RPM");
+    armSubsystem.off();
   }
 }
