@@ -57,7 +57,7 @@ public class DynamicPathGenerator {
     Path path = new Path(pathPoses);
     List<PathPoint> pathPoints = new ArrayList<>();
     for (WayPoint way : path.getWaypoints()) {
-      pathPoints.add(way.toPathPoint());
+      pathPoints.add(way.waypointToPathPoint());
     }
 
     // convert pathPoints into Trajectory we return

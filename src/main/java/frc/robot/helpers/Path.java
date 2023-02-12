@@ -29,7 +29,7 @@ public class Path {
     // throughout the path
     Rotation2d dRotation = endPose.getRotation().minus(startPose.getRotation()).div(pathLength);
 
-    wayPoints= new ArrayList<>();
+    wayPoints = new ArrayList<>();
     for (int i = 0; i < pathLength; i++) {
       Translation2d anchorPoint = poses.get(i).getTranslation();
       Rotation2d holonomicAngle = startPose.getRotation().plus(dRotation.times(i));

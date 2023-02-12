@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class WayPoint{
+public class WayPoint {
   private Translation2d anchorPoint;
   private Translation2d prevControl;
   private Translation2d nextControl;
