@@ -14,6 +14,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
@@ -26,9 +27,11 @@ import java.util.List;
 
 public class DynamicPathFinder {
   private int src;
+  private Rotation2d srcRot;
   private int sink;
+  private Rotation2d sinkRot;
   private int nodes;
-  private ArrayList<Pose2d> poses;
+  private ArrayList<Translation2d> positions;
 
   private double[] distanceToTravelToNodeN;
   private int[] previousNodesInCurrentPath;
@@ -42,14 +45,21 @@ public class DynamicPathFinder {
    * @param src start node
    * @param sink end node
    */
-  public DynamicPathFinder(int src, int sink, ArrayList<Pose2d> poses) {
+  public DynamicPathFinder(
+      int src,
+      Rotation2d srcRot,
+      int sink,
+      Rotation2d sinkRot,
+      ArrayList<Translation2d> positions) {
     this.src = src;
+    this.srcRot = srcRot;
     this.sink = sink;
-    this.poses = poses;
-    this.nodes = poses.size();
+    this.sinkRot = sinkRot;
+    this.positions = positions;
+    this.nodes = positions.size();
   }
 
-  public List<Pose2d> findPath() {
+  public List<Translation2d> findPath() {
     // Time to travel from src to all other nodes
     distanceToTravelToNodeN = new double[nodes];
     Arrays.fill(distanceToTravelToNodeN, INF);
@@ -61,7 +71,7 @@ public class DynamicPathFinder {
     // Priorities with which to visit the nodes
     priorityQueue = new double[nodes];
     Arrays.fill(priorityQueue, INF);
-    priorityQueue[src] = heuristic(poses.get(src), poses.get(sink));
+    priorityQueue[src] = heuristic(positions.get(src), positions.get(sink));
 
     // Visited nodes
     boolean[] visitedNodes = new boolean[nodes];
@@ -83,7 +93,7 @@ public class DynamicPathFinder {
       // No paths available
       if (currentNode == -1) {
         ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
-        return getPathPosesFromPathIds(pathIds);
+        return getPathPositionsFromPathIds(pathIds);
       }
 
       // Found shortest path to sink
@@ -92,13 +102,13 @@ public class DynamicPathFinder {
           System.out.println("Done!");
           System.out.println("Shortest Path Found:" + getPathIdsInCurrentPath(sink));
         }
-        return getPathPosesFromPathIds(getPathIdsInCurrentPath(sink));
+        return getPathPositionsFromPathIds(getPathIdsInCurrentPath(sink));
       }
 
       // Update all unvisited neighboring nodes
       for (int node = 0; node < nodes; node++) {
         List<Integer> path = getPathIdsInCurrentPath(currentNode);
-        if (poses.get(node).getX() < poses.get(currentNode).getX() && !visitedNodes[node]) {
+        if (positions.get(node).getX() < positions.get(currentNode).getX() && !visitedNodes[node]) {
           path.add(node);
           double pathTime = getPathTime(path);
           // If path over this edge is better
@@ -114,12 +124,13 @@ public class DynamicPathFinder {
 
             // Update node priority
             priorityQueue[node] =
-                distanceToTravelToNodeN[node] + heuristic(poses.get(node), poses.get(sink));
+                distanceToTravelToNodeN[node] + heuristic(positions.get(node), positions.get(sink));
 
             if (kDynamicPathGenerationDebug) {
               System.out.println("next:" + node);
               System.out.println("dist:" + distanceToTravelToNodeN[node]);
-              System.out.println("heuristic:" + heuristic(poses.get(node), poses.get(sink)));
+              System.out.println(
+                  "heuristic:" + heuristic(positions.get(node), positions.get(sink)));
               System.out.println("priority:" + priorityQueue[node]);
             }
           }
@@ -134,8 +145,8 @@ public class DynamicPathFinder {
 
   // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
   // actual
-  public static double heuristic(Pose2d pose1, Pose2d pose2) {
-    return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
+  public static double heuristic(Translation2d position1, Translation2d position2) {
+    return position1.getDistance(position2) / SwerveConstants.kMaxSpeed;
   }
 
   // make sure line segments don't intersect obstacles
@@ -157,7 +168,7 @@ public class DynamicPathFinder {
   private double getPathTime(List<Integer> pathIds) {
     // make sure pathIds are valid (doesn't hit obstacles)
     for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (!doesPathHitObstacles(poses.get(pathIds.get(i)), poses.get(pathIds.get(i + 1))))
+      if (!doesPathHitObstacles(positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1))))
         return INF;
     }
 
@@ -169,8 +180,8 @@ public class DynamicPathFinder {
   // convert list of pathIds into PathPlannerTrajectory
   public PathPlannerTrajectory getTrajectoryFromPathIds(List<Integer> pathIds) {
     // convert pathIds into pathPoints
-    List<Pose2d> pathPoses = getPathPosesFromPathIds(pathIds);
-    Path path = new Path(pathPoses);
+    List<Translation2d> pathPosition = getPathPositionsFromPathIds(pathIds);
+    Path path = new Path(pathPosition, srcRot, sinkRot);
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());
@@ -180,10 +191,10 @@ public class DynamicPathFinder {
   }
 
   // convert list of pathIds into list of pathPoses
-  private List<Pose2d> getPathPosesFromPathIds(List<Integer> pathIds) {
-    List<Pose2d> pathPoses = new ArrayList<>();
-    for (int node : pathIds) pathPoses.add(poses.get(node));
-    return pathPoses;
+  private List<Translation2d> getPathPositionsFromPathIds(List<Integer> pathIds) {
+    List<Translation2d> pathPositions = new ArrayList<>();
+    for (int node : pathIds) pathPositions.add(positions.get(node));
+    return pathPositions;
   }
   // get the pathIds stored from src to node
 
@@ -202,15 +213,11 @@ public class DynamicPathFinder {
   }
 
   // make sure line segments don't intersect obstacles
-  public static boolean doesPathHitObstacles(Pose2d pose1, Pose2d pose2) {
-    Translation2d translation1 = pose1.getTranslation();
-    Translation2d translation2 = pose2.getTranslation();
-
+  public static boolean doesPathHitObstacles(Translation2d position1, Translation2d position2) {
     for (Translation2d[] chargingStationCorner :
         FieldConstants.Community.kChargingStationSegments) {
       if (GeometryUtil.intersect(
-          chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
-        System.out.println("Pose1:" + pose1 + ", Pose2:" + pose2 + " FAIL");
+          chargingStationCorner[0], chargingStationCorner[1], position1, position2)) {
         return false;
       }
     }
