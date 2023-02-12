@@ -7,20 +7,20 @@
 
 package frc.robot.helpers;
 
+import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class WayPoint {
+public class Waypoint{
   Translation2d anchorPoint;
   Translation2d prevControl;
   Translation2d nextControl;
   Rotation2d holonomicAngle;
+  Rotation2d heading;
 
-  WayPoint() {}
-
-  WayPoint(
+  Waypoint(
       Translation2d anchorPoint,
       Translation2d prevControl,
       Translation2d nextControl,
@@ -28,8 +28,15 @@ public class WayPoint {
     this.anchorPoint = anchorPoint;
     this.prevControl = prevControl;
     this.nextControl = nextControl;
-
     this.holonomicAngle = holonomicAngle;
+    if (nextControl!=null){
+      this.heading=nextControl.minus(anchorPoint).getAngle();
+    }
+    else if (prevControl!=null){
+      this.heading=anchorPoint.minus(prevControl).getAngle();
+    } else {
+      this.heading = new Rotation2d();
+    }
   }
 
   public JSONObject getJson() {
@@ -62,6 +69,19 @@ public class WayPoint {
     JSONObject ret = new JSONObject();
     ret.put("x", point.getX());
     ret.put("y", point.getY());
+    return ret;
+  }
+
+  public PathPoint toPathPoint() {
+    PathPoint ret = new PathPoint(anchorPoint,heading,holonomicAngle);
+    if (prevControl!=null){
+      Translation2d anchorPrevVector=anchorPoint.minus(prevControl);
+      ret.withNextControlLength(anchorPrevVector.getNorm());
+    }
+    if (nextControl!=null){
+      Translation2d anchorNextVector=anchorPoint.minus(nextControl);
+      ret.withNextControlLength(anchorNextVector.getNorm());
+    }
     return ret;
   }
 }

@@ -11,13 +11,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Path {
-  List<WayPoint> waypoints;
+  public List<Waypoint> waypoints;
   int length;
   double kControlPointScalar = 0.3;
 
@@ -28,15 +27,16 @@ public class Path {
     Rotation2d dRotation = end.getRotation().minus(start.getRotation()).div(length);
     waypoints = new ArrayList<>();
     for (int i = 0; i < length; i++) {
-      waypoints.add(new WayPoint());
-      // set anchor
-      waypoints.get(i).anchorPoint = poses.get(i).getTranslation();
-      // set angle
-      waypoints.get(i).holonomicAngle = start.getRotation().plus(dRotation.times(i));
+      // get anchor
+      Translation2d anchorPoint = poses.get(i).getTranslation();
+      // get angle
+      Rotation2d holonomicAngle = start.getRotation().plus(dRotation.times(i));
       // set control
+      Translation2d prevControl;
+      Translation2d nextControl;
       if (i == 0) {
-        waypoints.get(i).prevControl = null;
-        waypoints.get(i).nextControl =
+        prevControl = null;
+        nextControl =
             poses
                 .get(i)
                 .getTranslation()
@@ -47,7 +47,7 @@ public class Path {
                         .minus(poses.get(i).getTranslation())
                         .times(kControlPointScalar));
       } else if (i == length - 1) {
-        waypoints.get(i).prevControl =
+        prevControl =
             poses
                 .get(i)
                 .getTranslation()
@@ -57,17 +57,17 @@ public class Path {
                         .getTranslation()
                         .minus(poses.get(i).getTranslation())
                         .times(kControlPointScalar));
-        waypoints.get(i).nextControl = null;
+        nextControl = null;
       } else {
         Translation2d[] controlPoints =
             findControlPoints(
                 poses.get(i - 1).getTranslation(),
                 poses.get(i).getTranslation(),
                 poses.get(i + 1).getTranslation());
-        System.out.println(Arrays.toString(controlPoints));
-        waypoints.get(i).prevControl = controlPoints[0];
-        waypoints.get(i).nextControl = controlPoints[1];
+        prevControl = controlPoints[0];
+        nextControl = controlPoints[1];
       }
+      waypoints.add(new Waypoint(anchorPoint,prevControl,nextControl,holonomicAngle));
     }
   }
 

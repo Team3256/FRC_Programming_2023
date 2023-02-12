@@ -15,6 +15,9 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.helpers.Path;
+import frc.robot.helpers.TransHelper;
+import frc.robot.helpers.Waypoint;
 import frc.robot.swerve.SwerveConstants;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,14 +136,19 @@ public class DynamicPathFinder {
     }
   }
 
-  private double getPathTime(ArrayList<Integer> path) {
-    for (int i = 0; i < path.size() - 1; i++) {
-      if (!isPathConnectionValid(poses.get(path.get(i)), poses.get(path.get(i + 1)))) return INF;
+  private double getPathTime(ArrayList<Integer> pathIds) {
+    for (int i = 0; i < pathIds.size() - 1; i++) {
+      if (!isPathConnectionValid(poses.get(pathIds.get(i)), poses.get(pathIds.get(i + 1)))) return INF;
     }
-    List<PathPoint> waypoints = new ArrayList<>();
-    for (int node : path)
-      waypoints.add(new PathPoint(poses.get(node).getTranslation(), poses.get(node).getRotation()));
-    PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, waypoints);
+    List<Pose2d> pathPoses = new ArrayList<>();
+    for (int node : pathIds) pathPoses.add(poses.get(node));
+    Path path = new Path(pathPoses);
+
+    List<PathPoint> pathPoints = new ArrayList<>();
+    for (Waypoint way : path.waypoints){
+      pathPoints.add(way.toPathPoint());
+    }
+    PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
     return trajectory.getTotalTimeSeconds();
   }
 
@@ -172,30 +180,12 @@ public class DynamicPathFinder {
 
     for (Translation2d[] chargingStationCorner :
         FieldConstants.Community.kChargingStationSegments) {
-      if (doIntersect(
+      if (TransHelper.doIntersect(
           chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
         System.out.println("Pose1:" + pose1 + ", Pose2:" + pose2 + " FAIL");
         return false;
       }
     }
     return true;
-  }
-
-  static int orientation(Translation2d p, Translation2d q, Translation2d r) {
-    double val =
-        (q.getY() - p.getY()) * (r.getX() - q.getX())
-            - (q.getX() - p.getX()) * (r.getY() - q.getY());
-
-    return (val > 0) ? 1 : 2; // CW/CCW
-  }
-
-  public static boolean doIntersect(
-      Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
-    int o1 = orientation(start1, end1, start2);
-    int o2 = orientation(start1, end1, end2);
-    int o3 = orientation(start2, end2, start1);
-    int o4 = orientation(start2, end2, end1);
-
-    return (o1 != o2 && o3 != o4);
   }
 }
