@@ -7,16 +7,16 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.VisionConstants.*;
-import static frc.robot.swerve.SwerveConstants.*;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
@@ -29,6 +29,9 @@ import frc.robot.limelight.Limelight;
 import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.Constants.VisionConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
@@ -49,23 +52,11 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
   public Pigeon2 gyro;
-  public SwerveDriveOdometry odometry;
 
   public SwerveDrive() {
     gyro = new Pigeon2(kPigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
-
-    this.odometry =
-        new SwerveDriveOdometry(
-            kSwerveKinematics,
-            getYaw(),
-            new SwerveModulePosition[] {
-              frontLeftModule.getPosition(),
-              frontRightModule.getPosition(),
-              backLeftModule.getPosition(),
-              backRightModule.getPosition()
-            });
 
     this.poseEstimator =
         new SwerveDrivePoseEstimator(
@@ -80,14 +71,6 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
             getPose());
 
     SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
-  }
-
-  public void drive(ChassisSpeeds chassisSpeeds) {
-    SwerveModuleState[] swerveModuleStates =
-        kSwerveKinematics.toSwerveModuleStates(
-            chassisSpeeds); // same as the older version of drive but takes in the calculated
-    // chassisspeed
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
     /*
      * By pausing init for a second before setting module offsets, we avoid a bug
      * with inverting motors.
@@ -95,10 +78,6 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
      */
     Timer.delay(1.0);
     resetModulesToAbsolute();
-
-    poseEstimator =
-        new SwerveDrivePoseEstimator(
-            kSwerveKinematics, getYaw(), getModulePositions(), new Pose2d());
   }
 
   public void resetModulesToAbsolute() {
@@ -212,7 +191,6 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
   @Override
   public void periodic() {
-    this.odometry.update(getYaw(), getModulePositions());
     // poseEstimator.update(getYaw(), getPositions());
     this.poseEstimator.update(getYaw(), getModulePositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
