@@ -39,7 +39,7 @@ public class DynamicPathFinder {
   /**
    * Finds the fastest path between two nodes using Warrior-star algorithm
    *
-   * @param src start node
+   * @param src  start node
    * @param sink end node
    */
   public DynamicPathFinder(int src, int sink, ArrayList<Pose2d> poses) {
@@ -49,7 +49,7 @@ public class DynamicPathFinder {
     this.nodes = poses.size();
   }
 
-  public ArrayList<Integer> findPath() {
+  public List<Pose2d> findPath() {
     // Time to travel from src to all other nodes
     distanceToTravelToNodeN = new double[nodes];
     Arrays.fill(distanceToTravelToNodeN, INF);
@@ -79,20 +79,25 @@ public class DynamicPathFinder {
       if (kDynamicPathGenerationDebug) {
         System.out.println("cur:" + currentNode);
       }
+
       // No paths available
       if (currentNode == -1) {
-        return new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
+        ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
+        return getPathPosesFromPathIds(pathIds);
       }
 
       // Found shortest path to sink
       else if (currentNode == sink) {
-        if (kDynamicPathGenerationDebug) System.out.println("Done!");
-        return getPathIdsInCurrentPath(sink);
+        if (kDynamicPathGenerationDebug) {
+          System.out.println("Done!");
+          System.out.println("Shortest Path Found:" + getPathIdsInCurrentPath(sink));
+        }
+        return getPathPosesFromPathIds(getPathIdsInCurrentPath(sink));
       }
 
       // Update all unvisited neighboring nodes
       for (int node = 0; node < nodes; node++) {
-        ArrayList<Integer> path = getPathIdsInCurrentPath(currentNode);
+        List<Integer> path = getPathIdsInCurrentPath(currentNode);
         if (poses.get(node).getX() < poses.get(currentNode).getX() && !visitedNodes[node]) {
           path.add(node);
           double pathTime = getPathTime(path);
@@ -108,8 +113,7 @@ public class DynamicPathFinder {
             previousNodesInCurrentPath[node] = currentNode;
 
             // Update node priority
-            priorityQueue[node] =
-                distanceToTravelToNodeN[node] + heuristic(poses.get(node), poses.get(sink));
+            priorityQueue[node] = distanceToTravelToNodeN[node] + heuristic(poses.get(node), poses.get(sink));
 
             if (kDynamicPathGenerationDebug) {
               System.out.println("next:" + node);
@@ -127,8 +131,28 @@ public class DynamicPathFinder {
     }
   }
 
+  // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
+  // actual
+  public static double heuristic(Pose2d pose1, Pose2d pose2) {
+    return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
+  }
+
+  // make sure line segments don't intersect obstacles
+  public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
+    Translation2d translation1 = pose1.getTranslation();
+    Translation2d translation2 = pose2.getTranslation();
+
+    for (Translation2d[] chargingStationCorner : FieldConstants.Community.kChargingStationSegments) {
+      if (GeometryUtil.intersect(
+          chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // calculate time to travel list of pathIds
-  private double getPathTime(ArrayList<Integer> pathIds) {
+  private double getPathTime(List<Integer> pathIds) {
     // make sure pathIds are valid (doesn't hit obstacles)
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (!doesPathHitObstacles(poses.get(pathIds.get(i)), poses.get(pathIds.get(i + 1))))
@@ -140,10 +164,10 @@ public class DynamicPathFinder {
     return trajectory.getTotalTimeSeconds();
   }
 
-  public PathPlannerTrajectory getTrajectoryFromPathIds(ArrayList<Integer> pathIds) {
-    List<Pose2d> pathPoses = new ArrayList<>();
-    for (int pathId : pathIds) pathPoses.add(poses.get(pathId));
-
+  // convert list of pathIds into PathPlannerTrajectory
+  public PathPlannerTrajectory getTrajectoryFromPathIds(List<Integer> pathIds) {
+    // convert pathIds into pathPoints
+    List<Pose2d> pathPoses = getPathPosesFromPathIds(pathIds);
     Path path = new Path(pathPoses);
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint waypoint : path.getWaypoints()) {
@@ -153,9 +177,17 @@ public class DynamicPathFinder {
     return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
   }
 
+  // convert list of pathIds into list of pathPoses
+  private List<Pose2d> getPathPosesFromPathIds(List<Integer> pathIds) {
+    List<Pose2d> pathPoses = new ArrayList<>();
+    for (int node : pathIds)
+      pathPoses.add(poses.get(node));
+    return pathPoses;
+  }
   // get the pathIds stored from src to node
-  private ArrayList<Integer> getPathIdsInCurrentPath(int node) {
-    ArrayList<Integer> pathIds = new ArrayList<>();
+
+  private List<Integer> getPathIdsInCurrentPath(int node) {
+    List<Integer> pathIds = new ArrayList<>();
     int currentNode = node;
 
     while (currentNode != src) {
@@ -168,19 +200,12 @@ public class DynamicPathFinder {
     return pathIds;
   }
 
-  // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
-  // actual
-  public static double heuristic(Pose2d pose1, Pose2d pose2) {
-    return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
-  }
-
   // make sure line segments don't intersect obstacles
   public static boolean doesPathHitObstacles(Pose2d pose1, Pose2d pose2) {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
 
-    for (Translation2d[] chargingStationCorner :
-        FieldConstants.Community.kChargingStationSegments) {
+    for (Translation2d[] chargingStationCorner : FieldConstants.Community.kChargingStationSegments) {
       if (GeometryUtil.intersect(
           chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
         System.out.println("Pose1:" + pose1 + ", Pose2:" + pose2 + " FAIL");

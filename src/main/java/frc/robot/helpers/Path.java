@@ -25,6 +25,8 @@ public class Path {
     pathLength = poses.size();
     Pose2d startPose = poses.get(0);
     Pose2d endPose = poses.get(pathLength - 1);
+    // dRotation, similar to dx or dy, representing a small change in rotation
+    // throughout the path
     Rotation2d dRotation = endPose.getRotation().minus(startPose.getRotation()).div(pathLength);
 
     waypoints = new ArrayList<>();
@@ -36,30 +38,27 @@ public class Path {
       Translation2d nextControl;
       if (i == 0) {
         prevControl = null;
-        Translation2d thisPointToNextPoint =
-            poses
-                .get(i + 1)
-                .getTranslation()
-                .minus(poses.get(i).getTranslation())
-                .times(kControlPointScalar);
+        Translation2d thisPointToNextPoint = poses
+            .get(i + 1)
+            .getTranslation()
+            .minus(poses.get(i).getTranslation())
+            .times(kControlPointScalar);
 
         nextControl = anchorPoint.plus(thisPointToNextPoint);
       } else if (i == pathLength - 1) {
-        Translation2d thisPointToPrevPoint =
-            poses
-                .get(i - 1)
-                .getTranslation()
-                .minus(poses.get(i).getTranslation())
-                .times(kControlPointScalar);
+        Translation2d thisPointToPrevPoint = poses
+            .get(i - 1)
+            .getTranslation()
+            .minus(poses.get(i).getTranslation())
+            .times(kControlPointScalar);
 
         prevControl = anchorPoint.plus(thisPointToPrevPoint);
         nextControl = null;
       } else {
-        Translation2d[] controlPoints =
-            findControlPoints(
-                poses.get(i - 1).getTranslation(),
-                poses.get(i).getTranslation(),
-                poses.get(i + 1).getTranslation());
+        Translation2d[] controlPoints = findControlPoints(
+            poses.get(i - 1).getTranslation(),
+            poses.get(i).getTranslation(),
+            poses.get(i + 1).getTranslation());
 
         prevControl = controlPoints[0];
         nextControl = controlPoints[1];
@@ -98,17 +97,14 @@ public class Path {
     System.out.println("alpha:" + alpha.getDegrees());
 
     Translation2d desiredToStartTransformed = desiredToStartVector.rotateBy(alpha.unaryMinus());
-    Translation2d projDesiredToStartOnTransform =
-        GeometryUtil.projectUonV(desiredToStartVector, desiredToStartTransformed);
-    Translation2d startPointControlPoint =
-        desiredPoint.plus(projDesiredToStartOnTransform.times(kControlPointScalar));
+    Translation2d projDesiredToStartOnTransform = GeometryUtil.projectUonV(desiredToStartVector,
+        desiredToStartTransformed);
+    Translation2d startPointControlPoint = desiredPoint.plus(projDesiredToStartOnTransform.times(kControlPointScalar));
 
     Translation2d desiredToEndTransformed = desiredToEndVector.rotateBy(alpha);
-    Translation2d projDesiredToEndOnTransform =
-        GeometryUtil.projectUonV(desiredToEndVector, desiredToEndTransformed);
-    Translation2d endPointControlPoint =
-        desiredPoint.plus(projDesiredToEndOnTransform.times(kControlPointScalar));
+    Translation2d projDesiredToEndOnTransform = GeometryUtil.projectUonV(desiredToEndVector, desiredToEndTransformed);
+    Translation2d endPointControlPoint = desiredPoint.plus(projDesiredToEndOnTransform.times(kControlPointScalar));
 
-    return new Translation2d[] {startPointControlPoint, endPointControlPoint};
+    return new Translation2d[] { startPointControlPoint, endPointControlPoint };
   }
 }

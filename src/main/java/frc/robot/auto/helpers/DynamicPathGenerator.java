@@ -13,7 +13,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.helpers.Path;
+import frc.robot.helpers.Waypoint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,41 +31,36 @@ public class DynamicPathGenerator {
     this.nodes = poseIndexes.length + 2;
   }
 
-  public List<Pose2d> computePath() {
+  public List<Pose2d> getPath() {
     ArrayList<Pose2d> poses = new ArrayList<>();
     Collections.addAll(poses, poseIndexes);
     poses.add(startPose);
     poses.add(goalPose);
 
     if (debug) {
-      System.out.println("Poses:");
+      System.out.println("Path generated on poses:");
       System.out.println(poses);
     }
 
     DynamicPathFinder pathFinder = new DynamicPathFinder(nodes - 2, nodes - 1, poses);
 
-    List<Pose2d> ret = new ArrayList<>();
-    ArrayList<Integer> pathIndexes = pathFinder.findPath();
-    for (int index : pathIndexes) {
-      ret.add(poses.get(index));
-    }
     if (debug) {
-      System.out.println("pathIndexes:");
-      System.out.println(pathIndexes);
+      System.out.println("Path generated:");
+      System.out.println(pathFinder.findPath());
     }
-    return ret;
+    return pathFinder.findPath();
   }
 
-  public PathPlannerTrajectory computeTrajectory() {
-    List<Pose2d> path = computePath();
-    List<PathPoint> waypoints = new ArrayList<>();
-    waypoints.add(
-        new PathPoint(startPose.getTranslation(), new Rotation2d(), startPose.getRotation()));
-    for (Pose2d pointPose : path) {
-      waypoints.add(new PathPoint(pointPose.getTranslation(), pointPose.getRotation()));
+  public PathPlannerTrajectory getTrajectory() {
+    // convert pathPoses into pathPoints
+    List<Pose2d> pathPoses = getPath();
+    Path path = new Path(pathPoses);
+    List<PathPoint> pathPoints = new ArrayList<>();
+    for (Waypoint way : path.getWaypoints()) {
+      pathPoints.add(way.toPathPoint());
     }
-    waypoints.add(
-        new PathPoint(goalPose.getTranslation(), new Rotation2d(), goalPose.getRotation()));
-    return PathPlanner.generatePath(dynamicPathConstraints, waypoints);
+
+    // convert pathPoints into Trajectory we return
+    return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
   }
 }

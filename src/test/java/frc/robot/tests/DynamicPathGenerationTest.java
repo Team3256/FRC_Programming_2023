@@ -55,7 +55,7 @@ public class DynamicPathGenerationTest {
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, int id) {
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
-    List<Pose2d> poseList = generator.computePath();
+    List<Pose2d> poseList = generator.getPath();
     System.out.println("Generated pose list:" + poseList);
     testInterpolatePathBase(poseList, id);
   }

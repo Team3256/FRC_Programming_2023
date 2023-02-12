@@ -40,7 +40,7 @@ public class DynamicPathFollowing extends CommandBase {
   public void initialize() {
     Pose2d currentPose = swerveSubsystem.getPose();
     DynamicPathGenerator pathGenerator = new DynamicPathGenerator(currentPose, goalPose);
-    pathToScoringLocation = pathGenerator.computeTrajectory();
+    pathToScoringLocation = pathGenerator.getTrajectory();
   }
 
   @Override
