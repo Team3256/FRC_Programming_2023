@@ -39,7 +39,7 @@ public class DynamicPathFinder {
   /**
    * Finds the fastest path between two nodes using Warrior-star algorithm
    *
-   * @param src  start node
+   * @param src start node
    * @param sink end node
    */
   public DynamicPathFinder(int src, int sink, ArrayList<Pose2d> poses) {
@@ -113,7 +113,8 @@ public class DynamicPathFinder {
             previousNodesInCurrentPath[node] = currentNode;
 
             // Update node priority
-            priorityQueue[node] = distanceToTravelToNodeN[node] + heuristic(poses.get(node), poses.get(sink));
+            priorityQueue[node] =
+                distanceToTravelToNodeN[node] + heuristic(poses.get(node), poses.get(sink));
 
             if (kDynamicPathGenerationDebug) {
               System.out.println("next:" + node);
@@ -142,7 +143,8 @@ public class DynamicPathFinder {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
 
-    for (Translation2d[] chargingStationCorner : FieldConstants.Community.kChargingStationSegments) {
+    for (Translation2d[] chargingStationCorner :
+        FieldConstants.Community.kChargingStationSegments) {
       if (GeometryUtil.intersect(
           chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
         return false;
@@ -180,8 +182,7 @@ public class DynamicPathFinder {
   // convert list of pathIds into list of pathPoses
   private List<Pose2d> getPathPosesFromPathIds(List<Integer> pathIds) {
     List<Pose2d> pathPoses = new ArrayList<>();
-    for (int node : pathIds)
-      pathPoses.add(poses.get(node));
+    for (int node : pathIds) pathPoses.add(poses.get(node));
     return pathPoses;
   }
   // get the pathIds stored from src to node
@@ -205,7 +206,8 @@ public class DynamicPathFinder {
     Translation2d translation1 = pose1.getTranslation();
     Translation2d translation2 = pose2.getTranslation();
 
-    for (Translation2d[] chargingStationCorner : FieldConstants.Community.kChargingStationSegments) {
+    for (Translation2d[] chargingStationCorner :
+        FieldConstants.Community.kChargingStationSegments) {
       if (GeometryUtil.intersect(
           chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
         System.out.println("Pose1:" + pose1 + ", Pose2:" + pose2 + " FAIL");
