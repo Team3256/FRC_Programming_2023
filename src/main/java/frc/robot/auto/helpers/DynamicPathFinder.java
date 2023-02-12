@@ -177,7 +177,6 @@ public class DynamicPathFinder {
   }
 
   // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than actual
-
   public static double heuristic(Pose2d pose1, Pose2d pose2) {
     return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
   }

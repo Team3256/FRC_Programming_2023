@@ -52,7 +52,7 @@ public class DynamicPathGenerator {
     List<Pose2d> pathPoses = getPath();
     Path path = new Path(pathPoses);
     List<PathPoint> pathPoints = new ArrayList<>();
-    for (Waypoint way : path.waypoints) {
+    for (Waypoint way : path.getWaypoints()) {
       pathPoints.add(way.toPathPoint());
     }
 
