@@ -51,6 +51,7 @@ public final class AutoConstants {
           AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
 
   public static final class DynamicPathGenerationConstants {
+    public static final boolean kDynamicPathGenerationDebug = true;
     public static final double kCollisionBuffer = Units.inchesToMeters(10);
     public static final double kControlPointScalar = 0.2;
     public static final Translation2d[][] kChargingStationSegments =

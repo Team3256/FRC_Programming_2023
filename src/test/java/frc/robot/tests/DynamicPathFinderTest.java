@@ -26,19 +26,19 @@ public class DynamicPathFinderTest extends UnitTestBase {
 
     pose1 = new Pose2d(new Translation2d(2, 2.5), new Rotation2d());
     pose2 = new Pose2d(new Translation2d(6.2, 2.5), new Rotation2d());
-    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    isIntersectingChargeStation = DynamicPathFinder.doesPathHitObstacles(pose1, pose2);
     assertEquals(
         isIntersectingChargeStation, false, "Check normal intersection between charge station");
 
     pose1 = new Pose2d(new Translation2d(6.2, 4), new Rotation2d());
     pose2 = new Pose2d(new Translation2d(6.2, 2.5), new Rotation2d());
-    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    isIntersectingChargeStation = DynamicPathFinder.doesPathHitObstacles(pose1, pose2);
     assertEquals(
         isIntersectingChargeStation, true, "Check normal non-collision with charge station");
 
     pose1 = new Pose2d(new Translation2d(5.6, 2.3), new Rotation2d());
     pose2 = new Pose2d(new Translation2d(3.75, 1), new Rotation2d());
-    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    isIntersectingChargeStation = DynamicPathFinder.doesPathHitObstacles(pose1, pose2);
     assertEquals(
         isIntersectingChargeStation,
         true,
@@ -46,19 +46,19 @@ public class DynamicPathFinderTest extends UnitTestBase {
 
     pose1 = new Pose2d(new Translation2d(5.94, 1.96), new Rotation2d());
     pose2 = new Pose2d(new Translation2d(3.75, 1), new Rotation2d());
-    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    isIntersectingChargeStation = DynamicPathFinder.doesPathHitObstacles(pose1, pose2);
     assertEquals(
         isIntersectingChargeStation, false, "Check intersection with buffer distance works");
 
     pose1 = new Pose2d(new Translation2d(5.4, 0.7), new Rotation2d());
     pose2 = new Pose2d(new Translation2d(2.4, 0.7), new Rotation2d());
-    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    isIntersectingChargeStation = DynamicPathFinder.doesPathHitObstacles(pose1, pose2);
     assertEquals(isIntersectingChargeStation, false, "Check valid path is not flagged");
 
     // paranoia
     pose1 = new Pose2d(new Translation2d(2.08, 4.55), new Rotation2d());
     pose2 = new Pose2d(new Translation2d(5.12, 0.78), new Rotation2d());
-    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    isIntersectingChargeStation = DynamicPathFinder.doesPathHitObstacles(pose1, pose2);
     assertEquals(
         isIntersectingChargeStation,
         false,
@@ -66,7 +66,7 @@ public class DynamicPathFinderTest extends UnitTestBase {
 
     pose1 = new Pose2d(new Translation2d(7.53, 6.19), new Rotation2d());
     pose2 = new Pose2d(new Translation2d(6.10, 2.49), new Rotation2d());
-    isIntersectingChargeStation = DynamicPathFinder.isPathConnectionValid(pose1, pose2);
+    isIntersectingChargeStation = DynamicPathFinder.doesPathHitObstacles(pose1, pose2);
     assertEquals(
         isIntersectingChargeStation, true, "Final check normal non-collision with charge station");
   }

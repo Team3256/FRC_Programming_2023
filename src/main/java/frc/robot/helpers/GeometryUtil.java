@@ -10,7 +10,7 @@ package frc.robot.helpers;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
-public class TransHelper {
+public class GeometryUtil {
   // return CCW rotation between u and v in degrees
   public static Rotation2d angleBetweenVectorsCCW(Translation2d u, Translation2d v) {
     double dot = u.getX() * v.getX() + u.getY() * v.getY();

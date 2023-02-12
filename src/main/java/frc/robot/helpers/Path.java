@@ -92,20 +92,20 @@ public class Path {
     Translation2d desiredToStartVector = startPoint.minus(desiredPoint);
     Translation2d desiredToEndVector = endPoint.minus(desiredPoint);
 
-    Rotation2d beta = TransHelper.angleBetweenVectorsCCW(desiredToStartVector, desiredToEndVector);
+    Rotation2d beta = GeometryUtil.angleBetweenVectorsCCW(desiredToStartVector, desiredToEndVector);
     Rotation2d alpha = Rotation2d.fromDegrees((180 - beta.getDegrees()) / 2);
     System.out.println("beta:" + beta.getDegrees());
     System.out.println("alpha:" + alpha.getDegrees());
 
     Translation2d desiredToStartTransformed = desiredToStartVector.rotateBy(alpha.unaryMinus());
     Translation2d projDesiredToStartOnTransform =
-        TransHelper.projectUonV(desiredToStartVector, desiredToStartTransformed);
+        GeometryUtil.projectUonV(desiredToStartVector, desiredToStartTransformed);
     Translation2d startPointControlPoint =
         desiredPoint.plus(projDesiredToStartOnTransform.times(kControlPointScalar));
 
     Translation2d desiredToEndTransformed = desiredToEndVector.rotateBy(alpha);
     Translation2d projDesiredToEndOnTransform =
-        TransHelper.projectUonV(desiredToEndVector, desiredToEndTransformed);
+        GeometryUtil.projectUonV(desiredToEndVector, desiredToEndTransformed);
     Translation2d endPointControlPoint =
         desiredPoint.plus(projDesiredToEndOnTransform.times(kControlPointScalar));
 

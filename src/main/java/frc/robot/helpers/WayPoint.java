@@ -14,11 +14,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Waypoint {
-  Translation2d anchorPoint;
-  Translation2d prevControl;
-  Translation2d nextControl;
-  Rotation2d holonomicAngle;
-  Rotation2d heading;
+  private Translation2d anchorPoint;
+  private Translation2d prevControl;
+  private Translation2d nextControl;
+  private Rotation2d holonomicAngle;
+  private Rotation2d heading;
 
   Waypoint(
       Translation2d anchorPoint,
@@ -29,6 +29,7 @@ public class Waypoint {
     this.prevControl = prevControl;
     this.nextControl = nextControl;
     this.holonomicAngle = holonomicAngle;
+
     if (nextControl != null) {
       this.heading = nextControl.minus(anchorPoint).getAngle();
     } else if (prevControl != null) {
@@ -39,48 +40,48 @@ public class Waypoint {
   }
 
   public JSONObject getJson() {
-    JSONObject ret = new JSONObject();
-    // we set
-    ret.put("anchorPoint", getTransJson(anchorPoint));
-    ret.put("prevControl", getTransJson(prevControl));
-    ret.put("nextControl", getTransJson(nextControl));
-    ret.put("holonomicAngle", holonomicAngle.getDegrees());
+    JSONObject json = new JSONObject();
+    json.put("anchorPoint", createJSONFromTranslation(anchorPoint));
+    json.put("prevControl", createJSONFromTranslation(prevControl));
+    json.put("nextControl", createJSONFromTranslation(nextControl));
+    json.put("holonomicAngle", holonomicAngle.getDegrees());
     // default
-    ret.put("isReversal", false);
-    ret.put("velOverride", null);
-    ret.put("isLocked", false);
-    ret.put("isStopPoint", false);
-    ret.put("stopEvent", getEventJson());
-    return ret;
+    json.put("isReversal", false);
+    json.put("velOverride", null);
+    json.put("isLocked", false);
+    json.put("isStopPoint", false);
+    json.put("stopEvent", getEventJson());
+    return json;
   }
 
   private JSONObject getEventJson() {
-    JSONObject ret = new JSONObject();
-    ret.put("names", new JSONArray());
-    ret.put("executionBehavior", "parallel");
-    ret.put("waitBehavior", "none");
-    ret.put("waitTime", 0);
-    return ret;
+    JSONObject json = new JSONObject();
+    json.put("names", new JSONArray());
+    json.put("executionBehavior", "parallel");
+    json.put("waitBehavior", "none");
+    json.put("waitTime", 0);
+    return json;
   }
 
-  private JSONObject getTransJson(Translation2d point) {
+  private JSONObject createJSONFromTranslation(Translation2d point) {
     if (point == null) return null;
-    JSONObject ret = new JSONObject();
-    ret.put("x", point.getX());
-    ret.put("y", point.getY());
-    return ret;
+
+    JSONObject json = new JSONObject();
+    json.put("x", point.getX());
+    json.put("y", point.getY());
+    return json;
   }
 
-  public PathPoint toPathPoint() {
-    PathPoint ret = new PathPoint(anchorPoint, heading, holonomicAngle);
+  public PathPoint waypointToPathPoint() {
+    PathPoint pathPoint = new PathPoint(anchorPoint, heading, holonomicAngle);
     if (prevControl != null) {
       Translation2d anchorPrevVector = anchorPoint.minus(prevControl);
-      ret.withNextControlLength(anchorPrevVector.getNorm());
+      pathPoint.withNextControlLength(anchorPrevVector.getNorm());
     }
     if (nextControl != null) {
       Translation2d anchorNextVector = anchorPoint.minus(nextControl);
-      ret.withNextControlLength(anchorNextVector.getNorm());
+      pathPoint.withNextControlLength(anchorNextVector.getNorm());
     }
-    return ret;
+    return pathPoint;
   }
 }
