@@ -130,6 +130,26 @@ public class DynamicPathFinder {
     }
   }
 
+  // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than actual
+  public static double heuristic(Pose2d pose1, Pose2d pose2) {
+    return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
+  }
+
+  // make sure line segments don't intersect obstacles
+  public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
+    Translation2d translation1 = pose1.getTranslation();
+    Translation2d translation2 = pose2.getTranslation();
+
+    for (Translation2d[] chargingStationCorner :
+        FieldConstants.Community.kChargingStationSegments) {
+      if (TransHelper.intersect(
+          chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // calculate time to travel list of pathIds
   private double getPathTime(List<Integer> pathIds) {
     // make sure pathIds are valid (doesn't hit obstacles)
@@ -174,25 +194,5 @@ public class DynamicPathFinder {
     ret.add(cur);
     Collections.reverse(ret);
     return ret;
-  }
-
-  // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than actual
-  public static double heuristic(Pose2d pose1, Pose2d pose2) {
-    return pose1.getTranslation().getDistance(pose2.getTranslation()) / SwerveConstants.kMaxSpeed;
-  }
-
-  // make sure line segments don't intersect obstacles
-  public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
-    Translation2d translation1 = pose1.getTranslation();
-    Translation2d translation2 = pose2.getTranslation();
-
-    for (Translation2d[] chargingStationCorner :
-        FieldConstants.Community.kChargingStationSegments) {
-      if (TransHelper.intersect(
-          chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
-        return false;
-      }
-    }
-    return true;
   }
 }
