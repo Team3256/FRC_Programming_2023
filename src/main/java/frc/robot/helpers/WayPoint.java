@@ -13,14 +13,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class Waypoint {
+public class WayPoint{
   private Translation2d anchorPoint;
   private Translation2d prevControl;
   private Translation2d nextControl;
   private Rotation2d holonomicAngle;
   private Rotation2d heading;
 
-  Waypoint(
+  WayPoint(
       Translation2d anchorPoint,
       Translation2d prevControl,
       Translation2d nextControl,

@@ -18,7 +18,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Path {
-  private List<Waypoint> waypoints;
+  private List<WayPoint> wayPoints;
   private int pathLength;
 
   public Path(List<Pose2d> poses) {
@@ -29,7 +29,7 @@ public class Path {
     // throughout the path
     Rotation2d dRotation = endPose.getRotation().minus(startPose.getRotation()).div(pathLength);
 
-    waypoints = new ArrayList<>();
+    wayPoints= new ArrayList<>();
     for (int i = 0; i < pathLength; i++) {
       Translation2d anchorPoint = poses.get(i).getTranslation();
       Rotation2d holonomicAngle = startPose.getRotation().plus(dRotation.times(i));
@@ -38,44 +38,47 @@ public class Path {
       Translation2d nextControl;
       if (i == 0) {
         prevControl = null;
-        Translation2d thisPointToNextPoint = poses
-            .get(i + 1)
-            .getTranslation()
-            .minus(poses.get(i).getTranslation())
-            .times(kControlPointScalar);
+        Translation2d thisPointToNextPoint =
+            poses
+                .get(i + 1)
+                .getTranslation()
+                .minus(poses.get(i).getTranslation())
+                .times(kControlPointScalar);
 
         nextControl = anchorPoint.plus(thisPointToNextPoint);
       } else if (i == pathLength - 1) {
-        Translation2d thisPointToPrevPoint = poses
-            .get(i - 1)
-            .getTranslation()
-            .minus(poses.get(i).getTranslation())
-            .times(kControlPointScalar);
+        Translation2d thisPointToPrevPoint =
+            poses
+                .get(i - 1)
+                .getTranslation()
+                .minus(poses.get(i).getTranslation())
+                .times(kControlPointScalar);
 
         prevControl = anchorPoint.plus(thisPointToPrevPoint);
         nextControl = null;
       } else {
-        Translation2d[] controlPoints = findControlPoints(
-            poses.get(i - 1).getTranslation(),
-            poses.get(i).getTranslation(),
-            poses.get(i + 1).getTranslation());
+        Translation2d[] controlPoints =
+            findControlPoints(
+                poses.get(i - 1).getTranslation(),
+                poses.get(i).getTranslation(),
+                poses.get(i + 1).getTranslation());
 
         prevControl = controlPoints[0];
         nextControl = controlPoints[1];
       }
-      waypoints.add(new Waypoint(anchorPoint, prevControl, nextControl, holonomicAngle));
+      wayPoints.add(new WayPoint(anchorPoint, prevControl, nextControl, holonomicAngle));
     }
   }
 
-  public List<Waypoint> getWaypoints() {
-    return this.waypoints;
+  public List<WayPoint> getWaypoints() {
+    return this.wayPoints;
   }
 
   public JSONObject getJson() {
     JSONObject fullJson = new JSONObject();
 
     JSONArray pathJson = new JSONArray();
-    for (Waypoint waypoint : waypoints) {
+    for (WayPoint waypoint : wayPoints) {
       pathJson.add(waypoint.getJson());
     }
     fullJson.put("waypoints", pathJson);
@@ -97,14 +100,17 @@ public class Path {
     System.out.println("alpha:" + alpha.getDegrees());
 
     Translation2d desiredToStartTransformed = desiredToStartVector.rotateBy(alpha.unaryMinus());
-    Translation2d projDesiredToStartOnTransform = GeometryUtil.projectUonV(desiredToStartVector,
-        desiredToStartTransformed);
-    Translation2d startPointControlPoint = desiredPoint.plus(projDesiredToStartOnTransform.times(kControlPointScalar));
+    Translation2d projDesiredToStartOnTransform =
+        GeometryUtil.projectUonV(desiredToStartVector, desiredToStartTransformed);
+    Translation2d startPointControlPoint =
+        desiredPoint.plus(projDesiredToStartOnTransform.times(kControlPointScalar));
 
     Translation2d desiredToEndTransformed = desiredToEndVector.rotateBy(alpha);
-    Translation2d projDesiredToEndOnTransform = GeometryUtil.projectUonV(desiredToEndVector, desiredToEndTransformed);
-    Translation2d endPointControlPoint = desiredPoint.plus(projDesiredToEndOnTransform.times(kControlPointScalar));
+    Translation2d projDesiredToEndOnTransform =
+        GeometryUtil.projectUonV(desiredToEndVector, desiredToEndTransformed);
+    Translation2d endPointControlPoint =
+        desiredPoint.plus(projDesiredToEndOnTransform.times(kControlPointScalar));
 
-    return new Translation2d[] { startPointControlPoint, endPointControlPoint };
+    return new Translation2d[] {startPointControlPoint, endPointControlPoint};
   }
 }

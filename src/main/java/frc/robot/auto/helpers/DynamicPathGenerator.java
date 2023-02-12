@@ -14,7 +14,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.helpers.Path;
-import frc.robot.helpers.Waypoint;
+import frc.robot.helpers.WayPoint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +56,7 @@ public class DynamicPathGenerator {
     List<Pose2d> pathPoses = getPath();
     Path path = new Path(pathPoses);
     List<PathPoint> pathPoints = new ArrayList<>();
-    for (Waypoint way : path.getWaypoints()) {
+    for (WayPoint way : path.getWaypoints()) {
       pathPoints.add(way.toPathPoint());
     }
 
