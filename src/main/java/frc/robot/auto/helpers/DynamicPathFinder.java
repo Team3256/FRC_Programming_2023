@@ -90,12 +90,12 @@ public class DynamicPathFinder {
       // Found shortest path to sink
       else if (cur == sink) {
         if (debug) System.out.println("Done!");
-        return getStoredPathTo(sink);
+        return getStoredPathIdsTo(sink);
       }
 
       // Update all unvisited neighboring nodes
       for (int node = 0; node < nodes; node++) {
-        ArrayList<Integer> path = getStoredPathTo(cur);
+        ArrayList<Integer> path = getStoredPathIdsTo(cur);
         if (poses.get(node).getX() < poses.get(cur).getX() && !vis[node]) {
           path.add(node);
           double pathTime = getPathTime(path);
@@ -131,11 +131,19 @@ public class DynamicPathFinder {
 
   //calculate time to travel list of pathIds
   private double getPathTime(ArrayList<Integer> pathIds) {
-    // convert pathIds into pathPoints
+    //make sure pathIds are valid (doesn't hit obstacles)
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (!isPathConnectionValid(poses.get(pathIds.get(i)), poses.get(pathIds.get(i + 1))))
         return INF;
     }
+
+    // calc trajectory time
+    PathPlannerTrajectory trajectory = getTrajectoryFromPathIds(pathIds);
+    return trajectory.getTotalTimeSeconds();
+  }
+
+  public PathPlannerTrajectory getTrajectoryFromPathIds(ArrayList<Integer> pathIds){
+    // convert pathIds into pathPoints
     List<Pose2d> pathPoses = new ArrayList<>();
     for (int node : pathIds) pathPoses.add(poses.get(node));
     Path path = new Path(pathPoses);
@@ -144,13 +152,12 @@ public class DynamicPathFinder {
       pathPoints.add(way.toPathPoint());
     }
 
-    // calc trajectory time
-    PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
-    return trajectory.getTotalTimeSeconds();
+    //convert pathPoints into Trajectory we return
+    return PathPlanner.generatePath(dynamicPathConstraints,pathPoints);
   }
 
-  //get the path stored from src to node
-  private ArrayList<Integer> getStoredPathTo(int node) {
+  //get the pathIds stored from src to node
+  private ArrayList<Integer> getStoredPathIdsTo(int node) {
     ArrayList<Integer> ret = new ArrayList<>();
     int cur = node;
     while (cur != src) {
