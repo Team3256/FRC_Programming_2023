@@ -13,10 +13,10 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DynamicPathGenerator {
@@ -28,21 +28,27 @@ public class DynamicPathGenerator {
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     this.startPose = startPose;
     this.goalPose = goalPose;
-    this.nodes = poseIndexes.length + 2;
+    this.nodes = dynamicPathPositions.size() + 2;
+    for (double x = xi; x < xf; x += dx) {
+      for (double y = yi; y < yf; y += dy) {
+        dynamicPathPositions.add(new Translation2d(x, y));
+      }
+    }
   }
 
-  public List<Pose2d> getPath() {
-    ArrayList<Pose2d> poses = new ArrayList<>();
-    Collections.addAll(poses, poseIndexes);
-    poses.add(startPose);
-    poses.add(goalPose);
+  public List<Translation2d> getPath() {
+    ArrayList<Translation2d> positions = new ArrayList<>(dynamicPathPositions);
+    positions.add(startPose.getTranslation());
+    positions.add(goalPose.getTranslation());
 
     if (debug) {
       System.out.println("Path generated on poses:");
-      System.out.println(poses);
+      System.out.println(positions);
     }
 
-    DynamicPathFinder pathFinder = new DynamicPathFinder(nodes - 2, nodes - 1, poses);
+    DynamicPathFinder pathFinder =
+        new DynamicPathFinder(
+            nodes - 2, startPose.getRotation(), nodes - 1, goalPose.getRotation(), positions);
 
     if (debug) {
       System.out.println("Path generated:");
@@ -53,8 +59,8 @@ public class DynamicPathGenerator {
 
   public PathPlannerTrajectory getTrajectory() {
     // convert pathPoses into pathPoints
-    List<Pose2d> pathPoses = getPath();
-    Path path = new Path(pathPoses);
+    List<Translation2d> pathPoses = getPath();
+    Path path = new Path(pathPoses, startPose.getRotation(), goalPose.getRotation());
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());
