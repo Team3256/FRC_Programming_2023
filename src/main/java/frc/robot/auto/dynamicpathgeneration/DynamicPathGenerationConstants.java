@@ -13,7 +13,6 @@ import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
-
 import java.util.ArrayList;
 
 public final class DynamicPathGenerationConstants {

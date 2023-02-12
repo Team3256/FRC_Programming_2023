@@ -31,7 +31,8 @@ public class DynamicPathGenerator {
     if (dynamicPathAllowedPositions.size() == 0) {
       for (double x = xi; x < xf; x += dx) {
         for (double y = yi; y < yf; y += dy) {
-          dynamicPathAllowedPositions.add(new Translation2d(x, y));
+          if (!chargingStation.containsPoint(new Translation2d(x, y)))
+            dynamicPathAllowedPositions.add(new Translation2d(x, y));
         }
       }
     }
