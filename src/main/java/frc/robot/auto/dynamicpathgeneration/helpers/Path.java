@@ -5,9 +5,9 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.helpers;
+package frc.robot.auto.dynamicpathgeneration.helpers;
 
-import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;

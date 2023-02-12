@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.helpers;
+package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import java.io.FileWriter;
 import java.io.IOException;

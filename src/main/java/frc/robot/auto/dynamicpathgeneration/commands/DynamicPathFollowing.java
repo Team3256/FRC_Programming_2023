@@ -5,13 +5,13 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.commands;
+package frc.robot.auto.dynamicpathgeneration.commands;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.helpers.AutoCommandRunner;
-import frc.robot.auto.helpers.DynamicPathGenerator;
 import frc.robot.swerve.SwerveDrive;
 
 // TODO Extend PPTrajectoryFollowCommand

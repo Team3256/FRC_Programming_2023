@@ -5,19 +5,19 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.helpers;
+package frc.robot.auto.dynamicpathgeneration;
 
 import static frc.robot.Constants.FieldConstants;
-import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.helpers.GeometryUtil;
-import frc.robot.helpers.Path;
-import frc.robot.helpers.Waypoint;
+import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
+import frc.robot.auto.dynamicpathgeneration.helpers.Path;
+import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
 import frc.robot.swerve.SwerveConstants;
 import java.util.ArrayList;
 import java.util.Arrays;

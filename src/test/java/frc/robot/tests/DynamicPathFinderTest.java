@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.UnitTestBase;
-import frc.robot.auto.helpers.DynamicPathFinder;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFinder;
 
 // TODO: make testIntersection() function that is called multiple times by testIntersections() to
 // create cleaner code
