@@ -11,7 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class TransHelper {
-  //return CCW rotation between u and v in degrees
+  // return CCW rotation between u and v in degrees
   public static Rotation2d angleBetweenVectorsCCW(Translation2d u, Translation2d v) {
     double dot = u.getX() * v.getX() + u.getY() * v.getY();
     double det = u.getX() * v.getY() - u.getY() * v.getX();
@@ -32,14 +32,14 @@ public class TransHelper {
   // returns 1 if p->q->r is CW and 2 if CCW
   public static int orientation(Translation2d p, Translation2d q, Translation2d r) {
     double val =
-            (q.getY() - p.getY()) * (r.getX() - q.getX())
-                    - (q.getX() - p.getX()) * (r.getY() - q.getY());
+        (q.getY() - p.getY()) * (r.getX() - q.getX())
+            - (q.getX() - p.getX()) * (r.getY() - q.getY());
 
     return (val > 0) ? 1 : 2;
   }
 
   public static boolean doIntersect(
-          Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
+      Translation2d start1, Translation2d end1, Translation2d start2, Translation2d end2) {
     int o1 = orientation(start1, end1, start2);
     int o2 = orientation(start1, end1, end2);
     int o3 = orientation(start2, end2, start1);

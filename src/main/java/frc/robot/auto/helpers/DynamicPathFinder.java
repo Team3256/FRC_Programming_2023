@@ -24,11 +24,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * CREDIT FOR CODE: <a href="https://www.algorithms-and-technologies.com/a_star/java/">...</a>
- * Adapted for Team 3256's needs Used to perform the A-Star (A*) Algorithm to find the shortest path
- * from a start to a target node.
- */
 public class DynamicPathFinder {
   double[][] graph;
   int src;
@@ -39,7 +34,7 @@ public class DynamicPathFinder {
   int[] pre;
   double[] priority;
 
-  static double INF = Double.MAX_VALUE / 10;
+  static final double INF = Double.MAX_VALUE / 10;
   boolean debug = true;
 
   /**
@@ -137,17 +132,20 @@ public class DynamicPathFinder {
   }
 
   private double getPathTime(ArrayList<Integer> pathIds) {
+    // convert pathIds into pathPoints
     for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (!isPathConnectionValid(poses.get(pathIds.get(i)), poses.get(pathIds.get(i + 1)))) return INF;
+      if (!isPathConnectionValid(poses.get(pathIds.get(i)), poses.get(pathIds.get(i + 1))))
+        return INF;
     }
     List<Pose2d> pathPoses = new ArrayList<>();
     for (int node : pathIds) pathPoses.add(poses.get(node));
     Path path = new Path(pathPoses);
-
     List<PathPoint> pathPoints = new ArrayList<>();
-    for (Waypoint way : path.waypoints){
+    for (Waypoint way : path.waypoints) {
       pathPoints.add(way.toPathPoint());
     }
+
+    // calculate trajectory time
     PathPlannerTrajectory trajectory = PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
     return trajectory.getTotalTimeSeconds();
   }

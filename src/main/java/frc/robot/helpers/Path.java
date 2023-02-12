@@ -67,7 +67,7 @@ public class Path {
         prevControl = controlPoints[0];
         nextControl = controlPoints[1];
       }
-      waypoints.add(new Waypoint(anchorPoint,prevControl,nextControl,holonomicAngle));
+      waypoints.add(new Waypoint(anchorPoint, prevControl, nextControl, holonomicAngle));
     }
   }
 
