@@ -13,7 +13,6 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstant
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
@@ -57,6 +56,10 @@ public class DynamicPathFinder {
     this.sinkRot = sinkRot;
     this.positions = positions;
     this.nodes = positions.size();
+    if (kDynamicPathGenerationDebug) {
+      System.out.println("Running Path Finder Algorithm");
+      System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
+    }
   }
 
   public List<Translation2d> findPath() {
@@ -87,7 +90,7 @@ public class DynamicPathFinder {
         }
       }
       if (kDynamicPathGenerationDebug) {
-        System.out.println("cur:" + currentNode);
+        System.out.println("explore node:" + currentNode);
       }
 
       // No paths available
@@ -146,29 +149,15 @@ public class DynamicPathFinder {
   // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
   // actual
   public static double heuristic(Translation2d position1, Translation2d position2) {
+    // if (doesPathHitObstacles(position1, position2)) return INF;
     return position1.getDistance(position2) / SwerveConstants.kMaxSpeed;
-  }
-
-  // make sure line segments don't intersect obstacles
-  public static boolean isPathConnectionValid(Pose2d pose1, Pose2d pose2) {
-    Translation2d translation1 = pose1.getTranslation();
-    Translation2d translation2 = pose2.getTranslation();
-
-    for (Translation2d[] chargingStationCorner :
-        FieldConstants.Community.kChargingStationSegments) {
-      if (GeometryUtil.intersect(
-          chargingStationCorner[0], chargingStationCorner[1], translation1, translation2)) {
-        return false;
-      }
-    }
-    return true;
   }
 
   // calculate time to travel list of pathIds
   private double getPathTime(List<Integer> pathIds) {
     // make sure pathIds are valid (doesn't hit obstacles)
     for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (!doesPathHitObstacles(positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1))))
+      if (doesPathHitObstacles(positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1))))
         return INF;
     }
 
@@ -218,9 +207,9 @@ public class DynamicPathFinder {
         FieldConstants.Community.kChargingStationSegments) {
       if (GeometryUtil.intersect(
           chargingStationCorner[0], chargingStationCorner[1], position1, position2)) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 }

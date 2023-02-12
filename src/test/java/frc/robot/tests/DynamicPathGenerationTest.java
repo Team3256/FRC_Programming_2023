@@ -58,7 +58,7 @@ public class DynamicPathGenerationTest {
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, int id) {
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
-    List<Translation2d> positions = generator.getPath();
+    List<Translation2d> positions = generator.getPositions();
     System.out.println("Generated pose list:" + positions);
     Path path = new Path(positions, src.getRotation(), sink.getRotation());
     testInterpolatePathBase(path, id);
