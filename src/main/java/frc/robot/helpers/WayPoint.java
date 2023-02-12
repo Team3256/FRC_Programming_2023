@@ -54,7 +54,7 @@ public class Waypoint {
     return ret;
   }
 
-  public JSONObject getEventJson() {
+  private JSONObject getEventJson() {
     JSONObject ret = new JSONObject();
     ret.put("names", new JSONArray());
     ret.put("executionBehavior", "parallel");
@@ -63,7 +63,7 @@ public class Waypoint {
     return ret;
   }
 
-  public JSONObject getTransJson(Translation2d point) {
+  private JSONObject getTransJson(Translation2d point) {
     if (point == null) return null;
     JSONObject ret = new JSONObject();
     ret.put("x", point.getX());
