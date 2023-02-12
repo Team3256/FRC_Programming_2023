@@ -19,6 +19,7 @@ import org.json.simple.*;
 import org.junit.jupiter.api.Test;
 
 public class DynamicPathGenerationTest {
+  // Turn sanity
   @Test
   public void testSimpleLeftTurnPath0() {
     List<Pose2d> path = new ArrayList<>();
@@ -28,6 +29,7 @@ public class DynamicPathGenerationTest {
     testInterpolatePathBase(path, 0);
   }
 
+  // Top test
   @Test
   public void testGeneratePath1() {
     Pose2d src = new Pose2d(new Translation2d(7.8, 4.8), new Rotation2d(0));
@@ -35,11 +37,20 @@ public class DynamicPathGenerationTest {
     testGeneratePathBase(src, sink, 1);
   }
 
+  // Bottom test
   @Test
   public void testGeneratePath2() {
     Pose2d src = new Pose2d(new Translation2d(7.5, 0.5), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
     testGeneratePathBase(src, sink, 2);
+  }
+
+  // Long test
+  @Test
+  public void testGeneratePath3() {
+    Pose2d src = new Pose2d(new Translation2d(16, 8), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
+    testGeneratePathBase(src, sink, 3);
   }
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, int id) {
