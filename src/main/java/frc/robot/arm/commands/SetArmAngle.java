@@ -8,8 +8,8 @@
 package frc.robot.arm.commands;
 
 import static frc.robot.arm.ArmConstants.*;
+
 import edu.wpi.first.math.MathUtil;
-import java.lang.Math;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
@@ -20,12 +20,14 @@ public class SetArmAngle extends ProfiledPIDCommand {
     super(
         new ProfiledPIDController(kP, kI, kD, kArmContraints),
         armSubsystem::getArmPosition,
-            MathUtil.clamp(angleRotation2d.getRadians(), Math.toRadians(12.881991), Math.toRadians(12.881991+180)),
+        MathUtil.clamp(
+            angleRotation2d.getRadians(),
+            Math.toRadians(kArmAngleConstraint),
+            Math.toRadians(kArmAngleConstraint + 180)),
         (output, setpoint) ->
             armSubsystem.setInputVoltage(
                 output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
-        armSubsystem
-    );
+        armSubsystem);
 
     getController().setTolerance(kArmToleranceAngle, kArmToleranceAngularVelocity);
   }

@@ -30,6 +30,8 @@ public final class ArmConstants {
   public static final double kArmToleranceAngle = Units.degreesToRadians(2);
   public static final double kArmToleranceAngularVelocity = Units.degreesToRadians(2);
 
+  public static final double kArmAngleConstraint = 12.881991;
+
   public static final int armID = 20;
   public static final double kArmS = 1;
   public static final double kArmG = 1;
