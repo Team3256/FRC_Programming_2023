@@ -7,6 +7,8 @@
 
 package frc.robot.helpers;
 
+import static frc.robot.auto.AutoConstants.DynamicPathGenerationConstants.*;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -16,47 +18,41 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Path {
-  public List<Waypoint> waypoints;
-  int length;
-  double kControlPointScalar = 0.3;
+  private List<Waypoint> waypoints;
+  private int pathLength;
 
   public Path(List<Pose2d> poses) {
-    length = poses.size();
-    Pose2d start = poses.get(0);
-    Pose2d end = poses.get(length - 1);
-    Rotation2d dRotation = end.getRotation().minus(start.getRotation()).div(length);
+    pathLength = poses.size();
+    Pose2d startPose = poses.get(0);
+    Pose2d endPose = poses.get(pathLength - 1);
+    Rotation2d dRotation = endPose.getRotation().minus(startPose.getRotation()).div(pathLength);
+
     waypoints = new ArrayList<>();
-    for (int i = 0; i < length; i++) {
-      // get anchor
+    for (int i = 0; i < pathLength; i++) {
       Translation2d anchorPoint = poses.get(i).getTranslation();
-      // get angle
-      Rotation2d holonomicAngle = start.getRotation().plus(dRotation.times(i));
-      // set control
+      Rotation2d holonomicAngle = startPose.getRotation().plus(dRotation.times(i));
+
       Translation2d prevControl;
       Translation2d nextControl;
       if (i == 0) {
         prevControl = null;
-        nextControl =
+        Translation2d thisPointToNextPoint =
             poses
-                .get(i)
+                .get(i + 1)
                 .getTranslation()
-                .plus(
-                    poses
-                        .get(i + 1)
-                        .getTranslation()
-                        .minus(poses.get(i).getTranslation())
-                        .times(kControlPointScalar));
-      } else if (i == length - 1) {
-        prevControl =
+                .minus(poses.get(i).getTranslation())
+                .times(kControlPointScalar);
+
+        nextControl = anchorPoint.plus(thisPointToNextPoint);
+      } else if (i == pathLength - 1) {
+        Translation2d thisPointToPrevPoint =
             poses
-                .get(i)
+                .get(i - 1)
                 .getTranslation()
-                .plus(
-                    poses
-                        .get(i - 1)
-                        .getTranslation()
-                        .minus(poses.get(i).getTranslation())
-                        .times(kControlPointScalar));
+                .minus(poses.get(i).getTranslation())
+                .times(kControlPointScalar);
+
+        prevControl = anchorPoint.plus(thisPointToPrevPoint);
         nextControl = null;
       } else {
         Translation2d[] controlPoints =
@@ -64,6 +60,7 @@ public class Path {
                 poses.get(i - 1).getTranslation(),
                 poses.get(i).getTranslation(),
                 poses.get(i + 1).getTranslation());
+
         prevControl = controlPoints[0];
         nextControl = controlPoints[1];
       }
@@ -71,22 +68,23 @@ public class Path {
     }
   }
 
+  public List<Waypoint> getWaypoints() {
+    return this.waypoints;
+  }
+
   public JSONObject getJson() {
-    JSONObject ret = new JSONObject();
+    JSONObject fullJson = new JSONObject();
 
-    // waypoints
     JSONArray pathJson = new JSONArray();
-    for (int poseIndex = 0; poseIndex < length; poseIndex++) {
-      pathJson.add(waypoints.get(poseIndex).getJson());
+    for (Waypoint waypoint : waypoints) {
+      pathJson.add(waypoint.getJson());
     }
-    ret.put("waypoints", pathJson);
+    fullJson.put("waypoints", pathJson);
 
-    // markers
     JSONArray markerJson = new JSONArray();
-    ret.put("markers", markerJson);
+    fullJson.put("markers", markerJson);
 
-    // ret
-    return ret;
+    return fullJson;
   }
 
   public Translation2d[] findControlPoints(
