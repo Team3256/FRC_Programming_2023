@@ -7,6 +7,8 @@
 
 package frc.robot.tests;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -61,12 +63,18 @@ public class DynamicPathGenerationTest {
   }
 
   public void testInterpolatePathBase(List<Pose2d> poseList, int id) {
+    System.out.println("Pose List id" + id + ":" + poseList);
     Path path = new Path(poseList);
     JSONObject json = path.getJson();
 
-    FileHelper.saveJson(
-        json, "src/main/deploy/pathplanner/DynamicPathGenerationTest" + id + ".path");
-    System.out.println("json:" + json);
-    assert (true);
+    String pathPlannerJsonPath =
+        "src/main/deploy/pathplanner/DynamicPathGenerationTest" + id + ".path";
+    String correctJsonPath =
+        "src/test/java/frc/robot/tests/dynamicpathgeneration/json/DynamicPathGenerationTest"
+            + id
+            + ".path";
+
+    FileHelper.saveJson(json, pathPlannerJsonPath);
+    assertTrue(FileHelper.areJsonFilesSame(pathPlannerJsonPath, correctJsonPath));
   }
 }
