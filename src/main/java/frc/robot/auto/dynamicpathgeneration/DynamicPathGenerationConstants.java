@@ -12,19 +12,15 @@ import static frc.robot.Constants.FieldConstants.Community.*;
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
+
 import java.util.ArrayList;
 
 public final class DynamicPathGenerationConstants {
   public static final boolean kDynamicPathGenerationDebug = true;
   public static final double kCollisionBuffer = Units.inchesToMeters(10);
   public static final double kControlPointScalar = 0.2;
-  public static final Translation2d[][] kChargingStationSegments =
-      new Translation2d[][] {
-        {kChargingStationCorners[0], kChargingStationCorners[1]},
-        {kChargingStationCorners[0], kChargingStationCorners[2]},
-        {kChargingStationCorners[1], kChargingStationCorners[3]},
-        {kChargingStationCorners[2], kChargingStationCorners[3]},
-      };
+  public static final Obstacle chargingStation = new Obstacle(kChargingStationCorners);
 
   // Graph represnted below in (x, y)
   // <-> Represent edges
@@ -37,8 +33,8 @@ public final class DynamicPathGenerationConstants {
   public static final double yi = 0.51;
   public static final double dx = 0.1;
   public static final double dy = 0.1;
-  public static final double xf = 14.67;
-  public static final double yf = 7.49;
+  public static final double xf = 5.34;
+  public static final double yf = 4.8;
   public static final ArrayList<Translation2d> dynamicPathAllowedPositions = new ArrayList<>();
 
   public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 5);

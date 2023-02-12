@@ -92,8 +92,6 @@ public class Path {
 
     Rotation2d beta = GeometryUtil.angleBetweenVectorsCCW(desiredToStartVector, desiredToEndVector);
     Rotation2d alpha = Rotation2d.fromDegrees((180 - beta.getDegrees()) / 2);
-    System.out.println("beta:" + beta.getDegrees());
-    System.out.println("alpha:" + alpha.getDegrees());
 
     Translation2d desiredToStartTransformed = desiredToStartVector.rotateBy(alpha.unaryMinus());
     Translation2d projDesiredToStartOnTransform =

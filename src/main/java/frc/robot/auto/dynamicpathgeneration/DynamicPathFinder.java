@@ -90,7 +90,7 @@ public class DynamicPathFinder {
         }
       }
       if (kDynamicPathGenerationDebug) {
-        System.out.println("explore node:" + currentNode);
+        // System.out.println("explore node:" + currentNode);
       }
 
       // No paths available
@@ -101,10 +101,6 @@ public class DynamicPathFinder {
 
       // Found shortest path to sink
       else if (currentNode == sink) {
-        if (kDynamicPathGenerationDebug) {
-          System.out.println("Done!");
-          System.out.println("Shortest Path Found:" + getPathIdsInCurrentPath(sink));
-        }
         return getPathPositionsFromPathIds(getPathIdsInCurrentPath(sink));
       }
 
@@ -115,11 +111,6 @@ public class DynamicPathFinder {
           path.add(node);
           double pathTime = getPathTime(path);
           // If path over this edge is better
-          if (kDynamicPathGenerationDebug) {
-            System.out.println("try:" + node);
-            System.out.println("path:" + path);
-            System.out.println("pathTime:" + pathTime);
-          }
           if (pathTime < distanceToTravelToNodeN[node]) {
             // Save path as new current shortest path
             distanceToTravelToNodeN[node] = pathTime;
@@ -128,14 +119,6 @@ public class DynamicPathFinder {
             // Update node priority
             priorityQueue[node] =
                 distanceToTravelToNodeN[node] + heuristic(positions.get(node), positions.get(sink));
-
-            if (kDynamicPathGenerationDebug) {
-              System.out.println("next:" + node);
-              System.out.println("dist:" + distanceToTravelToNodeN[node]);
-              System.out.println(
-                  "heuristic:" + heuristic(positions.get(node), positions.get(sink)));
-              System.out.println("priority:" + priorityQueue[node]);
-            }
           }
           path.remove(path.size() - 1);
         }
