@@ -29,7 +29,7 @@ public class DynamicPathGenerator {
     this.startPose = startPose;
     this.goalPose = goalPose;
     double r = 0.45;
-    int res = 10;
+    int res = 100;
     if (dynamicPathAllowedPositions.size() == 0) {
       for (double x = xi; x < xf; x += dx) {
         for (double y = yi; y < yf; y += dy) {
@@ -37,8 +37,7 @@ public class DynamicPathGenerator {
           for (int i = 0; i < res; i++) {
             double angle = i * 2 * Math.PI / res;
             if (chargingStation.containsPoint(
-                new Translation2d(x + 0.45 * Math.cos(angle), y + 0.45 * Math.sin(angle))))
-              bad = true;
+                new Translation2d(x + r * Math.cos(angle), y + r * Math.sin(angle)))) bad = true;
           }
           if (!bad) dynamicPathAllowedPositions.add(new Translation2d(x, y));
         }
