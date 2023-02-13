@@ -102,7 +102,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     ChassisSpeeds swerveChassisSpeed =
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getYaw())
+                translation.getX(), translation.getY(), rotation, getPose().getRotation())
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
@@ -117,7 +117,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     ChassisSpeeds swerveChassisSpeed =
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getYaw())
+                translation.getX(), translation.getY(), rotation, getPose().getRotation())
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop, elevatorHeight);
