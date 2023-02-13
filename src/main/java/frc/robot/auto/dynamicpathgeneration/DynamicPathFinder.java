@@ -25,16 +25,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class DynamicPathFinder {
-  private int src;
-  private Rotation2d srcRot;
-  private int sink;
-  private Rotation2d sinkRot;
-  private int nodes;
-  private ArrayList<Translation2d> positions;
+  private final int src;
+  private final Rotation2d srcRot;
+  private final int sink;
+  private final Rotation2d sinkRot;
+  private final int nodes;
+  private final ArrayList<Translation2d> positions;
 
-  private double[] distanceToTravelToNodeN;
   private int[] previousNodesInCurrentPath;
-  private double[] priorityQueue;
 
   static final double INF = Double.MAX_VALUE / 10;
 
@@ -64,7 +62,7 @@ public class DynamicPathFinder {
 
   public List<Translation2d> findPath() {
     // Time to travel from src to all other nodes
-    distanceToTravelToNodeN = new double[nodes];
+    double[] distanceToTravelToNodeN=new double[nodes];
     Arrays.fill(distanceToTravelToNodeN, INF);
     distanceToTravelToNodeN[src] = 0;
 
@@ -72,7 +70,7 @@ public class DynamicPathFinder {
     previousNodesInCurrentPath = new int[nodes];
 
     // Priorities with which to visit the nodes
-    priorityQueue = new double[nodes];
+    double[] priorityQueue=new double[nodes];
     Arrays.fill(priorityQueue, INF);
     priorityQueue[src] = heuristic(positions.get(src), positions.get(sink));
 
@@ -83,7 +81,7 @@ public class DynamicPathFinder {
       // Find unvisited lowest priority node
       double currentPriority = INF;
       int currentNode = -1;
-      for (int node = 0; node < priorityQueue.length; node++) {
+      for (int node=0;node < priorityQueue.length;node++) {
         if (priorityQueue[node] < currentPriority && !visitedNodes[node]) {
           currentPriority = priorityQueue[node];
           currentNode = node;
