@@ -14,8 +14,9 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.auto.HeuristicHelper;
+import frc.robot.auto.dynamicpathgeneration.helpers.HeuristicHelper;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathGenInit;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
 import java.util.*;
 

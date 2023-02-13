@@ -29,7 +29,7 @@ public final class DynamicPathGenerationConstants {
   public static final double searchHiX = 5.85;
   public static final double searchHiY = 4.85;
   public static final ArrayList<Translation2d> dynamicPathAllowedPositions = new ArrayList<>();
-  public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 5);
+  public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 7.5);
   public static final double INF_TIME = Double.MAX_VALUE / 10;
   public static final double ILLEGAL_TIME = Double.MAX_VALUE / 20;
 }

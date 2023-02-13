@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.dynamicpathgeneration;
+package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.dynamicPathAllowedPositions;
