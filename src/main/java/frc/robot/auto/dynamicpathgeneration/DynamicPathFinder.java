@@ -134,8 +134,9 @@ public class DynamicPathFinder {
   // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
   // actual
   public static double heuristic(Translation2d position1, Translation2d position2) {
-    // if (doesPathHitObstacles(position1, position2)) return INF;
-    return position1.getDistance(position2) / SwerveConstants.kMaxSpeed;
+    double ret = position1.getDistance(position2) / SwerveConstants.kMaxSpeed;
+    if (doesPathHitObstacles(position1, position2)) ret += INF / 2;
+    return ret;
   }
 
   // calculate time to travel list of pathIds
