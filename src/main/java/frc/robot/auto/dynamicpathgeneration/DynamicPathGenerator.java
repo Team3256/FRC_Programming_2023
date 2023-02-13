@@ -31,7 +31,16 @@ public class DynamicPathGenerator {
     this.startPose = startPose;
     this.goalPose = goalPose;
     init();
-    heuristic = HeuristicHelper.generateHeuristic(nodes - 1, newDynamicPathAllowedPositions);
+    this.heuristic =
+        HeuristicHelper.generateHeuristicTable(nodes - 1, newDynamicPathAllowedPositions);
+    if (debug) {
+      //      System.out.println("Heuristic Table:");
+      //      if (kDynamicPathGenerationDebug) {
+      //        for (double h : heuristic) {
+      //          System.out.println(h);
+      //        }
+      //      }
+    }
   }
 
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose, double[] heuristic) {

@@ -18,7 +18,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
-import frc.robot.swerve.SwerveConstants;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,8 +33,7 @@ public class DynamicPathFinder {
 
   private int[] previousNodesInCurrentPath;
 
-  private double[] heuristic;
-
+  private final double[] heuristic;
 
   /**
    * Finds the fastest path between two nodes using Warrior-star algorithm
@@ -67,7 +65,7 @@ public class DynamicPathFinder {
   public List<Translation2d> findPath() {
     // Time to travel from src to all other nodes
     double[] distanceToTravelToNodeN = new double[nodes];
-    Arrays.fill(distanceToTravelToNodeN, INF);
+    Arrays.fill(distanceToTravelToNodeN, INF_TIME);
     distanceToTravelToNodeN[src] = 0;
 
     // Previous node in current optimal path to node
@@ -75,15 +73,15 @@ public class DynamicPathFinder {
 
     // Priorities with which to visit the nodes
     double[] priorityQueue = new double[nodes];
-    Arrays.fill(priorityQueue, INF);
-    priorityQueue[src] = heuristic(positions.get(src), positions.get(sink));
+    Arrays.fill(priorityQueue, INF_TIME);
+    priorityQueue[src] = heuristic[src];
 
     // Visited nodes
     boolean[] visitedNodes = new boolean[nodes];
 
     while (true) {
       // Find unvisited lowest priority node
-      double currentPriority = INF;
+      double currentPriority = INF_TIME;
       int currentNode = -1;
       for (int node = 0; node < priorityQueue.length; node++) {
         if (priorityQueue[node] < currentPriority && !visitedNodes[node]) {
@@ -121,8 +119,7 @@ public class DynamicPathFinder {
             previousNodesInCurrentPath[node] = currentNode;
 
             // Update node priority
-            priorityQueue[node] =
-                distanceToTravelToNodeN[node] + heuristic[node];
+            priorityQueue[node] = distanceToTravelToNodeN[node] + heuristic[node];
           }
           path.remove(path.size() - 1);
         }
@@ -133,14 +130,12 @@ public class DynamicPathFinder {
     }
   }
 
-
-
   // calculate time to travel list of pathIds
   private double getPathTime(List<Integer> pathIds) {
     // make sure pathIds are valid (doesn't hit obstacles)
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (doesPathHitObstacles(positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1))))
-        return INF;
+        return INF_TIME;
     }
 
     // calc trajectory time
