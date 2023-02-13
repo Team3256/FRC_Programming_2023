@@ -28,11 +28,17 @@ public class DynamicPathGenerator {
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     this.startPose = startPose;
     this.goalPose = goalPose;
+    int[] sx = {-1, 1, 1, -1};
+    int[] sy = {1, 1, -1, -1};
     if (dynamicPathAllowedPositions.size() == 0) {
       for (double x = xi; x < xf; x += dx) {
         for (double y = yi; y < yf; y += dy) {
-          if (!chargingStation.containsPoint(new Translation2d(x, y)))
-            dynamicPathAllowedPositions.add(new Translation2d(x, y));
+          boolean bad = false;
+          for (int i = 0; i < 4; i++) {
+            if (chargingStation.containsPoint(
+                new Translation2d(x + 0.45 * sx[i], y + 0.45 * sy[i]))) bad = true;
+          }
+          if (!bad) dynamicPathAllowedPositions.add(new Translation2d(x, y));
         }
       }
     }

@@ -17,7 +17,7 @@ public class Obstacle {
   }
 
   public boolean containsPoint(Translation2d query) {
-    Translation2d wild = new Translation2d(9999, 9999);
+    Translation2d wild = new Translation2d(233.9659023, 192.432321);
     int intersections = 0;
     for (int i = 0; i < points.length; i++) {
       int j = (i + 1) % points.length;

@@ -32,8 +32,8 @@ public final class DynamicPathGenerationConstants {
   public static final double yi = 0.51;
   public static final double dx = 0.1;
   public static final double dy = 0.1;
-  public static final double xf = 5.34;
-  public static final double yf = 4.8;
+  public static final double xf = 5.85;
+  public static final double yf = 4.85;
   public static final ArrayList<Translation2d> dynamicPathAllowedPositions = new ArrayList<>();
 
   public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 5);
