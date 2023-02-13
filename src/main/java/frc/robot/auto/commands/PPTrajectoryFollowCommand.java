@@ -35,6 +35,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   private boolean useAllianceColor;
   private Pose2d startPose;
   private AutoCommandRunner autoCommandRunner;
+  private boolean isFirstSegment;
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
@@ -63,6 +64,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
           PIDController yController,
           ProfiledPIDController thetaController,
           boolean useAllianceColor,
+          boolean isFirstSegment,
           SwerveDrive swerveSubsystem) {
 
     this.trajectory = trajectory;
@@ -71,12 +73,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     this.useAllianceColor = useAllianceColor;
 
     this.swerveSubsystem = swerveSubsystem;
-    PathPlannerTrajectory.PathPlannerState start =
-            (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
-    Rotation2d rotation = start.holonomicRotation;
-    Translation2d translation = start.poseMeters.getTranslation();
-    this.startPose = new Pose2d(translation, rotation);
-
+    this.isFirstSegment = isFirstSegment;
     addRequirements(swerveSubsystem);
   }
 
@@ -110,11 +107,16 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       trajectory =
               PathPlannerTrajectory.transformTrajectoryForAlliance(
                       trajectory, DriverStation.getAlliance());
+      PathPlannerTrajectory.PathPlannerState start =
+              (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
+      Rotation2d rotation = start.holonomicRotation;
+      Translation2d translation = start.poseMeters.getTranslation();
+      this.startPose = new Pose2d(translation, rotation);
     }
     if (kAutoDebug) {
       swerveSubsystem.setTrajectory(trajectory);
     }
-    if (this.startPose != null) { // use existing pose for more accuracy if it is the first path
+    if (!isFirstSegment) { // use existing pose for more accuracy if it is the first path
       swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }

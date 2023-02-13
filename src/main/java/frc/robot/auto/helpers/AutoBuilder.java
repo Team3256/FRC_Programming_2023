@@ -27,25 +27,25 @@ public class AutoBuilder {
     this.swerveSubsystem = swerveSubsystem;
   }
 
-  public Command createPath(String path, PathConstraints constraints) {
+  public Command createPath(String path, PathConstraints constraints, boolean isFirstSegment) {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, constraints);
-    return createCommand(trajectory);
+    return createCommand(trajectory, isFirstSegment);
   }
 
   public ArrayList<Command> createPaths(
-      String pathGroup, PathConstraints constraint, PathConstraints... constraints) {
+          String pathGroup, PathConstraints constraint, boolean isFirstSegment, PathConstraints... constraints) {
     ArrayList<PathPlannerTrajectory> trajectories =
         new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
 
     ArrayList<Command> commands = new ArrayList<>();
     for (PathPlannerTrajectory trajectory : trajectories) {
-      commands.add(createCommand(trajectory));
+      commands.add(createCommand(trajectory, isFirstSegment));
     }
 
     return commands;
   }
 
-  private Command createCommand(PathPlannerTrajectory trajectory) {
+  private Command createCommand(PathPlannerTrajectory trajectory, boolean isFirstSegment) {
     PIDController xController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
     PIDController yController =
@@ -58,6 +58,6 @@ public class AutoBuilder {
             kAutoThetaControllerConstraints);
 
     return new PPTrajectoryFollowCommand(
-        trajectory, xController, yController, thetaController, true, this.swerveSubsystem);
+        trajectory, xController, yController, thetaController, true, isFirstSegment, this.swerveSubsystem);
   }
 }
