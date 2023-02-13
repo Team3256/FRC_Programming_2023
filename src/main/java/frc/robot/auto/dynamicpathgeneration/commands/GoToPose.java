@@ -45,7 +45,7 @@ public class GoToPose extends CommandBase {
 
   @Override
   public void execute() {
-    
+
   }
 
   @Override

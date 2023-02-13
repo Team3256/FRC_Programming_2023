@@ -31,8 +31,8 @@ public class DynamicPathGenerator {
     double r = 0.45;
     int res = 100;
     if (dynamicPathAllowedPositions.size() == 0) {
-      for (double x = xi; x < xf; x += dx) {
-        for (double y = yi; y < yf; y += dy) {
+      for (double x=searchLowX;x <searchHiX;x +=searchResX) {
+        for (double y=searchLowY;y <searchHiY;y +=searchResY) {
           boolean bad = false;
           for (int i = 0; i < res; i++) {
             double angle = i * 2 * Math.PI / res;
