@@ -23,24 +23,22 @@ import java.util.*;
 public class DynamicPathGenerator {
   private final Pose2d startPose;
   private final Pose2d goalPose;
-  private int nodes;
-  private static final boolean debug = true;
+  private int numNodes;
   private final double[] heuristic;
-  private ArrayList<Translation2d> newDynamicPathAllowedPositions;
+  private ArrayList<Translation2d> dynamicPathGraph;
 
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     this.startPose = startPose;
     this.goalPose = goalPose;
     init();
-    this.heuristic =
-        HeuristicHelper.generateHeuristicTable(nodes - 1, newDynamicPathAllowedPositions);
-    if (debug) {
-      //      System.out.println("Heuristic Table:");
-      //      if (kDynamicPathGenerationDebug) {
-      //        for (double h : heuristic) {
-      //          System.out.println(h);
-      //        }
-      //      }
+    this.heuristic = HeuristicHelper.generateHeuristicTable(numNodes - 1, dynamicPathGraph);
+    if (kDynamicPathGenerationDebug) {
+      // System.out.println("Heuristic Table:");
+      // if (kDynamicPathGenerationDebug) {
+      // for (double h : heuristic) {
+      // System.out.println(h);
+      // }
+      // }
     }
   }
 
@@ -53,25 +51,24 @@ public class DynamicPathGenerator {
 
   public void init() {
     PathGenInit.init();
-    newDynamicPathAllowedPositions = new ArrayList<>(dynamicPathAllowedPositions);
-    newDynamicPathAllowedPositions.add(startPose.getTranslation());
-    newDynamicPathAllowedPositions.add(goalPose.getTranslation());
-    nodes = newDynamicPathAllowedPositions.size();
+    dynamicPathGraph = new ArrayList<>(dynamicPathAllowedPositions);
+    dynamicPathGraph.add(startPose.getTranslation());
+    dynamicPathGraph.add(goalPose.getTranslation());
+    numNodes = dynamicPathGraph.size();
   }
 
   public List<Translation2d> getPositions() {
-
     DynamicPathFinder pathFinder =
         new DynamicPathFinder(
-            nodes - 2,
+            numNodes - 2,
             startPose.getRotation(),
-            nodes - 1,
+            numNodes - 1,
             goalPose.getRotation(),
-            newDynamicPathAllowedPositions,
+            dynamicPathGraph,
             heuristic);
 
     List<Translation2d> positions = pathFinder.findPath();
-    if (debug) {
+    if (kDynamicPathGenerationDebug) {
       System.out.println("This is the path generated:");
       System.out.println(positions);
     }

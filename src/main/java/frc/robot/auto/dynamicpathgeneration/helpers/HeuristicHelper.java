@@ -29,14 +29,16 @@ public class HeuristicHelper {
     pq.add(sink);
     while (!pq.isEmpty()) {
       int cur = pq.poll();
-      if (vis[cur]) continue;
+      if (vis[cur])
+        continue;
       vis[cur] = true;
       // System.out.println("cur:" + cur);
       for (int next = 0; next < nodes; next++) {
-        if (vis[next]) continue;
-        double newHeurestic =
-            heurestic[cur] + splineHeuristic(positions.get(cur), positions.get(next));
-        if (heurestic[next] < newHeurestic) continue;
+        if (vis[next])
+          continue;
+        double newHeurestic = heurestic[cur] + splineHeuristic(positions.get(cur), positions.get(next));
+        if (heurestic[next] < newHeurestic)
+          continue;
         heurestic[next] = newHeurestic;
         pq.add(next);
       }
@@ -44,13 +46,14 @@ public class HeuristicHelper {
     return heurestic;
   }
 
-  // heavy splined heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
+  // heavy splined heuristic estimate of time to travel 1->2 that is guaranteed to
+  // be lower than
   // actual
   public static double splineHeuristic(Translation2d position1, Translation2d position2) {
-    double ret = position1.getDistance(position2) / (SwerveConstants.kMaxSpeed);
+    double estimatedTime = position1.getDistance(position2) / (SwerveConstants.kMaxSpeed);
     if (doesPathHitObstacles(position1, position2)) {
-      ret += ILLEGAL_TIME;
+      estimatedTime += ILLEGAL_TIME;
     }
-    return ret;
+    return estimatedTime;
   }
 }
