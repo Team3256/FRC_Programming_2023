@@ -18,10 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class DynamicPathFinder {
   private final int src;
@@ -32,7 +29,6 @@ public class DynamicPathFinder {
   private final ArrayList<Translation2d> positions;
 
   private int[] previousNodesInCurrentPath;
-
   private final double[] heuristic;
 
   /**
@@ -63,6 +59,7 @@ public class DynamicPathFinder {
   }
 
   public List<Translation2d> findPath() {
+    int nodesExplored = 0;
     // Time to travel from src to all other nodes
     double[] distanceToTravelToNodeN = new double[nodes];
     Arrays.fill(distanceToTravelToNodeN, INF_TIME);
@@ -72,36 +69,29 @@ public class DynamicPathFinder {
     previousNodesInCurrentPath = new int[nodes];
 
     // Priorities with which to visit the nodes
-    double[] priorityQueue = new double[nodes];
-    Arrays.fill(priorityQueue, INF_TIME);
-    priorityQueue[src] = heuristic[src];
+    double[] priority = new double[nodes];
+    Arrays.fill(priority, INF_TIME);
+    priority[src] = heuristic[src];
+
+    // Q to pop from
+    PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> priority[a]));
+    pq.add(src);
 
     // Visited nodes
     boolean[] visitedNodes = new boolean[nodes];
 
-    while (true) {
+    while (!pq.isEmpty()) {
       // Find unvisited lowest priority node
-      double currentPriority = INF_TIME;
-      int currentNode = -1;
-      for (int node = 0; node < priorityQueue.length; node++) {
-        if (priorityQueue[node] < currentPriority && !visitedNodes[node]) {
-          currentPriority = priorityQueue[node];
-          currentNode = node;
-        }
-      }
+      int currentNode = pq.poll();
+      if (visitedNodes[currentNode]) continue;
+
       if (kDynamicPathGenerationDebug) {
         // System.out.println("explore node:" + currentNode);
-      }
-
-      // No paths available
-      if (currentNode == -1) {
-        System.out.println("No paths available.");
-        ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
-        return getPathPositionsFromPathIds(pathIds);
+        nodesExplored++;
       }
 
       // Found shortest path to sink
-      else if (currentNode == sink) {
+      if (currentNode == sink) {
         System.out.println("Path found");
         return getPathPositionsFromPathIds(getPathIdsInCurrentPath(sink));
       }
@@ -119,7 +109,10 @@ public class DynamicPathFinder {
             previousNodesInCurrentPath[node] = currentNode;
 
             // Update node priority
-            priorityQueue[node] = distanceToTravelToNodeN[node] + heuristic[node];
+            priority[node] = distanceToTravelToNodeN[node] + heuristic[node];
+
+            // Add node to queue
+            pq.add(node);
           }
           path.remove(path.size() - 1);
         }
@@ -128,6 +121,10 @@ public class DynamicPathFinder {
       // mark as visited
       visitedNodes[currentNode] = true;
     }
+    // No paths available
+    System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
+    ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
+    return getPathPositionsFromPathIds(pathIds);
   }
 
   // calculate time to travel list of pathIds
