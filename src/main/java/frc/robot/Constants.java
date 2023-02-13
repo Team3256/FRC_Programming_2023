@@ -7,10 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import java.util.Map;
 
@@ -265,5 +268,14 @@ public final class Constants {
                   Units.inchesToMeters(18.22),
                   new Rotation3d()));
     }
+  }
+
+  public static class VisionConstants {
+    public static final String kLimelightNetworkTablesName = "limelight";
+    public static final double kLimelightTranslationThresholdMeters = 1;
+    public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
+    public static final double kFieldTranslationOffsetX = 6;
+    public static final double kFieldTranslationOffsetY = 5;
+    Matrix<N3, N1> visionMeasurementStdDevs;
   }
 }
