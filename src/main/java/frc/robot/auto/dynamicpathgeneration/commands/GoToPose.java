@@ -21,15 +21,14 @@ public class GoToPose extends CommandBase {
   private AutoCommandRunner commandRunner;
   private PathPlannerTrajectory pathToScoringLocation;
 
-  public GoToPose(SwerveDrive swerveSubsystem,Pose2d goalPose) {
+  public GoToPose(SwerveDrive swerveSubsystem, Pose2d goalPose) {
     this.swerveSubsystem = swerveSubsystem;
     this.goalPose = goalPose;
 
     addRequirements(swerveSubsystem);
   }
 
-  public GoToPose(
-      SwerveDrive swerveSubsystem, Pose2d goalPose, AutoCommandRunner commandRunner) {
+  public GoToPose(SwerveDrive swerveSubsystem, Pose2d goalPose, AutoCommandRunner commandRunner) {
     this(swerveSubsystem, goalPose);
 
     // TODO Implement command runner
@@ -44,9 +43,7 @@ public class GoToPose extends CommandBase {
   }
 
   @Override
-  public void execute() {
-
-  }
+  public void execute() {}
 
   @Override
   public boolean isFinished() {

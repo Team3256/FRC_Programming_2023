@@ -14,43 +14,42 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.auto.HeuristicHelper;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class DynamicPathGenerator {
   private final Pose2d startPose;
   private final Pose2d goalPose;
-  private final int nodes;
+  private int nodes;
   private static final boolean debug = true;
+  private final double[] heuristic;
+  private ArrayList<Translation2d> newDynamicPathAllowedPositions;
 
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     this.startPose = startPose;
     this.goalPose = goalPose;
-    double r = 0.45;
-    int res = 100;
-    if (dynamicPathAllowedPositions.size() == 0) {
-      for (double x=searchLowX;x <searchHiX;x +=searchResX) {
-        for (double y=searchLowY;y <searchHiY;y +=searchResY) {
-          boolean bad = false;
-          for (int i = 0; i < res; i++) {
-            double angle = i * 2 * Math.PI / res;
-            if (chargingStation.containsPoint(
-                new Translation2d(x + r * Math.cos(angle), y + r * Math.sin(angle)))) bad = true;
-          }
-          if (!bad) dynamicPathAllowedPositions.add(new Translation2d(x, y));
-        }
-      }
-    }
-    this.nodes = dynamicPathAllowedPositions.size() + 2;
+    init();
+    heuristic = HeuristicHelper.generateHeuristic(nodes - 1, newDynamicPathAllowedPositions);
+  }
+
+  public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose, double[] heuristic) {
+    this.heuristic = heuristic;
+    this.goalPose = goalPose;
+    this.startPose = startPose;
+    init();
+  }
+
+  public void init() {
+    PathGenInit.init();
+    newDynamicPathAllowedPositions = new ArrayList<>(dynamicPathAllowedPositions);
+    newDynamicPathAllowedPositions.add(startPose.getTranslation());
+    newDynamicPathAllowedPositions.add(goalPose.getTranslation());
+    nodes = newDynamicPathAllowedPositions.size();
   }
 
   public List<Translation2d> getPositions() {
-    ArrayList<Translation2d> newDynamicPathAllowedPositions =
-        new ArrayList<>(dynamicPathAllowedPositions);
-    newDynamicPathAllowedPositions.add(startPose.getTranslation());
-    newDynamicPathAllowedPositions.add(goalPose.getTranslation());
 
     DynamicPathFinder pathFinder =
         new DynamicPathFinder(
@@ -58,7 +57,8 @@ public class DynamicPathGenerator {
             startPose.getRotation(),
             nodes - 1,
             goalPose.getRotation(),
-            newDynamicPathAllowedPositions);
+            newDynamicPathAllowedPositions,
+            heuristic);
 
     List<Translation2d> positions = pathFinder.findPath();
     if (debug) {

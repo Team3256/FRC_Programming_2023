@@ -34,26 +34,30 @@ public class DynamicPathFinder {
 
   private int[] previousNodesInCurrentPath;
 
-  static final double INF = Double.MAX_VALUE / 10;
+  private double[] heuristic;
+
 
   /**
    * Finds the fastest path between two nodes using Warrior-star algorithm
    *
    * @param src start node
    * @param sink end node
+   * @param heuristic heuristic
    */
   public DynamicPathFinder(
       int src,
       Rotation2d srcRot,
       int sink,
       Rotation2d sinkRot,
-      ArrayList<Translation2d> positions) {
+      ArrayList<Translation2d> positions,
+      double[] heuristic) {
     this.src = src;
     this.srcRot = srcRot;
     this.sink = sink;
     this.sinkRot = sinkRot;
     this.positions = positions;
     this.nodes = positions.size();
+    this.heuristic = heuristic;
     if (kDynamicPathGenerationDebug) {
       System.out.println("Running Path Finder Algorithm");
       System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
@@ -105,8 +109,8 @@ public class DynamicPathFinder {
       }
 
       // Update all unvisited neighboring nodes
+      List<Integer> path = getPathIdsInCurrentPath(currentNode);
       for (int node = 0; node < nodes; node++) {
-        List<Integer> path = getPathIdsInCurrentPath(currentNode);
         if (positions.get(node).getX() < positions.get(currentNode).getX() && !visitedNodes[node]) {
           path.add(node);
           double pathTime = getPathTime(path);
@@ -118,7 +122,7 @@ public class DynamicPathFinder {
 
             // Update node priority
             priorityQueue[node] =
-                distanceToTravelToNodeN[node] + heuristic(positions.get(node), positions.get(sink));
+                distanceToTravelToNodeN[node] + heuristic[node];
           }
           path.remove(path.size() - 1);
         }
@@ -129,13 +133,7 @@ public class DynamicPathFinder {
     }
   }
 
-  // heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
-  // actual
-  public static double heuristic(Translation2d position1, Translation2d position2) {
-    double ret = position1.getDistance(position2) / SwerveConstants.kMaxSpeed;
-    if (doesPathHitObstacles(position1, position2)) ret += INF / 2;
-    return ret;
-  }
+
 
   // calculate time to travel list of pathIds
   private double getPathTime(List<Integer> pathIds) {
