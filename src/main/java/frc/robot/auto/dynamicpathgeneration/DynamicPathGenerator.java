@@ -61,7 +61,7 @@ public class DynamicPathGenerator {
 
     List<Translation2d> positions = pathFinder.findPath();
     if (debug) {
-      System.out.println("Path generated:");
+      System.out.println("This is the path generated:");
       System.out.println(positions);
     }
     return positions;

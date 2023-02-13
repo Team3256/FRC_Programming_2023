@@ -59,13 +59,13 @@ public class DynamicPathGenerationTest {
   public void testGeneratePathBase(Pose2d src, Pose2d sink, int id) {
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<Translation2d> positions = generator.getPositions();
-    System.out.println("Generated pose list:" + positions);
     Path path = new Path(positions, src.getRotation(), sink.getRotation());
     testInterpolatePathBase(path, id);
   }
 
   public void testInterpolatePathBase(Path path, int id) {
-    System.out.println("Path " + id + ":" + path.getWaypoints());
+    System.out.println("Test Path " + id + ":");
+    System.out.println(path.getWaypoints());
     JSONObject json = path.getJson();
 
     String pathPlannerJsonPath =

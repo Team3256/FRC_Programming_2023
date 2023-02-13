@@ -102,6 +102,7 @@ public class DynamicPathFinder {
 
       // Found shortest path to sink
       else if (currentNode == sink) {
+        System.out.println("Path found");
         return getPathPositionsFromPathIds(getPathIdsInCurrentPath(sink));
       }
 
