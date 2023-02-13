@@ -28,18 +28,22 @@ public class Path {
     for (Translation2d position : positions) {
       poses.add(new Pose2d(position, new Rotation2d(0)));
     }
-    Pose2d startPose = poses.get(0);
-    Pose2d endPose = poses.get(points - 1);
 
     // dRotation, similar to dx or dy, representing a small change in rotation
     // throughout the path
-    Rotation2d dRotation = endPose.getRotation().minus(startPose.getRotation()).div(points);
+    double[] pathLengthTo = new double[points];
+    pathLengthTo[0] = 0;
+    for (int i = 1; i < points; i++) {
+      pathLengthTo[i] = pathLengthTo[i - 1];
+      pathLengthTo[i] += positions.get(i).getDistance(positions.get(i - 1));
+    }
+    Rotation2d dRotation = endRotation.minus(startRotation).div(pathLengthTo[points - 1]);
 
     // convert poses to waypoints
     waypoints = new ArrayList<>();
     for (int i = 0; i < points; i++) {
       Translation2d anchorPoint = poses.get(i).getTranslation();
-      Rotation2d holonomicAngle = startPose.getRotation().plus(dRotation.times(i));
+      Rotation2d holonomicAngle = startRotation.plus(dRotation.times(pathLengthTo[i]));
 
       Translation2d prevControl;
       Translation2d nextControl;

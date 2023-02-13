@@ -33,7 +33,7 @@ public class DynamicPathGenerationTest {
   }
 
   // Top test
-  // @Test
+  @Test
   public void testGeneratePath1() {
     Pose2d src = new Pose2d(new Translation2d(7.8, 4.8), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
@@ -41,18 +41,18 @@ public class DynamicPathGenerationTest {
   }
 
   // Bottom test
-  // @Test
+  @Test
   public void testGeneratePath2() {
     Pose2d src = new Pose2d(new Translation2d(7.5, 0.5), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
     testGeneratePathBase(src, sink, 2);
   }
 
-  // Long test
+  // Cycle test
   @Test
   public void testGeneratePath3() {
     Pose2d src = new Pose2d(new Translation2d(16, 8), new Rotation2d(0));
-    Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(180));
+    Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(Math.PI));
     testGeneratePathBase(src, sink, 3);
   }
 
