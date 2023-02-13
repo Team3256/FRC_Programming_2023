@@ -7,9 +7,6 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.VisionConstants.*;
-import static frc.robot.swerve.SwerveConstants.*;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -32,6 +29,9 @@ import frc.robot.limelight.Limelight;
 import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.Constants.VisionConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
@@ -177,22 +177,16 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     return (kInvertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
 
-  public boolean canAddVisionMeasurement(Pose2d limelightPose) {
-    if (Math.abs(
-                limelightPose
-                    .getTranslation()
-                    .getDistance(poseEstimator.getEstimatedPosition().getTranslation()))
-            < kLimelightTranslationThreshold
-        && Math.abs(
-                limelightPose.getRotation().getRadians() - limelightPose.getRotation().getRadians())
-            < kLimelightRotationThreshold) return true;
-    return false;
+  public boolean shouldAddVisionMeasurement(Pose2d limelightPose) {
+    Pose2d relativePose = limelightPose.relativeTo(poseEstimator.getEstimatedPosition());
+    return Math.abs(relativePose.getTranslation().getNorm()) < kLimelightTranslationThresholdMeters
+        && Math.abs(relativePose.getRotation().getRadians()) < kLimelightRotationThreshold;
   }
 
   @Override
   public void periodic() {
-    // poseEstimator.update(getYaw(), getPositions());
-    this.poseEstimator.update(getYaw(), getModulePositions());
+
+    poseEstimator.update(getYaw(), getModulePositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
     if (Limelight.hasValidTargets(kLimelightNetworkTablesName)) {
@@ -201,7 +195,6 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
       if (visionBotPose.length != 0) {
         double tx = visionBotPose[0] + kFieldTranslationOffsetX;
         double ty = visionBotPose[1] + kFieldTranslationOffsetY;
-        double tz = visionBotPose[2];
 
         // botpose from network tables uses degrees, not radians, so need to convert
         double rx = visionBotPose[3];
@@ -212,7 +205,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
 
         Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
 
-        if (canAddVisionMeasurement(limelightPose)) {
+        if (shouldAddVisionMeasurement(limelightPose)) {
           poseEstimator.addVisionMeasurement(
               limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
         }
