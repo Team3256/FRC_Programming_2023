@@ -68,12 +68,9 @@ public class DynamicPathGenerationTest {
     System.out.println(path.getWaypoints());
     JSONObject json = path.getJson();
 
-    String pathPlannerJsonPath =
-        "src/main/deploy/pathplanner/DynamicPathGenerationTest" + fileName + ".path";
+    String pathPlannerJsonPath = "src/main/deploy/pathplanner/" + fileName + ".path";
     String correctJsonPath =
-        "src/test/java/frc/robot/tests/dynamicpathgeneration/json/DynamicPathGenerationTest"
-            + fileName
-            + ".path";
+        "src/test/java/frc/robot/tests/dynamicpathgeneration/json/" + fileName + ".path";
 
     FileHelper.saveJson(json, pathPlannerJsonPath);
     assertTrue(true);
