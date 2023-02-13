@@ -28,7 +28,7 @@ public class DynamicPathFinder {
   private final int nodes;
   private final ArrayList<Translation2d> positions;
 
-  private int[] previousNodesInCurrentPath;
+  private int[] pre;
   private final double[] heuristic;
 
   /**
@@ -66,7 +66,7 @@ public class DynamicPathFinder {
     distanceToTravelToNodeN[src] = 0;
 
     // Previous node in current optimal path to node
-    previousNodesInCurrentPath = new int[nodes];
+    pre = new int[nodes];
 
     // Priorities with which to visit the nodes
     double[] priority = new double[nodes];
@@ -100,13 +100,14 @@ public class DynamicPathFinder {
       List<Integer> path = getPathIdsInCurrentPath(currentNode);
       for (int node = 0; node < nodes; node++) {
         if (positions.get(node).getX() < positions.get(currentNode).getX() && !visitedNodes[node]) {
+          //add node to path
           path.add(node);
           double pathTime = getPathTime(path);
           // If path over this edge is better
           if (pathTime < distanceToTravelToNodeN[node]) {
             // Save path as new current shortest path
             distanceToTravelToNodeN[node] = pathTime;
-            previousNodesInCurrentPath[node] = currentNode;
+            pre[node] = currentNode;
 
             // Update node priority
             priority[node] = distanceToTravelToNodeN[node] + heuristic[node];
@@ -114,6 +115,7 @@ public class DynamicPathFinder {
             // Add node to queue
             pq.add(node);
           }
+          //pop node from path
           path.remove(path.size() - 1);
         }
       }
@@ -143,8 +145,8 @@ public class DynamicPathFinder {
   // convert list of pathIds into PathPlannerTrajectory
   public PathPlannerTrajectory getTrajectoryFromPathIds(List<Integer> pathIds) {
     // convert pathIds into pathPoints
-    List<Translation2d> pathPosition = getPathPositionsFromPathIds(pathIds);
-    Path path = new Path(pathPosition, srcRot, sinkRot);
+    List<Translation2d> pathPositions = getPathPositionsFromPathIds(pathIds);
+    Path path = new Path(pathPositions, srcRot, sinkRot);
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());
@@ -167,7 +169,7 @@ public class DynamicPathFinder {
 
     while (currentNode != src) {
       pathIds.add(currentNode);
-      currentNode = previousNodesInCurrentPath[currentNode];
+      currentNode = pre[currentNode];
     }
 
     pathIds.add(currentNode);
