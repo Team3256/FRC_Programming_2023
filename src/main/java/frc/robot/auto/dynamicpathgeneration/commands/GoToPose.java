@@ -15,20 +15,20 @@ import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.swerve.SwerveDrive;
 
 // TODO Extend PPTrajectoryFollowCommand
-public class DynamicPathFollowing extends CommandBase {
-  private SwerveDrive swerveSubsystem;
-  private Pose2d goalPose;
+public class GoToPose extends CommandBase {
+  private final SwerveDrive swerveSubsystem;
+  private final Pose2d goalPose;
   private AutoCommandRunner commandRunner;
   private PathPlannerTrajectory pathToScoringLocation;
 
-  public DynamicPathFollowing(SwerveDrive swerveSubsystem, Pose2d goalPose) {
+  public GoToPose(SwerveDrive swerveSubsystem,Pose2d goalPose) {
     this.swerveSubsystem = swerveSubsystem;
     this.goalPose = goalPose;
 
     addRequirements(swerveSubsystem);
   }
 
-  public DynamicPathFollowing(
+  public GoToPose(
       SwerveDrive swerveSubsystem, Pose2d goalPose, AutoCommandRunner commandRunner) {
     this(swerveSubsystem, goalPose);
 
@@ -44,7 +44,9 @@ public class DynamicPathFollowing extends CommandBase {
   }
 
   @Override
-  public void execute() {}
+  public void execute() {
+    
+  }
 
   @Override
   public boolean isFinished() {
