@@ -96,6 +96,7 @@ public class DynamicPathFinder {
       for (int node = 0; node < nodes; node++) {
         if (visitedNodes[node]) continue;
         if (positions.get(node).getX() > positions.get(currentNode).getX()) continue;
+        if (positions.get(node).getDistance(positions.get(currentNode)) >= 5) continue;
         // add node to path
         path.add(node);
         double pathTime = getPathTime(path);

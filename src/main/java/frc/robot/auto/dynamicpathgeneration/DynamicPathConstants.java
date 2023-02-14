@@ -26,6 +26,7 @@ public final class DynamicPathConstants {
       new Obstacle(new Translation2d(0, 5.35), 3.27, 0.41);
   public static final Obstacle kLowerWall =
       new Obstacle(new Translation2d(0, -0.1), kFieldLength, 0.1);
+
   public static final Obstacle kChargingStation =
       new Obstacle(kChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
   public static final Obstacle[] obstacles = {kBarrierAboveGrid, kLowerWall, kChargingStation};
@@ -33,11 +34,11 @@ public final class DynamicPathConstants {
   public static final double kGridXLowerBound = 1.45 + kRobotRadius;
   public static final double kGridXUpperBound = kFieldLength;
 
-  public static final double kGridYLowerBound = kRobotRadius;
+  public static final double kGridYLowerBound = 0;
   public static final double kGridYUpperBound = kFieldWidth;
 
-  public static final double kGridXResolution = 0.75;
-  public static final double kGridYResolution = 0.125;
+  public static final double kGridXResolution = 0.7; // original res 0.7
+  public static final double kGridYResolution = 0.2; // original res 0.2
 
   public static final ArrayList<Translation2d> dynamicPathAllowedPositions = new ArrayList<>();
 
