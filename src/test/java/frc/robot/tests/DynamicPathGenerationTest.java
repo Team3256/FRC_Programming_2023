@@ -56,6 +56,22 @@ public class DynamicPathGenerationTest {
     testGeneratePathBase(src, sink, "DynamicTest-Cycle");
   }
 
+  // Mid short test
+  @Test
+  public void testGeneratePathMidShort() {
+    Pose2d src = new Pose2d(new Translation2d(5.5, 2.7), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(Math.PI));
+    testGeneratePathBase(src, sink, "DynamicTest-MidShort");
+  }
+
+  // Mid med test
+  @Test
+  public void testGeneratePathMidMed() {
+    Pose2d src = new Pose2d(new Translation2d(8.28, 2.76), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(Math.PI));
+    testGeneratePathBase(src, sink, "DynamicTest-MidMed");
+  }
+
   public void testGeneratePathBase(Pose2d src, Pose2d sink, String fileName) {
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<Translation2d> positions = generator.getPositions();
