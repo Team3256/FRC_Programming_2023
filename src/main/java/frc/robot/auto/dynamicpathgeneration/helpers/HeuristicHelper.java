@@ -44,13 +44,14 @@ public class HeuristicHelper {
     return heurestic;
   }
 
-  // heavy splined heuristic estimate of time to travel 1->2 that is guaranteed to be lower than
+  // heavy splined heuristic estimate of time to travel 1->2 that is guaranteed to
+  // be lower than
   // actual
   public static double splineHeuristic(Translation2d position1, Translation2d position2) {
-    double ret = position1.getDistance(position2) / (SwerveConstants.kMaxSpeed);
+    double estimatedTime = position1.getDistance(position2) / (SwerveConstants.kMaxSpeed);
     if (doesPathHitObstacles(position1, position2)) {
-      ret += ILLEGAL_TIME;
+      estimatedTime += ILLEGAL_TIME;
     }
-    return ret;
+    return estimatedTime;
   }
 }

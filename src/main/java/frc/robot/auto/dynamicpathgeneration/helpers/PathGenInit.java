@@ -8,7 +8,6 @@
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.dynamicPathAllowedPositions;
 
 import edu.wpi.first.math.geometry.Translation2d;
 

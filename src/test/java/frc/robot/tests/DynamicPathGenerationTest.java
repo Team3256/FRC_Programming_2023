@@ -24,36 +24,44 @@ public class DynamicPathGenerationTest {
   // Turn sanity
   @Test
   public void testSimpleLeftTurnPath0() {
+    long start = System.currentTimeMillis();
     List<Translation2d> positions = new ArrayList<>();
     positions.add(new Translation2d(6, 0.5));
     positions.add(new Translation2d(6, 2));
     positions.add(new Translation2d(7.5, 2));
     Path path = new Path(positions, new Rotation2d(0), new Rotation2d(0));
     testInterpolatePathBase(path, "InterpolationTest-Turn");
+    System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
   // Top test
   @Test
   public void testGeneratePath1() {
+    long start = System.currentTimeMillis();
     Pose2d src = new Pose2d(new Translation2d(7.8, 4.8), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
     testGeneratePathBase(src, sink, "DynamicTest-High");
+    System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
   // Bottom test
   @Test
   public void testGeneratePath2() {
+    long start = System.currentTimeMillis();
     Pose2d src = new Pose2d(new Translation2d(7.5, 0.5), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
     testGeneratePathBase(src, sink, "DynamicTest-Low");
+    System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
   // Cycle test
   @Test
   public void testGeneratePath3() {
+    long start = System.currentTimeMillis();
     Pose2d src = new Pose2d(new Translation2d(16, 8), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(Math.PI));
     testGeneratePathBase(src, sink, "DynamicTest-Cycle");
+    System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
   // Mid short test
@@ -73,10 +81,12 @@ public class DynamicPathGenerationTest {
   }
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, String fileName) {
+    long start = System.currentTimeMillis();
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<Translation2d> positions = generator.getPositions();
     Path path = new Path(positions, src.getRotation(), sink.getRotation());
     testInterpolatePathBase(path, fileName);
+    System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
   public void testInterpolatePathBase(Path path, String fileName) {
@@ -90,6 +100,7 @@ public class DynamicPathGenerationTest {
 
     FileHelper.saveJson(json, pathPlannerJsonPath);
     assertTrue(true);
-    // assertTrue(FileHelper.areJsonFilesSame(pathPlannerJsonPath, correctJsonPath));
+    // assertTrue(FileHelper.areJsonFilesSame(pathPlannerJsonPath,
+    // correctJsonPath));
   }
 }
