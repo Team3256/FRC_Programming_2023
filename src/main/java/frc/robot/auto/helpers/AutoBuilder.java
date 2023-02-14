@@ -33,7 +33,10 @@ public class AutoBuilder {
   }
 
   public ArrayList<Command> createPaths(
-          String pathGroup, PathConstraints constraint, boolean isFirstSegment, PathConstraints... constraints) {
+      String pathGroup,
+      PathConstraints constraint,
+      boolean isFirstSegment,
+      PathConstraints... constraints) {
     ArrayList<PathPlannerTrajectory> trajectories =
         new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
 
@@ -58,6 +61,12 @@ public class AutoBuilder {
             kAutoThetaControllerConstraints);
 
     return new PPTrajectoryFollowCommand(
-        trajectory, xController, yController, thetaController, true, isFirstSegment, this.swerveSubsystem);
+        trajectory,
+        xController,
+        yController,
+        thetaController,
+        true,
+        isFirstSegment,
+        this.swerveSubsystem);
   }
 }

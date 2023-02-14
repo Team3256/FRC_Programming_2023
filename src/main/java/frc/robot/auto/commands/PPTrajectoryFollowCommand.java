@@ -59,13 +59,13 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   }
 
   public PPTrajectoryFollowCommand(
-          PathPlannerTrajectory trajectory,
-          PIDController xController,
-          PIDController yController,
-          ProfiledPIDController thetaController,
-          boolean useAllianceColor,
-          boolean isFirstSegment,
-          SwerveDrive swerveSubsystem) {
+      PathPlannerTrajectory trajectory,
+      PIDController xController,
+      PIDController yController,
+      ProfiledPIDController thetaController,
+      boolean useAllianceColor,
+      boolean isFirstSegment,
+      SwerveDrive swerveSubsystem) {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
@@ -100,15 +100,15 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       this.startPose = null;
     }
   }
-  
+
   @Override
   public void initialize() {
     if (this.useAllianceColor) {
       trajectory =
-              PathPlannerTrajectory.transformTrajectoryForAlliance(
-                      trajectory, DriverStation.getAlliance());
+          PathPlannerTrajectory.transformTrajectoryForAlliance(
+              trajectory, DriverStation.getAlliance());
       PathPlannerTrajectory.PathPlannerState start =
-              (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
+          (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
       Rotation2d rotation = start.holonomicRotation;
       Translation2d translation = start.poseMeters.getTranslation();
       this.startPose = new Pose2d(translation, rotation);
