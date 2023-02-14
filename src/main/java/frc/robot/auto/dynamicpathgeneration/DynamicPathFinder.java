@@ -166,8 +166,8 @@ public class DynamicPathFinder {
     for (int node : pathIds) pathPositions.add(positions.get(node));
     return pathPositions;
   }
-  // get the pathIds stored from src to node
 
+  // get the pathIds stored from src to node
   private List<Integer> getPathIdsInCurrentPath(int node) {
     List<Integer> pathIds = new ArrayList<>();
     int currentNode = node;
@@ -193,8 +193,9 @@ public class DynamicPathFinder {
     return false;
   }
 
-  // make sure line segments don't intersect obstacles
-  public static boolean doesPathHitObstacles(Translation2d position1, Translation2d position2) {
+  // make sure path don't intersect obstacles
+  public static boolean doesTranslationHitObstacles(
+      Translation2d position1, Translation2d position2) {
     if (doesLineHitObstacles(position1, position2)) return true;
 
     Rotation2d normalAngle = position2.minus(position1).getAngle().plus(Rotation2d.fromDegrees(90));
