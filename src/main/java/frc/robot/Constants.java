@@ -70,7 +70,7 @@ public final class Constants {
             new Translation2d(kChargingStationOuterX, kChargingStationLeftY)
           };
       public static final Translation2d kChargingStationTopLeftCorner =
-          new Translation2d(kChargingStationInnerX, kChargingStationLeftY);
+          new Translation2d(kChargingStationInnerX, kChargingStationRightY);
       public static final Translation2d[][] kChargingStationSegments =
           new Translation2d[][] {
             {kChargingStationCorners[0], kChargingStationCorners[1]},

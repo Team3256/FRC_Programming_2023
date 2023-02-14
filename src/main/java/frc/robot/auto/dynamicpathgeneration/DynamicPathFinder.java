@@ -172,8 +172,7 @@ public class DynamicPathFinder {
     if (doesLineHitObstacles(position1, position2)) return true;
 
     Rotation2d normalAngle = position2.minus(position1).getAngle().plus(Rotation2d.fromDegrees(90));
-    Translation2d normalVector =
-        new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotRadius + 0.05);
+    Translation2d normalVector = new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotRadius);
 
     if (doesLineHitObstacles(position1.minus(normalVector), position2.minus(normalVector)))
       return true;

@@ -11,11 +11,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import java.awt.geom.Rectangle2D;
 
 public class Obstacle {
-  private Rectangle2D.Double rectangle;
+  public Rectangle2D.Double rectangle;
 
-  public Obstacle(Translation2d topLeftCorner, double width, double height) {
-    rectangle = new Rectangle2D.Double(topLeftCorner.getX(), topLeftCorner.getY(), width, height);
-    System.out.println(rectangle);
+  // Rectangle2D.Double actually uses bottom left contrary to their docs
+  public Obstacle(Translation2d bottomLeftCorner, double width, double height) {
+    rectangle =
+        new Rectangle2D.Double(bottomLeftCorner.getX(), bottomLeftCorner.getY(), width, height);
   }
 
   public boolean containsPoint(Translation2d query) {
