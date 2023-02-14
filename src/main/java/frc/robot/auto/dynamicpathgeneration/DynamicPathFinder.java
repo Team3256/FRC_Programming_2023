@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
+import frc.robot.swerve.SwerveConstants;
 import java.util.*;
 
 public class DynamicPathFinder {
@@ -99,25 +100,25 @@ public class DynamicPathFinder {
       // Update all unvisited neighboring nodes
       List<Integer> path = getPathIdsInCurrentPath(currentNode);
       for (int node = 0; node < nodes; node++) {
-        if (positions.get(node).getX() < positions.get(currentNode).getX() && !visitedNodes[node]) {
-          //add node to path
-          path.add(node);
-          double pathTime = getPathTime(path);
-          // If path over this edge is better
-          if (pathTime < distanceToTravelToNodeN[node]) {
-            // Save path as new current shortest path
-            distanceToTravelToNodeN[node] = pathTime;
-            pre[node] = currentNode;
+        if (visitedNodes[node]) continue;
+        if (positions.get(node).getX() > positions.get(currentNode).getX()) continue;
+        // add node to path
+        path.add(node);
+        double pathTime = getPathTime(path);
+        // If path over this edge is better
+        if (pathTime < distanceToTravelToNodeN[node]) {
+          // Save path as new current shortest path
+          distanceToTravelToNodeN[node] = pathTime;
+          pre[node] = currentNode;
 
-            // Update node priority
-            priority[node] = distanceToTravelToNodeN[node] + heuristic[node];
+          // Update node priority
+          priority[node] = distanceToTravelToNodeN[node] + heuristic[node];
 
-            // Add node to queue
-            pq.add(node);
-          }
-          //pop node from path
-          path.remove(path.size() - 1);
+          // Add node to queue
+          pq.add(node);
         }
+        // pop node from path
+        path.remove(path.size() - 1);
       }
 
       // mark as visited
@@ -125,6 +126,7 @@ public class DynamicPathFinder {
     }
     // No paths available
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
+
     ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
     return getPathPositionsFromPathIds(pathIds);
   }
@@ -132,14 +134,17 @@ public class DynamicPathFinder {
   // calculate time to travel list of pathIds
   private double getPathTime(List<Integer> pathIds) {
     // make sure pathIds are valid (doesn't hit obstacles)
+    double totalDistance = 0;
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (doesPathHitObstacles(positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1))))
         return INF_TIME;
+      totalDistance += positions.get(pathIds.get(i)).getDistance(positions.get(pathIds.get(i + 1)));
     }
+    return totalDistance / SwerveConstants.kMaxSpeed;
 
     // calc trajectory time
-    PathPlannerTrajectory trajectory = getTrajectoryFromPathIds(pathIds);
-    return trajectory.getTotalTimeSeconds();
+    // PathPlannerTrajectory trajectory = getTrajectoryFromPathIds(pathIds);
+    // return trajectory.getTotalTimeSeconds();
   }
 
   // convert list of pathIds into PathPlannerTrajectory

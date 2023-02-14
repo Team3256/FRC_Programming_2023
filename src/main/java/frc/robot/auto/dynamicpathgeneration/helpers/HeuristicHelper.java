@@ -29,16 +29,14 @@ public class HeuristicHelper {
     pq.add(sink);
     while (!pq.isEmpty()) {
       int cur = pq.poll();
-      if (vis[cur])
-        continue;
+      if (vis[cur]) continue;
       vis[cur] = true;
       // System.out.println("cur:" + cur);
       for (int next = 0; next < nodes; next++) {
-        if (vis[next])
-          continue;
-        double newHeurestic = heurestic[cur] + splineHeuristic(positions.get(cur), positions.get(next));
-        if (heurestic[next] < newHeurestic)
-          continue;
+        if (vis[next]) continue;
+        double newHeurestic =
+            heurestic[cur] + splineHeuristic(positions.get(cur), positions.get(next));
+        if (heurestic[next] < newHeurestic) continue;
         heurestic[next] = newHeurestic;
         pq.add(next);
       }
