@@ -8,21 +8,21 @@
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import java.awt.geom.Rectangle2D;
 
 public class Obstacle {
-  private Translation2d[] points;
+  private Rectangle2D.Double rectangle;
 
-  public Obstacle(Translation2d[] points) {
-    this.points = points;
+  public Obstacle(Translation2d topLeftCorner, double width, double height) {
+    rectangle = new Rectangle2D.Double(topLeftCorner.getX(), topLeftCorner.getY(), width, height);
+    System.out.println(rectangle);
   }
 
   public boolean containsPoint(Translation2d query) {
-    Translation2d wild = new Translation2d(233.9659023, 192.432321);
-    int intersections = 0;
-    for (int i = 0; i < points.length; i++) {
-      int j = (i + 1) % points.length;
-      if (GeometryUtil.intersect(query, wild, points[i], points[j])) intersections++;
-    }
-    return intersections % 2 == 1;
+    return rectangle.contains(query.getX(), query.getY());
+  }
+
+  public boolean intersectsLineSegment(Translation2d start, Translation2d end) {
+    return rectangle.intersectsLine(start.getX(), start.getY(), end.getX(), end.getY());
   }
 }

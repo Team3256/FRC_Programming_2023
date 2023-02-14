@@ -7,7 +7,7 @@
 
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;

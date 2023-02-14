@@ -54,14 +54,14 @@ public final class Constants {
           };
 
       // Charging station dimensions
-      public static final double kChargingStationLength = Units.inchesToMeters(76.125);
-      public static final double kChargingStationWidth = Units.inchesToMeters(97.25);
+      public static final double kChargingStationWidth = Units.inchesToMeters(76.125);
+      public static final double kChargingStationHeight = Units.inchesToMeters(97.25);
       public static final double kChargingStationOuterX = kOuterX - kTapeWidth;
       public static final double kChargingStationInnerX =
-          kChargingStationOuterX - kChargingStationLength;
+          kChargingStationOuterX - kChargingStationWidth;
       public static final double kChargingStationLeftY = kMidY - kTapeWidth;
       public static final double kChargingStationRightY =
-          kChargingStationLeftY - kChargingStationWidth;
+          kChargingStationLeftY - kChargingStationHeight;
       public static final Translation2d[] kChargingStationCorners =
           new Translation2d[] {
             new Translation2d(kChargingStationInnerX, kChargingStationRightY),
@@ -69,6 +69,8 @@ public final class Constants {
             new Translation2d(kChargingStationOuterX, kChargingStationRightY),
             new Translation2d(kChargingStationOuterX, kChargingStationLeftY)
           };
+      public static final Translation2d kChargingStationTopLeftCorner =
+          new Translation2d(kChargingStationInnerX, kChargingStationLeftY);
       public static final Translation2d[][] kChargingStationSegments =
           new Translation2d[][] {
             {kChargingStationCorners[0], kChargingStationCorners[1]},

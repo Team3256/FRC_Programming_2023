@@ -7,17 +7,11 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
-import static frc.robot.Constants.FieldConstants;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
-import frc.robot.auto.dynamicpathgeneration.helpers.Path;
-import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
+import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.swerve.SwerveConstants;
 import java.util.*;
 
@@ -94,11 +88,11 @@ public class DynamicPathFinder {
       // Found shortest path to sink
       if (currentNode == sink) {
         System.out.println("Path found");
-        return getPathPositionsFromPathIds(getPathIdsInCurrentPath(sink));
+        return getPositionsFromPathIds(getPathIdsFromNode(sink));
       }
 
       // Update all unvisited neighboring nodes
-      List<Integer> path = getPathIdsInCurrentPath(currentNode);
+      List<Integer> path = getPathIdsFromNode(currentNode);
       for (int node = 0; node < nodes; node++) {
         if (visitedNodes[node]) continue;
         if (positions.get(node).getX() > positions.get(currentNode).getX()) continue;
@@ -128,7 +122,7 @@ public class DynamicPathFinder {
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
 
     ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
-    return getPathPositionsFromPathIds(pathIds);
+    return getPositionsFromPathIds(pathIds);
   }
 
   // calculate time to travel list of pathIds
@@ -136,39 +130,23 @@ public class DynamicPathFinder {
     // make sure pathIds are valid (doesn't hit obstacles)
     double totalDistance = 0;
     for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (doesTranslationHitObstacles(
+      if (doesPathSegmentHitObstacles(
           positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1)))) return INF_TIME;
       totalDistance += positions.get(pathIds.get(i)).getDistance(positions.get(pathIds.get(i + 1)));
     }
+
     return totalDistance / SwerveConstants.kMaxSpeed;
-
-    // calc trajectory time
-    // PathPlannerTrajectory trajectory = getTrajectoryFromPathIds(pathIds);
-    // return trajectory.getTotalTimeSeconds();
-  }
-
-  // convert list of pathIds into PathPlannerTrajectory
-  public PathPlannerTrajectory getTrajectoryFromPathIds(List<Integer> pathIds) {
-    // convert pathIds into pathPoints
-    List<Translation2d> pathPositions = getPathPositionsFromPathIds(pathIds);
-    Path path = new Path(pathPositions, srcRot, sinkRot);
-    List<PathPoint> pathPoints = new ArrayList<>();
-    for (Waypoint waypoint : path.getWaypoints()) {
-      pathPoints.add(waypoint.waypointToPathPoint());
-    }
-
-    return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
   }
 
   // convert list of pathIds into list of pathPoses
-  private List<Translation2d> getPathPositionsFromPathIds(List<Integer> pathIds) {
+  private List<Translation2d> getPositionsFromPathIds(List<Integer> pathIds) {
     List<Translation2d> pathPositions = new ArrayList<>();
     for (int node : pathIds) pathPositions.add(positions.get(node));
     return pathPositions;
   }
 
   // get the pathIds stored from src to node
-  private List<Integer> getPathIdsInCurrentPath(int node) {
+  private List<Integer> getPathIdsFromNode(int node) {
     List<Integer> pathIds = new ArrayList<>();
     int currentNode = node;
 
@@ -183,18 +161,13 @@ public class DynamicPathFinder {
   }
 
   public static boolean doesLineHitObstacles(Translation2d position1, Translation2d position2) {
-    for (Translation2d[] chargingStationCorner :
-        FieldConstants.Community.kChargingStationSegments) {
-      if (GeometryUtil.intersect(
-          chargingStationCorner[0], chargingStationCorner[1], position1, position2)) {
-        return true;
-      }
+    for (Obstacle obstacle : obstacles) {
+      if (obstacle.intersectsLineSegment(position1, position2)) return true;
     }
     return false;
   }
 
-  // make sure path don't intersect obstacles
-  public static boolean doesTranslationHitObstacles(
+  public static boolean doesPathSegmentHitObstacles(
       Translation2d position1, Translation2d position2) {
     if (doesLineHitObstacles(position1, position2)) return true;
 
