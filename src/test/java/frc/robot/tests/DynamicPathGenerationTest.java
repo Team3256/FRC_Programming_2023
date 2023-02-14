@@ -21,22 +21,21 @@ import org.json.simple.*;
 import org.junit.jupiter.api.Test;
 
 public class DynamicPathGenerationTest {
-  // Turn sanity
+
   @Test
-  public void testSimpleLeftTurnPath0() {
+  public void testInterpolateTurnPath() {
     long start = System.currentTimeMillis();
     List<Translation2d> positions = new ArrayList<>();
     positions.add(new Translation2d(6, 0.5));
     positions.add(new Translation2d(6, 2));
     positions.add(new Translation2d(7.5, 2));
     Path path = new Path(positions, new Rotation2d(0), new Rotation2d(0));
-    testInterpolatePathBase(path, "InterpolationTest-Turn");
+    testInterpolatePathBase(path, "InterpolateTest-Turn");
     System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
-  // Top test
   @Test
-  public void testGeneratePath1() {
+  public void testGeneratePathHigh() {
     long start = System.currentTimeMillis();
     Pose2d src = new Pose2d(new Translation2d(7.8, 4.8), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
@@ -44,9 +43,8 @@ public class DynamicPathGenerationTest {
     System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
-  // Bottom test
   @Test
-  public void testGeneratePath2() {
+  public void testGeneratePathLow() {
     long start = System.currentTimeMillis();
     Pose2d src = new Pose2d(new Translation2d(7.5, 0.5), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(0));
@@ -54,9 +52,8 @@ public class DynamicPathGenerationTest {
     System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
-  // Cycle test
   @Test
-  public void testGeneratePath3() {
+  public void testGeneratePathCycle() {
     long start = System.currentTimeMillis();
     Pose2d src = new Pose2d(new Translation2d(16, 8), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(2, 3), new Rotation2d(Math.PI));
@@ -64,7 +61,6 @@ public class DynamicPathGenerationTest {
     System.out.println("Time taken: " + (System.currentTimeMillis() - start));
   }
 
-  // Mid short test
   @Test
   public void testGeneratePathMidShort() {
     Pose2d src = new Pose2d(new Translation2d(5.5, 2.7), new Rotation2d(0));
@@ -72,7 +68,6 @@ public class DynamicPathGenerationTest {
     testGeneratePathBase(src, sink, "DynamicTest-MidShort");
   }
 
-  // Mid med test
   @Test
   public void testGeneratePathMidMed() {
     Pose2d src = new Pose2d(new Translation2d(8.28, 2.76), new Rotation2d(0));
