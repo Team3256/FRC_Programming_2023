@@ -136,8 +136,8 @@ public class DynamicPathFinder {
     // make sure pathIds are valid (doesn't hit obstacles)
     double totalDistance = 0;
     for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (doesPathHitObstacles(positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1))))
-        return INF_TIME;
+      if (doesTranslationHitObstacles(
+          positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1)))) return INF_TIME;
       totalDistance += positions.get(pathIds.get(i)).getDistance(positions.get(pathIds.get(i + 1)));
     }
     return totalDistance / SwerveConstants.kMaxSpeed;
