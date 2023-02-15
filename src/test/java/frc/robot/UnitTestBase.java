@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class UnitTestBase {
-  public void setup() {
+  public static void setup() {
     assert HAL.initialize(500, 0); // initialize the HAL, crash if failed
     CommandScheduler.getInstance().enable();
     DriverStationSim.setEnabled(true);

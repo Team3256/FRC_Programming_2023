@@ -14,18 +14,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ArmTests extends UnitTestBase {
 
   static final double DELTA = 1e-2;
 
-  Arm armSubsystem;
+  private static Arm armSubsystem;
 
-  @BeforeEach
-  public void setup() {
-    super.setup();
+  @BeforeAll
+  public static void setup() {
+    UnitTestBase.setup();
     armSubsystem = new Arm();
   }
 
@@ -46,6 +46,6 @@ public class ArmTests extends UnitTestBase {
           DELTA,
           "Set angle to " + angle.getRadians() + " radians");
     }
-    //    armSubsystem.off();
+    // armSubsystem.off();
   }
 }

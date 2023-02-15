@@ -14,19 +14,19 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.UnitTestBase;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ElevatorTests extends UnitTestBase {
   public final double DELTA = Units.inchesToMeters(2);
 
-  private Elevator elevatorSubsystem;
+  private static Elevator elevatorSubsystem;
 
   // Run simulateJava to test Elevator
 
-  @BeforeEach
-  public void setup() {
-    super.setup();
+  @BeforeAll
+  public static void setup() {
+    UnitTestBase.setup();
     elevatorSubsystem = new Elevator();
   }
 
@@ -35,10 +35,10 @@ public class ElevatorTests extends UnitTestBase {
     testElevatorHeight(0.997);
   }
 
-  //  @Test
-  //  public void testElevatorHeightMin() {
-  //    testElevatorHeight(0.3048);
-  //  }
+  // @Test
+  // public void testElevatorHeightMin() {
+  // testElevatorHeight(0.3048);
+  // }
 
   public void testElevatorHeight(double heightSetpointMeters) { // 1 meter
     ProfiledPIDCommand command = new SetElevatorHeight(elevatorSubsystem, heightSetpointMeters);

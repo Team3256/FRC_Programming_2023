@@ -58,7 +58,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     gyro.configFactoryDefault();
     zeroGyro();
 
-    this.poseEstimator =
+    poseEstimator =
         new SwerveDrivePoseEstimator(
             kSwerveKinematics,
             getYaw(),
@@ -68,7 +68,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
               backLeftModule.getPosition(),
               backRightModule.getPosition()
             },
-            getPose());
+            new Pose2d());
 
     SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
     /*
