@@ -143,9 +143,8 @@ public class RobotContainer {
 
   private void configureArm() {
     this.armSubsystem = new Arm();
-
-    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
-    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
+    // TODO: Had setup for buttons to control arm (see configureIntake). 
+    // This method will be left empty for now as per requested changes on github
   }
 
   public void configureLEDStrip() {
@@ -155,7 +154,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new SetArmAngle(armSubsystem, new Rotation2d(2));
+    return new InstantCommand();
+    //return new SetArmAngle(armSubsystem, new Rotation2d(2));
   }
 
   public void test() {

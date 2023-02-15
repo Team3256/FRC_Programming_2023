@@ -70,21 +70,29 @@ public class TalonFXFactory {
   }
 
   // create a CANTalon with the default (out of the box) configuration
-  public static TalonFX createDefaultTalon(CanDeviceId id) {
-    return createTalon(id, kDefaultConfiguration);
+  public static TalonFX createDefaultTalon(int armid) {
+    return createTalon(armid, kDefaultConfiguration);
+  }
+
+  //  TODO: fix this, see what reprecussions this method's existence creates. 
+  // (createTalon in createDefaultTalon and createTalon, lazyTalonFX (marked with TODO:) have this inverse relationship)
+  private static TalonFX createTalon(int armid, Configuration kdefaultconfiguration2) {
+    return createTalon(armid, kdefaultconfiguration2);
   }
 
   public static TalonFX createPermanentSlaveTalon(CanDeviceId slave_id, CanDeviceId master_id) {
     if (slave_id.getBus() != master_id.getBus()) {
       throw new RuntimeException("Master and Slave Talons must be on the same CAN bus");
     }
+    // TODO
     final TalonFX talon = createTalon(slave_id, kSlaveConfiguration);
     talon.set(ControlMode.Follower, master_id.getDeviceNumber());
     return talon;
   }
 
-  public static TalonFX createTalon(CanDeviceId id, Configuration config) {
-    TalonFX talon = new LazyTalonFX(id);
+  public static TalonFX createTalon(CanDeviceId armid, Configuration config) {
+    // TODO
+    TalonFX talon = new LazyTalonFX(armid);
     talon.set(ControlMode.PercentOutput, 0.0);
 
     talon.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
@@ -171,4 +179,8 @@ public class TalonFXFactory {
 
     return talon;
   }
+
+public static TalonFX createDefaultTalon(CanDeviceId canDeviceId) {
+    return null;
+}
 }

@@ -7,7 +7,7 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.kAdvatageKitReplayEnabled;
+import static frc.robot.Constants.kAdvantageKitReplayEnabled;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -44,8 +44,8 @@ public class Robot extends LoggedRobot {
       Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
       Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-    } else if (kAdvatageKitReplayEnabled) {
-      setUseTiming(false); // Run as fast as possible
+    } else if (kAdvantageKitReplayEnabled) {
+      setUseTiming(false); //ss Run as fast as possible
       //
       String logPath =
           LogFileUtil
@@ -56,29 +56,60 @@ public class Robot extends LoggedRobot {
               new WPILOGWriter(
                   LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
     }
+    Logger logger = Logger.getInstance();
 
-    Logger.getInstance().start();
+    logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+
+    switch (Constants.currentMode) {
+      case REAL:
+        logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
+        logger.addDataReceiver(new NT4Publisher());
+        break;
+      case SIM:
+        logger.addDataReceiver(new WPILOGWriter(""));
+        logger.addDataReceiver(new NT4Publisher());
+        break;
+      case REPLAY:
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog();
+        logger.setReplaySource(new WPILOGReader(logPath));
+        logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
+      default: // Unknown mode.
+        logger.addDataReceiver(new WPILOGWriter(""));
+        logger.addDataReceiver(new NT4Publisher());
+        break;
+    }
+
+    /*if (isReal()) {
+      Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
+      Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+    } else {
+      setUseTiming(false); // Run as fast as possible
+      String logPath =
+          LogFileUtil
+              .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
+      Logger.getInstance()
+          .addDataReceiver(
+              new WPILOGWriter(
+                  LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+    }*/
+
+    //    Logger.getInstance()
+    //        .start(); // Start logging! No more data receivers, replay sources, or metadata values
+    // may
+    //    // be added.
+
+    logger.start(); // Start advkit logger
+    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-  }
-
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
-  // updated every 20 ms by default
-  @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

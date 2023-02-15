@@ -23,7 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.TalonFXFactory;
 
 public class Arm extends SubsystemBase {
 
@@ -42,14 +44,25 @@ public class Arm extends SubsystemBase {
           true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
-  private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Arm Root", 10, 0);
+  private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Arm Root", 10, 0); 
+  // TODO: Should this (above line) be renamed to pivot??
   private final MechanismLigament2d armMech2d =
       mechanism2dRoot.append(
           new MechanismLigament2d(
               "arm", kArmLengthMeters, Units.radiansToDegrees(armSim.getAngleRads())));
+  private final MechanismLigament2d armM = 
+    mechanism2dRoot.append(
+      new MechanismLigament2d(
+        "Arm", 
+        kArmInertia, 
+        kMaxAngleRads) // TODO: this is merely a setup, add appropriate values
+    );
 
   public Arm() {
-    armMotor = new WPI_TalonFX(armID);
+    TalonFXFactory.createDefaultTalon(armID);
+    /* TODO: Was supposed to be createDefaultFalcon as per requested changes on github. 
+    / This isn't a valid method for the object, so createDefaultTalon was used instead.
+    */
     armMotor.setNeutralMode(NeutralMode.Brake);
 
     if (RobotBase.isReal()) configureRealHardware();
@@ -60,12 +73,7 @@ public class Arm extends SubsystemBase {
   }
 
   private void configureRealHardware() {
-    armMotor = new WPI_TalonFX(armID);
     armMotor.enableVoltageCompensation(true);
-  }
-
-  public boolean isMotorCurrentSpiking() {
-    return armMotor.getSupplyCurrent() >= kArmCurrentThreshold;
   }
 
   public void off() {
@@ -100,7 +108,11 @@ public class Arm extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    if (this.getArmPosition() > kArmAngleConstraint) {
+      this.off();
+    }
+  }
 
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber("Arm angle position", armSim.getAngleRads());

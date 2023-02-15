@@ -7,6 +7,7 @@
 
 package frc.robot.arm;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -25,10 +26,10 @@ public final class ArmConstants {
   public static final double kD = 0;
 
   public static final TrapezoidProfile.Constraints kArmContraints =
-      new TrapezoidProfile.Constraints(0.45, 0.45);
+      new TrapezoidProfile.Constraints(0.1, 0.1);
 
-  public static final double kArmToleranceAngle = Units.degreesToRadians(2);
-  public static final double kArmToleranceAngularVelocity = Units.degreesToRadians(2);
+  public static final Rotation2d kArmToleranceAngle = new Rotation2d();
+  public static final Rotation2d kArmToleranceAngularVelocity = new Rotation2d();
 
   public static final double kArmAngleConstraint = 12.881991;
 
