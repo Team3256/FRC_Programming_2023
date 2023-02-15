@@ -17,21 +17,14 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import java.util.Map;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.swerve.helpers.SwerveModuleConstants;
-
 public final class Constants {
-  public static final boolean kDebugEnabled = false;
-  public static final boolean kIntakeEnabled = true;
-  public static final boolean kElevatorEnabled = true;
+  public static final boolean kDebugEnabled = true;
+  public static final boolean kIntakeEnabled = false;
+  public static final boolean kElevatorEnabled = false;
 
   public static final boolean kArmEnabled = true;
-  public static final boolean kSwerveEnabled = true;
-  public static final boolean kLedStripEnabled = true;
+  public static final boolean kSwerveEnabled = false;
+  public static final boolean kLedStripEnabled = false;
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final RobotType kRobotType = RobotType.ALPHA;
 

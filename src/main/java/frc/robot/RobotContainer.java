@@ -77,14 +77,14 @@ public class RobotContainer {
   }
 
   private void configureIntake() {
-    this.intakeSubsystem = new Intake();
+    intakeSubsystem = new Intake();
 
     driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
     driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
   }
 
   private void configureSwerve() {
-    this.swerveDrive = new SwerveDrive();
+    swerveDrive = new SwerveDrive();
 
     if (kElevatorEnabled) {
       // Enable elevator acceleration limiting
@@ -142,9 +142,9 @@ public class RobotContainer {
   }
 
   private void configureArm() {
-    this.armSubsystem = new Arm();
-    // TODO: Had setup for buttons to control arm (see configureIntake). 
-    // This method will be left empty for now as per requested changes on github
+    armSubsystem = new Arm();
+
+    // TODO: set button bindings for arm testing
   }
 
   public void configureLEDStrip() {
@@ -154,8 +154,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new InstantCommand();
-    //return new SetArmAngle(armSubsystem, new Rotation2d(2));
+    //    return new InstantCommand();
+    return new SetArmAngle(armSubsystem, new Rotation2d(Math.PI / 2));
   }
 
   public void test() {

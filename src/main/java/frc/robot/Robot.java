@@ -45,7 +45,7 @@ public class Robot extends LoggedRobot {
       Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
     } else if (kAdvantageKitReplayEnabled) {
-      setUseTiming(false); //ss Run as fast as possible
+      setUseTiming(false); // ss Run as fast as possible
       //
       String logPath =
           LogFileUtil

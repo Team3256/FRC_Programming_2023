@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.TalonFXFactory;
 
 public class Arm extends SubsystemBase {
@@ -38,31 +38,20 @@ public class Arm extends SubsystemBase {
           kArmGearing,
           jKgMetersSquared,
           kArmLengthMeters,
-          minAngleRads,
-          maxAngleRads,
+          kArmAngleConstraint,
+          (180 - kArmAngleConstraint),
           armMassKg,
           true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
-  private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Arm Root", 10, 0); 
-  // TODO: Should this (above line) be renamed to pivot??
+  private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Arm Root", 10, 0);
   private final MechanismLigament2d armMech2d =
       mechanism2dRoot.append(
           new MechanismLigament2d(
               "arm", kArmLengthMeters, Units.radiansToDegrees(armSim.getAngleRads())));
-  private final MechanismLigament2d armM = 
-    mechanism2dRoot.append(
-      new MechanismLigament2d(
-        "Arm", 
-        kArmInertia, 
-        kMaxAngleRads) // TODO: this is merely a setup, add appropriate values
-    );
 
   public Arm() {
-    TalonFXFactory.createDefaultTalon(armID);
-    /* TODO: Was supposed to be createDefaultFalcon as per requested changes on github. 
-    / This isn't a valid method for the object, so createDefaultTalon was used instead.
-    */
+    armMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kArmMotorID));
     armMotor.setNeutralMode(NeutralMode.Brake);
 
     if (RobotBase.isReal()) configureRealHardware();
@@ -74,11 +63,6 @@ public class Arm extends SubsystemBase {
 
   private void configureRealHardware() {
     armMotor.enableVoltageCompensation(true);
-  }
-
-  public void off() {
-    armMotor.neutralOutput();
-    System.out.println("arm off");
   }
 
   public double calculateFeedForward(double angle, double velocity) {
@@ -95,6 +79,11 @@ public class Arm extends SubsystemBase {
     } else return armSim.getAngleRads();
   }
 
+  public void off() {
+    armMotor.neutralOutput();
+    System.out.println("arm off");
+  }
+
   @Override
   public void simulationPeriodic() {
     armSim.setInput(armMotor.getMotorOutputPercent() * 12);
@@ -108,11 +97,7 @@ public class Arm extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    if (this.getArmPosition() > kArmAngleConstraint) {
-      this.off();
-    }
-  }
+  public void periodic() {}
 
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber("Arm angle position", armSim.getAngleRads());

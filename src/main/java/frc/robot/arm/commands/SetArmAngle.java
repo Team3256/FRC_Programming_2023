@@ -24,12 +24,13 @@ public class SetArmAngle extends ProfiledPIDCommand {
         MathUtil.clamp(
             angleRotation2d.getRadians(),
             Units.degreesToRadians(kArmAngleConstraint),
-            Units.degreesToRadians(kArmAngleConstraint + 180)),
+            Units.degreesToRadians(180 - kArmAngleConstraint)),
         (output, setpoint) ->
             armSubsystem.setInputVoltage(
                 output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
         armSubsystem);
 
-    getController().setTolerance(kArmToleranceAngle.getDegrees(), kArmToleranceAngularVelocity.getDegrees());
+    getController()
+        .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
   }
 }

@@ -9,11 +9,10 @@ package frc.robot.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 
 public final class ArmConstants {
-  // TODO: Fix these to comply to the mechanical ppls kg
-  public static final int kArmMotorID = -1;
+  // TODO: Fix constants
+  public static final int kArmMotorID = 10;
   public static final double kArmInertia =
       1; // https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/simulation/SingleJointedArmSim.html#%3Cinit%3E(edu.wpi.first.math.system.plant.DCMotor,double,double,double,double,double,double,boolean)
   public static final double kMinAngleRads = 1;
@@ -31,21 +30,15 @@ public final class ArmConstants {
   public static final Rotation2d kArmToleranceAngle = new Rotation2d();
   public static final Rotation2d kArmToleranceAngularVelocity = new Rotation2d();
 
-  public static final double kArmAngleConstraint = 12.881991;
-
-  public static final int armID = 20;
+  public static final double kArmAngleConstraint = -12.881991;
   public static final double kArmS = 1;
   public static final double kArmG = 1;
   public static final double kArmV = 1;
   public static final double kArmA = 1;
-
-  public static final double kArmHighPositionMeters = 1;
-  public static final double kArmMidPositionMeters = 1;
-  public static final double kArmLowPositionMeters = 1;
   public static final int kNumArmMotors = 1;
   public static final double kArmGearing = 1;
   public static final double jKgMetersSquared = 1;
-  public static final double kArmLengthMeters = 1;
+  public static final double kArmLengthMeters = 10;
   public static final double minAngleRads = 0;
   public static final double maxAngleRads = Math.PI;
   public static final double armMassKg = 1;
