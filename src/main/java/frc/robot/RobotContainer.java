@@ -10,14 +10,12 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
@@ -143,7 +141,6 @@ public class RobotContainer {
 
   private void configureArm() {
     armSubsystem = new Arm();
-
     // TODO: set button bindings for arm testing
   }
 
@@ -155,7 +152,8 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     //    return new InstantCommand();
-    return new SetArmAngle(armSubsystem, new Rotation2d(Math.PI / 2));
+    //    return new SetArmAngle(armSubsystem, new Rotation2d(Math.PI / 2));
+    return new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH);
   }
 
   public void test() {

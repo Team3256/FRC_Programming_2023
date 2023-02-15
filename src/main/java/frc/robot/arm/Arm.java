@@ -38,8 +38,8 @@ public class Arm extends SubsystemBase {
           kArmGearing,
           jKgMetersSquared,
           kArmLengthMeters,
-          kArmAngleConstraint,
-          (180 - kArmAngleConstraint),
+          Units.degreesToRadians(kArmAngleConstraint),
+          Units.degreesToRadians(180 - kArmAngleConstraint),
           armMassKg,
           true);
 

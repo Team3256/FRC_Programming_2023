@@ -12,7 +12,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class ArmConstants {
   // TODO: Fix constants
-  public static final int kArmMotorID = 10;
+  public static final int kArmMotorID = 16;
   public static final double kArmInertia =
       1; // https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/simulation/SingleJointedArmSim.html#%3Cinit%3E(edu.wpi.first.math.system.plant.DCMotor,double,double,double,double,double,double,boolean)
   public static final double kMinAngleRads = 1;
@@ -25,7 +25,7 @@ public final class ArmConstants {
   public static final double kD = 0;
 
   public static final TrapezoidProfile.Constraints kArmContraints =
-      new TrapezoidProfile.Constraints(0.1, 0.1);
+      new TrapezoidProfile.Constraints(2, 1);
 
   public static final Rotation2d kArmToleranceAngle = new Rotation2d();
   public static final Rotation2d kArmToleranceAngularVelocity = new Rotation2d();
