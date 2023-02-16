@@ -76,17 +76,8 @@ public class Elevator extends SubsystemBase {
     elevatorMotor.enableVoltageCompensation(true);
   }
 
-  public void zeroElevator() {
-    elevatorMotor.set(ControlMode.Position, 0);
-  }
-
   public boolean isMotorCurrentSpiking() {
     return elevatorMotor.getSupplyCurrent() >= kElevatorCurrentThreshold;
-  }
-
-  public void off() {
-    elevatorMotor.neutralOutput();
-    System.out.println("Elevator off");
   }
 
   public double calculateFeedForward(double velocity) {
@@ -102,6 +93,15 @@ public class Elevator extends SubsystemBase {
       return falconToMeters(
           elevatorMotor.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
     } else return elevatorSim.getPositionMeters();
+  }
+
+  public void zeroElevator() {
+    elevatorMotor.set(ControlMode.Position, 0);
+  }
+
+  public void off() {
+    elevatorMotor.neutralOutput();
+    System.out.println("Elevator off");
   }
 
   @Override
