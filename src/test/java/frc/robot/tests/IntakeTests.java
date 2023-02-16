@@ -23,8 +23,8 @@ public class IntakeTests extends UnitTestBase {
   private static Intake intakeSubsystem;
 
   @BeforeAll
-  public void setup() {
-    super.setup();
+  public static void setup() {
+    UnitTestBase.setup();
     intakeSubsystem = new Intake();
   }
 

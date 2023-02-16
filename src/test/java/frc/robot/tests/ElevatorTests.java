@@ -27,21 +27,19 @@ public class ElevatorTests extends UnitTestBase {
   @BeforeAll
   public void setup() {
     super.setup();
-    //    elevatorSubsystem = new Elevator();
+    elevatorSubsystem = new Elevator();
   }
-
   @Test
   public void testElevatorHeightMax() {
     testElevatorHeight(0.997);
   }
 
-  //  @Test
-  //  public void testElevatorHeightMin() {
-  //    testElevatorHeight(0.3048);
-  //  }
+  // @Test
+  // public void testElevatorHeightMin() {
+  // testElevatorHeight(0.3048);
+  // }
 
   public void testElevatorHeight(double heightSetpointMeters) { // 1 meter
-    Elevator elevatorSubsystem = new Elevator();
     Command command = new SetElevatorHeight(elevatorSubsystem, heightSetpointMeters);
 
     runScheduler(2, command, elevatorSubsystem);

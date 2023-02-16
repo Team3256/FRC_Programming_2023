@@ -21,9 +21,9 @@ public final class Constants {
   public static final boolean kDebugEnabled = false;
   public static final boolean kIntakeEnabled = false;
   public static final boolean kElevatorEnabled = true;
+  public static final boolean kArmEnabled = true;
+  public static final boolean kSwerveEnabled = true;
 
-  public static final boolean kArmEnabled = false;
-  public static final boolean kSwerveEnabled = false;
   public static final boolean kLedStripEnabled = false;
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final RobotType kRobotType = RobotType.ALPHA;
@@ -31,7 +31,7 @@ public final class Constants {
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
 
-  public static final MODE currentMode = MODE.REAL;
+  public static final MODE currentMode = MODE.SIM;
 
   public enum MODE {
     REAL,
