@@ -13,6 +13,7 @@ import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -72,7 +73,6 @@ public class Elevator extends SubsystemBase {
   }
 
   private void configureRealHardware() {
-    elevatorMotor = new WPI_TalonFX(elevatorID);
     elevatorMotor.enableVoltageCompensation(true);
   }
 
@@ -85,7 +85,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setInputVoltage(double voltage) {
-    elevatorMotor.setVoltage(voltage);
+    elevatorMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
   public double getElevatorPosition() {

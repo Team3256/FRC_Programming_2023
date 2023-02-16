@@ -12,8 +12,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class ArmConstants {
   // TODO: Fix constants
-  public static final int kArmMotorID = 10;
-  public static final int kArmEncoderDIOPort = 1;
+  public static final int kArmMotorID = 20;
+  public static final int kArmEncoderDIOPort = 10;
 
   private static final double kArmCountsPerRevolution = 256;
   public static final double kArmEncoderConversionToRadians =
@@ -21,14 +21,14 @@ public final class ArmConstants {
 
   // TODO Update
   public static final double kArmLengthMeters = 3.5;
-  public static final double kArmInertia = 10;
+  public static final double kArmInertia = 30;
   public static final double kArmMassKg = 5.5;
   public static final double kArmGearing = 100;
   public static final boolean kArmSimGravity = true;
 
-  public static final double kP = 100;
+  public static final double kP = 10.0;
   public static final double kI = 0;
-  public static final double kD = 0;
+  public static final double kD = 0.5;
   public static final TrapezoidProfile.Constraints kArmContraints =
       new TrapezoidProfile.Constraints(2, 1);
 
@@ -40,9 +40,9 @@ public final class ArmConstants {
 
   // https://www.reca.lc/arm
   // TODO Update
-  public static final double kArmS = 0.5;
-  public static final double kArmG = 4.59;
-  public static final double kArmV = 1.8;
+  public static final double kArmS = 0.0;
+  public static final double kArmG = 5.21;
+  public static final double kArmV = 0.6;
   public static final double kArmA = 1.81;
   public static final int kNumArmMotors = 1;
 }

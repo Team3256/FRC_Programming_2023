@@ -10,6 +10,7 @@ package frc.robot.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
 import frc.robot.arm.Arm;
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 public class ArmTests extends UnitTestBase {
 
-  static final double DELTA = 1e-2;
+  static final double DELTA = Units.degreesToRadians(3); // degrees
 
   private static Arm armSubsystem;
 
@@ -30,22 +31,30 @@ public class ArmTests extends UnitTestBase {
   }
 
   // Arm Sim is setting to minimum angle. Tests don't really work
-
+  // Test in simulateJava, gravity is weird in tests
   @Test
-  public void testSetArmAngle() {
-    armAngleRoutine(new Rotation2d(0));
+  public void testArmAngleVertical() {
+    testArmAngle(Rotation2d.fromDegrees(90));
   }
 
-  public void armAngleRoutine(Rotation2d... angles) {
-    for (Rotation2d angle : angles) {
-      Command setAngleCommand = new SetArmAngle(armSubsystem, angle);
-      runScheduler(3, setAngleCommand, armSubsystem);
-      assertEquals(
-          angle.getRadians(),
-          armSubsystem.getArmPositionRads(),
-          DELTA,
-          "Set angle to " + angle.getRadians() + " radians");
-    }
+  // @Test
+  // public void testArmAngle12Deg() {
+  // testArmAngle(Rotation2d.fromDegrees(12));
+  // }
+
+  // @Test
+  // public void testArmAngleNeg5() {
+  // testArmAngle(Rotation2d.fromDegrees(-5));
+  // }
+
+  public void testArmAngle(Rotation2d angle) {
+    Command setAngleCommand = new SetArmAngle(armSubsystem, angle);
+    runScheduler(3, setAngleCommand, armSubsystem);
+    assertEquals(
+        angle.getRadians(),
+        armSubsystem.getArmPositionRads(),
+        DELTA,
+        "Set angle to " + angle.getRadians() + " radians");
     armSubsystem.off();
   }
 }

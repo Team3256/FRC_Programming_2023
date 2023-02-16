@@ -150,7 +150,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // return new InstantCommand();
-    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(20));
+    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(-5));
     // return new SetElevatorHeight(elevatorSubsystem,
     // Elevator.ElevatorPosition.HIGH);
   }

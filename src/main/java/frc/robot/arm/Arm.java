@@ -8,7 +8,6 @@
 package frc.robot.arm;
 
 import static frc.robot.arm.ArmConstants.*;
-import static frc.robot.swerve.helpers.Conversions.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -84,11 +83,14 @@ public class Arm extends SubsystemBase {
     double clampedPosition =
         MathUtil.clamp(
             angleRadians, kArmAngleMinConstraint.getRadians(), kArmAngleMaxConstraint.getRadians());
+    // System.out.println("Position: " + Units.radiansToDegrees(clampedPosition) +
+    // ", Velocity: " + velocity);
+    SmartDashboard.putNumber("Position setpoint", Units.radiansToDegrees(clampedPosition));
     return armFeedforward.calculate(clampedPosition, velocity);
   }
 
   public void setInputVoltage(double voltage) {
-    armMotor.setVoltage(voltage);
+    armMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
   public double getArmPositionRads() {
