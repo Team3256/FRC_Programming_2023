@@ -7,10 +7,6 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.kAdvantageKitReplayEnabled;
-
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -28,7 +24,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
-
   private RobotContainer robotContainer;
 
   /**
@@ -37,34 +32,21 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-    Logger.getInstance()
-        .recordMetadata("ProjectName", "WarriorBorgs (2023)"); // Set a metadata value
-
-    if (isReal()) {
-      Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
-      Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-      new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-    } else if (kAdvantageKitReplayEnabled) {
-      setUseTiming(false); // ss Run as fast as possible
-      //
-      String logPath =
-          LogFileUtil
-              .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-      Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
-      Logger.getInstance()
-          .addDataReceiver(
-              new WPILOGWriter(
-                  LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-    }
     Logger logger = Logger.getInstance();
 
+    logger.recordMetadata("ProjectName", "WarriorBorgs (2023)"); // Set a metadata value
     logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
     logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
     logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
 
-    switch (Constants.currentMode) {
+    Constants.RobotMode currentMode = isReal() ? Constants.RobotMode.REAL : Constants.kCurrentMode;
+    if (isReal()) {
+      System.out.println("Robot is real, forcing robot mode to REAL");
+    }
+
+    switch (currentMode) {
       case REAL:
         logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
         logger.addDataReceiver(new NT4Publisher());
@@ -85,31 +67,16 @@ public class Robot extends LoggedRobot {
         break;
     }
 
-    /*if (isReal()) {
-      Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
-      Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-      new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-    } else {
-      setUseTiming(false); // Run as fast as possible
-      String logPath =
-          LogFileUtil
-              .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-      Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
-      Logger.getInstance()
-          .addDataReceiver(
-              new WPILOGWriter(
-                  LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-    }*/
-
-    //    Logger.getInstance()
-    //        .start(); // Start logging! No more data receivers, replay sources, or metadata values
-    // may
-    //    // be added.
-
     logger.start(); // Start advkit logger
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+  }
+
+  @Override
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

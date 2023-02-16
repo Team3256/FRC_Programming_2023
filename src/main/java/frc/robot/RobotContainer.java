@@ -154,8 +154,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    //    return new InstantCommand();
-    return new SetArmAngle(armSubsystem, new Rotation2d(Math.PI / 2));
+    // return new InstantCommand();
+    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(20));
   }
 
   public void test() {
