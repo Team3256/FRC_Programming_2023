@@ -10,7 +10,7 @@ package frc.robot.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
@@ -23,7 +23,6 @@ public class ElevatorTests extends UnitTestBase {
   private static Elevator elevatorSubsystem;
 
   // Run simulateJava to test Elevator
-
   @BeforeAll
   public static void setup() {
     UnitTestBase.setup();
@@ -41,7 +40,7 @@ public class ElevatorTests extends UnitTestBase {
   // }
 
   public void testElevatorHeight(double heightSetpointMeters) { // 1 meter
-    ProfiledPIDCommand command = new SetElevatorHeight(elevatorSubsystem, heightSetpointMeters);
+    Command command = new SetElevatorHeight(elevatorSubsystem, heightSetpointMeters);
 
     runScheduler(2, command, elevatorSubsystem);
     double height = elevatorSubsystem.getElevatorPosition();
@@ -50,6 +49,6 @@ public class ElevatorTests extends UnitTestBase {
         height,
         DELTA,
         "Setting elevator setpoint to " + heightSetpointMeters);
-    elevatorSubsystem.zeroElevator();
+    // elevatorSubsystem.zeroElevator();
   }
 }

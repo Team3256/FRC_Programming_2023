@@ -17,21 +17,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.SetArmAngle;
+import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patterns.ColorChaseBluePattern;
+import frc.robot.led.commands.*;
+import frc.robot.led.patterns.*;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.TeleopSwerve;
-import frc.robot.swerve.commands.TeleopSwerveLimited;
-import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
+import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
@@ -143,7 +139,6 @@ public class RobotContainer {
 
   private void configureArm() {
     armSubsystem = new Arm();
-
     // TODO: set button bindings for arm testing
   }
 
@@ -156,6 +151,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return new InstantCommand();
     return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(20));
+    // return new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.HIGH);
   }
 
   public void test() {
