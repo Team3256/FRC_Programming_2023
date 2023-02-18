@@ -49,9 +49,16 @@ public class DynamicPathGenerationTest {
 
   @Test
   public void testGeneratePathCycle() {
-    Pose2d src = new Pose2d(new Translation2d(16, 8), new Rotation2d(0));
+    Pose2d src = new Pose2d(new Translation2d(15.22, 6.28), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
     testGeneratePathBase(src, sink, "DynamicTest-Cycle");
+  }
+
+  @Test
+  public void testGeneratePathCycleLow() {
+    Pose2d src = new Pose2d(new Translation2d(15.22, 6.28), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(1.88, 0.52), new Rotation2d(Math.PI));
+    testGeneratePathBase(src, sink, "DynamicTest-CycleLow");
   }
 
   @Test
@@ -66,6 +73,20 @@ public class DynamicPathGenerationTest {
     Pose2d src = new Pose2d(new Translation2d(8.28, 2.76), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
     testGeneratePathBase(src, sink, "DynamicTest-MidMed");
+  }
+
+  @Test
+  public void testGeneratePathCom() {
+    Pose2d src = new Pose2d(new Translation2d(1.75, 7.05), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
+    testGeneratePathBase(src, sink, "DynamicTest-Com");
+  }
+
+  @Test
+  public void testGeneratePathBottom() {
+    Pose2d src = new Pose2d(new Translation2d(14.44, 0.72), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
+    testGeneratePathBase(src, sink, "DynamicTest-Bottom");
   }
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, String fileName) {

@@ -31,6 +31,7 @@ public final class DynamicPathConstants {
 
   public static final Obstacle kChargingStation =
       new Obstacle(kChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
+
   public static final Obstacle[] obstacles = {kBarrierAboveGrid, kLowerWall, kChargingStation};
 
   public static final double kGridXLowerBound = 1.45 + kRobotRadius;
@@ -44,7 +45,7 @@ public final class DynamicPathConstants {
 
   public static final ArrayList<PathNode> dynamicPathWayNodes = new ArrayList<>();
 
-  public static final boolean blue = false;
+  public static final boolean blue = true;
 
   static {
     PathGenInit.init();
