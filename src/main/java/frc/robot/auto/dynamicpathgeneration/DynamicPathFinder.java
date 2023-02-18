@@ -75,7 +75,7 @@ public class DynamicPathFinder {
 
       // Update all unvisited neighboring nodes
       for (int childId = 0; childId < pathNodes.get(currentNode).getEdges().size(); childId++) {
-        int next = pathNodes.get(currentNode).getEdges().get(childId).index;
+        int next = pathNodes.get(currentNode).getEdges().get(childId).getIndex();
         if (visitedNodes[next]) continue;
         if (kDynamicPathGenerationDebug) {
           System.out.println("explore child: " + next);

@@ -80,9 +80,8 @@ public class PathGenInit {
     ArrayList<PathNode> newNodes = new ArrayList<>();
     newNodes.add(sink);
     for (double x = sink.getX() + passageRes; x <= src.getX() + passageRes; x += passageRes) {
-      newNodes.add(new PathNode(x, sink.getY()));
+      newNodes.add(new PathNode(x, sink.getY(), true));
     }
-    for (PathNode node : newNodes) {}
     newNodes.add(src);
     fullyConnect(newNodes);
     pathNodes.addAll(newNodes);

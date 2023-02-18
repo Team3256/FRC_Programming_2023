@@ -36,7 +36,7 @@ public class DynamicPathGenerator {
     src = numNodes - 2;
     sink = numNodes - 1;
     for (int i = 0; i < numNodes; i++) {
-      dynamicPathNodes.get(i).index = i;
+      dynamicPathNodes.get(i).setIndex(i);
     }
   }
 

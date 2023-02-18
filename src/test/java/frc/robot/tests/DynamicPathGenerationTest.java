@@ -98,8 +98,12 @@ public class DynamicPathGenerationTest {
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, String fileName) {
     if (!blue) {
-      src = new Pose2d(16.5 - src.getX(), src.getY(), src.getRotation());
-      sink = new Pose2d(16.5 - sink.getX(), sink.getY(), sink.getRotation());
+      src =
+          new Pose2d(
+              16.5 - src.getX(), src.getY(), src.getRotation().plus(new Rotation2d(Math.PI)));
+      sink =
+          new Pose2d(
+              16.5 - sink.getX(), sink.getY(), sink.getRotation().plus(new Rotation2d(Math.PI)));
     }
     long start = System.currentTimeMillis();
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
