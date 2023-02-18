@@ -33,11 +33,9 @@ public class AutoBuilder {
   }
 
   public ArrayList<Command> createPaths(
-      String pathGroup,
-      PathConstraints constraint,
-      PathConstraints... constraints) {
-    ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<>(
-        PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
+      String pathGroup, PathConstraints constraint, PathConstraints... constraints) {
+    ArrayList<PathPlannerTrajectory> trajectories =
+        new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
     ArrayList<Command> commands = new ArrayList<>();
 
     commands.add(createPathPlannerCommand(trajectories.get(0), true));
@@ -49,14 +47,18 @@ public class AutoBuilder {
     return commands;
   }
 
-  private Command createPathPlannerCommand(PathPlannerTrajectory trajectory, boolean isFirstSegment) {
-    PIDController xController = new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
-    PIDController yController = new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
-    ProfiledPIDController thetaController = new ProfiledPIDController(
-        kAutoThetaControllerP,
-        kAutoThetaControllerI,
-        kAutoThetaControllerD,
-        kAutoThetaControllerConstraints);
+  private Command createPathPlannerCommand(
+      PathPlannerTrajectory trajectory, boolean isFirstSegment) {
+    PIDController xController =
+        new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
+    PIDController yController =
+        new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
+    ProfiledPIDController thetaController =
+        new ProfiledPIDController(
+            kAutoThetaControllerP,
+            kAutoThetaControllerI,
+            kAutoThetaControllerD,
+            kAutoThetaControllerConstraints);
 
     return new PPTrajectoryFollowCommand(
         trajectory,

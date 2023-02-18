@@ -69,7 +69,8 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller = new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
+    this.controller =
+        new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
     this.useAllianceColor = useAllianceColor;
 
     this.swerveSubsystem = swerveSubsystem;
