@@ -7,10 +7,10 @@
 
 package frc.robot.led.patterns;
 
+import static frc.robot.led.LEDConstants.kResolution;
+
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.led.patternBases.LEDPattern;
-
-import static frc.robot.led.LEDConstants.kResolution;
 
 /** Full Yellow */
 public class DoubleSubstationPattern extends LEDPattern {
