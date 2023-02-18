@@ -60,8 +60,8 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
-      PIDController xController,
-      PIDController yController,
+      PIDController xTranslationController,
+      PIDController yTranslationController,
       ProfiledPIDController thetaController,
       boolean useAllianceColor,
       boolean isFirstSegment,
@@ -69,7 +69,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller = new SwerveDriveController(xController, yController, thetaController);
+    this.controller = new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
     this.useAllianceColor = useAllianceColor;
 
     this.swerveSubsystem = swerveSubsystem;
@@ -116,7 +116,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     if (kAutoDebug) {
       swerveSubsystem.setTrajectory(trajectory);
     }
-    if (!isFirstSegment) { // use existing pose for more accuracy if it is the first path
+    if (isFirstSegment) { // use existing pose for more accuracy if it is the first path
       swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }

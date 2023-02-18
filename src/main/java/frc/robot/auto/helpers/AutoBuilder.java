@@ -29,7 +29,7 @@ public class AutoBuilder {
 
   public Command createPath(String path, PathConstraints constraints, boolean isFirstSegment) {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, constraints);
-    return createCommand(trajectory, isFirstSegment);
+    return initPathPlanner(trajectory, isFirstSegment);
   }
 
   public ArrayList<Command> createPaths(
@@ -42,13 +42,13 @@ public class AutoBuilder {
 
     ArrayList<Command> commands = new ArrayList<>();
     for (PathPlannerTrajectory trajectory : trajectories) {
-      commands.add(createCommand(trajectory, isFirstSegment));
+      commands.add(initPathPlanner(trajectory, isFirstSegment));
     }
 
     return commands;
   }
 
-  private Command createCommand(PathPlannerTrajectory trajectory, boolean isFirstSegment) {
+  private Command initPathPlanner(PathPlannerTrajectory trajectory, boolean isFirstSegment) {
     PIDController xController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
     PIDController yController =
@@ -65,7 +65,7 @@ public class AutoBuilder {
         xController,
         yController,
         thetaController,
-        true,
+        changeAutosBasedOnAlliance,
         isFirstSegment,
         this.swerveSubsystem);
   }
