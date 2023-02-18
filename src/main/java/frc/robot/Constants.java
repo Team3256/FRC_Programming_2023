@@ -204,7 +204,7 @@ public final class Constants {
           kSingleSubstationLowZ + kSingleSubstationHeight;
     }
 
-    // Locations of staged game pieces
+    // Locations of staged game pieces (meters)
     public static final class StagingLocations {
       public static final double kCenterOffsetX = Units.inchesToMeters(47.36);
       public static final double kPositionX = kFieldLength / 2.0 - Units.inchesToMeters(47.36);

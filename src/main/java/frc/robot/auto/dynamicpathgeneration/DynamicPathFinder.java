@@ -13,58 +13,44 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstant
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
 import frc.robot.swerve.SwerveConstants;
 import java.util.*;
 
 public class DynamicPathFinder {
-  private final int src;
-  private final Rotation2d srcRot;
-  private final int sink;
-  private final Rotation2d sinkRot;
-  private final int nodes;
-  private final ArrayList<Translation2d> positions;
-
+  private final Pose2d src;
+  private final Pose2d sink;
+  private final ArrayList<PathNode> pathNodes;
+  private int nodes;
   private int[] pre;
-  private final double[] heuristic;
+  private double[] dist;
 
-  /**
-   * Finds the fastest path between two nodes using Warrior-star algorithm
-   *
-   * @param src start node
-   * @param sink end node
-   * @param heuristic heuristic
-   */
   public DynamicPathFinder(
-      int src,
-      Rotation2d srcRot,
-      int sink,
-      Rotation2d sinkRot,
-      ArrayList<Translation2d> positions,
-      double[] heuristic) {
+      Pose2d src,
+      Pose2d sink,
+      ArrayList<PathNode> pathNodes
+      ) {
     this.src = src;
-    this.srcRot = srcRot;
     this.sink = sink;
-    this.sinkRot = sinkRot;
-    this.positions = positions;
-    this.nodes = positions.size();
-    this.heuristic = heuristic;
+    this.pathNodes = pathNodes;
+    this.nodes = pathNodes.size();
     if (kDynamicPathGenerationDebug) {
       System.out.println("Running Path Finder Algorithm");
-      System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
+      System.out.println("src: " + src.toString() + ", sink: " + sink.toString() + ", nodes: " + nodes);
     }
   }
 
   public List<Translation2d> findPath() {
     int nodesExplored = 0;
     // Time to travel from src to all other nodes
-    double[] distanceToTravelToNodeN = new double[nodes];
-    Arrays.fill(distanceToTravelToNodeN, INF_TIME);
-    distanceToTravelToNodeN[src] = 0;
+    Arrays.fill(dist, INF_TIME);
+    dist[src] = 0;
 
     // Previous node in current optimal path to node
     pre = new int[nodes];
@@ -101,18 +87,18 @@ public class DynamicPathFinder {
       List<Integer> path = getPathIdsInCurrentPath(currentNode);
       for (int node = 0; node < nodes; node++) {
         if (visitedNodes[node]) continue;
-        if (positions.get(node).getX() > positions.get(currentNode).getX()) continue;
+        if (pathNodes.get(node).getX() > pathNodes.get(currentNode).getX()) continue;
         // add node to path
         path.add(node);
         double pathTime = getPathTime(path);
         // If path over this edge is better
-        if (pathTime < distanceToTravelToNodeN[node]) {
+        if (pathTime < dist[node]) {
           // Save path as new current shortest path
-          distanceToTravelToNodeN[node] = pathTime;
+          dist[node] = pathTime;
           pre[node] = currentNode;
 
           // Update node priority
-          priority[node] = distanceToTravelToNodeN[node] + heuristic[node];
+          priority[node] = dist[node] + heuristic[node];
 
           // Add node to queue
           pq.add(node);
@@ -137,8 +123,8 @@ public class DynamicPathFinder {
     double totalDistance = 0;
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (doesTranslationHitObstacles(
-          positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1)))) return INF_TIME;
-      totalDistance += positions.get(pathIds.get(i)).getDistance(positions.get(pathIds.get(i + 1)));
+          pathNodes.get(pathIds.get(i)), pathNodes.get(pathIds.get(i + 1)))) return INF_TIME;
+      totalDistance += pathNodes.get(pathIds.get(i)).getDistance(pathNodes.get(pathIds.get(i + 1)));
     }
     return totalDistance / SwerveConstants.kMaxSpeed;
 
@@ -163,7 +149,7 @@ public class DynamicPathFinder {
   // convert list of pathIds into list of pathPoses
   private List<Translation2d> getPathPositionsFromPathIds(List<Integer> pathIds) {
     List<Translation2d> pathPositions = new ArrayList<>();
-    for (int node : pathIds) pathPositions.add(positions.get(node));
+    for (int node : pathIds) pathPositions.add(pathNodes.get(node));
     return pathPositions;
   }
 
