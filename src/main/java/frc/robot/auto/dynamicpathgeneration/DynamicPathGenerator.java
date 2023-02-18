@@ -7,7 +7,7 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.HeuristicHelper;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
-import frc.robot.auto.dynamicpathgeneration.helpers.PathGenInit;
 import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
 import java.util.*;
 
@@ -50,7 +49,6 @@ public class DynamicPathGenerator {
   }
 
   public void init() {
-    PathGenInit.init();
     dynamicPathGraph = new ArrayList<>(dynamicPathAllowedPositions);
     dynamicPathGraph.add(startPose.getTranslation());
     dynamicPathGraph.add(goalPose.getTranslation());

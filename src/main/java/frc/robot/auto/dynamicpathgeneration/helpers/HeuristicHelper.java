@@ -7,8 +7,8 @@
 
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathFinder.doesTranslationHitObstacles;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathFinder.doesPathSegmentHitObstacles;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.swerve.SwerveConstants;
@@ -49,7 +49,7 @@ public class HeuristicHelper {
   // actual
   public static double splineHeuristic(Translation2d position1, Translation2d position2) {
     double estimatedTime = position1.getDistance(position2) / (SwerveConstants.kMaxSpeed);
-    if (doesTranslationHitObstacles(position1, position2)) {
+    if (doesPathSegmentHitObstacles(position1, position2)) {
       estimatedTime += ILLEGAL_TIME;
     }
     return estimatedTime;

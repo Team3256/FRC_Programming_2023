@@ -7,50 +7,58 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
-import static frc.robot.Constants.FieldConstants;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathGenerationConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.auto.dynamicpathgeneration.helpers.GeometryUtil;
-import frc.robot.auto.dynamicpathgeneration.helpers.Path;
-import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
-import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
+import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.swerve.SwerveConstants;
 import java.util.*;
 
 public class DynamicPathFinder {
-  private final Pose2d src;
-  private final Pose2d sink;
-  private final ArrayList<PathNode> pathNodes;
-  private int nodes;
-  private int[] pre;
-  private double[] dist;
+  private final int src;
+  private final Rotation2d srcRot;
+  private final int sink;
+  private final Rotation2d sinkRot;
+  private final int nodes;
+  private final ArrayList<Translation2d> positions;
 
+  private int[] pre;
+  private final double[] heuristic;
+
+  /**
+   * Finds the fastest path between two nodes using Warrior-star algorithm
+   *
+   * @param src start node
+   * @param sink end node
+   * @param heuristic heuristic
+   */
   public DynamicPathFinder(
-      Pose2d src,
-      Pose2d sink,
-      ArrayList<PathNode> pathNodes
-      ) {
+      int src,
+      Rotation2d srcRot,
+      int sink,
+      Rotation2d sinkRot,
+      ArrayList<Translation2d> positions,
+      double[] heuristic) {
     this.src = src;
+    this.srcRot = srcRot;
     this.sink = sink;
-    this.pathNodes = pathNodes;
-    this.nodes = pathNodes.size();
+    this.sinkRot = sinkRot;
+    this.positions = positions;
+    this.nodes = positions.size();
+    this.heuristic = heuristic;
     if (kDynamicPathGenerationDebug) {
       System.out.println("Running Path Finder Algorithm");
-      System.out.println("src: " + src.toString() + ", sink: " + sink.toString() + ", nodes: " + nodes);
+      System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
     }
   }
 
   public List<Translation2d> findPath() {
     int nodesExplored = 0;
     // Time to travel from src to all other nodes
-    Arrays.fill(dist, INF_TIME);
-    dist[src] = 0;
+    double[] distanceToTravelToNodeN = new double[nodes];
+    Arrays.fill(distanceToTravelToNodeN, INF_TIME);
+    distanceToTravelToNodeN[src] = 0;
 
     // Previous node in current optimal path to node
     pre = new int[nodes];
@@ -80,25 +88,26 @@ public class DynamicPathFinder {
       // Found shortest path to sink
       if (currentNode == sink) {
         System.out.println("Path found");
-        return getPathPositionsFromPathIds(getPathIdsInCurrentPath(sink));
+        return getPositionsFromPathIds(getPathIdsFromNode(sink));
       }
 
       // Update all unvisited neighboring nodes
-      List<Integer> path = getPathIdsInCurrentPath(currentNode);
+      List<Integer> path = getPathIdsFromNode(currentNode);
       for (int node = 0; node < nodes; node++) {
         if (visitedNodes[node]) continue;
-        if (pathNodes.get(node).getX() > pathNodes.get(currentNode).getX()) continue;
+        if (positions.get(node).getX() > positions.get(currentNode).getX()) continue;
+        if (positions.get(node).getDistance(positions.get(currentNode)) >= 5) continue;
         // add node to path
         path.add(node);
         double pathTime = getPathTime(path);
         // If path over this edge is better
-        if (pathTime < dist[node]) {
+        if (pathTime < distanceToTravelToNodeN[node]) {
           // Save path as new current shortest path
-          dist[node] = pathTime;
+          distanceToTravelToNodeN[node] = pathTime;
           pre[node] = currentNode;
 
           // Update node priority
-          priority[node] = dist[node] + heuristic[node];
+          priority[node] = distanceToTravelToNodeN[node] + heuristic[node];
 
           // Add node to queue
           pq.add(node);
@@ -114,7 +123,7 @@ public class DynamicPathFinder {
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
 
     ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
-    return getPathPositionsFromPathIds(pathIds);
+    return getPositionsFromPathIds(pathIds);
   }
 
   // calculate time to travel list of pathIds
@@ -122,39 +131,23 @@ public class DynamicPathFinder {
     // make sure pathIds are valid (doesn't hit obstacles)
     double totalDistance = 0;
     for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (doesTranslationHitObstacles(
-          pathNodes.get(pathIds.get(i)), pathNodes.get(pathIds.get(i + 1)))) return INF_TIME;
-      totalDistance += pathNodes.get(pathIds.get(i)).getDistance(pathNodes.get(pathIds.get(i + 1)));
+      if (doesPathSegmentHitObstacles(
+          positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1)))) return INF_TIME;
+      totalDistance += positions.get(pathIds.get(i)).getDistance(positions.get(pathIds.get(i + 1)));
     }
+
     return totalDistance / SwerveConstants.kMaxSpeed;
-
-    // calc trajectory time
-    // PathPlannerTrajectory trajectory = getTrajectoryFromPathIds(pathIds);
-    // return trajectory.getTotalTimeSeconds();
-  }
-
-  // convert list of pathIds into PathPlannerTrajectory
-  public PathPlannerTrajectory getTrajectoryFromPathIds(List<Integer> pathIds) {
-    // convert pathIds into pathPoints
-    List<Translation2d> pathPositions = getPathPositionsFromPathIds(pathIds);
-    Path path = new Path(pathPositions, srcRot, sinkRot);
-    List<PathPoint> pathPoints = new ArrayList<>();
-    for (Waypoint waypoint : path.getWaypoints()) {
-      pathPoints.add(waypoint.waypointToPathPoint());
-    }
-
-    return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
   }
 
   // convert list of pathIds into list of pathPoses
-  private List<Translation2d> getPathPositionsFromPathIds(List<Integer> pathIds) {
+  private List<Translation2d> getPositionsFromPathIds(List<Integer> pathIds) {
     List<Translation2d> pathPositions = new ArrayList<>();
-    for (int node : pathIds) pathPositions.add(pathNodes.get(node));
+    for (int node : pathIds) pathPositions.add(positions.get(node));
     return pathPositions;
   }
 
   // get the pathIds stored from src to node
-  private List<Integer> getPathIdsInCurrentPath(int node) {
+  private List<Integer> getPathIdsFromNode(int node) {
     List<Integer> pathIds = new ArrayList<>();
     int currentNode = node;
 
@@ -169,24 +162,18 @@ public class DynamicPathFinder {
   }
 
   public static boolean doesLineHitObstacles(Translation2d position1, Translation2d position2) {
-    for (Translation2d[] chargingStationCorner :
-        FieldConstants.Community.kChargingStationSegments) {
-      if (GeometryUtil.intersect(
-          chargingStationCorner[0], chargingStationCorner[1], position1, position2)) {
-        return true;
-      }
+    for (Obstacle obstacle : obstacles) {
+      if (obstacle.intersectsLineSegment(position1, position2)) return true;
     }
     return false;
   }
 
-  // make sure path don't intersect obstacles
-  public static boolean doesTranslationHitObstacles(
+  public static boolean doesPathSegmentHitObstacles(
       Translation2d position1, Translation2d position2) {
     if (doesLineHitObstacles(position1, position2)) return true;
 
     Rotation2d normalAngle = position2.minus(position1).getAngle().plus(Rotation2d.fromDegrees(90));
-    Translation2d normalVector =
-        new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotRadius + 0.05);
+    Translation2d normalVector = new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotRadius);
 
     if (doesLineHitObstacles(position1.minus(normalVector), position2.minus(normalVector)))
       return true;
