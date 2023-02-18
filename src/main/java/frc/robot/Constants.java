@@ -48,50 +48,50 @@ public final class Constants {
       // Region dimensions
       public static final double kInnerX = 0.0;
       public static final double kMidX =
-          Units.inchesToMeters(132.375); // Tape to the left of charging station
+              Units.inchesToMeters(132.375); // Tape to the left of charging station
       public static final double kOuterX =
-          Units.inchesToMeters(193.25); // Tape to the right of charging station
+              Units.inchesToMeters(193.25); // Tape to the right of charging station
       public static final double kLeftY = Units.feetToMeters(18.0);
       public static final double kMidY = kLeftY - Units.inchesToMeters(59.39) + kTapeWidth;
       public static final double kRightY = 0.0;
       public static final Translation2d[] kRegionCorners =
-          new Translation2d[] {
-            new Translation2d(kInnerX, kRightY),
-            new Translation2d(kInnerX, kLeftY),
-            new Translation2d(kMidX, kLeftY),
-            new Translation2d(kMidX, kMidY),
-            new Translation2d(kOuterX, kMidY),
-            new Translation2d(kOuterX, kRightY),
-          };
+              new Translation2d[] {
+                      new Translation2d(kInnerX, kRightY),
+                      new Translation2d(kInnerX, kLeftY),
+                      new Translation2d(kMidX, kLeftY),
+                      new Translation2d(kMidX, kMidY),
+                      new Translation2d(kOuterX, kMidY),
+                      new Translation2d(kOuterX, kRightY),
+              };
 
       // Charging station dimensions
       public static final double kChargingStationLength = Units.inchesToMeters(76.125);
       public static final double kChargingStationWidth = Units.inchesToMeters(97.25);
       public static final double kChargingStationOuterX = kOuterX - kTapeWidth;
       public static final double kChargingStationInnerX =
-          kChargingStationOuterX - kChargingStationLength;
+              kChargingStationOuterX - kChargingStationLength;
       public static final double kChargingStationLeftY = kMidY - kTapeWidth;
       public static final double kChargingStationRightY =
-          kChargingStationLeftY - kChargingStationWidth;
+              kChargingStationLeftY - kChargingStationWidth;
       public static final Translation2d[] kChargingStationCorners =
-          new Translation2d[] {
-            new Translation2d(kChargingStationInnerX, kChargingStationRightY),
-            new Translation2d(kChargingStationInnerX, kChargingStationLeftY),
-            new Translation2d(kChargingStationOuterX, kChargingStationRightY),
-            new Translation2d(kChargingStationOuterX, kChargingStationLeftY)
-          };
+              new Translation2d[] {
+                      new Translation2d(kChargingStationInnerX, kChargingStationRightY),
+                      new Translation2d(kChargingStationInnerX, kChargingStationLeftY),
+                      new Translation2d(kChargingStationOuterX, kChargingStationRightY),
+                      new Translation2d(kChargingStationOuterX, kChargingStationLeftY)
+              };
 
       // Cable bump
       public static final double kCableBumpInnerX =
-          kInnerX + Grids.kOuterX + Units.inchesToMeters(95.25);
+              kInnerX + Grids.kOuterX + Units.inchesToMeters(95.25);
       public static final double kCableBumpOuterX = kCableBumpInnerX + Units.inchesToMeters(7);
       public static final Translation2d[] kCableBumpCorners =
-          new Translation2d[] {
-            new Translation2d(kCableBumpInnerX, 0.0),
-            new Translation2d(kCableBumpInnerX, kChargingStationRightY),
-            new Translation2d(kCableBumpOuterX, 0.0),
-            new Translation2d(kCableBumpOuterX, kChargingStationRightY)
-          };
+              new Translation2d[] {
+                      new Translation2d(kCableBumpInnerX, 0.0),
+                      new Translation2d(kCableBumpInnerX, kChargingStationRightY),
+                      new Translation2d(kCableBumpOuterX, 0.0),
+                      new Translation2d(kCableBumpOuterX, kChargingStationRightY)
+              };
     }
 
     // Dimensions for grids and nodes
@@ -99,7 +99,7 @@ public final class Constants {
       // X layout
       public static final double kOuterX = Units.inchesToMeters(54.25);
       public static final double kLowX =
-          kOuterX - (Units.inchesToMeters(14.25) / 2.0); // Centered when under cube
+              kOuterX - (Units.inchesToMeters(14.25) / 2.0); // Centered when under cube
       // nodes
       public static final double kMidX = kOuterX - Units.inchesToMeters(22.75);
       public static final double kHighX = kOuterX - Units.inchesToMeters(39.75);
@@ -129,11 +129,11 @@ public final class Constants {
           kLowTranslations[i] = new Translation2d(kLowX, kNodeFirstY + kNodeSeparationY * i);
           kMidTranslations[i] = new Translation2d(kMidX, kNodeFirstY + kNodeSeparationY * i);
           kMid3dTranslations[i] =
-              new Translation3d(
-                  kMidX, kNodeFirstY + kNodeSeparationY * i, isCube ? kMidCubeZ : kMidConeZ);
+                  new Translation3d(
+                          kMidX, kNodeFirstY + kNodeSeparationY * i, isCube ? kMidCubeZ : kMidConeZ);
           kHigh3dTranslations[i] =
-              new Translation3d(
-                  kHighX, kNodeFirstY + kNodeSeparationY * i, isCube ? kHighCubeZ : kHighConeZ);
+                  new Translation3d(
+                          kHighX, kNodeFirstY + kNodeSeparationY * i, isCube ? kHighCubeZ : kHighConeZ);
           kHighTranslations[i] = new Translation2d(kHighX, kNodeFirstY + kNodeSeparationY * i);
         }
       }
@@ -142,26 +142,26 @@ public final class Constants {
       // nodes)
 
       public static final double kComplexLowXCones =
-          kOuterX - Units.inchesToMeters(16.0) / 2.0; // Centered X under
+              kOuterX - Units.inchesToMeters(16.0) / 2.0; // Centered X under
       // cone
       // nodes
       public static final double kComplexLowXCubes = kLowX; // Centered X under cube nodes
       public static final double kComplexLowOuterYOffset =
-          kNodeFirstY - Units.inchesToMeters(3.0) - (Units.inchesToMeters(25.75) / 2.0);
+              kNodeFirstY - Units.inchesToMeters(3.0) - (Units.inchesToMeters(25.75) / 2.0);
 
       public static final Translation2d[] kComplexLowTranslations =
-          new Translation2d[] {
-            new Translation2d(kComplexLowXCones, kNodeFirstY - kComplexLowOuterYOffset),
-            new Translation2d(kComplexLowXCubes, kNodeFirstY + kNodeSeparationY * 1),
-            new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 2),
-            new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 3),
-            new Translation2d(kComplexLowXCubes, kNodeFirstY + kNodeSeparationY * 4),
-            new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 5),
-            new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 6),
-            new Translation2d(kComplexLowXCubes, kNodeFirstY + kNodeSeparationY * 7),
-            new Translation2d(
-                kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 8 + kComplexLowOuterYOffset),
-          };
+              new Translation2d[] {
+                      new Translation2d(kComplexLowXCones, kNodeFirstY - kComplexLowOuterYOffset),
+                      new Translation2d(kComplexLowXCubes, kNodeFirstY + kNodeSeparationY * 1),
+                      new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 2),
+                      new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 3),
+                      new Translation2d(kComplexLowXCubes, kNodeFirstY + kNodeSeparationY * 4),
+                      new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 5),
+                      new Translation2d(kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 6),
+                      new Translation2d(kComplexLowXCubes, kNodeFirstY + kNodeSeparationY * 7),
+                      new Translation2d(
+                              kComplexLowXCones, kNodeFirstY + kNodeSeparationY * 8 + kComplexLowOuterYOffset),
+              };
     }
 
     // Dimensions for loading zone and substations, including the tape
@@ -175,15 +175,15 @@ public final class Constants {
       public static final double kMidY = kLeftY - Units.inchesToMeters(50.5);
       public static final double kRightY = kLeftY - kWidth;
       public static final Translation2d[] kRegionCorners =
-          new Translation2d[] {
-            new Translation2d(
-                kMidX, kRightY), // Start at lower left next to border with opponent community
-            new Translation2d(kMidX, kMidY),
-            new Translation2d(kOuterX, kMidY),
-            new Translation2d(kOuterX, kLeftY),
-            new Translation2d(kInnerX, kLeftY),
-            new Translation2d(kInnerX, kRightY),
-          };
+              new Translation2d[] {
+                      new Translation2d(
+                              kMidX, kRightY), // Start at lower left next to border with opponent community
+                      new Translation2d(kMidX, kMidY),
+                      new Translation2d(kOuterX, kMidY),
+                      new Translation2d(kOuterX, kLeftY),
+                      new Translation2d(kInnerX, kLeftY),
+                      new Translation2d(kInnerX, kRightY),
+              };
 
       // Double substation dimensions
       public static final double kDoubleSubstationLength = Units.inchesToMeters(14.0);
@@ -193,20 +193,20 @@ public final class Constants {
       // Single substation dimensions
       public static final double kSingleSubstationWidth = Units.inchesToMeters(22.75);
       public static final double kSingleSubstationLeftX =
-          FieldConstants.kFieldLength - kDoubleSubstationLength - Units.inchesToMeters(88.77);
+              FieldConstants.kFieldLength - kDoubleSubstationLength - Units.inchesToMeters(88.77);
       public static final double kSingleSubstationCenterX =
-          kSingleSubstationLeftX + (kSingleSubstationWidth / 2.0);
+              kSingleSubstationLeftX + (kSingleSubstationWidth / 2.0);
       public static final double kSingleSubstationRightX =
-          kSingleSubstationLeftX + kSingleSubstationWidth;
+              kSingleSubstationLeftX + kSingleSubstationWidth;
       public static final Translation2d kSingleSubstationTranslation =
-          new Translation2d(kSingleSubstationCenterX, kLeftY);
+              new Translation2d(kSingleSubstationCenterX, kLeftY);
 
       public static final double kSingleSubstationHeight = Units.inchesToMeters(18.0);
       public static final double kSingleSubstationLowZ = Units.inchesToMeters(27.125);
       public static final double kSingleSubstationCenterZ =
-          kSingleSubstationLowZ + (kSingleSubstationHeight / 2.0);
+              kSingleSubstationLowZ + (kSingleSubstationHeight / 2.0);
       public static final double kSingleSubstationHighZ =
-          kSingleSubstationLowZ + kSingleSubstationHeight;
+              kSingleSubstationLowZ + kSingleSubstationHeight;
     }
 
     // Locations of staged game pieces
@@ -225,55 +225,55 @@ public final class Constants {
 
       // AprilTag locations (do not flip for red alliance)
       public static final Map<Integer, Pose3d> kAprilTags =
-          Map.of(
-              1,
-              new Pose3d(
-                  Units.inchesToMeters(610.77),
-                  Units.inchesToMeters(42.19),
-                  Units.inchesToMeters(18.22),
-                  new Rotation3d(0.0, 0.0, Math.PI)),
-              2,
-              new Pose3d(
-                  Units.inchesToMeters(610.77),
-                  Units.inchesToMeters(108.19),
-                  Units.inchesToMeters(18.22),
-                  new Rotation3d(0.0, 0.0, Math.PI)),
-              3,
-              new Pose3d(
-                  Units.inchesToMeters(610.77),
-                  Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
-                  Units.inchesToMeters(18.22),
-                  new Rotation3d(0.0, 0.0, Math.PI)),
-              4,
-              new Pose3d(
-                  Units.inchesToMeters(636.96),
-                  Units.inchesToMeters(265.74),
-                  Units.inchesToMeters(27.38),
-                  new Rotation3d(0.0, 0.0, Math.PI)),
-              5,
-              new Pose3d(
-                  Units.inchesToMeters(14.25),
-                  Units.inchesToMeters(265.74),
-                  Units.inchesToMeters(27.38),
-                  new Rotation3d()),
-              6,
-              new Pose3d(
-                  Units.inchesToMeters(40.45),
-                  Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
-                  Units.inchesToMeters(18.22),
-                  new Rotation3d()),
-              7,
-              new Pose3d(
-                  Units.inchesToMeters(40.45),
-                  Units.inchesToMeters(108.19),
-                  Units.inchesToMeters(18.22),
-                  new Rotation3d()),
-              8,
-              new Pose3d(
-                  Units.inchesToMeters(40.45),
-                  Units.inchesToMeters(42.19),
-                  Units.inchesToMeters(18.22),
-                  new Rotation3d()));
+              Map.of(
+                      1,
+                      new Pose3d(
+                              Units.inchesToMeters(610.77),
+                              Units.inchesToMeters(42.19),
+                              Units.inchesToMeters(18.22),
+                              new Rotation3d(0.0, 0.0, Math.PI)),
+                      2,
+                      new Pose3d(
+                              Units.inchesToMeters(610.77),
+                              Units.inchesToMeters(108.19),
+                              Units.inchesToMeters(18.22),
+                              new Rotation3d(0.0, 0.0, Math.PI)),
+                      3,
+                      new Pose3d(
+                              Units.inchesToMeters(610.77),
+                              Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
+                              Units.inchesToMeters(18.22),
+                              new Rotation3d(0.0, 0.0, Math.PI)),
+                      4,
+                      new Pose3d(
+                              Units.inchesToMeters(636.96),
+                              Units.inchesToMeters(265.74),
+                              Units.inchesToMeters(27.38),
+                              new Rotation3d(0.0, 0.0, Math.PI)),
+                      5,
+                      new Pose3d(
+                              Units.inchesToMeters(14.25),
+                              Units.inchesToMeters(265.74),
+                              Units.inchesToMeters(27.38),
+                              new Rotation3d()),
+                      6,
+                      new Pose3d(
+                              Units.inchesToMeters(40.45),
+                              Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
+                              Units.inchesToMeters(18.22),
+                              new Rotation3d()),
+                      7,
+                      new Pose3d(
+                              Units.inchesToMeters(40.45),
+                              Units.inchesToMeters(108.19),
+                              Units.inchesToMeters(18.22),
+                              new Rotation3d()),
+                      8,
+                      new Pose3d(
+                              Units.inchesToMeters(40.45),
+                              Units.inchesToMeters(42.19),
+                              Units.inchesToMeters(18.22),
+                              new Rotation3d()));
     }
   }
 

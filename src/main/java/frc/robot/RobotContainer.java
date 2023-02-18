@@ -8,6 +8,8 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.arm.ArmConstants.kArmAngleMinConstraint;
+import static frc.robot.elevator.ElevatorConstants.kMinHeight;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -62,7 +64,7 @@ public class RobotContainer {
     }
     if (kElevatorEnabled) {
       configureElevator();
-      testables.add(elevatorSubsystem);
+      testables.add((CANTestable) elevatorSubsystem);
     }
     if (kArmEnabled) {
       configureArm();
@@ -86,48 +88,48 @@ public class RobotContainer {
     if (kElevatorEnabled) {
       // Enable elevator acceleration limiting
       swerveDrive.setDefaultCommand(
-          new TeleopSwerve(
-              swerveDrive,
-              elevatorSubsystem,
-              () -> driver.getLeftY(),
-              () -> driver.getLeftX(),
-              () -> driver.getRightX(),
-              kFieldRelative,
-              kOpenLoop));
+              new TeleopSwerve(
+                      swerveDrive,
+                      elevatorSubsystem,
+                      () -> driver.getLeftY(),
+                      () -> driver.getLeftX(),
+                      () -> driver.getRightX(),
+                      kFieldRelative,
+                      kOpenLoop));
     } else {
       swerveDrive.setDefaultCommand(
-          new TeleopSwerve(
-              swerveDrive,
-              () -> driver.getLeftY(),
-              () -> driver.getLeftX(),
-              () -> driver.getRightX(),
-              kFieldRelative,
-              kOpenLoop));
+              new TeleopSwerve(
+                      swerveDrive,
+                      () -> driver.getLeftY(),
+                      () -> driver.getLeftX(),
+                      () -> driver.getRightX(),
+                      kFieldRelative,
+                      kOpenLoop));
     }
 
     driver
-        .rightBumper()
-        .whileTrue(
-            new TeleopSwerveWithAzimuth(
-                swerveDrive,
-                () -> driver.getRightY(),
-                () -> driver.getRightX(),
-                () -> driver.getLeftX(),
-                () -> driver.getLeftY(),
-                kFieldRelative,
-                kOpenLoop));
+            .rightBumper()
+            .whileTrue(
+                    new TeleopSwerveWithAzimuth(
+                            swerveDrive,
+                            () -> driver.getRightY(),
+                            () -> driver.getRightX(),
+                            () -> driver.getLeftX(),
+                            () -> driver.getLeftY(),
+                            kFieldRelative,
+                            kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     driver
-        .b()
-        .toggleOnTrue(
-            new TeleopSwerveLimited(
-                swerveDrive,
-                () -> driver.getRightY(),
-                () -> driver.getRightX(),
-                () -> driver.getLeftX(),
-                kFieldRelative,
-                kOpenLoop));
+            .b()
+            .toggleOnTrue(
+                    new TeleopSwerveLimited(
+                            swerveDrive,
+                            () -> driver.getRightY(),
+                            () -> driver.getRightX(),
+                            () -> driver.getLeftX(),
+                            kFieldRelative,
+                            kOpenLoop));
   }
 
   public void configureElevator() {
@@ -138,6 +140,13 @@ public class RobotContainer {
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
   }
 
+  public void defaultArmElevator() { //sets default position (lower elevator and default position for arm)
+    elevatorSubsystem = new Elevator();
+    armSubsystem = new Arm();
+
+    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
+    operator.a().onTrue(new SetArmAngle(armSubsystem, kArmAngleMinConstraint));
+  }
   private void configureArm() {
     armSubsystem = new Arm();
     // TODO: set button bindings for arm testing

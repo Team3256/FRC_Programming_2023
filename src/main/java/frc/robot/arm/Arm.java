@@ -78,7 +78,7 @@ public class Arm extends SubsystemBase implements CANTestable {
   }
 
   private void configureRealHardware() {
-    armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
+    armMotor = (WPI_TalonFX) TalonFXFactory.createDefaultTalon(kArmCANDevice);
     armMotor.enableVoltageCompensation(true);
     armMotor.setNeutralMode(NeutralMode.Brake);
   }
