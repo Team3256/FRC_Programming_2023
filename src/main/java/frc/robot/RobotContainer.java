@@ -31,9 +31,12 @@ import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -145,20 +148,20 @@ public class RobotContainer {
   }
 
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] {100});
+    ledStrip = new LED(0, new int[] { 100 });
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
 
   public Command getAutonomousCommand() {
-    // return new InstantCommand();
-    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(5));
+    return new InstantCommand();
   }
 
   public void test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
+    for (CANTestable subsystem : testables)
+      result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
   }
 }
