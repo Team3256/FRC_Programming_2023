@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathGenInit;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
-
 import java.util.ArrayList;
 
 public final class DynamicPathConstants {

@@ -7,13 +7,13 @@
 
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.dynamicPathWayNodes;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
-
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.dynamicPathWayNodes;
 
 public class PathGenInit {
   static double passageRes = 0.6;
@@ -64,7 +64,8 @@ public class PathGenInit {
     return new PathNode[] {preSinks.get(0), preSinks.get(preSinks.size() - 1)};
   }
 
-  public static ArrayList<PathNode> passage(ArrayList<PathNode> pathNodes, PathNode src, PathNode sink) {
+  public static ArrayList<PathNode> passage(
+      ArrayList<PathNode> pathNodes, PathNode src, PathNode sink) {
     ArrayList<PathNode> newNodes = new ArrayList<>();
     newNodes.add(src);
     for (double x = src.getX() + passageRes; x <= sink.getX() - passageRes; x += passageRes) {

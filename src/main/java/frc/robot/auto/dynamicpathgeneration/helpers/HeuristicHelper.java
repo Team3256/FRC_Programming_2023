@@ -32,13 +32,17 @@ public class HeuristicHelper {
       if (vis[cur]) continue;
       vis[cur] = true;
       // System.out.println("cur:" + cur);
-      for (int next = 0; next < nodes; next++) {
-        if (vis[next]) continue;
+      for (int child = 0; child < pathNodes.get(cur).getEdges().size(); child++) {
+        int node = pathNodes.get(cur).getEdges().get(child).index;
+        if (vis[node]) continue;
         double newHeurestic =
-            heurestic[cur] + splineHeuristic(pathNodes.get(cur).getPoint(), pathNodes.get(next).getPoint());
-        if (heurestic[next] < newHeurestic) continue;
-        heurestic[next] = newHeurestic;
-        pq.add(next);
+            heurestic[cur]
+                + splineHeuristic(
+                    pathNodes.get(cur).getEdges().get(node).getPoint(),
+                    pathNodes.get(cur).getPoint());
+        if (heurestic[node] < newHeurestic) continue;
+        heurestic[node] = newHeurestic;
+        pq.add(node);
       }
     }
     return heurestic;

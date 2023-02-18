@@ -15,7 +15,6 @@ import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.*;
-
 import java.util.*;
 
 public class DynamicPathGenerator {
@@ -26,39 +25,38 @@ public class DynamicPathGenerator {
   private int numNodes;
   private ArrayList<PathNode> dynamicPathNodes;
 
-  public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose){
-    this.startPose=startPose;
-    this.goalPose=goalPose;
-    dynamicPathNodes=new ArrayList<>(dynamicPathWayNodes);
+  public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
+    System.out.println("Setting Up Path Finder Algorithm");
+    this.startPose = startPose;
+    this.goalPose = goalPose;
+    dynamicPathNodes = new ArrayList<>(dynamicPathWayNodes);
     dynamicPathNodes.add(new PathNode(startPose.getTranslation()));
     dynamicPathNodes.add(new PathNode(goalPose.getTranslation()));
-    numNodes=dynamicPathNodes.size();
-    src = numNodes-2;
-    sink = numNodes-1;
+    numNodes = dynamicPathNodes.size();
+    src = numNodes - 2;
+    sink = numNodes - 1;
 
-    connectToClosest(dynamicPathNodes.get(src),dynamicPathNodes);
-    connectToClosest(dynamicPathNodes.get(sink),dynamicPathNodes);
+    connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
+    connectToClosest(dynamicPathNodes.get(sink), dynamicPathNodes);
   }
+
   public void connectToClosest(PathNode node, ArrayList<PathNode> nodes) {
     double closest = INF_TIME;
     PathNode ret = node;
-    for (PathNode q : nodes){
-      if (q==node) continue;
-      double dist = HeuristicHelper.splineHeuristic(node.getPoint(),q.getPoint());
-      if (dist < closest){
-        closest=dist;
-        ret=q;
+    for (PathNode q : nodes) {
+      if (q == node) continue;
+      double dist = HeuristicHelper.splineHeuristic(node.getPoint(), q.getPoint());
+      if (dist < closest) {
+        closest = dist;
+        ret = q;
       }
     }
-    PathGenInit.fullyConnect(ret,node);
+    PathGenInit.fullyConnect(ret, node);
+    System.out.println("closest to " + node + " is " + ret);
   }
 
   public List<Translation2d> getPositions() {
-      DynamicPathFinder pathFinder=
-              new DynamicPathFinder(
-                      src,
-                      sink,
-                      dynamicPathNodes);
+    DynamicPathFinder pathFinder = new DynamicPathFinder(src, sink, dynamicPathNodes);
 
     List<Translation2d> positions = pathFinder.findPath();
     if (kDynamicPathGenerationDebug) {

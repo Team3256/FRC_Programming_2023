@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class PathNode {
   Translation2d point;
   ArrayList<PathNode> edges;
+  public int index;
 
   public PathNode(double x, double y) {
     this.point = new Translation2d(x, y);
@@ -38,5 +39,13 @@ public class PathNode {
 
   public Translation2d getPoint() {
     return point;
+  }
+
+  public ArrayList<PathNode> getEdges() {
+    return edges;
+  }
+
+  public String toString() {
+    return point.toString();
   }
 }
