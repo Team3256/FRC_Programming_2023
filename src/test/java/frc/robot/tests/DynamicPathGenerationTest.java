@@ -29,7 +29,7 @@ public class DynamicPathGenerationTest {
     positions.add(new Translation2d(6, 2));
     positions.add(new Translation2d(7.5, 2));
     testInterpolatePathBase(
-            new Rotation2d(0), new Rotation2d(0), positions, "InterpolateTest-Turn");
+        new Rotation2d(0), new Rotation2d(0), positions, "InterpolateTest-Turn");
   }
 
   @Test
@@ -76,7 +76,7 @@ public class DynamicPathGenerationTest {
   }
 
   public void testInterpolatePathBase(
-          Rotation2d srcRot, Rotation2d sinkRot, List<Translation2d> points, String fileName) {
+      Rotation2d srcRot, Rotation2d sinkRot, List<Translation2d> points, String fileName) {
     long start = System.currentTimeMillis();
     Path path = new Path(points, srcRot, sinkRot);
     System.out.println("Time to interpolate path: " + (System.currentTimeMillis() - start));
@@ -86,7 +86,7 @@ public class DynamicPathGenerationTest {
 
     String pathPlannerJsonPath = "src/main/deploy/pathplanner/" + fileName + ".path";
     String correctJsonPath =
-            "src/test/java/frc/robot/tests/dynamicpathgeneration/json/" + fileName + ".path";
+        "src/test/java/frc/robot/tests/dynamicpathgeneration/json/" + fileName + ".path";
 
     FileHelper.saveJson(json, pathPlannerJsonPath);
     assertTrue(true);

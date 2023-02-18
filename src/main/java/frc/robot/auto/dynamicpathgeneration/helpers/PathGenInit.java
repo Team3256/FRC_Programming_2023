@@ -8,6 +8,7 @@
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.dynamicPathWayNodes;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kDynamicPathGenerationDebug;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,9 +23,7 @@ public class PathGenInit {
     System.out.println("Path Generator Initialized");
 
     // end
-    PathNode[] res = preSink(dynamicPathWayNodes);
-    PathNode topPreSink = res[0];
-    PathNode botPreSink = res[1];
+    preSink(dynamicPathWayNodes);
 
     // passages
     PathNode topPassageSrc = new PathNode(2.28, 5.53 - 0.75);
@@ -54,14 +53,17 @@ public class PathGenInit {
     FileHelper.saveJson(json, pathPlannerJsonPath);
   }
 
-  public static PathNode[] preSink(ArrayList<PathNode> pathNodes) {
+  public static void preSink(ArrayList<PathNode> pathNodes) {
     ArrayList<PathNode> preSinks = new ArrayList<>();
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
       preSinks.add(new PathNode(sink.getX() + 1, sink.getY()));
     }
     pathNodes.addAll(preSinks);
     fullyConnect(preSinks);
-    return new PathNode[] {preSinks.get(0), preSinks.get(preSinks.size() - 1)};
+    if (kDynamicPathGenerationDebug) {
+      System.out.println("preSink nodes:" + preSinks.size());
+      System.out.println("preSink edges:" + preSinks.get(0).getEdges().size());
+    }
   }
 
   public static ArrayList<PathNode> passage(
@@ -73,6 +75,10 @@ public class PathGenInit {
     }
     newNodes.add(sink);
     fullyConnect(newNodes);
+    if (kDynamicPathGenerationDebug) {
+      System.out.println("passage nodes:" + newNodes.size());
+      System.out.println("passage edges:" + newNodes.get(0).getEdges().size());
+    }
     pathNodes.addAll(newNodes);
     return newNodes;
   }
@@ -80,7 +86,7 @@ public class PathGenInit {
   public static void fullyConnect(ArrayList<PathNode> pathNodes) {
     for (PathNode u : pathNodes) {
       for (PathNode v : pathNodes) {
-        if (u != v) fullyConnect(u, v);
+        if (u != v) u.addEdge(v);
       }
     }
   }
@@ -100,7 +106,7 @@ public class PathGenInit {
   }
 
   public static void fullyConnect(PathNode u, PathNode v) {
-    u.addEdge(u);
+    u.addEdge(v);
     v.addEdge(u);
   }
 }

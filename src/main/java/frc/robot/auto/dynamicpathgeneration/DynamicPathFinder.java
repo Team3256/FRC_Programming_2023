@@ -25,7 +25,6 @@ public class DynamicPathFinder {
 
   private int[] pre;
   private double[] dist;
-  private final double[] heuristic;
 
   public DynamicPathFinder(int src, int sink, ArrayList<PathNode> positions) {
     this.src = src;
@@ -36,7 +35,7 @@ public class DynamicPathFinder {
       System.out.println("Running Path Finder Algorithm");
       System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
     }
-    this.heuristic = HeuristicHelper.generateHeuristicTable(sink, positions);
+    // this.heuristic = HeuristicHelper.generateHeuristicTable(sink, positions);
   }
 
   public List<Translation2d> findPath() {
@@ -50,12 +49,9 @@ public class DynamicPathFinder {
     pre = new int[nodes];
 
     // Priorities with which to visit the nodes
-    double[] priority = new double[nodes];
-    Arrays.fill(priority, INF_TIME);
-    priority[src] = heuristic[src];
 
     // Q to pop from
-    PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> priority[a]));
+    PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> dist[a]));
     pq.add(src);
 
     // Visited nodes
@@ -79,27 +75,27 @@ public class DynamicPathFinder {
 
       // Update all unvisited neighboring nodes
       List<Integer> path = getPathIdsFromNode(currentNode);
-      for (int child = 0; child < positions.get(currentNode).getEdges().size(); child++) {
-        int node = positions.get(currentNode).getEdges().get(child).index;
-        if (visitedNodes[node]) continue;
+      for (int childId = 0; childId < positions.get(currentNode).getEdges().size(); childId++) {
+        int next = positions.get(currentNode).getEdges().get(childId).index;
+        if (visitedNodes[next]) continue;
         if (kDynamicPathGenerationDebug) {
-          System.out.println("explore child: " + node);
+          System.out.println("explore child: " + next);
         }
         // add node to path
-        path.add(node);
+        path.add(next);
         // calculate time
-        double pathTime = getPathTime(path);
+        double newDist =
+            dist[currentNode]
+                + HeuristicHelper.splineHeuristic(
+                    positions.get(currentNode).getPoint(), positions.get(next).getPoint());
         // If path over this edge is better
-        if (pathTime < dist[node]) {
+        if (newDist < dist[next]) {
           // Save path as new current shortest path
-          dist[node] = pathTime;
-          pre[node] = currentNode;
-
-          // Update node priority
-          priority[node] = dist[node] + heuristic[node];
+          dist[next] = newDist;
+          pre[next] = currentNode;
 
           // Add node to queue
-          pq.add(node);
+          pq.add(next);
         }
         // pop node from path
         path.remove(path.size() - 1);

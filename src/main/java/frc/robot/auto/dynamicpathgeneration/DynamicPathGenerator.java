@@ -38,6 +38,10 @@ public class DynamicPathGenerator {
 
     connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
     connectToClosest(dynamicPathNodes.get(sink), dynamicPathNodes);
+
+    for (int i = 0; i < numNodes; i++) {
+      dynamicPathNodes.get(i).index = i;
+    }
   }
 
   public void connectToClosest(PathNode node, ArrayList<PathNode> nodes) {
@@ -45,7 +49,7 @@ public class DynamicPathGenerator {
     PathNode ret = node;
     for (PathNode q : nodes) {
       if (q == node) continue;
-      double dist = HeuristicHelper.splineHeuristic(node.getPoint(), q.getPoint());
+      double dist = HeuristicHelper.mockSplineHeuristic(node.getPoint(), q.getPoint());
       if (dist < closest) {
         closest = dist;
         ret = q;

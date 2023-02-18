@@ -32,17 +32,15 @@ public class HeuristicHelper {
       if (vis[cur]) continue;
       vis[cur] = true;
       // System.out.println("cur:" + cur);
-      for (int child = 0; child < pathNodes.get(cur).getEdges().size(); child++) {
-        int node = pathNodes.get(cur).getEdges().get(child).index;
-        if (vis[node]) continue;
+      for (int childId = 0; childId < pathNodes.get(cur).getEdges().size(); childId++) {
+        int next = pathNodes.get(cur).getEdges().get(childId).index;
+        if (vis[next]) continue;
         double newHeurestic =
             heurestic[cur]
-                + splineHeuristic(
-                    pathNodes.get(cur).getEdges().get(node).getPoint(),
-                    pathNodes.get(cur).getPoint());
-        if (heurestic[node] < newHeurestic) continue;
-        heurestic[node] = newHeurestic;
-        pq.add(node);
+                + splineHeuristic(pathNodes.get(next).getPoint(), pathNodes.get(cur).getPoint());
+        if (heurestic[next] < newHeurestic) continue;
+        heurestic[next] = newHeurestic;
+        pq.add(next);
       }
     }
     return heurestic;
@@ -52,6 +50,14 @@ public class HeuristicHelper {
   // be lower than
   // actual
   public static double splineHeuristic(Translation2d position1, Translation2d position2) {
+    double estimatedTime = position1.getDistance(position2) / (SwerveConstants.kMaxSpeed);
+    //    if (doesPathSegmentHitObstacles(position1, position2)) {
+    //      estimatedTime += ILLEGAL_TIME;
+    //    }
+    return estimatedTime;
+  }
+
+  public static double mockSplineHeuristic(Translation2d position1, Translation2d position2) {
     double estimatedTime = position1.getDistance(position2) / (SwerveConstants.kMaxSpeed);
     if (doesPathSegmentHitObstacles(position1, position2)) {
       estimatedTime += ILLEGAL_TIME;
