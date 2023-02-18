@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -127,6 +128,7 @@ public class RobotContainer {
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+    operator.y().onTrue(new ZeroElevator(elevatorSubsystem));
   }
 
   public void configureLEDStrip() {
@@ -138,7 +140,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new InstantCommand();
   }
-
   public void test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
