@@ -47,10 +47,13 @@ public class Path {
 
       Translation2d prevControl;
       Translation2d nextControl;
-      if (i+1<points && Math.abs(poses.get(i).getX()-poses.get(i+1).getX())<0.0000001) {
-        int sgn = 1; if (poses.get(i).getX()-poses.get(i+1).getX() < 0) sgn=-1;
-        prevControl = new Translation2d(-sgn*0.2, 0);
-        nextControl = new Translation2d(sgn*0.2, 0);
+      if (i + 1 < points && Math.abs(poses.get(i).getY() - poses.get(i + 1).getY()) < 0.0000001) {
+        Translation2d baseL =
+            new Translation2d(poses.get(i - 1).minus(poses.get(i)).getTranslation().getX(), 0);
+        prevControl = baseL.times(kControlPointScalar).plus(anchorPoint);
+        Translation2d baseR =
+            new Translation2d(poses.get(i + 1).minus(poses.get(i)).getTranslation().getX(), 0);
+        nextControl = baseR.times(kControlPointScalar).plus(anchorPoint);
       } else if (i == 0) {
         prevControl = null;
         Translation2d thisPointToNextPoint =

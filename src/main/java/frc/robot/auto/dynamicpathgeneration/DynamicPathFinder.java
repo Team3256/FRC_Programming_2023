@@ -82,7 +82,8 @@ public class DynamicPathFinder {
         }
         // calculate time
         double newDist =
-            dist[currentNode]
+            0.0001
+                + dist[currentNode]
                 + HeuristicHelper.splineHeuristic(
                     pathNodes.get(currentNode).getPoint(), pathNodes.get(next).getPoint());
         // If path over this edge is better
