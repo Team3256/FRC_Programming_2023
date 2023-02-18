@@ -29,7 +29,7 @@ public class AutoBuilder {
 
   public Command createPath(String path, PathConstraints constraints, boolean isFirstSegment) {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, constraints);
-    return initPathPlanner(trajectory, isFirstSegment);
+    return createPathPlannerCommand(trajectory, isFirstSegment);
   }
 
   public ArrayList<Command> createPaths(
@@ -37,28 +37,25 @@ public class AutoBuilder {
       PathConstraints constraint,
       boolean isFirstSegment,
       PathConstraints... constraints) {
-    ArrayList<PathPlannerTrajectory> trajectories =
-        new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
+    ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<>(
+        PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
 
     ArrayList<Command> commands = new ArrayList<>();
     for (PathPlannerTrajectory trajectory : trajectories) {
-      commands.add(initPathPlanner(trajectory, isFirstSegment));
+      commands.add(createPathPlannerCommand(trajectory, isFirstSegment));
     }
 
     return commands;
   }
 
-  private Command initPathPlanner(PathPlannerTrajectory trajectory, boolean isFirstSegment) {
-    PIDController xController =
-        new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
-    PIDController yController =
-        new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
-    ProfiledPIDController thetaController =
-        new ProfiledPIDController(
-            kAutoThetaControllerP,
-            kAutoThetaControllerI,
-            kAutoThetaControllerD,
-            kAutoThetaControllerConstraints);
+  private Command createPathPlannerCommand(PathPlannerTrajectory trajectory, boolean isFirstSegment) {
+    PIDController xController = new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
+    PIDController yController = new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+        kAutoThetaControllerP,
+        kAutoThetaControllerI,
+        kAutoThetaControllerD,
+        kAutoThetaControllerConstraints);
 
     return new PPTrajectoryFollowCommand(
         trajectory,
