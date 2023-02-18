@@ -108,4 +108,8 @@ public class PathGenInit {
     u.addEdge(v);
     v.addEdge(u);
   }
+  public static void fullyDisconnect(PathNode u, PathNode v){
+    u.remEdge(v);
+    v.remEdge(u);
+  }
 }

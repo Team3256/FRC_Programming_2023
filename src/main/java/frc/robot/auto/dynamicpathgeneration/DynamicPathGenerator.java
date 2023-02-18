@@ -39,15 +39,9 @@ public class DynamicPathGenerator {
       dynamicPathNodes.get(i).index = i;
     }
 
-    connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
-    connectToClosest(dynamicPathNodes.get(sink), dynamicPathNodes);
-    if (kDynamicPathGenerationDebug) {
-      System.out.println("src edges:" + dynamicPathNodes.get(src).getEdges().size());
-      System.out.println("sink edges:" + dynamicPathNodes.get(sink).getEdges().size());
-    }
   }
 
-  public void connectToClosest(PathNode node, ArrayList<PathNode> nodes) {
+  public PathNode connectToClosest(PathNode node, ArrayList<PathNode> nodes) {
     double closest = INF_TIME;
     PathNode ret = node;
     for (PathNode q : nodes) {
@@ -60,16 +54,24 @@ public class DynamicPathGenerator {
     }
     System.out.println("closest to " + node + " is " + ret);
     PathGenInit.fullyConnect(ret, node);
+    return ret;
   }
 
   public List<Translation2d> getPositions() {
+    PathNode srcClosest = connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
+    PathNode sinkClosest = connectToClosest(dynamicPathNodes.get(sink), dynamicPathNodes);
+    if (kDynamicPathGenerationDebug) {
+      System.out.println("src edges:" + dynamicPathNodes.get(src).getEdges().size());
+      System.out.println("sink edges:" + dynamicPathNodes.get(sink).getEdges().size());
+    }
     DynamicPathFinder pathFinder = new DynamicPathFinder(src, sink, dynamicPathNodes);
-
     List<Translation2d> positions = pathFinder.findPath();
     if (kDynamicPathGenerationDebug) {
       System.out.println("This is the path generated:");
       System.out.println(positions);
     }
+    PathGenInit.fullyDisconnect(srcClosest, dynamicPathNodes.get(src));
+    PathGenInit.fullyDisconnect(sinkClosest, dynamicPathNodes.get(sink));
     return positions;
   }
 
