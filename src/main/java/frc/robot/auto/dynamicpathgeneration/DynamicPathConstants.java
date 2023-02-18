@@ -13,6 +13,9 @@ import static frc.robot.Constants.FieldConstants.Community.*;
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathGenInit;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
+
 import java.util.ArrayList;
 
 public final class DynamicPathConstants {
@@ -40,26 +43,10 @@ public final class DynamicPathConstants {
   public static final double kGridXResolution = 0.7; // original res 0.7
   public static final double kGridYResolution = 0.2; // original res 0.2
 
-  public static final ArrayList<Translation2d> dynamicPathAllowedPositions = new ArrayList<>();
+  public static final ArrayList<PathNode> dynamicPathWayNodes = new ArrayList<>();
 
   static {
-    for (double x = kGridXLowerBound; x < kGridXUpperBound; x += kGridXResolution) {
-      for (double y = kGridYLowerBound; y < kGridYUpperBound; y += kGridYResolution) {
-        boolean invalidPoint = false;
-        for (int i = 0; i < kHitBoxResolution; i++) {
-          double angle = i * 2 * Math.PI / kHitBoxResolution;
-          double padding = kRobotRadius + kCollisionBuffer;
-          for (Obstacle obstacle : obstacles) {
-            if (obstacle.containsPoint(
-                new Translation2d(x + padding * Math.cos(angle), y + padding * Math.sin(angle)))) {
-              invalidPoint = true;
-              break;
-            }
-          }
-        }
-        if (!invalidPoint) dynamicPathAllowedPositions.add(new Translation2d(x, y));
-      }
-    }
+    PathGenInit.init();
   }
 
   public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 7.5);

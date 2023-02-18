@@ -12,41 +12,28 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.swerve.SwerveConstants;
 import java.util.*;
 
 public class DynamicPathFinder {
   private final int src;
-  private final Rotation2d srcRot;
   private final int sink;
-  private final Rotation2d sinkRot;
   private final int nodes;
-  private final ArrayList<Translation2d> positions;
+  private final ArrayList<PathNode> positions;
 
   private int[] pre;
-  private final double[] heuristic;
-
-  /**
-   * Finds the fastest path between two nodes using Warrior-star algorithm
-   *
-   * @param src start node
-   * @param sink end node
-   * @param heuristic heuristic
-   */
+  private double[] dist;
   public DynamicPathFinder(
       int src,
       Rotation2d srcRot,
       int sink,
       Rotation2d sinkRot,
-      ArrayList<Translation2d> positions,
-      double[] heuristic) {
+      ArrayList<PathNode> positions) {
     this.src = src;
-    this.srcRot = srcRot;
     this.sink = sink;
-    this.sinkRot = sinkRot;
     this.positions = positions;
     this.nodes = positions.size();
-    this.heuristic = heuristic;
     if (kDynamicPathGenerationDebug) {
       System.out.println("Running Path Finder Algorithm");
       System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
@@ -96,7 +83,7 @@ public class DynamicPathFinder {
       for (int node = 0; node < nodes; node++) {
         if (visitedNodes[node]) continue;
         if (positions.get(node).getX() > positions.get(currentNode).getX()) continue;
-        if (positions.get(node).getDistance(positions.get(currentNode)) >= 5) continue;
+        if (positions.get(node).getPoint().getDistance(positions.get(currentNode).getPoint()) >= 5) continue;
         // add node to path
         path.add(node);
         double pathTime = getPathTime(path);
@@ -132,8 +119,8 @@ public class DynamicPathFinder {
     double totalDistance = 0;
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (doesPathSegmentHitObstacles(
-          positions.get(pathIds.get(i)), positions.get(pathIds.get(i + 1)))) return INF_TIME;
-      totalDistance += positions.get(pathIds.get(i)).getDistance(positions.get(pathIds.get(i + 1)));
+          positions.get(pathIds.get(i)).getPoint(), positions.get(pathIds.get(i + 1)).getPoint())) return INF_TIME;
+      totalDistance += positions.get(pathIds.get(i)).getPoint().getDistance(positions.get(pathIds.get(i + 1)).getPoint());
     }
 
     return totalDistance / SwerveConstants.kMaxSpeed;
@@ -142,7 +129,7 @@ public class DynamicPathFinder {
   // convert list of pathIds into list of pathPoses
   private List<Translation2d> getPositionsFromPathIds(List<Integer> pathIds) {
     List<Translation2d> pathPositions = new ArrayList<>();
-    for (int node : pathIds) pathPositions.add(positions.get(node));
+    for (int node : pathIds) pathPositions.add(positions.get(node).getPoint());
     return pathPositions;
   }
 

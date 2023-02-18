@@ -13,39 +13,40 @@ import frc.robot.Constants;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.dynamicPathWayNodes;
+
 public class PathGenInit {
   static double passageRes = 0.6;
   // assume blue for now
   public static void init() {
     System.out.println("Path Generator Initialized");
-    ArrayList<PathNode> pathNodes = new ArrayList<>();
 
     // end
-    PathNode[] res = preSink(pathNodes);
+    PathNode[] res = preSink(dynamicPathWayNodes);
     PathNode topPreSink = res[0];
     PathNode botPreSink = res[1];
 
     // passages
     PathNode topPassageSrc = new PathNode(2.28, 5.53 - 0.75);
     PathNode topPassageSink = new PathNode(5.81, 5.53 - 0.75);
-    ArrayList<PathNode> topPassage = passage(pathNodes, topPassageSrc, topPassageSink);
+    ArrayList<PathNode> topPassage = passage(dynamicPathWayNodes, topPassageSrc, topPassageSink);
 
     PathNode botPassageSrc = new PathNode(2.28, 0 + 0.73);
     PathNode botPassageSink = new PathNode(5.81, 0 + 0.73);
-    ArrayList<PathNode> botPassage = passage(pathNodes, botPassageSrc, botPassageSink);
+    ArrayList<PathNode> botPassage = passage(dynamicPathWayNodes, botPassageSrc, botPassageSink);
 
     // station
     PathNode leftStation = new PathNode(6.28, 6.39);
-    pathNodes.add(leftStation);
+    dynamicPathWayNodes.add(leftStation);
     fullyConnect(leftStation, topPassage);
 
     PathNode rightStation = new PathNode(16.5 - 6.28, 6.39);
-    pathNodes.add(rightStation);
+    dynamicPathWayNodes.add(rightStation);
     fullyConnect(rightStation, topPassageSink);
 
     // debug
     ArrayList<Translation2d> pathPositions = new ArrayList<>();
-    for (PathNode pathNode : pathNodes) pathPositions.add(pathNode.getPoint());
+    for (PathNode pathNode : dynamicPathWayNodes) pathPositions.add(pathNode.getPoint());
     Path path = new Path(pathPositions, new Rotation2d(0), new Rotation2d(0));
     JSONObject json = path.getJson();
     String fileName = "SpecialPoints";
