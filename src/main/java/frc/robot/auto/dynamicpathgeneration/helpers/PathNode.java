@@ -14,6 +14,7 @@ public class PathNode {
   Translation2d point;
   ArrayList<PathNode> edges;
   public int index;
+  boolean forceHorizontal;
 
   public PathNode(double x, double y) {
     this.point = new Translation2d(x, y);

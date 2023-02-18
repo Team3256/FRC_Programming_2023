@@ -22,29 +22,29 @@ public class PathGenInit {
     System.out.println("Path Generator Initialized");
 
     // end
-    PathNode[] res = preSink(dynamicPathWayNodes);
-    PathNode topPreSink = res[0];
-    PathNode botPreSink = res[1];
+    ArrayList<PathNode> preSinks = preSink(dynamicPathWayNodes);
+    PathNode topPreSink = preSinks.get(preSinks.size() - 2);
+    PathNode botPreSink = preSinks.get(1);
 
     // passages
-    PathNode topPassageSrc = new PathNode(2.28, 5.53 - 0.75);
-    PathNode topPassageSink = new PathNode(5.81, 5.53 - 0.75);
+    PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75);
+    PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75);
     ArrayList<PathNode> topPassage = passage(dynamicPathWayNodes, topPassageSrc, topPassageSink);
     fullyConnect(topPreSink, topPassageSink);
 
-    PathNode botPassageSrc = new PathNode(2.28, 0 + 0.73);
-    PathNode botPassageSink = new PathNode(5.81, 0 + 0.73);
+    PathNode botPassageSink = new PathNode(2.8, 0 + 0.73);
+    PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73);
     ArrayList<PathNode> botPassage = passage(dynamicPathWayNodes, botPassageSrc, botPassageSink);
     fullyConnect(botPreSink, botPassageSink);
 
     // station
     PathNode leftStation = new PathNode(6.28, 6.39);
     dynamicPathWayNodes.add(leftStation);
-    fullyConnect(leftStation, topPassage);
+    fullyConnect(leftStation, topPassageSrc);
 
     PathNode rightStation = new PathNode(16.5 - 6.28, 6.39);
     dynamicPathWayNodes.add(rightStation);
-    fullyConnect(rightStation, topPassageSink);
+    fullyConnect(rightStation, topPassageSrc);
 
     // debug
     ArrayList<Translation2d> pathPositions = new ArrayList<>();
@@ -56,24 +56,24 @@ public class PathGenInit {
     FileHelper.saveJson(json, pathPlannerJsonPath);
   }
 
-  public static PathNode[] preSink(ArrayList<PathNode> pathNodes) {
+  public static ArrayList<PathNode> preSink(ArrayList<PathNode> pathNodes) {
     ArrayList<PathNode> preSinks = new ArrayList<>();
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
       preSinks.add(new PathNode(sink.getX() + 1, sink.getY()));
     }
     pathNodes.addAll(preSinks);
     fullyConnect(preSinks);
-    return new PathNode[] {preSinks.get(0), preSinks.get(preSinks.size() - 1)};
+    return preSinks;
   }
 
   public static ArrayList<PathNode> passage(
       ArrayList<PathNode> pathNodes, PathNode src, PathNode sink) {
     ArrayList<PathNode> newNodes = new ArrayList<>();
-    newNodes.add(src);
-    for (double x = src.getX() + passageRes; x <= sink.getX() - passageRes; x += passageRes) {
-      newNodes.add(new PathNode(x, src.getY()));
-    }
     newNodes.add(sink);
+    for (double x = sink.getX() + passageRes; x <= src.getX() + passageRes; x += passageRes) {
+      newNodes.add(new PathNode(x, sink.getY()));
+    }
+    newNodes.add(src);
     fullyConnect(newNodes);
     pathNodes.addAll(newNodes);
     return newNodes;
