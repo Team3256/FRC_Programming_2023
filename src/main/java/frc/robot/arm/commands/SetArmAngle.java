@@ -31,7 +31,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
                 output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
         armSubsystem);
 
-    System.out.println("Setting arm position angle to " + angleRotation2d);
     getController()
         .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
     this.armSubsystem = armSubsystem;

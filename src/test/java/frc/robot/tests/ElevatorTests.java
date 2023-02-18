@@ -13,7 +13,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.ElevatorConstants;
 import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.ZeroElevator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -34,10 +36,16 @@ public class ElevatorTests extends UnitTestBase {
     testElevatorHeight(0.997);
   }
 
-  // @Test
-  // public void testElevatorHeightMin() {
-  // testElevatorHeight(0.3048);
-  // }
+  @Test
+  public void testElevatorZero() {
+    Command zeroElevator = new ZeroElevator(elevatorSubsystem);
+    System.out.println(elevatorSubsystem.getElevatorPosition());
+    runScheduler(2, zeroElevator, elevatorSubsystem);
+
+    double height = elevatorSubsystem.getElevatorPosition();
+    System.out.println(height);
+    assertEquals(ElevatorConstants.kMinHeight, height, DELTA, "Zeroing elevator");
+  }
 
   public void testElevatorHeight(double heightSetpointMeters) { // 1 meter
     Command command = new SetElevatorHeight(elevatorSubsystem, heightSetpointMeters);
@@ -49,6 +57,5 @@ public class ElevatorTests extends UnitTestBase {
         height,
         DELTA,
         "Setting elevator setpoint to " + heightSetpointMeters);
-    // elevatorSubsystem.zeroElevator();
   }
 }

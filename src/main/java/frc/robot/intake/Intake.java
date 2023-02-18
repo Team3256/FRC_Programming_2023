@@ -11,7 +11,6 @@ import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,23 +20,31 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
 
 public class Intake extends SubsystemBase implements CANTestable {
-
-  private final TalonFX intakeMotor;
-
-  public double getIntakeSpeed() {
-    return intakeMotor.getMotorOutputPercent();
-  }
+  private WPI_TalonFX intakeMotor;
 
   public Intake() {
     if (RobotBase.isReal()) {
-      intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
+      configureRealHardware();
     } else {
-      intakeMotor = new WPI_TalonFX(kIntakeMotorID);
+      configureSimHardware();
     }
 
-    intakeMotor.setNeutralMode(NeutralMode.Brake);
     off();
     System.out.println("Intake initialized");
+  }
+
+  private void configureRealHardware() {
+    intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
+  }
+
+  private void configureSimHardware() {
+    intakeMotor = new WPI_TalonFX(kIntakeMotorID);
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public double getIntakeSpeed() {
+    return intakeMotor.getMotorOutputPercent();
   }
 
   public void intakeCone() {
