@@ -48,9 +48,9 @@ public class Path {
       Translation2d prevControl;
       Translation2d nextControl;
       if (i+1<points && Math.abs(poses.get(i).getX()-poses.get(i+1).getX())<0.0000001) {
-        int sgn = .signum(poses.get(i).getX()-poses.get(i+1).getX());
-        prevControl = new Translation2d(-0.2, 0);
-        nextControl = new Translation2d(0.2, 0);
+        int sgn = 1; if (poses.get(i).getX()-poses.get(i+1).getX() < 0) sgn=-1;
+        prevControl = new Translation2d(-sgn*0.2, 0);
+        nextControl = new Translation2d(sgn*0.2, 0);
       } else if (i == 0) {
         prevControl = null;
         Translation2d thisPointToNextPoint =
