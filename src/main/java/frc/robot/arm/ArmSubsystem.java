@@ -9,9 +9,8 @@ package frc.robot.arm;
 
 import static frc.robot.arm.ArmConstants.*;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -43,7 +42,7 @@ public class ArmSubsystem extends SubsystemBase {
     periodicIO = new PeriodicIO();
     if (Robot.isReal()) {
       // Configure REAL HW
-      armMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kArmMotorID));
+      armMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kArmMotorID, "mani"));
       armMotor.enableVoltageCompensation(true);
       System.out.println("Arm initalized");
     } else {
@@ -61,13 +60,17 @@ public class ArmSubsystem extends SubsystemBase {
     }
   }
 
+  public void testThing() {
+    armMotor.set(ControlMode.PercentOutput, 0.1);
+  }
+
   public void setInputVoltage(double voltage) {
-    periodicIO.voltage = MathUtil.clamp(voltage, 0, 12);
-    if (Robot.isSimulation()) {
-      armSim.setInputVoltage(periodicIO.voltage);
-    } else {
-      armMotor.set(TalonFXControlMode.PercentOutput, periodicIO.voltage / 12);
-    }
+    // periodicIO.voltage = MathUtil.clamp(voltage, 0, 12);
+    // if (Robot.isSimulation()) {
+    // armSim.setInputVoltage(periodicIO.voltage);
+    // } else {
+    // armMotor.set(TalonFXControlMode.PercentOutput, periodicIO.voltage / 12);
+    // }
   }
 
   public double getAngularVelocityRPM() {

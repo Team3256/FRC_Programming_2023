@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.CanDeviceId;
+import frc.robot.drivers.TalonFXFactory;
 
 public class Elevator extends SubsystemBase {
   public enum ElevatorPosition {
@@ -61,7 +63,7 @@ public class Elevator extends SubsystemBase {
               "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
 
   public Elevator() {
-    elevatorMotor = new WPI_TalonFX(elevatorID);
+    elevatorMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(elevatorID, "mani"));
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
 
     if (RobotBase.isReal()) configureRealHardware();

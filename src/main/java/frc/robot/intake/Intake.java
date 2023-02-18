@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase implements CANTestable {
   }
 
   public Intake() {
-    intakeMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kIntakeMotorID));
+    intakeMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kIntakeMotorID, "mani"));
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     off();
     System.out.println("Intake initialized");

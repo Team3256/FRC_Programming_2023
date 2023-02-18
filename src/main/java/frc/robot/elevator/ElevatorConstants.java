@@ -11,7 +11,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class ElevatorConstants {
-  public static final int elevatorID = 15;
+  public static final int elevatorID = 5;
   public static final int kNumElevatorMotors = 1;
 
   // TODO: Change to real values
@@ -34,25 +34,18 @@ public final class ElevatorConstants {
   public static final TrapezoidProfile.Constraints kElevatorContraints =
       new TrapezoidProfile.Constraints(2.45, 2.45);
 
-  public static final double kDownSpeedVolts = -3;
+  public static final double kDownSpeedVolts = -1.5;
 
-  // public static final double kElevatorGearing = 10;
-  // public static final double kCarriageMass = 4;
-  // public static final double kDrumRadius = Units.inchesToMeters(2);
-  // public static final double kMinHeight = Units.inchesToMeters(2);
-  // public static final double kMaxHeight = Units.inchesToMeters(50);
-
-  public static final double kDrumRadius = Units.inchesToMeters(2.5);
-  public static final double kMinHeight = Units.inchesToMeters(0.125); //
-  // meters 0.003175
-  public static final double kMaxHeight = Units.inchesToMeters(38.5); // 0.9779
+  public static final double kDrumRadius = 0.0222377;
+  public static final double kMinHeight = 0.174625;
+  public static final double kMaxHeight = 1.09855;
   public static final double kElevatorGearing = 5;
-  public static final double kCarriageMass = 4.0; // kg
+  public static final double kCarriageMass = 6.28815086; // kg
 
   public static final double kTolerancePosition = 0.025;
   public static final double kToleranceVelocity = 0.025;
   // TODO: TUNE THIS
   public static final double kRateLimiting = 0.05;
-  public static final double kEncoderToMetersConversionFactor = -1;
+  public static final double kEncoderToMetersConversionFactor = 1;
   public static final double kElevatorCurrentThreshold = 10; // amps
 }

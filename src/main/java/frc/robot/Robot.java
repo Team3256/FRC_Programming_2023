@@ -129,5 +129,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    // CommandScheduler.getInstance().run();
+  }
 }

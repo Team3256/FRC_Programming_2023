@@ -13,9 +13,10 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.arm.ArmSubsystem;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -30,9 +31,12 @@ import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -43,6 +47,7 @@ public class RobotContainer {
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
+  private ArmSubsystem armSubsystem;
   private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
@@ -61,6 +66,9 @@ public class RobotContainer {
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
+    }
+    if (true) {
+      this.armSubsystem = new ArmSubsystem();
     }
   }
 
@@ -124,13 +132,17 @@ public class RobotContainer {
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
-    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
-    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
-    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+    driver.a().whileTrue(new ZeroElevator(elevatorSubsystem));
+    // operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.HIGH));
+    // operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.MID));
+    // operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.LOW));
   }
 
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] {100});
+    ledStrip = new LED(0, new int[] { 100 });
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
@@ -140,9 +152,10 @@ public class RobotContainer {
   }
 
   public void test() {
-    System.out.println("Testing CAN connections:");
-    boolean result = true;
-    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
-    System.out.println("CAN fully connected: " + result);
+    armSubsystem.testThing();
+    // System.out.println("Testing CAN connections:");
+    // boolean result = true;
+    // for (CANTestable subsystem : testables) result &= subsystem.CANTest();
+    // System.out.println("CAN fully connected: " + result);
   }
 }

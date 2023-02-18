@@ -9,7 +9,7 @@ package frc.robot.drivers;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
@@ -57,7 +57,8 @@ public class TalonFXFactory {
   private static final Configuration kSlaveConfiguration = new Configuration();
 
   static {
-    // This control frame value seems to need to be something reasonable to avoid the Talon's
+    // This control frame value seems to need to be something reasonable to avoid
+    // the Talon's
     // LEDs behaving erratically. Potentially try to increase as much as possible.
     kSlaveConfiguration.CONTROL_FRAME_PERIOD_MS = 100;
     kSlaveConfiguration.MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
@@ -70,21 +71,21 @@ public class TalonFXFactory {
   }
 
   // create a CANTalon with the default (out of the box) configuration
-  public static TalonFX createDefaultTalon(CanDeviceId id) {
+  public static WPI_TalonFX createDefaultTalon(CanDeviceId id) {
     return createTalon(id, kDefaultConfiguration);
   }
 
-  public static TalonFX createPermanentSlaveTalon(CanDeviceId slave_id, CanDeviceId master_id) {
+  public static WPI_TalonFX createPermanentSlaveTalon(CanDeviceId slave_id, CanDeviceId master_id) {
     if (slave_id.getBus() != master_id.getBus()) {
       throw new RuntimeException("Master and Slave Talons must be on the same CAN bus");
     }
-    final TalonFX talon = createTalon(slave_id, kSlaveConfiguration);
+    final WPI_TalonFX talon = createTalon(slave_id, kSlaveConfiguration);
     talon.set(ControlMode.Follower, master_id.getDeviceNumber());
     return talon;
   }
 
-  public static TalonFX createTalon(CanDeviceId id, Configuration config) {
-    TalonFX talon = new LazyTalonFX(id);
+  public static WPI_TalonFX createTalon(CanDeviceId id, Configuration config) {
+    WPI_TalonFX talon = new LazyTalonFX(id);
     talon.set(ControlMode.PercentOutput, 0.0);
 
     talon.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
