@@ -16,6 +16,7 @@ import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathGenInit;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public final class DynamicPathConstants {
   public static final boolean kDynamicPathGenerationDebug = true;
@@ -43,6 +44,9 @@ public final class DynamicPathConstants {
   public static final double kGridYResolution = 0.2; // original res 0.2
 
   public static final ArrayList<PathNode> dynamicPathWayNodes = new ArrayList<>();
+  public static final HashSet<Integer> forceHorizontal = new HashSet<>();
+
+  public static final boolean blue = true;
 
   static {
     PathGenInit.init();

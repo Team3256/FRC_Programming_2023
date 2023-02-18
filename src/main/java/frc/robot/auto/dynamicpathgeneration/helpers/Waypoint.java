@@ -19,7 +19,6 @@ public class Waypoint {
   private Translation2d nextControl;
   private Rotation2d holonomicAngle;
   private Rotation2d heading;
-  public boolean forceHorizontal;
 
   Waypoint(
       Translation2d anchorPoint,

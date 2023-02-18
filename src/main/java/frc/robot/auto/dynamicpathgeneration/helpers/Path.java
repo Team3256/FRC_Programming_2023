@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,6 +21,7 @@ import org.json.simple.JSONObject;
 public class Path {
   private List<Waypoint> waypoints;
   private int points;
+  public HashSet<Integer> forceHorizontal = new HashSet<>();
 
   public Path(List<Translation2d> positions, Rotation2d startRotation, Rotation2d endRotation) {
     points = positions.size();
@@ -47,7 +49,12 @@ public class Path {
 
       Translation2d prevControl;
       Translation2d nextControl;
-      if (i == 0) {
+      if (forceHorizontal.contains(i)){
+        // TODO: Switch sign for Red Color
+        prevControl= new Translation2d(-0.2,0);
+        nextControl= new Translation2d(0.2,0);
+      }
+      else if (i == 0) {
         prevControl = null;
         Translation2d thisPointToNextPoint =
             positions.get(i + 1).minus(positions.get(i)).times(kControlPointScalar);
