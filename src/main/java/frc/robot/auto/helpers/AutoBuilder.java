@@ -41,6 +41,7 @@ public class AutoBuilder {
     ArrayList<Command> commands = new ArrayList<>();
 
     commands.add(createPathPlannerCommand(trajectories.get(0), true));
+    trajectories.remove(0);
     for (PathPlannerTrajectory trajectory : trajectories) {
       commands.add(createPathPlannerCommand(trajectory, false));
     }
