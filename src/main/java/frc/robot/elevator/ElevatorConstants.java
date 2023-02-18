@@ -13,6 +13,7 @@ import frc.robot.drivers.CanDeviceId;
 
 public final class ElevatorConstants {
   public static final int kElevatorID = 5;
+  public static final double kElevatorStartingPose = 1;
   public static final String kElevatorCANBus = "mani";
   public static final CanDeviceId kElevatorCANDevice =
       new CanDeviceId(kElevatorID, kElevatorCANBus);

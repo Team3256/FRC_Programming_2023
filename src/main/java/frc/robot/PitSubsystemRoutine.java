@@ -8,11 +8,15 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.elevator.ElevatorConstants.kElevatorStartingPose;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.elevator.commands.ZeroElevator;
@@ -38,61 +42,91 @@ public class PitSubsystemRoutine {
   }
 
   public void pitRoutine() {
-    if (kElevatorEnabled) {
-      elevatorCommands();
-    }
+    Command startRoutine = new WaitCommand(1).until(driver.a());
+    Command tests = new WaitCommand(1).beforeStarting(startRoutine);
     if (kIntakeEnabled) {
-      intakeCommands();
+      tests.andThen(intakeCommands());
     }
     if (kSwerveEnabled) {
-      swerveCommands();
+      tests.andThen(swerveCommands());
     }
+    if (kElevatorEnabled) {
+      tests.andThen(elevatorCommands());
+    }
+    tests.schedule();
   }
 
-  public void intakeCommands() {
-    Command zeroElevator = new ZeroElevator(elevatorSubsystem);
-    zeroElevator.initialize();
-    Command setElevatorHeight = new SetElevatorHeight(elevatorSubsystem, 1);
-    setElevatorHeight.initialize();
+  public Command elevatorCommands() {
+    Command zeroElevator = new ZeroElevator(elevatorSubsystem).until(driver.a());
+    Command setElevatorHeight = new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPose).until(driver.a());
+
+    return zeroElevator.andThen(setElevatorHeight);
   }
 
-  public void elevatorCommands() {
-    Command intakeCone = new IntakeCone(intakeSubsystem);
-    intakeCone.initialize();
-    Command intakeCube = new IntakeCube(intakeSubsystem);
-    intakeCube.initialize();
+  public Command intakeCommands() {
+    Command intakeCone = new IntakeCone(intakeSubsystem).until(driver.a());
+    Command intakeCube = new IntakeCube(intakeSubsystem).until(driver.a());
+
+    return intakeCube.andThen(intakeCone);
   }
 
-  public void swerveCommands() {
-    LockSwerve lockSwerve = new LockSwerve(swerveSubsystem);
-    lockSwerve.initialize();
-    TeleopSwerve teleopSwerve =
-        new TeleopSwerve(
-            swerveSubsystem,
-            () -> driver.getLeftY(),
-            () -> driver.getLeftX(),
-            () -> driver.getRightX(),
-            kFieldRelative,
-            kOpenLoop);
-    teleopSwerve.initialize();
-    TeleopSwerveLimited teleopSwerveLimited =
-        new TeleopSwerveLimited(
-            swerveSubsystem,
-            () -> driver.getRightY(),
-            () -> driver.getRightX(),
-            () -> driver.getLeftX(),
-            kFieldRelative,
-            kOpenLoop);
-    teleopSwerveLimited.initialize();
-    TeleopSwerveWithAzimuth teleopSwerveWithAzimuth =
-        new TeleopSwerveWithAzimuth(
-            swerveSubsystem,
-            () -> driver.getRightY(),
-            () -> driver.getRightX(),
-            () -> driver.getLeftX(),
-            () -> driver.getLeftY(),
-            kFieldRelative,
-            kOpenLoop);
-    teleopSwerveWithAzimuth.initialize();
+  public Command swerveCommands() {
+    Command lockSwerve = new LockSwerve(swerveSubsystem).until(driver.a());
+    Command teleopSwerveForward = //move forward
+            new TeleopSwerve(
+                    swerveSubsystem,
+                    () -> 0.3,
+                    () -> 0,
+                    () -> 0,
+                    kFieldRelative,
+                    kOpenLoop).until(driver.a());
+
+    Command telopSwerveBackward = //move backward
+            new TeleopSwerve(
+                    swerveSubsystem,
+                    () -> -0.3,
+                    () -> 0,
+                    () -> 0,
+                    kFieldRelative,
+                    kOpenLoop).until(driver.a());
+
+    Command teleopSwerveRight = //move right
+            new TeleopSwerve(
+                    swerveSubsystem,
+                    () -> 0,
+                    () -> 0.3,
+                    () -> 0,
+                    kFieldRelative,
+                    kOpenLoop).until(driver.a());
+
+    Command teleopSwerveLeft = //move left
+            new TeleopSwerve(
+                    swerveSubsystem,
+                    () -> 0,
+                    () -> -0.3,
+                    () -> 0,
+                    kFieldRelative,
+                    kOpenLoop).until(driver.a());
+
+    Command teleopSwerveRotateRight = //rotate right
+            new TeleopSwerve(
+                    swerveSubsystem,
+                    () -> 0,
+                    () -> 0,
+                    () -> 0.3,
+                    kFieldRelative,
+                    kOpenLoop).until(driver.a());
+
+    Command teleopSwerveRotateLeft = //rotate left
+            new TeleopSwerve(
+                    swerveSubsystem,
+                    () -> 0,
+                    () -> 0,
+                    () -> -0.3,
+                    kFieldRelative,
+                    kOpenLoop).until(driver.a());
+    return lockSwerve.andThen(teleopSwerveForward.andThen(telopSwerveBackward.andThen
+            (teleopSwerveRight.andThen(teleopSwerveLeft.andThen
+                    (teleopSwerveRotateRight.andThen(teleopSwerveRotateLeft))))));
   }
 }
