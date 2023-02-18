@@ -18,9 +18,9 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class HeuristicHelper {
-  public static double[] generateHeuristicTable(int sink, ArrayList<Translation2d> positions) {
+  public static double[] generateHeuristicTable(int sink, ArrayList<PathNode> pathNodes) {
     // fill in heurestic
-    int nodes = positions.size();
+    int nodes = pathNodes.size();
     double[] heurestic = new double[nodes];
     boolean[] vis = new boolean[nodes];
     Arrays.fill(heurestic, INF_TIME);
@@ -35,7 +35,7 @@ public class HeuristicHelper {
       for (int next = 0; next < nodes; next++) {
         if (vis[next]) continue;
         double newHeurestic =
-            heurestic[cur] + splineHeuristic(positions.get(cur), positions.get(next));
+            heurestic[cur] + splineHeuristic(pathNodes.get(cur).getPoint(), pathNodes.get(next).getPoint());
         if (heurestic[next] < newHeurestic) continue;
         heurestic[next] = newHeurestic;
         pq.add(next);
@@ -44,7 +44,7 @@ public class HeuristicHelper {
     return heurestic;
   }
 
-  // heavy splined heuristic estimate of time to travel 1->2 that is guaranteed to
+  // heavy spline heuristic estimate of time to travel 1->2 that is guaranteed to
   // be lower than
   // actual
   public static double splineHeuristic(Translation2d position1, Translation2d position2) {

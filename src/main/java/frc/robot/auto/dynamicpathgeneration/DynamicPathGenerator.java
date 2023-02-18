@@ -14,14 +14,15 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.auto.dynamicpathgeneration.helpers.Path;
-import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
-import frc.robot.auto.dynamicpathgeneration.helpers.Waypoint;
+import frc.robot.auto.dynamicpathgeneration.helpers.*;
+
 import java.util.*;
 
 public class DynamicPathGenerator {
   private final Pose2d startPose;
+  private final int src;
   private final Pose2d goalPose;
+  private final int sink;
   private int numNodes;
   private ArrayList<PathNode> dynamicPathNodes;
 
@@ -29,20 +30,35 @@ public class DynamicPathGenerator {
     this.startPose=startPose;
     this.goalPose=goalPose;
     dynamicPathNodes=new ArrayList<>(dynamicPathWayNodes);
-    dynamicPathNodes.add(startPose.getTranslation());
-    dynamicPathNodes.add(goalPose.getTranslation());
+    dynamicPathNodes.add(new PathNode(startPose.getTranslation()));
+    dynamicPathNodes.add(new PathNode(goalPose.getTranslation()));
     numNodes=dynamicPathNodes.size();
+    src = numNodes-2;
+    sink = numNodes-1;
+
+    connectToClosest(dynamicPathNodes.get(src),dynamicPathNodes);
+    connectToClosest(dynamicPathNodes.get(sink),dynamicPathNodes);
+  }
+  public void connectToClosest(PathNode node, ArrayList<PathNode> nodes) {
+    double closest = INF_TIME;
+    PathNode ret = node;
+    for (PathNode q : nodes){
+      if (q==node) continue;
+      double dist = HeuristicHelper.splineHeuristic(node.getPoint(),q.getPoint());
+      if (dist < closest){
+        closest=dist;
+        ret=q;
+      }
+    }
+    PathGenInit.fullyConnect(ret,node);
   }
 
   public List<Translation2d> getPositions() {
       DynamicPathFinder pathFinder=
               new DynamicPathFinder(
-                      numNodes-2,
-                      startPose.getRotation(),
-                      numNodes-1,
-                      goalPose.getRotation(),
+                      src,
+                      sink,
                       dynamicPathNodes);
-    }
 
     List<Translation2d> positions = pathFinder.findPath();
     if (kDynamicPathGenerationDebug) {

@@ -54,7 +54,7 @@ public class PathGenInit {
     FileHelper.saveJson(json, pathPlannerJsonPath);
   }
 
-  static PathNode[] preSink(ArrayList<PathNode> pathNodes) {
+  public static PathNode[] preSink(ArrayList<PathNode> pathNodes) {
     ArrayList<PathNode> preSinks = new ArrayList<>();
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
       preSinks.add(new PathNode(sink.getX() + 1, sink.getY()));
@@ -64,7 +64,7 @@ public class PathGenInit {
     return new PathNode[] {preSinks.get(0), preSinks.get(preSinks.size() - 1)};
   }
 
-  static ArrayList<PathNode> passage(ArrayList<PathNode> pathNodes, PathNode src, PathNode sink) {
+  public static ArrayList<PathNode> passage(ArrayList<PathNode> pathNodes, PathNode src, PathNode sink) {
     ArrayList<PathNode> newNodes = new ArrayList<>();
     newNodes.add(src);
     for (double x = src.getX() + passageRes; x <= sink.getX() - passageRes; x += passageRes) {
@@ -76,7 +76,7 @@ public class PathGenInit {
     return newNodes;
   }
 
-  static void fullyConnect(ArrayList<PathNode> pathNodes) {
+  public static void fullyConnect(ArrayList<PathNode> pathNodes) {
     for (PathNode u : pathNodes) {
       for (PathNode v : pathNodes) {
         if (u != v) fullyConnect(u, v);
@@ -84,7 +84,7 @@ public class PathGenInit {
     }
   }
 
-  static void fullyConnect(ArrayList<PathNode> pathNodes1, ArrayList<PathNode> pathNodes2) {
+  public static void fullyConnect(ArrayList<PathNode> pathNodes1, ArrayList<PathNode> pathNodes2) {
     for (PathNode u : pathNodes1) {
       for (PathNode v : pathNodes2) {
         fullyConnect(u, v);
@@ -92,13 +92,13 @@ public class PathGenInit {
     }
   }
 
-  static void fullyConnect(PathNode u, ArrayList<PathNode> pathNodes) {
+  public static void fullyConnect(PathNode u, ArrayList<PathNode> pathNodes) {
     for (PathNode v : pathNodes) {
       fullyConnect(u, v);
     }
   }
 
-  static void fullyConnect(PathNode u, PathNode v) {
+  public static void fullyConnect(PathNode u, PathNode v) {
     u.addEdge(u);
     v.addEdge(u);
   }

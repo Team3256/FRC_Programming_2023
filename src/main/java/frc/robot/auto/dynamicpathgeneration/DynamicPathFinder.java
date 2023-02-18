@@ -11,6 +11,7 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.auto.dynamicpathgeneration.helpers.HeuristicHelper;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.swerve.SwerveConstants;
@@ -24,11 +25,11 @@ public class DynamicPathFinder {
 
   private int[] pre;
   private double[] dist;
+  private double[] heuristic;
+
   public DynamicPathFinder(
       int src,
-      Rotation2d srcRot,
       int sink,
-      Rotation2d sinkRot,
       ArrayList<PathNode> positions) {
     this.src = src;
     this.sink = sink;
@@ -38,6 +39,7 @@ public class DynamicPathFinder {
       System.out.println("Running Path Finder Algorithm");
       System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
     }
+    heuristic =HeuristicHelper.generateHeuristicTable(sink, positions);
   }
 
   public List<Translation2d> findPath() {
