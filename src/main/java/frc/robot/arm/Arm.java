@@ -62,26 +62,25 @@ public class Arm extends SubsystemBase implements CANTestable {
 
   public Arm() {
     if (RobotBase.isReal()) {
-      armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
-    } else {
-      armMotor = new WPI_TalonFX(kArmSimulationID);
-    }
-
-    armMotor.setNeutralMode(NeutralMode.Brake);
-
-    if (RobotBase.isReal()) {
       configureRealHardware();
     } else {
-      SmartDashboard.putData("Arm Sim", mechanism2d);
-      armTower.setColor(new Color8Bit(Color.kBlue));
+      configureSimHardware();
     }
 
     System.out.println("Arm initialized");
     off();
   }
 
+  private void configureSimHardware() {
+    armMotor = new WPI_TalonFX(kArmSimulationID);
+    SmartDashboard.putData("Arm Sim", mechanism2d);
+    armTower.setColor(new Color8Bit(Color.kBlue));
+  }
+
   private void configureRealHardware() {
+    armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
     armMotor.enableVoltageCompensation(true);
+    armMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public double calculateFeedForward(double angleRadians, double velocity) {

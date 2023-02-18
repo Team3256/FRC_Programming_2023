@@ -10,7 +10,6 @@ package frc.robot.elevator;
 import static frc.robot.elevator.ElevatorConstants.*;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
@@ -66,22 +65,25 @@ public class Elevator extends SubsystemBase implements CANTestable {
 
   public Elevator() {
     if (RobotBase.isReal()) {
-      elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
+      configureRealHardware();
     } else {
-      elevatorMotor = new WPI_TalonFX(kElevatorID);
+      configureSimHardware();
     }
-
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
-
-    if (RobotBase.isReal()) configureRealHardware();
-    else SmartDashboard.putData("Elevator Sim", mechanism2d);
 
     System.out.println("Elevator initialized");
     off();
   }
 
+  private void configureSimHardware() {
+    elevatorMotor = new WPI_TalonFX(kElevatorID);
+    SmartDashboard.putData("Elevator Sim", mechanism2d);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+  }
+
   private void configureRealHardware() {
+    elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
     elevatorMotor.enableVoltageCompensation(true);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -104,7 +106,7 @@ public class Elevator extends SubsystemBase implements CANTestable {
   }
 
   public void zeroElevator() {
-    elevatorMotor.set(ControlMode.Position, 0);
+    elevatorMotor.setSelectedSensorPosition(0);
   }
 
   public void off() {
