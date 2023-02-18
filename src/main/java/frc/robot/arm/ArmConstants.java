@@ -15,22 +15,20 @@ public final class ArmConstants {
   public static final int kArmMotorID = 20;
   public static final int kArmEncoderDIOPort = 10;
 
-  private static final double kArmCountsPerRevolution = 256;
-  public static final double kArmEncoderConversionToRadians =
-      (1 / kArmCountsPerRevolution) * 2 * Math.PI;
+  private static final double kArmCountsPerRevolution = 8192;
+  public static final double kArmEncoderConversionToRadians = (1 / kArmCountsPerRevolution) * 2 * Math.PI;
 
   // TODO Update
-  public static final double kArmLengthMeters = 3.5;
+  public static final double kArmLengthMeters = 1.638059;
   public static final double kArmInertia = 30;
-  public static final double kArmMassKg = 5.5;
-  public static final double kArmGearing = 100;
+  public static final double kArmMassKg = 5.10881086;
+  public static final double kArmGearing = 240;
   public static final boolean kArmSimGravity = true;
 
   public static final double kP = 10.0;
   public static final double kI = 0;
   public static final double kD = 0.5;
-  public static final TrapezoidProfile.Constraints kArmContraints =
-      new TrapezoidProfile.Constraints(2, 1);
+  public static final TrapezoidProfile.Constraints kArmContraints = new TrapezoidProfile.Constraints(2, 1);
 
   // TODO Update
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0);
