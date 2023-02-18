@@ -29,7 +29,7 @@ public class AutoBuilder {
 
   public Command createPath(String path, PathConstraints constraints, boolean isFirstSegment) {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, constraints);
-    return initPathPlanner(trajectory, isFirstSegment);
+    return createPathPlannerCommand(trajectory, isFirstSegment);
   }
 
   public ArrayList<Command> createPaths(
@@ -39,19 +39,22 @@ public class AutoBuilder {
       PathConstraints... constraints) {
     ArrayList<PathPlannerTrajectory> trajectories =
         new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
-
     ArrayList<Command> commands = new ArrayList<>();
+
+    commands.add(createPathPlannerCommand(trajectories.get(0), true));
+    trajectories.remove(0);
     for (PathPlannerTrajectory trajectory : trajectories) {
-      commands.add(initPathPlanner(trajectory, isFirstSegment));
+      commands.add(createPathPlannerCommand(trajectory, false));
     }
 
     return commands;
   }
 
-  private Command initPathPlanner(PathPlannerTrajectory trajectory, boolean isFirstSegment) {
-    PIDController xController =
+  private Command createPathPlannerCommand(
+      PathPlannerTrajectory trajectory, boolean isFirstSegment) {
+    PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
-    PIDController yController =
+    PIDController yTranslationController =
         new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
     ProfiledPIDController thetaController =
         new ProfiledPIDController(
@@ -62,8 +65,8 @@ public class AutoBuilder {
 
     return new PPTrajectoryFollowCommand(
         trajectory,
-        xController,
-        yController,
+        xTranslationController,
+        yTranslationController,
         thetaController,
         changeAutosBasedOnAlliance,
         isFirstSegment,
