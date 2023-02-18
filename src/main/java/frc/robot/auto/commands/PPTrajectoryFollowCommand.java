@@ -67,7 +67,6 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       boolean useAllianceColor,
       boolean isFirstSegment,
       SwerveDrive swerveSubsystem) {
-
     this(
         trajectory,
         xTranslationController,
