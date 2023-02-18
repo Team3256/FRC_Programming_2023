@@ -7,6 +7,7 @@
 
 package frc.robot.tests;
 
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.blue;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -68,6 +69,10 @@ public class DynamicPathGenerationTest {
   }
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, String fileName) {
+    if (!blue) {
+      src = new Pose2d(16.5 - src.getX(), src.getY(), src.getRotation());
+      sink = new Pose2d(16.5 - sink.getX(), sink.getY(), sink.getRotation());
+    }
     long start = System.currentTimeMillis();
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<Translation2d> positions = generator.getPositions();
