@@ -38,7 +38,7 @@ public final class ElevatorConstants {
   public static final TrapezoidProfile.Constraints kElevatorContraints =
       new TrapezoidProfile.Constraints(2.45, 2.45);
 
-  public static final double kDownSpeedVolts = -1.5;
+  public static final double kDownSpeedVolts = -2.0;
 
   public static final double kDrumRadius = 0.0222377;
   public static final double kMinHeight = 0.174625;
@@ -51,5 +51,5 @@ public final class ElevatorConstants {
   // TODO: TUNE THIS
   public static final double kRateLimiting = 0.05;
   public static final double kEncoderToMetersConversionFactor = 1;
-  public static final double kElevatorCurrentThreshold = 10; // amps
+  public static final double kElevatorCurrentThreshold = 8; // amps
 }

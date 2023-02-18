@@ -57,9 +57,18 @@ public class Intake extends SubsystemBase implements CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
+  public boolean isCurrentSpiking() {
+    return intakeMotor.getSupplyCurrent() >= kIntakeCurrentSpikingThreshold;
+  }
+
   public void off() {
     System.out.println("Intake off");
     intakeMotor.neutralOutput();
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Intake current", intakeMotor.getSupplyCurrent());
   }
 
   public boolean CANTest() {

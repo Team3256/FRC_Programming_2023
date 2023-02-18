@@ -82,7 +82,7 @@ public class Elevator extends SubsystemBase implements CANTestable {
 
   private void configureRealHardware() {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
-    elevatorMotor.enableVoltageCompensation(true);
+    elevatorMotor.setInverted(true);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
@@ -131,7 +131,12 @@ public class Elevator extends SubsystemBase implements CANTestable {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    SmartDashboard.putNumber("Elevator position", elevatorMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Elevator percent output", elevatorMotor.getMotorOutputPercent());
+    SmartDashboard.putBoolean("Elevator spiking", isMotorCurrentSpiking());
+  }
 
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());

@@ -73,13 +73,6 @@ public class RobotContainer {
     }
   }
 
-  private void configureIntake() {
-    intakeSubsystem = new Intake();
-
-    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
-    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
-  }
-
   private void configureSwerve() {
     swerveDrive = new SwerveDrive();
 
@@ -130,10 +123,18 @@ public class RobotContainer {
                 kOpenLoop));
   }
 
+  private void configureIntake() {
+    intakeSubsystem = new Intake();
+
+    driver.rightBumper().whileTrue(new IntakeCube(intakeSubsystem));
+    driver.leftBumper().whileTrue(new IntakeCone(intakeSubsystem));
+  }
+
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
-    driver.a().whileTrue(new ZeroElevator(elevatorSubsystem));
+    driver.x().whileTrue(new SetElevatorVolts(elevatorSubsystem, 3));
+    driver.y().whileTrue(new ZeroElevator(elevatorSubsystem));
     // operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem,
     // Elevator.ElevatorPosition.HIGH));
     // operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem,
@@ -144,7 +145,8 @@ public class RobotContainer {
 
   private void configureArm() {
     armSubsystem = new Arm();
-    // TODO: set button bindings for arm testing
+    driver.rightTrigger().whileTrue(new SetArmVoltage(armSubsystem, 3));
+    driver.leftTrigger().whileTrue(new SetArmVoltage(armSubsystem, -3));
   }
 
   public void configureLEDStrip() {
