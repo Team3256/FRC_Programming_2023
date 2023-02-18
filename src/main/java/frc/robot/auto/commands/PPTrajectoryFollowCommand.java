@@ -39,14 +39,15 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
-      PIDController xController,
-      PIDController yController,
+      PIDController xTranslationController,
+      PIDController yTranslationController,
       ProfiledPIDController thetaController,
       SwerveDrive swerveSubsystem) {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller = new SwerveDriveController(xController, yController, thetaController);
+    this.controller =
+        new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
 
     this.swerveSubsystem = swerveSubsystem;
     PathPlannerTrajectory.PathPlannerState start =
@@ -67,29 +68,35 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       boolean isFirstSegment,
       SwerveDrive swerveSubsystem) {
 
-    this.trajectory = trajectory;
-    this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller =
-        new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
-    this.useAllianceColor = useAllianceColor;
+    this(
+        trajectory,
+        xTranslationController,
+        yTranslationController,
+        thetaController,
+        swerveSubsystem);
 
-    this.swerveSubsystem = swerveSubsystem;
+    this.useAllianceColor = useAllianceColor;
     this.isFirstSegment = isFirstSegment;
     addRequirements(swerveSubsystem);
   }
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
-      PIDController xController,
-      PIDController yController,
+      PIDController xTranslationController,
+      PIDController yTranslationController,
       ProfiledPIDController thetaController,
       Pose2d startPose,
-      SwerveDrive swerveDrive) {
+      SwerveDrive swerveSubsystem) {
 
-    this(trajectory, xController, yController, thetaController, swerveDrive);
+    this(
+        trajectory,
+        xTranslationController,
+        yTranslationController,
+        thetaController,
+        swerveSubsystem);
     this.startPose = startPose;
 
-    addRequirements(swerveDrive);
+    addRequirements(swerveSubsystem);
   }
 
   public void setAutoCommandRunner(AutoCommandRunner commandRunner) {

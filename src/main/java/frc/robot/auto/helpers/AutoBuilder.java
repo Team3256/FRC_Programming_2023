@@ -49,9 +49,9 @@ public class AutoBuilder {
 
   private Command createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment) {
-    PIDController xController =
+    PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
-    PIDController yController =
+    PIDController yTranslationController =
         new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
     ProfiledPIDController thetaController =
         new ProfiledPIDController(
@@ -62,8 +62,8 @@ public class AutoBuilder {
 
     return new PPTrajectoryFollowCommand(
         trajectory,
-        xController,
-        yController,
+        xTranslationController,
+        yTranslationController,
         thetaController,
         changeAutosBasedOnAlliance,
         isFirstSegment,
