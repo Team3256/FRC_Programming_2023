@@ -35,14 +35,14 @@ public class AutoBuilder {
   public ArrayList<Command> createPaths(
       String pathGroup,
       PathConstraints constraint,
-      boolean isFirstSegment,
       PathConstraints... constraints) {
     ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<>(
         PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
-
     ArrayList<Command> commands = new ArrayList<>();
+
+    commands.add(createPathPlannerCommand(trajectories.get(0), true));
     for (PathPlannerTrajectory trajectory : trajectories) {
-      commands.add(createPathPlannerCommand(trajectory, isFirstSegment));
+      commands.add(createPathPlannerCommand(trajectory, false));
     }
 
     return commands;
