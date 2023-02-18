@@ -75,12 +75,13 @@ public class TalonFXFactory {
     return createTalon(id, kDefaultConfiguration);
   }
 
-  public static WPI_TalonFX createPermanentSlaveTalon(CanDeviceId slave_id, CanDeviceId master_id) {
-    if (slave_id.getBus() != master_id.getBus()) {
+  public static WPI_TalonFX createPermanentFollowerTalon(
+      CanDeviceId followerId, CanDeviceId masterId) {
+    if (followerId.getBus() != masterId.getBus()) {
       throw new RuntimeException("Master and Slave Talons must be on the same CAN bus");
     }
-    final WPI_TalonFX talon = createTalon(slave_id, kSlaveConfiguration);
-    talon.set(ControlMode.Follower, master_id.getDeviceNumber());
+    final WPI_TalonFX talon = createTalon(followerId, kSlaveConfiguration);
+    talon.set(ControlMode.Follower, masterId.getDeviceNumber());
     return talon;
   }
 

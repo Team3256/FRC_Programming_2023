@@ -9,9 +9,13 @@ package frc.robot.elevator;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.drivers.CanDeviceId;
 
 public final class ElevatorConstants {
-  public static final int elevatorID = 5;
+  public static final int kElevatorID = 5;
+  public static final String kElevatorCANBus = "mani";
+  public static final CanDeviceId kElevatorCANDevice =
+      new CanDeviceId(kElevatorID, kElevatorCANBus);
   public static final int kNumElevatorMotors = 1;
 
   // TODO: Change to real values

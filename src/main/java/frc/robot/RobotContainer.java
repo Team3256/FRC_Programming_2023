@@ -10,33 +10,29 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.arm.ArmSubsystem;
+import frc.robot.arm.Arm;
+import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.ZeroElevator;
+import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patterns.ColorChaseBluePattern;
+import frc.robot.led.commands.*;
+import frc.robot.led.patterns.*;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.TeleopSwerve;
-import frc.robot.swerve.commands.TeleopSwerveLimited;
-import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
+import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -47,12 +43,15 @@ public class RobotContainer {
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
-  private ArmSubsystem armSubsystem;
+  private Arm armSubsystem;
   private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
   public RobotContainer() {
+    PowerDistribution pdp = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
+    SmartDashboard.putData(pdp);
+
     if (kIntakeEnabled) {
       configureIntake();
       testables.add(intakeSubsystem);
@@ -63,24 +62,26 @@ public class RobotContainer {
     }
     if (kElevatorEnabled) {
       configureElevator();
+      testables.add(elevatorSubsystem);
+    }
+    if (kArmEnabled) {
+      configureArm();
+      testables.add(armSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
     }
-    if (true) {
-      this.armSubsystem = new ArmSubsystem();
-    }
   }
 
   private void configureIntake() {
-    this.intakeSubsystem = new Intake();
+    intakeSubsystem = new Intake();
 
     driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
     driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
   }
 
   private void configureSwerve() {
-    this.swerveDrive = new SwerveDrive();
+    swerveDrive = new SwerveDrive();
 
     if (kElevatorEnabled) {
       // Enable elevator acceleration limiting
@@ -141,8 +142,13 @@ public class RobotContainer {
     // Elevator.ElevatorPosition.LOW));
   }
 
+  private void configureArm() {
+    armSubsystem = new Arm();
+    // TODO: set button bindings for arm testing
+  }
+
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] { 100 });
+    ledStrip = new LED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
@@ -152,10 +158,9 @@ public class RobotContainer {
   }
 
   public void test() {
-    armSubsystem.testThing();
-    // System.out.println("Testing CAN connections:");
-    // boolean result = true;
-    // for (CANTestable subsystem : testables) result &= subsystem.CANTest();
-    // System.out.println("CAN fully connected: " + result);
+    System.out.println("Testing CAN connections:");
+    boolean result = true;
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
+    System.out.println("CAN fully connected: " + result);
   }
 }

@@ -10,9 +10,9 @@ package frc.robot.elevator;
 import static frc.robot.elevator.ElevatorConstants.*;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -25,10 +25,11 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.drivers.CanDeviceId;
+import frc.robot.drivers.CANDeviceTester;
+import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
 
-public class Elevator extends SubsystemBase {
+public class Elevator extends SubsystemBase implements CANTestable {
   public enum ElevatorPosition {
     HIGH(ElevatorConstants.kElevatorHighPositionMeters),
     MID(ElevatorConstants.kElevatorMidPositionMeters),
@@ -63,32 +64,34 @@ public class Elevator extends SubsystemBase {
               "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
 
   public Elevator() {
-    elevatorMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(elevatorID, "mani"));
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
-
-    if (RobotBase.isReal()) configureRealHardware();
-    else SmartDashboard.putData("Elevator Sim", mechanism2d);
+    if (RobotBase.isReal()) {
+      configureRealHardware();
+    } else {
+      configureSimHardware();
+    }
 
     System.out.println("Elevator initialized");
     off();
   }
 
-  private void configureRealHardware() {
-    elevatorMotor = new WPI_TalonFX(elevatorID);
-    elevatorMotor.enableVoltageCompensation(true);
+  private void configureSimHardware() {
+    elevatorMotor = new WPI_TalonFX(kElevatorID);
+    SmartDashboard.putData("Elevator Sim", mechanism2d);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
-  public void zeroElevator() {
-    elevatorMotor.set(ControlMode.Position, 0);
+  private void configureRealHardware() {
+    elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
+    elevatorMotor.enableVoltageCompensation(true);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public boolean isMotorCurrentSpiking() {
-    return elevatorMotor.getSupplyCurrent() >= kElevatorCurrentThreshold;
-  }
-
-  public void off() {
-    elevatorMotor.neutralOutput();
-    System.out.println("Elevator off");
+    if (RobotBase.isReal()) {
+      return elevatorMotor.getSupplyCurrent() >= kElevatorCurrentThreshold;
+    } else {
+      return elevatorSim.getCurrentDrawAmps() >= kElevatorCurrentThreshold;
+    }
   }
 
   public double calculateFeedForward(double velocity) {
@@ -96,7 +99,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setInputVoltage(double voltage) {
-    elevatorMotor.setVoltage(voltage);
+    elevatorMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
   public double getElevatorPosition() {
@@ -104,6 +107,15 @@ public class Elevator extends SubsystemBase {
       return falconToMeters(
           elevatorMotor.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
     } else return elevatorSim.getPositionMeters();
+  }
+
+  public void zeroElevator() {
+    elevatorMotor.setSelectedSensorPosition(0);
+  }
+
+  public void off() {
+    elevatorMotor.neutralOutput();
+    System.out.println("Elevator off");
   }
 
   @Override
@@ -125,5 +137,14 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
     SmartDashboard.putNumber("Current Draw", elevatorSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Elevator Sim Voltage", elevatorMotor.getMotorOutputPercent() * 12);
+  }
+
+  @Override
+  public boolean CANTest() {
+    System.out.println("Testing Elevator CAN:");
+    boolean result = CANDeviceTester.testTalonFX(elevatorMotor);
+    System.out.println("Elevator CAN connected: " + result);
+    SmartDashboard.putBoolean("Elevator CAN connected", result);
+    return result;
   }
 }

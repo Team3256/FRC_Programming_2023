@@ -58,7 +58,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     gyro.configFactoryDefault();
     zeroGyro();
 
-    this.poseEstimator =
+    poseEstimator =
         new SwerveDrivePoseEstimator(
             kSwerveKinematics,
             getYaw(),

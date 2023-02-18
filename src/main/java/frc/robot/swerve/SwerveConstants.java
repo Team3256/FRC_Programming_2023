@@ -29,8 +29,7 @@ public final class SwerveConstants {
   public static int kYAccelRateLimit = 15;
   public static int kYDecelRateLimit = 10;
 
-  public static final COTSFalconSwerveConstants
-      kChosenModule = // TODO: This must be tuned to specific robot
+  public static final COTSFalconSwerveConstants kChosenModule =
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Drivetrain Constants */
