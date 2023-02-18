@@ -7,6 +7,7 @@
 
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.blue;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.dynamicPathWayNodes;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -45,6 +46,12 @@ public class PathGenInit {
     PathNode rightStation = new PathNode(16.5 - 6.28, 6.39);
     dynamicPathWayNodes.add(rightStation);
     fullyConnect(rightStation, topPassageSrc);
+
+    if (!blue) {
+      for (PathNode p : dynamicPathWayNodes) {
+        p.point = new Translation2d(16.5 - p.getX(), p.getY());
+      }
+    }
 
     // debug
     ArrayList<Translation2d> pathPositions = new ArrayList<>();
@@ -108,7 +115,8 @@ public class PathGenInit {
     u.addEdge(v);
     v.addEdge(u);
   }
-  public static void fullyDisconnect(PathNode u, PathNode v){
+
+  public static void fullyDisconnect(PathNode u, PathNode v) {
     u.remEdge(v);
     v.remEdge(u);
   }

@@ -44,7 +44,7 @@ public final class DynamicPathConstants {
 
   public static final ArrayList<PathNode> dynamicPathWayNodes = new ArrayList<>();
 
-  public static final boolean blue = true;
+  public static final boolean blue = false;
 
   static {
     PathGenInit.init();

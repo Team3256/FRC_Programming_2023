@@ -29,7 +29,10 @@ public class PathNode {
   public void addEdge(PathNode node) {
     edges.add(node);
   }
-  public void remEdge(PathNode node) { edges.remove(node);}
+
+  public void remEdge(PathNode node) {
+    edges.remove(node);
+  }
 
   public double getX() {
     return point.getX();

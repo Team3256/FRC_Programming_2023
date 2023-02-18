@@ -38,7 +38,6 @@ public class DynamicPathGenerator {
     for (int i = 0; i < numNodes; i++) {
       dynamicPathNodes.get(i).index = i;
     }
-
   }
 
   public PathNode connectToClosest(PathNode node, ArrayList<PathNode> nodes) {
