@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
-import frc.robot.drivers.CanDeviceId;
 import frc.robot.drivers.TalonFXFactory;
 
 public class Arm extends SubsystemBase implements CANTestable {
@@ -37,29 +36,37 @@ public class Arm extends SubsystemBase implements CANTestable {
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
-  private static final SingleJointedArmSim armSim = new SingleJointedArmSim(
-      DCMotor.getFalcon500(kNumArmMotors),
-      kArmGearing,
-      kArmInertia,
-      kArmLengthMeters,
-      kArmAngleMinConstraint.getRadians(),
-      kArmAngleMaxConstraint.getRadians(),
-      kArmMassKg,
-      true);
+  private static final SingleJointedArmSim armSim =
+      new SingleJointedArmSim(
+          DCMotor.getFalcon500(kNumArmMotors),
+          kArmGearing,
+          kArmInertia,
+          kArmLengthMeters,
+          kArmAngleMinConstraint.getRadians(),
+          kArmAngleMaxConstraint.getRadians(),
+          kArmMassKg,
+          true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
   private final MechanismRoot2d armPivot = mechanism2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d armTower = armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
-  private final MechanismLigament2d arm = armPivot.append(
-      new MechanismLigament2d(
-          "Arm",
-          30,
-          Units.radiansToDegrees(armSim.getAngleRads()),
-          6,
-          new Color8Bit(Color.kYellow)));
+  private final MechanismLigament2d armTower =
+      armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+  private final MechanismLigament2d arm =
+      armPivot.append(
+          new MechanismLigament2d(
+              "Arm",
+              30,
+              Units.radiansToDegrees(armSim.getAngleRads()),
+              6,
+              new Color8Bit(Color.kYellow)));
 
   public Arm() {
-    armMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(kArmMotorID));
+    if (RobotBase.isReal()) {
+      armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
+    } else {
+      armMotor = new WPI_TalonFX(kArmSimulationID);
+    }
+
     armMotor.setNeutralMode(NeutralMode.Brake);
 
     if (RobotBase.isReal()) {
@@ -78,10 +85,10 @@ public class Arm extends SubsystemBase implements CANTestable {
   }
 
   public double calculateFeedForward(double angleRadians, double velocity) {
-    double clampedPosition = MathUtil.clamp(
-        angleRadians, kArmAngleMinConstraint.getRadians(), kArmAngleMaxConstraint.getRadians());
-    // System.out.println("Position: " + Units.radiansToDegrees(clampedPosition) +
-    // ", Velocity: " + velocity);
+    double clampedPosition =
+        MathUtil.clamp(
+            angleRadians, kArmAngleMinConstraint.getRadians(), kArmAngleMaxConstraint.getRadians());
+
     SmartDashboard.putNumber("Position setpoint", Units.radiansToDegrees(clampedPosition));
     return armFeedforward.calculate(clampedPosition, velocity);
   }
@@ -93,8 +100,7 @@ public class Arm extends SubsystemBase implements CANTestable {
   public double getArmPositionRads() {
     if (RobotBase.isReal())
       return armEncoder.getAbsolutePosition() * kArmEncoderConversionToRadians;
-    else
-      return armSim.getAngleRads();
+    else return armSim.getAngleRads();
   }
 
   public void off() {
@@ -103,8 +109,7 @@ public class Arm extends SubsystemBase implements CANTestable {
   }
 
   @Override
-  public void periodic() {
-  }
+  public void periodic() {}
 
   @Override
   public void simulationPeriodic() {
