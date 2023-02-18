@@ -73,8 +73,8 @@ public class PathGenInit {
     for (double x = sink.getX() + passageRes; x <= src.getX() + passageRes; x += passageRes) {
       newNodes.add(new PathNode(x, sink.getY()));
     }
-    for (PathNode node : newNodes){
-      node.forceHorizontal=true;
+    for (PathNode node : newNodes) {
+      node.forceHorizontal = true;
     }
     newNodes.add(src);
     fullyConnect(newNodes);
