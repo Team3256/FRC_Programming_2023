@@ -27,28 +27,31 @@ public class AutoBuilder {
     this.swerveSubsystem = swerveSubsystem;
   }
 
-  public Command createPath(String path, PathConstraints constraints) {
+  public Command createPath(String path, PathConstraints constraints, boolean isFirstSegment) {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, constraints);
-    return createCommand(trajectory);
+    return createPathPlannerCommand(trajectory, isFirstSegment);
   }
 
   public ArrayList<Command> createPaths(
       String pathGroup, PathConstraints constraint, PathConstraints... constraints) {
     ArrayList<PathPlannerTrajectory> trajectories =
         new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
-
     ArrayList<Command> commands = new ArrayList<>();
+
+    commands.add(createPathPlannerCommand(trajectories.get(0), true));
+    trajectories.remove(0);
     for (PathPlannerTrajectory trajectory : trajectories) {
-      commands.add(createCommand(trajectory));
+      commands.add(createPathPlannerCommand(trajectory, false));
     }
 
     return commands;
   }
 
-  private Command createCommand(PathPlannerTrajectory trajectory) {
-    PIDController xController =
+  private Command createPathPlannerCommand(
+      PathPlannerTrajectory trajectory, boolean isFirstSegment) {
+    PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
-    PIDController yController =
+    PIDController yTranslationController =
         new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
     ProfiledPIDController thetaController =
         new ProfiledPIDController(
@@ -58,6 +61,12 @@ public class AutoBuilder {
             kAutoThetaControllerConstraints);
 
     return new PPTrajectoryFollowCommand(
-        trajectory, xController, yController, thetaController, this.swerveSubsystem);
+        trajectory,
+        xTranslationController,
+        yTranslationController,
+        thetaController,
+        changeAutosBasedOnAlliance,
+        isFirstSegment,
+        this.swerveSubsystem);
   }
 }

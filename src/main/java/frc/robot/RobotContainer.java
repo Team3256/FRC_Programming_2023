@@ -15,23 +15,28 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.arm.Arm;
+import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
-import frc.robot.ezled.EZLED;
-import frc.robot.ezled.commands.LEDSetAllSectionsPattern;
-import frc.robot.ezled.commands.LEDToggleGamePieceDisplay;
-import frc.robot.ezled.patterns.ColorChaseBluePattern;
+import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.logging.GyroSendable;
 import frc.robot.logging.Loggable;
+import frc.robot.intake.commands.*;
+import frc.robot.led.LED;
+import frc.robot.led.commands.*;
+import frc.robot.led.patterns.*;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.TeleopSwerve;
-import frc.robot.swerve.commands.TeleopSwerveLimited;
-import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
+import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
@@ -47,7 +52,9 @@ public class RobotContainer {
 
   private SwerveDrive swerveDrive;
   private Intake intakeSubsystem;
-  private EZLED ledStrip;
+  private Elevator elevatorSubsystem;
+  private Arm armSubsystem;
+  private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
@@ -67,6 +74,11 @@ public class RobotContainer {
     }
     if (kElevatorEnabled) {
       configureElevator();
+      testables.add(elevatorSubsystem);
+    }
+    if (kArmEnabled) {
+      configureArm();
+      testables.add(armSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -76,23 +88,36 @@ public class RobotContainer {
   }
 
   private void configureIntake() {
-    this.intakeSubsystem = new Intake();
+    intakeSubsystem = new Intake();
 
     driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
     driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
   }
 
   private void configureSwerve() {
-    this.swerveDrive = new SwerveDrive();
+    swerveDrive = new SwerveDrive();
 
-    swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            swerveDrive,
-            () -> driver.getRightY(),
-            () -> driver.getRightX(),
-            () -> driver.getLeftX(),
-            kFieldRelative,
-            kOpenLoop));
+    if (kElevatorEnabled) {
+      // Enable elevator acceleration limiting
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              elevatorSubsystem,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    } else {
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    }
 
     driver
         .rightBumper()
@@ -119,10 +144,21 @@ public class RobotContainer {
                 kOpenLoop));
   }
 
-  public void configureElevator() {}
+  public void configureElevator() {
+    elevatorSubsystem = new Elevator();
+
+    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
+    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+  }
+
+  private void configureArm() {
+    armSubsystem = new Arm();
+    // TODO: set button bindings for arm testing
+  }
 
   public void configureLEDStrip() {
-    ledStrip = new EZLED(0, new int[] {100});
+    ledStrip = new LED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
@@ -147,7 +183,7 @@ public class RobotContainer {
   public void test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables) result &= subsystem.test();
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
   }
 }

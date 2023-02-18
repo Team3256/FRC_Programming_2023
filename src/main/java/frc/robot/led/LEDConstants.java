@@ -5,8 +5,8 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.drivers;
+package frc.robot.led;
 
-public interface CANTestable {
-  public boolean CANTest();
+public class LEDConstants {
+  public static final int kResolution = 100;
 }

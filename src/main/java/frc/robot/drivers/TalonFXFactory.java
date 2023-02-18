@@ -57,7 +57,8 @@ public class TalonFXFactory {
   private static final Configuration kSlaveConfiguration = new Configuration();
 
   static {
-    // This control frame value seems to need to be something reasonable to avoid the Talon's
+    // This control frame value seems to need to be something reasonable to avoid
+    // the Talon's
     // LEDs behaving erratically. Potentially try to increase as much as possible.
     kSlaveConfiguration.CONTROL_FRAME_PERIOD_MS = 100;
     kSlaveConfiguration.MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
@@ -80,6 +81,15 @@ public class TalonFXFactory {
     }
     final WPI_TalonFX talon = createTalon(slave_id, kSlaveConfiguration);
     talon.set(ControlMode.Follower, master_id.getDeviceNumber());
+  }
+
+  public static WPI_TalonFX createPermanentFollowerTalon(
+      CanDeviceId followerId, CanDeviceId masterId) {
+    if (followerId.getBus() != masterId.getBus()) {
+      throw new RuntimeException("Master and Slave Talons must be on the same CAN bus");
+    }
+    final WPI_TalonFX talon = createTalon(followerId, kSlaveConfiguration);
+    talon.set(ControlMode.Follower, masterId.getDeviceNumber());
     return talon;
   }
 
