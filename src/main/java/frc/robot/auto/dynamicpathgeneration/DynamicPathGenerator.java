@@ -35,12 +35,15 @@ public class DynamicPathGenerator {
     numNodes = dynamicPathNodes.size();
     src = numNodes - 2;
     sink = numNodes - 1;
+    for (int i = 0; i < numNodes; i++) {
+      dynamicPathNodes.get(i).index = i;
+    }
 
     connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
     connectToClosest(dynamicPathNodes.get(sink), dynamicPathNodes);
-
-    for (int i = 0; i < numNodes; i++) {
-      dynamicPathNodes.get(i).index = i;
+    if (kDynamicPathGenerationDebug) {
+      System.out.println("src edges:" + dynamicPathNodes.get(src).getEdges().size());
+      System.out.println("sink edges:" + dynamicPathNodes.get(sink).getEdges().size());
     }
   }
 
@@ -55,8 +58,8 @@ public class DynamicPathGenerator {
         ret = q;
       }
     }
-    PathGenInit.fullyConnect(ret, node);
     System.out.println("closest to " + node + " is " + ret);
+    PathGenInit.fullyConnect(ret, node);
   }
 
   public List<Translation2d> getPositions() {

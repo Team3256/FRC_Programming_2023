@@ -8,7 +8,6 @@
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.dynamicPathWayNodes;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kDynamicPathGenerationDebug;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,16 +22,20 @@ public class PathGenInit {
     System.out.println("Path Generator Initialized");
 
     // end
-    preSink(dynamicPathWayNodes);
+    PathNode[] res = preSink(dynamicPathWayNodes);
+    PathNode topPreSink = res[0];
+    PathNode botPreSink = res[1];
 
     // passages
     PathNode topPassageSrc = new PathNode(2.28, 5.53 - 0.75);
     PathNode topPassageSink = new PathNode(5.81, 5.53 - 0.75);
     ArrayList<PathNode> topPassage = passage(dynamicPathWayNodes, topPassageSrc, topPassageSink);
+    fullyConnect(topPreSink, topPassageSink);
 
     PathNode botPassageSrc = new PathNode(2.28, 0 + 0.73);
     PathNode botPassageSink = new PathNode(5.81, 0 + 0.73);
     ArrayList<PathNode> botPassage = passage(dynamicPathWayNodes, botPassageSrc, botPassageSink);
+    fullyConnect(botPreSink, botPassageSink);
 
     // station
     PathNode leftStation = new PathNode(6.28, 6.39);
@@ -53,17 +56,14 @@ public class PathGenInit {
     FileHelper.saveJson(json, pathPlannerJsonPath);
   }
 
-  public static void preSink(ArrayList<PathNode> pathNodes) {
+  public static PathNode[] preSink(ArrayList<PathNode> pathNodes) {
     ArrayList<PathNode> preSinks = new ArrayList<>();
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
       preSinks.add(new PathNode(sink.getX() + 1, sink.getY()));
     }
     pathNodes.addAll(preSinks);
     fullyConnect(preSinks);
-    if (kDynamicPathGenerationDebug) {
-      System.out.println("preSink nodes:" + preSinks.size());
-      System.out.println("preSink edges:" + preSinks.get(0).getEdges().size());
-    }
+    return new PathNode[] {preSinks.get(0), preSinks.get(preSinks.size() - 1)};
   }
 
   public static ArrayList<PathNode> passage(
@@ -75,10 +75,6 @@ public class PathGenInit {
     }
     newNodes.add(sink);
     fullyConnect(newNodes);
-    if (kDynamicPathGenerationDebug) {
-      System.out.println("passage nodes:" + newNodes.size());
-      System.out.println("passage edges:" + newNodes.get(0).getEdges().size());
-    }
     pathNodes.addAll(newNodes);
     return newNodes;
   }
@@ -86,7 +82,7 @@ public class PathGenInit {
   public static void fullyConnect(ArrayList<PathNode> pathNodes) {
     for (PathNode u : pathNodes) {
       for (PathNode v : pathNodes) {
-        if (u != v) u.addEdge(v);
+        if (u != v) fullyConnect(u, v);
       }
     }
   }

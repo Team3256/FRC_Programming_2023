@@ -46,6 +46,6 @@ public class PathNode {
   }
 
   public String toString() {
-    return point.toString();
+    return "[" + index + ": " + getX() + ", " + getY() + "]";
   }
 }

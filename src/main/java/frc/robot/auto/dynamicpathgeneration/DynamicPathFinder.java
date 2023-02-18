@@ -21,16 +21,16 @@ public class DynamicPathFinder {
   private final int src;
   private final int sink;
   private final int nodes;
-  private final ArrayList<PathNode> positions;
+  private final ArrayList<PathNode> pathNodes;
 
   private int[] pre;
   private double[] dist;
 
-  public DynamicPathFinder(int src, int sink, ArrayList<PathNode> positions) {
+  public DynamicPathFinder(int src, int sink, ArrayList<PathNode> pathNodes) {
     this.src = src;
     this.sink = sink;
-    this.positions = positions;
-    this.nodes = positions.size();
+    this.pathNodes = pathNodes;
+    this.nodes = pathNodes.size();
     if (kDynamicPathGenerationDebug) {
       System.out.println("Running Path Finder Algorithm");
       System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
@@ -74,20 +74,17 @@ public class DynamicPathFinder {
       }
 
       // Update all unvisited neighboring nodes
-      List<Integer> path = getPathIdsFromNode(currentNode);
-      for (int childId = 0; childId < positions.get(currentNode).getEdges().size(); childId++) {
-        int next = positions.get(currentNode).getEdges().get(childId).index;
+      for (int childId = 0; childId < pathNodes.get(currentNode).getEdges().size(); childId++) {
+        int next = pathNodes.get(currentNode).getEdges().get(childId).index;
         if (visitedNodes[next]) continue;
         if (kDynamicPathGenerationDebug) {
           System.out.println("explore child: " + next);
         }
-        // add node to path
-        path.add(next);
         // calculate time
         double newDist =
             dist[currentNode]
                 + HeuristicHelper.splineHeuristic(
-                    positions.get(currentNode).getPoint(), positions.get(next).getPoint());
+                    pathNodes.get(currentNode).getPoint(), pathNodes.get(next).getPoint());
         // If path over this edge is better
         if (newDist < dist[next]) {
           // Save path as new current shortest path
@@ -97,8 +94,6 @@ public class DynamicPathFinder {
           // Add node to queue
           pq.add(next);
         }
-        // pop node from path
-        path.remove(path.size() - 1);
       }
 
       // mark as visited
@@ -117,13 +112,13 @@ public class DynamicPathFinder {
     double totalDistance = 0;
     for (int i = 0; i < pathIds.size() - 1; i++) {
       if (doesPathSegmentHitObstacles(
-          positions.get(pathIds.get(i)).getPoint(), positions.get(pathIds.get(i + 1)).getPoint()))
+          pathNodes.get(pathIds.get(i)).getPoint(), pathNodes.get(pathIds.get(i + 1)).getPoint()))
         return INF_TIME;
       totalDistance +=
-          positions
+          pathNodes
               .get(pathIds.get(i))
               .getPoint()
-              .getDistance(positions.get(pathIds.get(i + 1)).getPoint());
+              .getDistance(pathNodes.get(pathIds.get(i + 1)).getPoint());
     }
     return totalDistance / SwerveConstants.kMaxSpeed;
   }
@@ -131,7 +126,7 @@ public class DynamicPathFinder {
   // convert list of pathIds into list of pathPoses
   private List<Translation2d> getPositionsFromPathIds(List<Integer> pathIds) {
     List<Translation2d> pathPositions = new ArrayList<>();
-    for (int node : pathIds) pathPositions.add(positions.get(node).getPoint());
+    for (int node : pathIds) pathPositions.add(pathNodes.get(node).getPoint());
     return pathPositions;
   }
 
