@@ -68,6 +68,8 @@ public class PathGenInit {
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
       preSinks.add(new PathNode(sink.getX() + 1, sink.getY()));
     }
+    preSinks.get(0).addY(0.25);
+    preSinks.get(preSinks.size() - 2).addY(-0.25);
     pathNodes.addAll(preSinks);
     fullyConnect(preSinks);
     return preSinks;
@@ -80,9 +82,7 @@ public class PathGenInit {
     for (double x = sink.getX() + passageRes; x <= src.getX() + passageRes; x += passageRes) {
       newNodes.add(new PathNode(x, sink.getY()));
     }
-    for (PathNode node : newNodes) {
-      node.forceHorizontal = true;
-    }
+    for (PathNode node : newNodes) {}
     newNodes.add(src);
     fullyConnect(newNodes);
     pathNodes.addAll(newNodes);

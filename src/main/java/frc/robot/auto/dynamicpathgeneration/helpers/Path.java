@@ -30,23 +30,31 @@ public class Path {
     }
 
     // dRotation, similar to dx or dy, representing a small change in rotation
-    // throughout the path
+    // throughout the path when its not in narrow passage
     double[] pathLengthTo = new double[points];
     pathLengthTo[0] = 0;
     for (int i = 1; i < points; i++) {
       pathLengthTo[i] = pathLengthTo[i - 1];
-      pathLengthTo[i] += positions.get(i).getDistance(positions.get(i - 1));
+      if (!(i - 1 > 0 && Math.abs(poses.get(i).getY() - poses.get(i - 1).getY()) < 0.0000001)) {
+        pathLengthTo[i] += positions.get(i).getDistance(positions.get(i - 1));
+      }
     }
-    Rotation2d dRotation = endRotation.minus(startRotation).div(pathLengthTo[points - 1]);
+    Rotation2d totRotation = endRotation.minus(startRotation);
+    if (totRotation.getDegrees() < -180) totRotation.plus(new Rotation2d(2 * Math.PI));
+    if (totRotation.getDegrees() > 180) totRotation.minus(new Rotation2d(2 * Math.PI));
+    Rotation2d dRotation = totRotation.div(pathLengthTo[points - 1]);
 
     // convert poses to waypoints
     waypoints = new ArrayList<>();
     for (int i = 0; i < points; i++) {
       Translation2d anchorPoint = poses.get(i).getTranslation();
+      // get positive holonomic
       Rotation2d holonomicAngle = startRotation.plus(dRotation.times(pathLengthTo[i]));
-
+      if (holonomicAngle.getDegrees() < 0)
+        holonomicAngle = holonomicAngle.plus(new Rotation2d(2 * Math.PI));
       Translation2d prevControl;
       Translation2d nextControl;
+      // horizontal passage case: horizontal proj scale and lock angle compass NESW
       if (i + 1 < points && Math.abs(poses.get(i).getY() - poses.get(i + 1).getY()) < 0.0000001) {
         Translation2d baseL =
             new Translation2d(poses.get(i - 1).minus(poses.get(i)).getTranslation().getX(), 0);
@@ -54,6 +62,12 @@ public class Path {
         Translation2d baseR =
             new Translation2d(poses.get(i + 1).minus(poses.get(i)).getTranslation().getX(), 0);
         nextControl = baseR.times(kControlPointScalar).plus(anchorPoint);
+        // double[] radLock = {0, Math.PI / 2, Math.PI, 3 * Math.PI / 2, 2 * Math.PI};
+        // for (double rad : radLock) {
+        //   if (Math.abs(holonomicAngle.getRadians() - rad) < Math.PI / 4) {
+        //     holonomicAngle = new Rotation2d(rad);
+        //   }
+        // }
       } else if (i == 0) {
         prevControl = null;
         Translation2d thisPointToNextPoint =

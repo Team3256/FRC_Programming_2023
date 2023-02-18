@@ -89,6 +89,13 @@ public class DynamicPathGenerationTest {
     testGeneratePathBase(src, sink, "DynamicTest-Bottom");
   }
 
+  @Test
+  public void testGeneratePathLongScore() {
+    Pose2d src = new Pose2d(new Translation2d(1.88, 0.53), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(1.90, 4.44), new Rotation2d(Math.PI));
+    testGeneratePathBase(src, sink, "DynamicTest-LongScore");
+  }
+
   public void testGeneratePathBase(Pose2d src, Pose2d sink, String fileName) {
     if (!blue) {
       src = new Pose2d(16.5 - src.getX(), src.getY(), src.getRotation());
