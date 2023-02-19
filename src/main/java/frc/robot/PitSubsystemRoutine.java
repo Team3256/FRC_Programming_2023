@@ -31,13 +31,16 @@ public class PitSubsystemRoutine {
   SwerveDrive swerveSubsystem;
   private final CommandXboxController driver = new CommandXboxController(0);
 
-  public PitSubsystemRoutine(Elevator elevator, Intake intake, SwerveDrive swerve) {
-    elevatorSubsystem = elevator;
-    intakeSubsystem = intake;
-    swerveSubsystem = swerve;
+  public PitSubsystemRoutine(
+      Elevator elevatorSubsystem, Intake intakeSubsystem, SwerveDrive swerveSubsystem) {
+    this.elevatorSubsystem = elevatorSubsystem;
+    this.intakeSubsystem = intakeSubsystem;
+    this.swerveSubsystem = swerveSubsystem;
   }
 
   public void pitRoutine() {
+    RobotContainer robotContainer = new RobotContainer();
+    robotContainer.test();
     Command startRoutine = new WaitCommand(1).until(driver.a());
     Command tests = new WaitCommand(1).beforeStarting(startRoutine);
     if (kIntakeEnabled) {
@@ -60,12 +63,12 @@ public class PitSubsystemRoutine {
         new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID).until(driver.a());
     Command setElevatorHeightLOW =
         new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW).until(driver.a());
-    Command setElevatorHeight =
+    Command setElevatorToStart =
         new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPose).until(driver.a());
 
     return zeroElevator.andThen(
         setElevatorHeightHIGH.andThen(
-            setElevatorHeightMID.andThen(setElevatorHeightLOW.andThen(setElevatorHeight))));
+            setElevatorHeightMID.andThen(setElevatorHeightLOW.andThen(setElevatorToStart))));
   }
 
   public Command intakeCommands() {
@@ -78,27 +81,63 @@ public class PitSubsystemRoutine {
   public Command swerveCommands() {
     Command lockSwerve = new LockSwerve(swerveSubsystem).until(driver.a());
     Command teleopSwerveForward = // move forward
-        new TeleopSwerve(swerveSubsystem, () -> 0.3, () -> 0, () -> 0, kFieldRelative, kOpenLoop)
+        new TeleopSwerve(
+                swerveSubsystem,
+                () -> kTeleopSwerveControllerLamda,
+                () -> 0,
+                () -> 0,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command telopSwerveBackward = // move backward
-        new TeleopSwerve(swerveSubsystem, () -> -0.3, () -> 0, () -> 0, kFieldRelative, kOpenLoop)
+        new TeleopSwerve(
+                swerveSubsystem,
+                () -> -kTeleopSwerveControllerLamda,
+                () -> 0,
+                () -> 0,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command teleopSwerveRight = // move right
-        new TeleopSwerve(swerveSubsystem, () -> 0, () -> 0.3, () -> 0, kFieldRelative, kOpenLoop)
+        new TeleopSwerve(
+                swerveSubsystem,
+                () -> 0,
+                () -> kTeleopSwerveControllerLamda,
+                () -> 0,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command teleopSwerveLeft = // move left
-        new TeleopSwerve(swerveSubsystem, () -> 0, () -> -0.3, () -> 0, kFieldRelative, kOpenLoop)
+        new TeleopSwerve(
+                swerveSubsystem,
+                () -> 0,
+                () -> -kTeleopSwerveControllerLamda,
+                () -> 0,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command teleopSwerveRotateRight = // rotate right
-        new TeleopSwerve(swerveSubsystem, () -> 0, () -> 0, () -> 0.3, kFieldRelative, kOpenLoop)
+        new TeleopSwerve(
+                swerveSubsystem,
+                () -> 0,
+                () -> 0,
+                () -> kTeleopSwerveControllerLamda,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command teleopSwerveRotateLeft = // rotate left
-        new TeleopSwerve(swerveSubsystem, () -> 0, () -> 0, () -> -0.3, kFieldRelative, kOpenLoop)
+        new TeleopSwerve(
+                swerveSubsystem,
+                () -> 0,
+                () -> 0,
+                () -> -kTeleopSwerveControllerLamda,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
     return lockSwerve.andThen(
         teleopSwerveForward.andThen(
