@@ -30,8 +30,9 @@ public class Path {
     double[] remainingPathLength = new double[points];
     remainingPathLength[points - 1] = 0;
     for (int i = points - 2; i >= 0; i--) {
-      remainingPathLength[i] =
-          remainingPathLength[i + 1] + positions.get(i).getDistance(positions.get(i + 1));
+      remainingPathLength[i] = remainingPathLength[i + 1];
+      if (!pathNodes.get(i).isPassage())
+        remainingPathLength[i] += positions.get(i).getDistance(positions.get(i + 1));
     }
     // convert poses to waypoints
     waypoints = new ArrayList<>();
@@ -40,33 +41,33 @@ public class Path {
       Rotation2d holonomicAngle;
       if (i == 0) {
         holonomicAngle = startRotation;
+        System.out.println("WantedAngle:" + holonomicAngle.getDegrees());
       } else {
-        // total rotation to end, make sure its the closer direction
+        // total rotation to end
         Rotation2d prevRotation = waypoints.get(i - 1).getHolonomicAngle();
         Rotation2d totRotation = endRotation.minus(prevRotation);
-        if (totRotation.getRadians() < -Math.PI) totRotation.plus(new Rotation2d(2 * Math.PI));
-        if (totRotation.getRadians() > Math.PI) totRotation.minus(new Rotation2d(2 * Math.PI));
         // rotation step size
         Rotation2d dRotation = totRotation.div(remainingPathLength[i - 1]);
         // marks the direction the robot is slowly turning to
-        boolean ccw = dRotation.getDegrees() > 0;
-        // calculate positive holonomic angle
+        boolean ccw = dRotation.getDegrees() >= 0;
+        // calculate holonomic angle
         holonomicAngle =
-            prevRotation.plus(dRotation.times(positions.get(i - 1).getDistance(positions.get(i))));
-        if (holonomicAngle.getDegrees() < 0)
-          holonomicAngle = holonomicAngle.plus(new Rotation2d(2 * Math.PI));
+            prevRotation.plus(dRotation.times(remainingPathLength[i - 1] - remainingPathLength[i]));
         // passage case, convert to multiple of 90*
+        System.out.println("WantedAngle:" + holonomicAngle.getDegrees());
         if (pathNodes.get(i).isPassage()) {
-          double[] radLock = {0, Math.PI / 2, Math.PI, 3 * Math.PI / 2, 2 * Math.PI};
+          double[] radLock = {-Math.PI, -Math.PI / 2, 0, Math.PI / 2, Math.PI};
+
           for (double rad : radLock) {
             if (ccw
                 && rad - holonomicAngle.getRadians() < Math.PI / 2
-                && rad - holonomicAngle.getRadians() > 0) {
+                && rad - holonomicAngle.getRadians() >= 0) {
               holonomicAngle = new Rotation2d(rad);
-              break;
             } else if (!ccw
                 && holonomicAngle.getRadians() - rad < Math.PI / 2
-                && holonomicAngle.getRadians() - rad > 0) {
+                && holonomicAngle.getRadians() - rad >= 0) {
+              holonomicAngle = new Rotation2d(rad);
+            } else if (Math.abs(holonomicAngle.getRadians() - rad) < 0.1) {
               holonomicAngle = new Rotation2d(rad);
               break;
             }

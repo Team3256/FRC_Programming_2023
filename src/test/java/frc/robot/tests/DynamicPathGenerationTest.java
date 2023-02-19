@@ -36,14 +36,14 @@ public class DynamicPathGenerationTest {
   @Test
   public void testGeneratePathHigh() {
     Pose2d src = new Pose2d(new Translation2d(7.8, 4.8), new Rotation2d(0));
-    Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
     testGeneratePathBase(src, sink, "DynamicTest-High");
   }
 
   @Test
   public void testGeneratePathLow() {
     Pose2d src = new Pose2d(new Translation2d(7.5, 0.5), new Rotation2d(0));
-    Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
     testGeneratePathBase(src, sink, "DynamicTest-Low");
   }
 
