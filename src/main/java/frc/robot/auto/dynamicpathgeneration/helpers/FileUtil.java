@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 
-public class FileUtil{
+public class FileUtil {
   public static void saveJson(JSONObject json, String path) {
     try {
       PrintWriter pw = new PrintWriter(new FileWriter(path));

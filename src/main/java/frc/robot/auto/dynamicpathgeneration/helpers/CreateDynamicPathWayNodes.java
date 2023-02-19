@@ -16,7 +16,7 @@ import frc.robot.Constants;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
-public class CreateDynamicPathWayNodes{
+public class CreateDynamicPathWayNodes {
   static double passageRes = 0.6;
   // assume blue for now
   public static void init() {

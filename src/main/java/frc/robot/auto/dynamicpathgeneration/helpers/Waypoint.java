@@ -39,6 +39,14 @@ public class Waypoint {
     }
   }
 
+  public Rotation2d getHolonomicAngle() {
+    return holonomicAngle;
+  }
+
+  public Translation2d getAnchorPoint() {
+    return anchorPoint;
+  }
+
   public JSONObject getJson() {
     JSONObject json = new JSONObject();
     json.put("anchorPoint", createJSONFromTranslation(anchorPoint));

@@ -9,7 +9,6 @@ package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import java.util.ArrayList;
@@ -27,51 +26,67 @@ public class Path {
     for (int i = 0; i < points; i++) {
       positions.add(pathNodes.get(i).getPoint());
     }
-    // convert positions into poses
-    List<Pose2d> poses = new ArrayList<>();
-    for (Translation2d position : positions) {
-      poses.add(new Pose2d(position, new Rotation2d(0)));
+    // path length from node to final node
+    double[] remainingPathLength = new double[points];
+    remainingPathLength[points - 1] = 0;
+    for (int i = points - 2; i >= 0; i--) {
+      remainingPathLength[i] =
+          remainingPathLength[i + 1] + positions.get(i).getDistance(positions.get(i + 1));
     }
-
-    // dRotation, similar to dx or dy, representing a small change in rotation
-    // throughout the path when it is not in narrow passage
-    double[] pathLengthTo = new double[points];
-    pathLengthTo[0] = 0;
-    for (int i = 1; i < points; i++) {
-      pathLengthTo[i] = pathLengthTo[i - 1];
-      if (!pathNodes.get(i).isPassage()) {
-        pathLengthTo[i] += positions.get(i).getDistance(positions.get(i - 1));
-      }
-    }
-    Rotation2d totRotation = endRotation.minus(startRotation);
-    if (totRotation.getRadians() < -Math.PI) totRotation.plus(new Rotation2d(2 * Math.PI));
-    if (totRotation.getRadians() > Math.PI) totRotation.minus(new Rotation2d(2 * Math.PI));
-    Rotation2d dRotation = totRotation.div(pathLengthTo[points - 1]);
-
     // convert poses to waypoints
     waypoints = new ArrayList<>();
     for (int i = 0; i < points; i++) {
-      Translation2d anchorPoint = poses.get(i).getTranslation();
-      // get positive holonomic
-      Rotation2d holonomicAngle = startRotation.plus(dRotation.times(pathLengthTo[i]));
-      if (holonomicAngle.getDegrees() < 0)
-        holonomicAngle = holonomicAngle.plus(new Rotation2d(2 * Math.PI));
-      Translation2d prevControl;
-      Translation2d nextControl;
-      // horizontal passage case: horizontal proj scale and lock angle compass NESW
-      if (pathNodes.get(i).isPassage()) {
-        Translation2d baseL =
-            new Translation2d(poses.get(i - 1).minus(poses.get(i)).getTranslation().getX(), 0);
-        prevControl = baseL.times(kControlPointScalar).plus(anchorPoint);
-        Translation2d baseR =
-            new Translation2d(poses.get(i + 1).minus(poses.get(i)).getTranslation().getX(), 0);
-        nextControl = baseR.times(kControlPointScalar).plus(anchorPoint);
-        double[] radLock = {0, Math.PI / 2, Math.PI, 3 * Math.PI / 2, 2 * Math.PI};
-        for (double rad : radLock) {
-          if (Math.abs(holonomicAngle.getRadians() - rad) <= Math.PI / 4) {
-            holonomicAngle = new Rotation2d(rad);
+      // calculate holonomicAngle
+      Rotation2d holonomicAngle;
+      if (i == 0) {
+        holonomicAngle = startRotation;
+      } else {
+        // total rotation to end, make sure its the closer direction
+        Rotation2d prevRotation = waypoints.get(i - 1).getHolonomicAngle();
+        Rotation2d totRotation = endRotation.minus(prevRotation);
+        if (totRotation.getRadians() < -Math.PI) totRotation.plus(new Rotation2d(2 * Math.PI));
+        if (totRotation.getRadians() > Math.PI) totRotation.minus(new Rotation2d(2 * Math.PI));
+        // rotation step size
+        Rotation2d dRotation = totRotation.div(remainingPathLength[i - 1]);
+        // marks the direction the robot is slowly turning to
+        boolean ccw = dRotation.getDegrees() > 0;
+        // calculate positive holonomic angle
+        holonomicAngle =
+            prevRotation.plus(dRotation.times(positions.get(i - 1).getDistance(positions.get(i))));
+        if (holonomicAngle.getDegrees() < 0)
+          holonomicAngle = holonomicAngle.plus(new Rotation2d(2 * Math.PI));
+        // passage case, convert to multiple of 90*
+        if (pathNodes.get(i).isPassage()) {
+          double[] radLock = {0, Math.PI / 2, Math.PI, 3 * Math.PI / 2, 2 * Math.PI};
+          for (double rad : radLock) {
+            if (ccw
+                && rad - holonomicAngle.getRadians() < Math.PI / 2
+                && rad - holonomicAngle.getRadians() > 0) {
+              holonomicAngle = new Rotation2d(rad);
+              break;
+            } else if (!ccw
+                && holonomicAngle.getRadians() - rad < Math.PI / 2
+                && holonomicAngle.getRadians() - rad > 0) {
+              holonomicAngle = new Rotation2d(rad);
+              break;
+            }
           }
         }
+      }
+
+      // calculate anchorPoint, prevControl, nextControl
+      Translation2d anchorPoint = positions.get(i);
+      Translation2d prevControl;
+      Translation2d nextControl;
+      // horizontal passage case
+      if (pathNodes.get(i).isPassage()) {
+        // horizontal bezier controls
+        Translation2d prevControlVector =
+            new Translation2d(positions.get(i - 1).minus(positions.get(i)).getX(), 0);
+        prevControl = prevControlVector.times(kControlPointScalar).plus(anchorPoint);
+        Translation2d nextControlVector =
+            new Translation2d(positions.get(i + 1).minus(positions.get(i)).getX(), 0);
+        nextControl = nextControlVector.times(kControlPointScalar).plus(anchorPoint);
       } else if (i == 0) {
         prevControl = null;
         Translation2d thisPointToNextPoint =

@@ -10,8 +10,8 @@ package frc.robot.auto.dynamicpathgeneration;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.swerve.SwerveConstants;
 import java.util.*;
 
@@ -78,9 +78,9 @@ public class DynamicPathFinder {
         if (kDynamicPathGenerationDebug) {
           // System.out.println("explore child: " + next);
         }
-        // calculate time
+        // calculate time (penalize paths with more points)
         double newDist =
-            0.0001
+            0.000001
                 + dist[currentNode]
                 + PathUtil.splineHeuristic(
                     pathNodes.get(currentNode).getPoint(), pathNodes.get(next).getPoint());
@@ -143,5 +143,4 @@ public class DynamicPathFinder {
     Collections.reverse(pathIds);
     return pathIds;
   }
-
 }

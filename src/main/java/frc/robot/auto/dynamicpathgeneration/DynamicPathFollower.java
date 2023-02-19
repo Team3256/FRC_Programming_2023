@@ -16,7 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.*;
 import java.util.*;
 
-public class DynamicPathFollower{
+public class DynamicPathFollower {
   private final Pose2d startPose;
   private final int src;
   private final Pose2d goalPose;
@@ -24,7 +24,7 @@ public class DynamicPathFollower{
   private int numNodes;
   private ArrayList<PathNode> dynamicPathNodes;
 
-  public DynamicPathFollower(Pose2d startPose,Pose2d goalPose) {
+  public DynamicPathFollower(Pose2d startPose, Pose2d goalPose) {
     System.out.println("Setting Up Path Finder Algorithm");
     this.startPose = startPose;
     this.goalPose = goalPose;
