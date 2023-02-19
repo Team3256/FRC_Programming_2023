@@ -17,7 +17,7 @@ import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
 public class DynamicPathFollower {
-  static void run(SwerveDrive swerveDrive) {
+  public static void run(SwerveDrive swerveDrive) {
     // get src, sink
     Pose2d src = swerveDrive.getPose();
     int locationId = (int) SmartDashboard.getNumber("locationId", -1);
