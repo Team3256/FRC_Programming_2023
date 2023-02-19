@@ -11,6 +11,9 @@ import static frc.robot.Constants.FieldConstants.*;
 import static frc.robot.Constants.FieldConstants.Community.*;
 
 import com.pathplanner.lib.PathConstraints;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathGenInit;
@@ -24,21 +27,19 @@ public final class DynamicPathConstants {
   public static final double kHitBoxResolution = 100;
   public static final double kControlPointScalar = 0.15;
 
-  public static final Obstacle kBarrierAboveGrid =
-      new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
+  public static final Obstacle kBarrierAboveGrid = new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
   public static final Obstacle kLowerWall = new Obstacle(new Translation2d(0, 0), kFieldLength, 0);
 
-  public static final Obstacle kChargingStation =
-      new Obstacle(
-          kBlueChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
+  public static final Obstacle kChargingStation = new Obstacle(
+      kBlueChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
 
   public static final Obstacle[] obstacles = {
-    kBarrierAboveGrid,
-    kLowerWall,
-    kChargingStation,
-    kChargingStation.getOther(),
-    kLowerWall.getOther(),
-    kBarrierAboveGrid.getOther()
+      kBarrierAboveGrid,
+      kLowerWall,
+      kChargingStation,
+      kChargingStation.getOther(),
+      kLowerWall.getOther(),
+      kBarrierAboveGrid.getOther()
   };
 
   public static final double kGridXLowerBound = 1.45 + kRobotRadius;
@@ -61,4 +62,17 @@ public final class DynamicPathConstants {
   public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 7.5);
   public static final double INF_TIME = Double.MAX_VALUE / 10;
   public static final double ILLEGAL_TIME = Double.MAX_VALUE / 20;
+
+  // Ordered bottom to top
+  public static final Pose2d[] kScoringLocations = new Pose2d[] {
+      new Pose2d(new Translation2d(1.94, 0.61), Rotation2d.fromDegrees(-174.75)),
+      new Pose2d(new Translation2d(1.98, 1.04), Rotation2d.fromDegrees(180)),
+      new Pose2d(new Translation2d(1.98, 1.61), Rotation2d.fromDegrees(180)),
+      new Pose2d(new Translation2d(1.98, 2.12), Rotation2d.fromDegrees(180)),
+      new Pose2d(new Translation2d(1.98, 2.71), Rotation2d.fromDegrees(180)),
+      new Pose2d(new Translation2d(1.98, 3.24), Rotation2d.fromDegrees(180)),
+      new Pose2d(new Translation2d(1.98, 3.82), Rotation2d.fromDegrees(180)),
+      new Pose2d(new Translation2d(1.98, 4.35), Rotation2d.fromDegrees(180)),
+      new Pose2d(new Translation2d(2.05, 4.81), Rotation2d.fromDegrees(174)),
+  };
 }
