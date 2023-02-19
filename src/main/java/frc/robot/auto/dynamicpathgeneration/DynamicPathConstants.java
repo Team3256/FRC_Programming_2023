@@ -64,9 +64,9 @@ public final class DynamicPathConstants {
   public static final double INF_TIME = Double.MAX_VALUE / 10;
   public static final double ILLEGAL_TIME = Double.MAX_VALUE / 20;
 
-  public static final Pose2d[] kBlueImportantLocations=
+  public static final Pose2d[] kBlueImportantLocations =
       new Pose2d[] {
-              //scoring locations (bottom to top)
+        // scoring locations (bottom to top)
         new Pose2d(new Translation2d(1.94, 0.61), Rotation2d.fromDegrees(-174.75)),
         new Pose2d(new Translation2d(1.98, 1.04), Rotation2d.fromDegrees(180)),
         new Pose2d(new Translation2d(1.98, 1.61), Rotation2d.fromDegrees(180)),
@@ -76,9 +76,9 @@ public final class DynamicPathConstants {
         new Pose2d(new Translation2d(1.98, 3.82), Rotation2d.fromDegrees(180)),
         new Pose2d(new Translation2d(1.98, 4.35), Rotation2d.fromDegrees(180)),
         new Pose2d(new Translation2d(2.05, 4.81), Rotation2d.fromDegrees(174)),
-              //loading locations (dummy)
-              new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(21)),
-              //charging station locations (dummy)
-              new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(21)),
+        // loading locations (dummy)
+        new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(21)),
+        // charging station locations (dummy)
+        new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(21)),
       };
 }
