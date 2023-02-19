@@ -21,8 +21,8 @@ public class DynamicPathGenerator {
   private final int src;
   private final Pose2d goalPose;
   private final int sink;
-  private int numNodes;
-  private ArrayList<PathNode> dynamicPathNodes;
+  private final int numNodes;
+  private final ArrayList<PathNode> dynamicPathNodes;
 
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
     System.out.println("Setting Up Path Finder Algorithm");
@@ -89,7 +89,7 @@ public class DynamicPathGenerator {
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());
     }
-    //if no path points were found then there should be no trajectory
+    // if no path points were found then there should be no trajectory
     if (pathPoints.size() == 0) return null;
     // convert pathPoints into Trajectory we return
     return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
