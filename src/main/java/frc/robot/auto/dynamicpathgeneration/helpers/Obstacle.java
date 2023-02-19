@@ -8,6 +8,7 @@
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants;
 import java.awt.geom.Rectangle2D;
 
 public class Obstacle {
@@ -29,7 +30,8 @@ public class Obstacle {
 
   /** return red version of blue obstacles */
   public Obstacle getRedVersion() {
-    double newBottomLeftCornerX = 16.5 - rectangle.getX() - rectangle.width;
+    double newBottomLeftCornerX =
+        Constants.FieldConstants.kFieldLength - rectangle.getX() - rectangle.width;
     return new Obstacle(
         new Translation2d(newBottomLeftCornerX, rectangle.getY()),
         rectangle.width,

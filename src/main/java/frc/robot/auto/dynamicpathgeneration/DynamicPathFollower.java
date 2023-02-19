@@ -17,18 +17,23 @@ import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
 public class DynamicPathFollower {
-  static void run(SwerveDrive swerveDrive) {
+  public static void run(SwerveDrive swerveDrive) {
     // get src, sink
     Pose2d src = swerveDrive.getPose();
     int locationId = (int) SmartDashboard.getNumber("locationId", -1);
+    // handle invalid location
     if (locationId == -1) {
-      System.out.println("locationId entered was invalid.");
+      System.out.println("LocationId entered was invalid.");
       return;
     }
     Pose2d sink = kBlueImportantLocations[locationId];
     // get trajectory
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     PathPlannerTrajectory trajectory = generator.getTrajectory();
+    // handle invalid trajectory
+    if (trajectory == null) {
+      System.out.println("No trajectory was found.");
+    }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false);
