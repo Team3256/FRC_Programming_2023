@@ -1,9 +1,13 @@
 # Dynamic Path Generation
 ### Quick start:
-* Use the method DynamicPathFollower.run() to make the robot travel to the wanted node on SmartDashboard
+* Use the method DynamicPathFollower.run() to make the robot travel to any wanted pose on SmartDashboard
 ### How it works:
 * DynamicPathFinder gets a list of points and finds the best path from start node to end node
 * DynamicPathFollower uses Finder to create a trajectory for the robot to travel
+* To mirror to red paths (default is blue), we subtract all x coordinates from 16.5 to form x' (including obstacles)
+### Tests:
+* Follow DynamicPathGenerationTest functions to create your own test case and visualize it.
+* In red mode all pose rotations are inverted
 ### Confusing stuff:
 * Translation2D is a point
 * Rotation2D is a rotation
