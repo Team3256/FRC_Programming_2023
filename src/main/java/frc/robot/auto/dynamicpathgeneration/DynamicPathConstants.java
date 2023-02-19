@@ -37,9 +37,9 @@ public final class DynamicPathConstants {
       kBarrierAboveGrid,
       kLowerWall,
       kChargingStation,
-      kChargingStation.getOther(),
-      kLowerWall.getOther(),
-      kBarrierAboveGrid.getOther()
+      kChargingStation.getRedVersion(),
+      kLowerWall.getRedVersion(),
+      kBarrierAboveGrid.getRedVersion()
   };
 
   public static final double kGridXLowerBound = 1.45 + kRobotRadius;

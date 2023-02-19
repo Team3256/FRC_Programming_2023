@@ -11,7 +11,7 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.auto.dynamicpathgeneration.helpers.HeuristicHelper;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.swerve.SwerveConstants;
@@ -84,7 +84,7 @@ public class DynamicPathFinder {
         double newDist =
             0.0001
                 + dist[currentNode]
-                + HeuristicHelper.splineHeuristic(
+                + PathUtil.splineHeuristic(
                     pathNodes.get(currentNode).getPoint(), pathNodes.get(next).getPoint());
         // If path over this edge is better
         if (newDist < dist[next]) {

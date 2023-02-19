@@ -27,7 +27,10 @@ public class Obstacle {
     return rectangle.intersectsLine(start.getX(), start.getY(), end.getX(), end.getY());
   }
 
-  public Obstacle getOther() {
+  /**
+   * return red version of blue obstacles
+   */
+  public Obstacle getRedVersion() {
     double newBottomLeftCornerX = 16.5 - rectangle.getX() - rectangle.width;
     return new Obstacle(
         new Translation2d(newBottomLeftCornerX, rectangle.getY()),
