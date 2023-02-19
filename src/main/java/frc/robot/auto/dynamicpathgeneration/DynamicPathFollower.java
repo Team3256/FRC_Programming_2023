@@ -13,7 +13,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
@@ -27,13 +26,13 @@ public class DynamicPathFollower {
       return;
     }
     Pose2d sink = kBlueImportantLocations[locationId];
-    // get traj
+    // get trajectory
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     PathPlannerTrajectory trajectory = generator.getTrajectory();
-    // create command that runs traj
+    // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command toRun = autoBuilder.createPathPlannerCommand(trajectory, false);
     // run command
-    CommandScheduler.getInstance().schedule(toRun);
+    toRun.schedule();
   }
 }
