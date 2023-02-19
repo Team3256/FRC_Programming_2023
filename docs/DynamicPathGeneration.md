@@ -21,3 +21,10 @@
 * Translation2D is a position, not a vector, even though we often use it as a vector. Add the vector to the original position to get the final position.
 * Rotation2D is stored as a 2x2 transformation matrix. Therefore its value only ever ranges between (-180,180]
 * We do not count path length on passages during rotate interpolation
+### Features:
+* Optimal control points to interpolate between consecutive points
+* Piecewise control scalar that is large when not in community zone
+* Convert path into JSON that PathPlanner can render
+* Locked rotation during passages that minimizes the robot's radius
+* Fastest path algorithm
+* Visibility graph
