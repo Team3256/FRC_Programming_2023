@@ -15,20 +15,20 @@ import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.swerve.SwerveDrive;
 
 // TODO Extend PPTrajectoryFollowCommand
-public class GoToPose extends CommandBase {
+public class GoToGUIPose extends CommandBase {
   private final SwerveDrive swerveSubsystem;
   private final Pose2d goalPose;
   private AutoCommandRunner commandRunner;
   private PathPlannerTrajectory pathToScoringLocation;
 
-  public GoToPose(SwerveDrive swerveSubsystem, Pose2d goalPose) {
+  public GoToGUIPose(SwerveDrive swerveSubsystem, Pose2d goalPose) {
     this.swerveSubsystem = swerveSubsystem;
     this.goalPose = goalPose;
 
     addRequirements(swerveSubsystem);
   }
 
-  public GoToPose(SwerveDrive swerveSubsystem, Pose2d goalPose, AutoCommandRunner commandRunner) {
+  public GoToGUIPose(SwerveDrive swerveSubsystem, Pose2d goalPose, AutoCommandRunner commandRunner) {
     this(swerveSubsystem, goalPose);
 
     // TODO Implement command runner

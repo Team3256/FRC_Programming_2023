@@ -7,6 +7,7 @@
 
 package frc.robot.swerve;
 
+import static frc.robot.Constants.VisionConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -17,13 +18,19 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
+import frc.robot.limelight.Limelight;
 import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
@@ -33,7 +40,10 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
   private final SwerveModule backRightModule = new SwerveModule(3, BackRight.constants);
+  private SwerveDrivePoseEstimator poseEstimator;
+
   private final Field2d field = new Field2d();
+  private final Field2d limelightLocalizationField = new Field2d();
 
   private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
       new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
@@ -43,8 +53,6 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
-
-  public SwerveDrivePoseEstimator poseEstimator;
   public Pigeon2 gyro;
 
   public SwerveDrive() {
@@ -52,6 +60,19 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     gyro.configFactoryDefault();
     zeroGyro();
 
+    poseEstimator =
+        new SwerveDrivePoseEstimator(
+            kSwerveKinematics,
+            getYaw(),
+            new SwerveModulePosition[] {
+              frontLeftModule.getPosition(),
+              frontRightModule.getPosition(),
+              backLeftModule.getPosition(),
+              backRightModule.getPosition()
+            },
+            new Pose2d());
+
+    SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
     /*
      * By pausing init for a second before setting module offsets, we avoid a bug
      * with inverting motors.
@@ -59,10 +80,6 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
      */
     Timer.delay(1.0);
     resetModulesToAbsolute();
-
-    poseEstimator =
-        new SwerveDrivePoseEstimator(
-            kSwerveKinematics, getYaw(), getModulePositions(), new Pose2d());
   }
 
   public void resetModulesToAbsolute() {
@@ -99,7 +116,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     ChassisSpeeds swerveChassisSpeed =
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getYaw())
+                translation.getX(), translation.getY(), rotation, getPose().getRotation())
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
@@ -114,7 +131,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     ChassisSpeeds swerveChassisSpeed =
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getYaw())
+                translation.getX(), translation.getY(), rotation, getPose().getRotation())
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop, elevatorHeight);
@@ -174,10 +191,42 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     return (kInvertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
 
+  public boolean shouldAddVisionMeasurement(Pose2d limelightPose) {
+    Pose2d relativePose = limelightPose.relativeTo(poseEstimator.getEstimatedPosition());
+    return Math.abs(relativePose.getTranslation().getNorm()) < kLimelightTranslationThresholdMeters
+        && Math.abs(relativePose.getRotation().getRadians()) < kLimelightRotationThreshold;
+  }
+
   @Override
   public void periodic() {
+
     poseEstimator.update(getYaw(), getModulePositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
+
+    if (Limelight.hasValidTargets(kLimelightNetworkTablesName)) {
+      double[] visionBotPose = Limelight.getBotpose(kLimelightNetworkTablesName);
+
+      if (visionBotPose.length != 0) {
+        double tx = visionBotPose[0] + kFieldTranslationOffsetX;
+        double ty = visionBotPose[1] + kFieldTranslationOffsetY;
+
+        // botpose from network tables uses degrees, not radians, so need to convert
+        double rx = visionBotPose[3];
+        double ry = visionBotPose[4];
+        double rz = ((visionBotPose[5] + 360) % 360);
+
+        double tl = Limelight.getLatency_Pipeline(kLimelightNetworkTablesName);
+
+        Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
+
+        if (shouldAddVisionMeasurement(limelightPose)) {
+          poseEstimator.addVisionMeasurement(
+              limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+        }
+
+        limelightLocalizationField.setRobotPose(limelightPose);
+      }
+    }
 
     for (SwerveModule mod : swerveModules) {
       SmartDashboard.putNumber(
