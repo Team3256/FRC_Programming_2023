@@ -18,6 +18,7 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class SwerveConstants {
   public static final int kPigeonID = 1;
+  public static final String kPigeonCanBus = "mani";
 
   public static final boolean kFieldRelative = true;
   public static final boolean kOpenLoop = true;

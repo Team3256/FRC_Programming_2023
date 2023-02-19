@@ -33,6 +33,7 @@ import frc.robot.drivers.TalonFXFactory;
 
 public class Arm extends SubsystemBase implements CANTestable {
   private WPI_TalonFX armMotor;
+  // private DutyCycleEncoder[] armEncoder = new DutyCycleEncoder[10];
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
@@ -67,6 +68,10 @@ public class Arm extends SubsystemBase implements CANTestable {
       configureSimHardware();
     }
 
+    // for (int i = 0; i <= 9; i++) {
+    // armEncoder[i] = new DutyCycleEncoder(i);
+    // }
+
     System.out.println("Arm initialized");
     off();
   }
@@ -81,6 +86,7 @@ public class Arm extends SubsystemBase implements CANTestable {
     armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
     armMotor.setInverted(true);
     armMotor.setNeutralMode(NeutralMode.Brake);
+    armEncoder.setDistancePerRotation(kArmCountsPerRadian);
   }
 
   public double calculateFeedForward(double angleRadians, double velocity) {
@@ -97,8 +103,7 @@ public class Arm extends SubsystemBase implements CANTestable {
   }
 
   public double getArmPositionRads() {
-    if (RobotBase.isReal())
-      return armEncoder.getAbsolutePosition() * kArmEncoderConversionToRadians;
+    if (RobotBase.isReal()) return armEncoder.getAbsolutePosition();
     else return armSim.getAngleRads();
   }
 
@@ -108,7 +113,13 @@ public class Arm extends SubsystemBase implements CANTestable {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    SmartDashboard.putBoolean("Is Arm Encoder Connected", armEncoder.isConnected());
+    SmartDashboard.putNumber("Arm Raw Encoder value", armEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
+    SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
+    SmartDashboard.putNumber("Arm motor percent output", armMotor.getMotorOutputPercent() * 12);
+  }
 
   @Override
   public void simulationPeriodic() {
@@ -123,7 +134,7 @@ public class Arm extends SubsystemBase implements CANTestable {
   }
 
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(armSim.getAngleRads()));
+    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }

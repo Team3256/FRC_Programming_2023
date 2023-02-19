@@ -54,7 +54,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   public Pigeon2 gyro;
 
   public SwerveDrive() {
-    gyro = new Pigeon2(kPigeonID);
+    gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
     zeroGyro();
 

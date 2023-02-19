@@ -14,9 +14,9 @@ import frc.robot.drivers.CanDeviceId;
 public final class ElevatorConstants {
   public static final int kElevatorID = 5;
   public static final String kElevatorCANBus = "mani";
-  public static final CanDeviceId kElevatorCANDevice =
-      new CanDeviceId(kElevatorID, kElevatorCANBus);
+  public static final CanDeviceId kElevatorCANDevice = new CanDeviceId(kElevatorID, kElevatorCANBus);
   public static final int kNumElevatorMotors = 1;
+  public static final boolean kElevatorInverted = false;
 
   // TODO: Change to real values
   public static final double kElevatorHighPositionMeters = Units.inchesToMeters(30);
@@ -35,8 +35,7 @@ public final class ElevatorConstants {
   public static final double kI = 0;
   public static final double kD = 0;
 
-  public static final TrapezoidProfile.Constraints kElevatorContraints =
-      new TrapezoidProfile.Constraints(2.45, 2.45);
+  public static final TrapezoidProfile.Constraints kElevatorContraints = new TrapezoidProfile.Constraints(2.45, 2.45);
 
   public static final double kDownSpeedVolts = -2.0;
 

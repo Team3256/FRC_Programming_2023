@@ -18,11 +18,10 @@ public final class ArmConstants {
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
   public static final int kArmSimulationID = 16;
 
-  public static final int kArmEncoderDIOPort = 10;
+  public static final int kArmEncoderDIOPort = 8;
 
   private static final double kArmCountsPerRevolution = 8192;
-  public static final double kArmEncoderConversionToRadians =
-      (1 / kArmCountsPerRevolution) * 2 * Math.PI;
+  public static final double kArmCountsPerRadian = 2 * Math.PI / kArmCountsPerRevolution;
 
   // TODO Update
   public static final double kArmLengthMeters = 1.638059;
