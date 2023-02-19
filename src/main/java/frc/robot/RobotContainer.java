@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.*;
@@ -64,7 +65,7 @@ public class RobotContainer {
     }
     if (kElevatorEnabled) {
       configureElevator();
-      testables.add((CANTestable) elevatorSubsystem);
+      testables.add(elevatorSubsystem);
     }
     if (kArmEnabled) {
       configureArm();
@@ -138,15 +139,19 @@ public class RobotContainer {
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+
+    if (kArmEnabled) {
+      operator.y().onTrue(defaultArmElevator());
+    }
   }
 
-  public void
-      defaultArmElevator() { // sets default position (lower elevator and default position for arm)
+  public ParallelCommandGroup defaultArmElevator() { // sets default position (lower elevator and default position for arm)
     elevatorSubsystem = new Elevator();
     armSubsystem = new Arm();
 
-    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
-    operator.a().onTrue(new SetArmAngle(armSubsystem, kArmAngleMinConstraint));
+    return new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, kMinHeight),
+            new SetArmAngle(armSubsystem, kArmAngleMinConstraint));
   }
 
   private void configureArm() {
