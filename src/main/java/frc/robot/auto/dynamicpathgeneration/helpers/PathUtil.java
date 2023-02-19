@@ -12,6 +12,7 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.swerve.SwerveConstants;
+import java.util.ArrayList;
 
 public class PathUtil {
   public static double straightTravelTimeWithoutObstacles(
@@ -46,5 +47,44 @@ public class PathUtil {
       return true;
 
     return false;
+  }
+
+  // helper methods to connect/disconnect edges
+  public static void fullyConnect(ArrayList<PathNode> pathNodes) {
+    for (PathNode u : pathNodes) {
+      for (PathNode v : pathNodes) {
+        if (u != v) fullyConnect(u, v);
+      }
+    }
+  }
+
+  public static void fullyConnect(ArrayList<PathNode> pathNodes1, ArrayList<PathNode> pathNodes2) {
+    for (PathNode u : pathNodes1) {
+      for (PathNode v : pathNodes2) {
+        fullyConnect(u, v);
+      }
+    }
+  }
+
+  public static void fullyConnect(PathNode u, ArrayList<PathNode> pathNodes) {
+    for (PathNode v : pathNodes) {
+      fullyConnect(u, v);
+    }
+  }
+
+  public static void fullyConnect(PathNode u, PathNode v) {
+    u.addEdge(v);
+    v.addEdge(u);
+  }
+
+  public static void fullyDisconnect(PathNode u, PathNode v) {
+    u.remEdge(v);
+    v.remEdge(u);
+  }
+
+  public static void fullyDisconnect(PathNode u, ArrayList<PathNode> pathNodes) {
+    for (PathNode v : pathNodes) {
+      fullyDisconnect(u, v);
+    }
   }
 }

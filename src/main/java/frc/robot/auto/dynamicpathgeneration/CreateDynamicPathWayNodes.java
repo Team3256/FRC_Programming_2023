@@ -13,12 +13,11 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.dynamicP
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
-import java.util.ArrayList;
-
 import frc.robot.auto.dynamicpathgeneration.helpers.FileUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
+import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 public class CreateDynamicPathWayNodes {
@@ -92,5 +91,4 @@ public class CreateDynamicPathWayNodes {
     pathNodes.addAll(newNodes);
     return newNodes;
   }
-
 }
