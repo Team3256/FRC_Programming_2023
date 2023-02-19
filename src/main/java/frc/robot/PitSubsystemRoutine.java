@@ -12,9 +12,12 @@ import static frc.robot.elevator.ElevatorConstants.kElevatorStartingPose;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.arm.Arm;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.elevator.commands.ZeroElevator;
@@ -29,13 +32,18 @@ public class PitSubsystemRoutine {
   Elevator elevatorSubsystem;
   Intake intakeSubsystem;
   SwerveDrive swerveSubsystem;
+  Arm armSubsystem;
   private final CommandXboxController driver = new CommandXboxController(0);
 
   public PitSubsystemRoutine(
-      Elevator elevatorSubsystem, Intake intakeSubsystem, SwerveDrive swerveSubsystem) {
+      Elevator elevatorSubsystem,
+      Intake intakeSubsystem,
+      SwerveDrive swerveSubsystem,
+      Arm armSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
     this.intakeSubsystem = intakeSubsystem;
     this.swerveSubsystem = swerveSubsystem;
+    this.armSubsystem = armSubsystem;
   }
 
   public void pitRoutine() {
@@ -45,6 +53,9 @@ public class PitSubsystemRoutine {
     Command tests = new WaitCommand(1).beforeStarting(startRoutine);
     if (kIntakeEnabled) {
       tests.andThen(intakeCommands());
+    }
+    if (kArmEnabled) {
+      tests.andThen(armCommands());
     }
     if (kSwerveEnabled) {
       tests.andThen(swerveCommands());
@@ -76,6 +87,15 @@ public class PitSubsystemRoutine {
     Command intakeCube = new IntakeCube(intakeSubsystem).until(driver.a());
 
     return intakeCube.andThen(intakeCone);
+  }
+
+  public Command armCommands() {
+    Command setArmAngleVertical =
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)).until(driver.a());
+    Command setArmAngleBack =
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(180)).until(driver.a());
+
+    return setArmAngleVertical.andThen(setArmAngleBack);
   }
 
   public Command swerveCommands() {
