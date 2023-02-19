@@ -25,9 +25,8 @@ public final class DynamicPathConstants {
   public static final double kControlPointScalar = 0.15;
 
   public static final Obstacle kBarrierAboveGrid =
-      new Obstacle(new Translation2d(0, 5.35), 3.27, 0.41);
-  public static final Obstacle kLowerWall =
-      new Obstacle(new Translation2d(0, -0.1), kFieldLength, 0.1);
+      new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
+  public static final Obstacle kLowerWall = new Obstacle(new Translation2d(0, 0), kFieldLength, 0);
 
   public static final Obstacle kChargingStation =
       new Obstacle(
