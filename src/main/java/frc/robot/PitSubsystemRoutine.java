@@ -52,11 +52,15 @@ public class PitSubsystemRoutine {
     tests.schedule();
   }
 
-  public Command elevatorCommands() {
+  private Command elevatorCommands() {
     Command zeroElevator = new ZeroElevator(elevatorSubsystem).until(driver.a());
+    Command setElevatorHeightHIGH = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH).until(driver.a());
+    Command setElevatorHeightMID = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID).until(driver.a());
+    Command setElevatorHeightLOW = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW).until(driver.a());
     Command setElevatorHeight = new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPose).until(driver.a());
 
-    return zeroElevator.andThen(setElevatorHeight);
+    return zeroElevator.andThen(setElevatorHeightHIGH.andThen(setElevatorHeightMID.andThen
+            (setElevatorHeightLOW.andThen(setElevatorHeight))));
   }
 
   public Command intakeCommands() {
