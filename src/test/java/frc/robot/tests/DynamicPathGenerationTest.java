@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.FileUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
@@ -100,10 +101,14 @@ public class DynamicPathGenerationTest {
     if (!blue) {
       src =
           new Pose2d(
-              16.5 - src.getX(), src.getY(), src.getRotation().plus(new Rotation2d(Math.PI)));
+              Constants.FieldConstants.kFieldLength - src.getX(),
+              src.getY(),
+              src.getRotation().plus(new Rotation2d(Math.PI)));
       sink =
           new Pose2d(
-              16.5 - sink.getX(), sink.getY(), sink.getRotation().plus(new Rotation2d(Math.PI)));
+              Constants.FieldConstants.kFieldLength - sink.getX(),
+              sink.getY(),
+              sink.getRotation().plus(new Rotation2d(Math.PI)));
     }
     long start = System.currentTimeMillis();
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
