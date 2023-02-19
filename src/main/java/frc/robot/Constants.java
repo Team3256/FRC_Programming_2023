@@ -56,27 +56,27 @@ public final class Constants {
       // Charging station dimensions
       public static final double kChargingStationWidth = Units.inchesToMeters(76.125);
       public static final double kChargingStationHeight = Units.inchesToMeters(97.25);
-      public static final double kChargingStationOuterX = kOuterX - kTapeWidth;
-      public static final double kChargingStationInnerX =
-          kChargingStationOuterX - kChargingStationWidth;
-      public static final double kChargingStationLeftY = kMidY - kTapeWidth;
-      public static final double kChargingStationRightY =
-          kChargingStationLeftY - kChargingStationHeight;
-      public static final Translation2d[] kChargingStationCorners =
+      public static final double kBlueChargingStationOuterX = kOuterX - kTapeWidth;
+      public static final double kBlueChargingStationInnerX =
+          kBlueChargingStationOuterX - kChargingStationWidth;
+      public static final double kBlueChargingStationLeftY = kMidY - kTapeWidth;
+      public static final double kBlueChargingStationRightY =
+          kBlueChargingStationLeftY - kChargingStationHeight;
+      public static final Translation2d[] kBlueChargingStationCorners =
           new Translation2d[] {
-            new Translation2d(kChargingStationInnerX, kChargingStationRightY),
-            new Translation2d(kChargingStationInnerX, kChargingStationLeftY),
-            new Translation2d(kChargingStationOuterX, kChargingStationRightY),
-            new Translation2d(kChargingStationOuterX, kChargingStationLeftY)
+            new Translation2d(kBlueChargingStationInnerX, kBlueChargingStationRightY),
+            new Translation2d(kBlueChargingStationInnerX, kBlueChargingStationLeftY),
+            new Translation2d(kBlueChargingStationOuterX, kBlueChargingStationRightY),
+            new Translation2d(kBlueChargingStationOuterX, kBlueChargingStationLeftY)
           };
-      public static final Translation2d kChargingStationTopLeftCorner =
-          new Translation2d(kChargingStationInnerX, kChargingStationRightY);
-      public static final Translation2d[][] kChargingStationSegments =
+      public static final Translation2d kBlueChargingStationTopLeftCorner =
+          new Translation2d(kBlueChargingStationInnerX, kBlueChargingStationRightY);
+      public static final Translation2d[][] kBlueChargingStationSegments =
           new Translation2d[][] {
-            {kChargingStationCorners[0], kChargingStationCorners[1]},
-            {kChargingStationCorners[0], kChargingStationCorners[2]},
-            {kChargingStationCorners[1], kChargingStationCorners[3]},
-            {kChargingStationCorners[2], kChargingStationCorners[3]},
+            {kBlueChargingStationCorners[0], kBlueChargingStationCorners[1]},
+            {kBlueChargingStationCorners[0], kBlueChargingStationCorners[2]},
+            {kBlueChargingStationCorners[1], kBlueChargingStationCorners[3]},
+            {kBlueChargingStationCorners[2], kBlueChargingStationCorners[3]},
           };
 
       // Cable bump
@@ -86,9 +86,9 @@ public final class Constants {
       public static final Translation2d[] kCableBumpCorners =
           new Translation2d[] {
             new Translation2d(kCableBumpInnerX, 0.0),
-            new Translation2d(kCableBumpInnerX, kChargingStationRightY),
+            new Translation2d(kCableBumpInnerX, kBlueChargingStationRightY),
             new Translation2d(kCableBumpOuterX, 0.0),
-            new Translation2d(kCableBumpOuterX, kChargingStationRightY)
+            new Translation2d(kCableBumpOuterX, kBlueChargingStationRightY)
           };
     }
 

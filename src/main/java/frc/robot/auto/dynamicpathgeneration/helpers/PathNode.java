@@ -11,10 +11,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import java.util.ArrayList;
 
 public class PathNode {
-  Translation2d point;
-  ArrayList<PathNode> edges;
-  int index;
-  boolean isPassage;
+  private Translation2d point;
+  private ArrayList<PathNode> edges;
+  private int index;
+  private boolean isPassage;
 
   public PathNode(double x, double y) {
     this.point = new Translation2d(x, y);
@@ -69,6 +69,10 @@ public class PathNode {
 
   public Translation2d getPoint() {
     return point;
+  }
+
+  public void setPoint(Translation2d point) {
+    this.point = point;
   }
 
   public ArrayList<PathNode> getEdges() {

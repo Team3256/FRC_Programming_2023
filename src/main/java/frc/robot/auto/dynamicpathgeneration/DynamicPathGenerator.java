@@ -13,7 +13,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.*;
 import java.util.*;
 
@@ -56,7 +55,7 @@ public class DynamicPathGenerator {
     return ret;
   }
 
-  public List<Translation2d> getPositions() {
+  public List<Integer> getPathIds() {
     PathNode srcClosest = connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
     PathNode sinkClosest = connectToClosest(dynamicPathNodes.get(sink), dynamicPathNodes);
     if (kDynamicPathGenerationDebug) {
@@ -64,7 +63,7 @@ public class DynamicPathGenerator {
       System.out.println("sink edges:" + dynamicPathNodes.get(sink).getEdges().size());
     }
     DynamicPathFinder pathFinder = new DynamicPathFinder(src, sink, dynamicPathNodes);
-    List<Translation2d> positions = pathFinder.findPath();
+    List<Integer> positions = pathFinder.findPath();
     if (kDynamicPathGenerationDebug) {
       System.out.println("This is the path generated:");
       System.out.println(positions);
@@ -74,10 +73,18 @@ public class DynamicPathGenerator {
     return positions;
   }
 
+  public List<PathNode> getPathNodes() {
+    // convert pathIds into pathNodes
+    List<Integer> pathIds = getPathIds();
+    List<PathNode> pathNodes = new ArrayList<>();
+    for (int i : pathIds) {
+      pathNodes.add(dynamicPathNodes.get(i));
+    }
+    return pathNodes;
+  }
+
   public PathPlannerTrajectory getTrajectory() {
-    // convert pathPoses into pathPoints
-    List<Translation2d> pathPoses = getPositions();
-    Path path = new Path(pathPoses, startPose.getRotation(), goalPose.getRotation());
+    Path path = new Path(getPathNodes(), startPose.getRotation(), goalPose.getRotation());
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());

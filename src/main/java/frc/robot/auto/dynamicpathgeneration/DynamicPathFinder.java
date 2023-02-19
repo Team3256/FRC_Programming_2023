@@ -38,7 +38,7 @@ public class DynamicPathFinder {
     // this.heuristic = HeuristicHelper.generateHeuristicTable(sink, positions);
   }
 
-  public List<Translation2d> findPath() {
+  public List<Integer> findPath() {
     int nodesExplored = 0;
     // Time to travel from src to all other nodes
     dist = new double[nodes];
@@ -63,14 +63,14 @@ public class DynamicPathFinder {
       if (visitedNodes[currentNode]) continue;
 
       if (kDynamicPathGenerationDebug) {
-        System.out.println("explore node:" + currentNode);
+        // System.out.println("explore node:" + currentNode);
       }
       nodesExplored++;
 
-      // Found shortest path to sink
+      // Found the shortest path to sink
       if (currentNode == sink) {
         System.out.println("Path found");
-        return getPositionsFromPathIds(getPathIdsFromNode(sink));
+        return getPathIdsFromNode(sink);
       }
 
       // Update all unvisited neighboring nodes
@@ -78,7 +78,7 @@ public class DynamicPathFinder {
         int next = pathNodes.get(currentNode).getEdges().get(childId).getIndex();
         if (visitedNodes[next]) continue;
         if (kDynamicPathGenerationDebug) {
-          System.out.println("explore child: " + next);
+          // System.out.println("explore child: " + next);
         }
         // calculate time
         double newDist =
@@ -104,7 +104,7 @@ public class DynamicPathFinder {
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
 
     ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
-    return getPositionsFromPathIds(pathIds);
+    return pathIds;
   }
 
   // calculate time to travel list of pathIds

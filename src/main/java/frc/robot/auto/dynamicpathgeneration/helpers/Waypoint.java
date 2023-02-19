@@ -84,4 +84,14 @@ public class Waypoint {
     }
     return pathPoint;
   }
+
+  public String toString() {
+    return "[x:"
+        + anchorPoint.getX()
+        + ", y:"
+        + anchorPoint.getY()
+        + " angle:"
+        + holonomicAngle.getDegrees()
+        + "]";
+  }
 }

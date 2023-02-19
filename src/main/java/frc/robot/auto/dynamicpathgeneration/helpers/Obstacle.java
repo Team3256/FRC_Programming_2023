@@ -26,4 +26,12 @@ public class Obstacle {
   public boolean intersectsLineSegment(Translation2d start, Translation2d end) {
     return rectangle.intersectsLine(start.getX(), start.getY(), end.getX(), end.getY());
   }
+
+  public Obstacle getOther() {
+    double newBottomLeftCornerX = 16.5 - rectangle.getX() - rectangle.width;
+    return new Obstacle(
+        new Translation2d(newBottomLeftCornerX, rectangle.getY()),
+        rectangle.width,
+        rectangle.height);
+  }
 }

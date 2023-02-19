@@ -28,13 +28,13 @@ public class PathGenInit {
     PathNode botPreSink = preSinks.get(1);
 
     // passages
-    PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75);
-    PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75);
+    PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, true);
+    PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75, true);
     ArrayList<PathNode> topPassage = passage(dynamicPathWayNodes, topPassageSrc, topPassageSink);
     fullyConnect(topPreSink, topPassageSink);
 
-    PathNode botPassageSink = new PathNode(2.8, 0 + 0.73);
-    PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73);
+    PathNode botPassageSink = new PathNode(2.8, 0 + 0.73, true);
+    PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73, true);
     ArrayList<PathNode> botPassage = passage(dynamicPathWayNodes, botPassageSrc, botPassageSink);
     fullyConnect(botPreSink, botPassageSink);
 
@@ -49,14 +49,12 @@ public class PathGenInit {
 
     if (!blue) {
       for (PathNode p : dynamicPathWayNodes) {
-        p.point = new Translation2d(16.5 - p.getX(), p.getY());
+        p.setPoint(new Translation2d(16.5 - p.getX(), p.getY()));
       }
     }
 
     // debug
-    ArrayList<Translation2d> pathPositions = new ArrayList<>();
-    for (PathNode pathNode : dynamicPathWayNodes) pathPositions.add(pathNode.getPoint());
-    Path path = new Path(pathPositions, new Rotation2d(0), new Rotation2d(0));
+    Path path = new Path(dynamicPathWayNodes, new Rotation2d(0), new Rotation2d(0));
     JSONObject json = path.getJson();
     String fileName = "SpecialPoints";
     String pathPlannerJsonPath = "src/main/deploy/pathplanner/" + fileName + ".path";

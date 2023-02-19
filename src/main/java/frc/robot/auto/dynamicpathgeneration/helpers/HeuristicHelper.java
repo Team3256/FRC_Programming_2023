@@ -33,7 +33,7 @@ public class HeuristicHelper {
       vis[cur] = true;
       // System.out.println("cur:" + cur);
       for (int childId = 0; childId < pathNodes.get(cur).getEdges().size(); childId++) {
-        int next = pathNodes.get(cur).getEdges().get(childId).index;
+        int next = pathNodes.get(cur).getEdges().get(childId).getIndex();
         if (vis[next]) continue;
         double newHeurestic =
             heurestic[cur]
