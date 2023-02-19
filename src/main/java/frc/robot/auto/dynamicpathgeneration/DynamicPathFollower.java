@@ -22,13 +22,16 @@ public class DynamicPathFollower {
     Pose2d src = swerveDrive.getPose();
     int locationId = (int) SmartDashboard.getNumber("locationId", -1);
     if (locationId == -1) {
-      System.out.println("locationId entered was invalid.");
+      System.out.println("LocationId entered was invalid.");
       return;
     }
     Pose2d sink = kBlueImportantLocations[locationId];
     // get trajectory
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     PathPlannerTrajectory trajectory = generator.getTrajectory();
+    if (trajectory == null) {
+      System.out.println("No trajectory was found.");
+    }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false);

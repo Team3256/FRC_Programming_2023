@@ -58,10 +58,6 @@ public class DynamicPathFinder {
       int currentNode = pq.poll();
       if (visitedNodes[currentNode]) continue;
 
-      if (kDynamicPathGenerationDebug) {
-        // System.out.println("explore node:" + currentNode);
-      }
-
       nodesExplored++;
 
       // Found the shortest path to sink
@@ -74,9 +70,6 @@ public class DynamicPathFinder {
       for (int childId = 0; childId < pathNodes.get(currentNode).getEdges().size(); childId++) {
         int next = pathNodes.get(currentNode).getEdges().get(childId).getIndex();
         if (visitedNodes[next]) continue;
-        if (kDynamicPathGenerationDebug) {
-          // System.out.println("explore child: " + next);
-        }
         // Calculate time (penalize paths with more points)
         double newDist =
             0.000001
@@ -99,8 +92,7 @@ public class DynamicPathFinder {
     }
     // No paths available
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
-    ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
-    return pathIds;
+    return new ArrayList<>();
   }
 
   // calculate time to travel list of pathIds
