@@ -50,7 +50,7 @@ public class DynamicPathGenerator {
       }
     }
     System.out.println("closest to " + node + " is " + ret);
-    CreateDynamicPathWayNodes.fullyConnect(ret, node);
+    PathUtil.fullyConnect(ret, node);
     return ret;
   }
 
@@ -67,8 +67,8 @@ public class DynamicPathGenerator {
       System.out.println("This is the path generated:");
       System.out.println(positions);
     }
-    CreateDynamicPathWayNodes.fullyDisconnect(srcClosest, dynamicPathNodes.get(src));
-    CreateDynamicPathWayNodes.fullyDisconnect(sinkClosest, dynamicPathNodes.get(sink));
+    PathUtil.fullyDisconnect(srcClosest, dynamicPathNodes.get(src));
+    PathUtil.fullyDisconnect(sinkClosest, dynamicPathNodes.get(sink));
     return positions;
   }
 
