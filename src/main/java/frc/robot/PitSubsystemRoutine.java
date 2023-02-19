@@ -54,13 +54,18 @@ public class PitSubsystemRoutine {
 
   private Command elevatorCommands() {
     Command zeroElevator = new ZeroElevator(elevatorSubsystem).until(driver.a());
-    Command setElevatorHeightHIGH = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH).until(driver.a());
-    Command setElevatorHeightMID = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID).until(driver.a());
-    Command setElevatorHeightLOW = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW).until(driver.a());
-    Command setElevatorHeight = new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPose).until(driver.a());
+    Command setElevatorHeightHIGH =
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH).until(driver.a());
+    Command setElevatorHeightMID =
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID).until(driver.a());
+    Command setElevatorHeightLOW =
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW).until(driver.a());
+    Command setElevatorHeight =
+        new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPose).until(driver.a());
 
-    return zeroElevator.andThen(setElevatorHeightHIGH.andThen(setElevatorHeightMID.andThen
-            (setElevatorHeightLOW.andThen(setElevatorHeight))));
+    return zeroElevator.andThen(
+        setElevatorHeightHIGH.andThen(
+            setElevatorHeightMID.andThen(setElevatorHeightLOW.andThen(setElevatorHeight))));
   }
 
   public Command intakeCommands() {
@@ -72,61 +77,34 @@ public class PitSubsystemRoutine {
 
   public Command swerveCommands() {
     Command lockSwerve = new LockSwerve(swerveSubsystem).until(driver.a());
-    Command teleopSwerveForward = //move forward
-            new TeleopSwerve(
-                    swerveSubsystem,
-                    () -> 0.3,
-                    () -> 0,
-                    () -> 0,
-                    kFieldRelative,
-                    kOpenLoop).until(driver.a());
+    Command teleopSwerveForward = // move forward
+        new TeleopSwerve(swerveSubsystem, () -> 0.3, () -> 0, () -> 0, kFieldRelative, kOpenLoop)
+            .until(driver.a());
 
-    Command telopSwerveBackward = //move backward
-            new TeleopSwerve(
-                    swerveSubsystem,
-                    () -> -0.3,
-                    () -> 0,
-                    () -> 0,
-                    kFieldRelative,
-                    kOpenLoop).until(driver.a());
+    Command telopSwerveBackward = // move backward
+        new TeleopSwerve(swerveSubsystem, () -> -0.3, () -> 0, () -> 0, kFieldRelative, kOpenLoop)
+            .until(driver.a());
 
-    Command teleopSwerveRight = //move right
-            new TeleopSwerve(
-                    swerveSubsystem,
-                    () -> 0,
-                    () -> 0.3,
-                    () -> 0,
-                    kFieldRelative,
-                    kOpenLoop).until(driver.a());
+    Command teleopSwerveRight = // move right
+        new TeleopSwerve(swerveSubsystem, () -> 0, () -> 0.3, () -> 0, kFieldRelative, kOpenLoop)
+            .until(driver.a());
 
-    Command teleopSwerveLeft = //move left
-            new TeleopSwerve(
-                    swerveSubsystem,
-                    () -> 0,
-                    () -> -0.3,
-                    () -> 0,
-                    kFieldRelative,
-                    kOpenLoop).until(driver.a());
+    Command teleopSwerveLeft = // move left
+        new TeleopSwerve(swerveSubsystem, () -> 0, () -> -0.3, () -> 0, kFieldRelative, kOpenLoop)
+            .until(driver.a());
 
-    Command teleopSwerveRotateRight = //rotate right
-            new TeleopSwerve(
-                    swerveSubsystem,
-                    () -> 0,
-                    () -> 0,
-                    () -> 0.3,
-                    kFieldRelative,
-                    kOpenLoop).until(driver.a());
+    Command teleopSwerveRotateRight = // rotate right
+        new TeleopSwerve(swerveSubsystem, () -> 0, () -> 0, () -> 0.3, kFieldRelative, kOpenLoop)
+            .until(driver.a());
 
-    Command teleopSwerveRotateLeft = //rotate left
-            new TeleopSwerve(
-                    swerveSubsystem,
-                    () -> 0,
-                    () -> 0,
-                    () -> -0.3,
-                    kFieldRelative,
-                    kOpenLoop).until(driver.a());
-    return lockSwerve.andThen(teleopSwerveForward.andThen(telopSwerveBackward.andThen
-            (teleopSwerveRight.andThen(teleopSwerveLeft.andThen
-                    (teleopSwerveRotateRight.andThen(teleopSwerveRotateLeft))))));
+    Command teleopSwerveRotateLeft = // rotate left
+        new TeleopSwerve(swerveSubsystem, () -> 0, () -> 0, () -> -0.3, kFieldRelative, kOpenLoop)
+            .until(driver.a());
+    return lockSwerve.andThen(
+        teleopSwerveForward.andThen(
+            telopSwerveBackward.andThen(
+                teleopSwerveRight.andThen(
+                    teleopSwerveLeft.andThen(
+                        teleopSwerveRotateRight.andThen(teleopSwerveRotateLeft))))));
   }
 }
