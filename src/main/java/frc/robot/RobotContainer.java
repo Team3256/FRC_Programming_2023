@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.*;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
@@ -128,6 +129,7 @@ public class RobotContainer {
                 () -> driver.getLeftX(),
                 kFieldRelative,
                 kOpenLoop));
+    driver.x().onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive)));
   }
 
   public void configureElevator() {
