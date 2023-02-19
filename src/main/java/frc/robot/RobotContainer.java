@@ -145,13 +145,14 @@ public class RobotContainer {
     }
   }
 
-  public ParallelCommandGroup defaultArmElevator() { // sets default position (lower elevator and default position for arm)
+  public ParallelCommandGroup
+      defaultArmElevator() { // sets default position (lower elevator and default position for arm)
     elevatorSubsystem = new Elevator();
     armSubsystem = new Arm();
 
     return new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, kMinHeight),
-            new SetArmAngle(armSubsystem, kArmAngleMinConstraint));
+        new SetElevatorHeight(elevatorSubsystem, kMinHeight),
+        new SetArmAngle(armSubsystem, kArmAngleMinConstraint));
   }
 
   private void configureArm() {
