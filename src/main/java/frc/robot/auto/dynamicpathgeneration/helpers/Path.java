@@ -32,7 +32,7 @@ public class Path {
     remainingPathLength[points - 1] = 0;
     for (int i = points - 2; i >= 0; i--) {
       remainingPathLength[i] = remainingPathLength[i + 1];
-      if (!pathNodes.get(i).isPassage())
+      if (pathNodes.get(i).getType() != PathNode.NodeType.PASSAGE)
         remainingPathLength[i] += positions.get(i).getDistance(positions.get(i + 1));
     }
     // convert poses to waypoints
@@ -57,7 +57,7 @@ public class Path {
             prevRotation.plus(dRotation.times(remainingPathLength[i - 1] - remainingPathLength[i]));
         // passage case, convert to multiple of 90*
         System.out.println("WantedAngle:" + holonomicAngle.getDegrees());
-        if (pathNodes.get(i).isPassage()) {
+        if (pathNodes.get(i).getType() == PathNode.NodeType.PASSAGE) {
           double[] radLock = {-Math.PI, -Math.PI / 2, 0, Math.PI / 2, Math.PI};
 
           for (double rad : radLock) {
@@ -82,34 +82,38 @@ public class Path {
       Translation2d prevControl;
       Translation2d nextControl;
       // passage case, use horizontal bezier controls
-      if (pathNodes.get(i).isPassage()) {
+      if (pathNodes.get(i).getType() == PathNode.NodeType.PASSAGE) {
         Translation2d prevControlVector =
             new Translation2d(positions.get(i - 1).minus(positions.get(i)).getX(), 0);
-        prevControl = prevControlVector.times(kControlPointScalar).plus(anchorPoint);
+        prevControl = prevControlVector.times(kRegularControlPointScalar).plus(anchorPoint);
         Translation2d nextControlVector =
             new Translation2d(positions.get(i + 1).minus(positions.get(i)).getX(), 0);
-        nextControl = nextControlVector.times(kControlPointScalar).plus(anchorPoint);
+        nextControl = nextControlVector.times(kRegularControlPointScalar).plus(anchorPoint);
       }
       // first point case, use point to point bezier control
       else if (i == 0) {
         prevControl = null;
         Translation2d thisPointToNextPoint =
-            positions.get(i + 1).minus(positions.get(i)).times(kControlPointScalar);
+            positions.get(i + 1).minus(positions.get(i)).times(kRegularControlPointScalar);
 
         nextControl = anchorPoint.plus(thisPointToNextPoint);
       }
       // last point case, use point to point bezier control
       else if (i == points - 1) {
         Translation2d thisPointToPrevPoint =
-            positions.get(i - 1).minus(positions.get(i)).times(kControlPointScalar);
+            positions.get(i - 1).minus(positions.get(i)).times(kRegularControlPointScalar);
 
         prevControl = anchorPoint.plus(thisPointToPrevPoint);
         nextControl = null;
       }
       // else use optimal bezier controls
       else {
+        double controlPointScalar = kRegularControlPointScalar;
+        // apply tight control point scalar in the community zone to avoid hitting charging station
+
         Translation2d[] controlPoints =
-            findControlPoints(positions.get(i - 1), positions.get(i), positions.get(i + 1));
+            findControlPoints(
+                positions.get(i - 1), positions.get(i), positions.get(i + 1), controlPointScalar);
 
         prevControl = controlPoints[0];
         nextControl = controlPoints[1];
@@ -140,7 +144,10 @@ public class Path {
   // find optimal bezier control points for a point given the point right before and the point right
   // after
   public Translation2d[] findControlPoints(
-      Translation2d startPoint, Translation2d desiredPoint, Translation2d endPoint) {
+      Translation2d startPoint,
+      Translation2d desiredPoint,
+      Translation2d endPoint,
+      double controlPointScalar) {
     Translation2d desiredToStartVector = startPoint.minus(desiredPoint);
     Translation2d desiredToEndVector = endPoint.minus(desiredPoint);
 
@@ -151,13 +158,13 @@ public class Path {
     Translation2d projDesiredToStartOnTransform =
         GeometryUtil.projectUonV(desiredToStartVector, desiredToStartTransformed);
     Translation2d startPointControlPoint =
-        desiredPoint.plus(projDesiredToStartOnTransform.times(kControlPointScalar));
+        desiredPoint.plus(projDesiredToStartOnTransform.times(controlPointScalar));
 
     Translation2d desiredToEndTransformed = desiredToEndVector.rotateBy(alpha);
     Translation2d projDesiredToEndOnTransform =
         GeometryUtil.projectUonV(desiredToEndVector, desiredToEndTransformed);
     Translation2d endPointControlPoint =
-        desiredPoint.plus(projDesiredToEndOnTransform.times(kControlPointScalar));
+        desiredPoint.plus(projDesiredToEndOnTransform.times(controlPointScalar));
 
     return new Translation2d[] {startPointControlPoint, endPointControlPoint};
   }

@@ -32,13 +32,13 @@ public class CreateDynamicPathWayNodes {
     PathNode botPreSink = preSinks.get(0);
 
     // add passages
-    PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, true);
-    PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75, true);
+    PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
+    PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
     ArrayList<PathNode> topPassage = passage(dynamicPathWayNodes, topPassageSrc, topPassageSink);
     PathUtil.fullyConnect(topPreSink, topPassageSink);
 
-    PathNode botPassageSink = new PathNode(2.8, 0 + 0.73, true);
-    PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73, true);
+    PathNode botPassageSink = new PathNode(2.8, 0 + 0.73, PathNode.NodeType.PASSAGE);
+    PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73, PathNode.NodeType.PASSAGE);
     ArrayList<PathNode> botPassage = passage(dynamicPathWayNodes, botPassageSrc, botPassageSink);
     PathUtil.fullyConnect(botPreSink, botPassageSink);
 
@@ -84,7 +84,7 @@ public class CreateDynamicPathWayNodes {
     ArrayList<PathNode> newNodes = new ArrayList<>();
     newNodes.add(sink);
     for (double x = sink.getX() + passageRes; x <= src.getX() + passageRes; x += passageRes) {
-      newNodes.add(new PathNode(x, sink.getY(), true));
+      newNodes.add(new PathNode(x, sink.getY(), PathNode.NodeType.PASSAGE));
     }
     newNodes.add(src);
     PathUtil.fullyConnect(newNodes);

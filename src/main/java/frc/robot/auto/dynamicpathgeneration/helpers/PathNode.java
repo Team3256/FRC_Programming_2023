@@ -14,16 +14,23 @@ public class PathNode {
   private Translation2d point;
   private ArrayList<PathNode> edges;
   private int index;
-  private boolean isPassage;
+  private NodeType nodeType;
+
+  public enum NodeType {
+    NORMAL,
+    PASSAGE,
+    PRESINK
+  }
 
   public PathNode(double x, double y) {
     this.point = new Translation2d(x, y);
     this.edges = new ArrayList<>();
+    this.nodeType = NodeType.NORMAL;
   }
 
-  public PathNode(double x, double y, boolean isPassage) {
+  public PathNode(double x, double y, NodeType nodeType) {
     this(x, y);
-    this.isPassage = isPassage;
+    this.nodeType = nodeType;
   }
 
   public PathNode(Translation2d point) {
@@ -63,8 +70,8 @@ public class PathNode {
     this.index = index;
   }
 
-  public boolean isPassage() {
-    return isPassage;
+  public NodeType getType() {
+    return nodeType;
   }
 
   public Translation2d getPoint() {
