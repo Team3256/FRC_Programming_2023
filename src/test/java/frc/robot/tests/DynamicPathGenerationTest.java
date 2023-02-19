@@ -97,6 +97,13 @@ public class DynamicPathGenerationTest {
     testGeneratePathBase(src, sink, "DynamicTest-LongScore");
   }
 
+  @Test
+  public void testGeneratorPassage() {
+    Pose2d src = new Pose2d(new Translation2d(3.81, 0.80), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(1.90, 4.44), new Rotation2d(Math.PI));
+    testGeneratePathBase(src, sink, "DynamicTest-Passage");
+  }
+
   public void testGeneratePathBase(Pose2d src, Pose2d sink, String fileName) {
     if (!blue) {
       src =
