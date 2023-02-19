@@ -9,28 +9,30 @@ package frc.robot.auto.dynamicpathgeneration.commands;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.auto.commands.PPTrajectoryFollowCommand;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.swerve.SwerveDrive;
 
 // TODO Extend PPTrajectoryFollowCommand
-public class GoToGUIPose extends CommandBase {
+public class GoToGUIPose extends PPTrajectoryFollowCommand {
   private final SwerveDrive swerveSubsystem;
   private final Pose2d goalPose;
   private AutoCommandRunner commandRunner;
   private PathPlannerTrajectory pathToScoringLocation;
 
-  public GoToGUIPose(SwerveDrive swerveSubsystem, Pose2d goalPose) {
+  public GoToGUIPose() {
+    super();
+    SwerveDrive swerveSubsystem, AutoCommandRunner
+  } commandRunner) {
     this.swerveSubsystem = swerveSubsystem;
+    //TODO: GRAB FROM SD
+    Pose2d goalPose = new Pose2d(0,0,new Rotation2d(0));
+    this.commandRunner = commandRunner;
     this.goalPose = goalPose;
-
     addRequirements(swerveSubsystem);
-  }
-
-  public GoToGUIPose(SwerveDrive swerveSubsystem, Pose2d goalPose, AutoCommandRunner commandRunner) {
-    this(swerveSubsystem, goalPose);
-
     // TODO Implement command runner
     this.commandRunner = commandRunner;
   }
@@ -43,7 +45,9 @@ public class GoToGUIPose extends CommandBase {
   }
 
   @Override
-  public void execute() {}
+  public void execute() {
+    autoCommand
+  }
 
   @Override
   public boolean isFinished() {
