@@ -110,7 +110,9 @@ public class Path {
       else {
         double controlPointScalar = kRegularControlPointScalar;
         // apply tight control point scalar in the community zone to avoid hitting charging station
-
+        if (pathNodes.get(i).getType() == PathNode.NodeType.PRESINK) {
+          controlPointScalar = kTightControlPointScalar;
+        }
         Translation2d[] controlPoints =
             findControlPoints(
                 positions.get(i - 1), positions.get(i), positions.get(i + 1), controlPointScalar);

@@ -23,8 +23,8 @@ public final class DynamicPathConstants {
   public static final double kCollisionBuffer = 0.1;
   public static final double kRobotRadius = 0.455 * Math.sqrt(2);
   public static final double kHitBoxResolution = 100;
-  public static final double kRegularControlPointScalar = 0.4;
-  public static final double kTightControlPointScalar = 0.15;
+  public static final double kRegularControlPointScalar = 0.5;
+  public static final double kTightControlPointScalar = 0.1;
 
   public static final Obstacle kBarrierAboveGrid =
       new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
