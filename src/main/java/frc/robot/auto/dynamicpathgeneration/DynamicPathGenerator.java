@@ -25,7 +25,6 @@ public class DynamicPathGenerator {
   private final ArrayList<PathNode> dynamicPathNodes;
 
   public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
-    System.out.println("Setting Up Path Finder Algorithm");
     this.startPose = startPose;
     this.goalPose = goalPose;
     dynamicPathNodes = new ArrayList<>(dynamicPathWayNodes);
