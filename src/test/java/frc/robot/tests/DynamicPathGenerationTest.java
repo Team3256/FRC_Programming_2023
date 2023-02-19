@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
-import frc.robot.auto.dynamicpathgeneration.helpers.FileHelper;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
+import frc.robot.auto.dynamicpathgeneration.helpers.FileUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import java.util.List;
@@ -106,7 +106,7 @@ public class DynamicPathGenerationTest {
               16.5 - sink.getX(), sink.getY(), sink.getRotation().plus(new Rotation2d(Math.PI)));
     }
     long start = System.currentTimeMillis();
-    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
+    DynamicPathFollower generator = new DynamicPathFollower(src, sink);
     List<PathNode> pathNodes = generator.getPathNodes();
     System.out.println("Time to find points: " + (System.currentTimeMillis() - start));
     testInterpolatePathBase(src.getRotation(), sink.getRotation(), pathNodes, fileName);
@@ -125,7 +125,7 @@ public class DynamicPathGenerationTest {
     String correctJsonPath =
         "src/test/java/frc/robot/tests/dynamicpathgeneration/json/" + fileName + ".path";
 
-    FileHelper.saveJson(json, pathPlannerJsonPath);
+    FileUtil.saveJson(json, pathPlannerJsonPath);
     assertTrue(true);
     // assertTrue(FileHelper.areJsonFilesSame(pathPlannerJsonPath,
     // correctJsonPath));

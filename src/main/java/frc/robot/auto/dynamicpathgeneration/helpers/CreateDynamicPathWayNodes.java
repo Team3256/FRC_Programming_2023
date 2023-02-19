@@ -16,7 +16,7 @@ import frc.robot.Constants;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
-public class PathGenInit {
+public class CreateDynamicPathWayNodes{
   static double passageRes = 0.6;
   // assume blue for now
   public static void init() {
@@ -58,7 +58,7 @@ public class PathGenInit {
     JSONObject json = path.getJson();
     String fileName = "SpecialPoints";
     String pathPlannerJsonPath = "src/main/deploy/pathplanner/" + fileName + ".path";
-    FileHelper.saveJson(json, pathPlannerJsonPath);
+    FileUtil.saveJson(json, pathPlannerJsonPath);
   }
 
   public static ArrayList<PathNode> preSink(ArrayList<PathNode> pathNodes) {

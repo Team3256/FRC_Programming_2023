@@ -10,9 +10,8 @@ package frc.robot.auto.dynamicpathgeneration.commands;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.auto.commands.PPTrajectoryFollowCommand;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
 import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.swerve.SwerveDrive;
 
@@ -40,7 +39,7 @@ public class GoToGUIPose extends PPTrajectoryFollowCommand {
   @Override
   public void initialize() {
     Pose2d currentPose = swerveSubsystem.getPose();
-    DynamicPathGenerator pathGenerator = new DynamicPathGenerator(currentPose, goalPose);
+    DynamicPathFollower pathGenerator = new DynamicPathFollower(currentPose, goalPose);
     pathToScoringLocation = pathGenerator.getTrajectory();
   }
 

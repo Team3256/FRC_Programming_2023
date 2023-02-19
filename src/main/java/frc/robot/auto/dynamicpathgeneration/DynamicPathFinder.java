@@ -9,10 +9,8 @@ package frc.robot.auto.dynamicpathgeneration;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
-import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.swerve.SwerveConstants;
 import java.util.*;
@@ -112,7 +110,7 @@ public class DynamicPathFinder {
     // make sure pathIds are valid (doesn't hit obstacles)
     double totalDistance = 0;
     for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (doesPathSegmentHitObstacles(
+      if (PathUtil.doesPathSegmentHitObstacles(
           pathNodes.get(pathIds.get(i)).getPoint(), pathNodes.get(pathIds.get(i + 1)).getPoint()))
         return INF_TIME;
       totalDistance +=
@@ -146,25 +144,4 @@ public class DynamicPathFinder {
     return pathIds;
   }
 
-  public static boolean doesLineHitObstacles(Translation2d position1, Translation2d position2) {
-    for (Obstacle obstacle : obstacles) {
-      if (obstacle.intersectsLineSegment(position1, position2)) return true;
-    }
-    return false;
-  }
-
-  public static boolean doesPathSegmentHitObstacles(
-      Translation2d position1, Translation2d position2) {
-    if (doesLineHitObstacles(position1, position2)) return true;
-
-    Rotation2d normalAngle = position2.minus(position1).getAngle().plus(Rotation2d.fromDegrees(90));
-    Translation2d normalVector = new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotRadius);
-
-    if (doesLineHitObstacles(position1.minus(normalVector), position2.minus(normalVector)))
-      return true;
-    if (doesLineHitObstacles(position1.plus(normalVector), position2.plus(normalVector)))
-      return true;
-
-    return false;
-  }
 }

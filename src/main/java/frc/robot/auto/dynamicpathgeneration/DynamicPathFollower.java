@@ -16,7 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.*;
 import java.util.*;
 
-public class DynamicPathGenerator {
+public class DynamicPathFollower{
   private final Pose2d startPose;
   private final int src;
   private final Pose2d goalPose;
@@ -24,7 +24,7 @@ public class DynamicPathGenerator {
   private int numNodes;
   private ArrayList<PathNode> dynamicPathNodes;
 
-  public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
+  public DynamicPathFollower(Pose2d startPose,Pose2d goalPose) {
     System.out.println("Setting Up Path Finder Algorithm");
     this.startPose = startPose;
     this.goalPose = goalPose;
@@ -51,7 +51,7 @@ public class DynamicPathGenerator {
       }
     }
     System.out.println("closest to " + node + " is " + ret);
-    PathGenInit.fullyConnect(ret, node);
+    CreateDynamicPathWayNodes.fullyConnect(ret, node);
     return ret;
   }
 
@@ -68,8 +68,8 @@ public class DynamicPathGenerator {
       System.out.println("This is the path generated:");
       System.out.println(positions);
     }
-    PathGenInit.fullyDisconnect(srcClosest, dynamicPathNodes.get(src));
-    PathGenInit.fullyDisconnect(sinkClosest, dynamicPathNodes.get(sink));
+    CreateDynamicPathWayNodes.fullyDisconnect(srcClosest, dynamicPathNodes.get(src));
+    CreateDynamicPathWayNodes.fullyDisconnect(sinkClosest, dynamicPathNodes.get(sink));
     return positions;
   }
 

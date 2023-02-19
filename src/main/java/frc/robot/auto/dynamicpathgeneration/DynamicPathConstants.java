@@ -16,7 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
-import frc.robot.auto.dynamicpathgeneration.helpers.PathGenInit;
+import frc.robot.auto.dynamicpathgeneration.helpers.CreateDynamicPathWayNodes;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import java.util.ArrayList;
 
@@ -56,7 +56,7 @@ public final class DynamicPathConstants {
   public static final boolean blue = true;
 
   static {
-    PathGenInit.init();
+    CreateDynamicPathWayNodes.init();
   }
 
   public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 7.5);
