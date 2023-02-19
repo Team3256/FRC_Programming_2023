@@ -89,8 +89,8 @@ public class DynamicPathGenerator {
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());
     }
+    //if no path points were found then there should be no trajectory
     if (pathPoints.size() == 0) return null;
-
     // convert pathPoints into Trajectory we return
     return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
   }

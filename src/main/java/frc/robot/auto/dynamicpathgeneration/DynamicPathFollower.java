@@ -21,6 +21,7 @@ public class DynamicPathFollower {
     // get src, sink
     Pose2d src = swerveDrive.getPose();
     int locationId = (int) SmartDashboard.getNumber("locationId", -1);
+    // handle invalid location
     if (locationId == -1) {
       System.out.println("LocationId entered was invalid.");
       return;
@@ -29,6 +30,7 @@ public class DynamicPathFollower {
     // get trajectory
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     PathPlannerTrajectory trajectory = generator.getTrajectory();
+    // handle invalid trajectory
     if (trajectory == null) {
       System.out.println("No trajectory was found.");
     }
