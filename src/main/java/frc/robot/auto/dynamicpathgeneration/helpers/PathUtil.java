@@ -14,12 +14,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.swerve.SwerveConstants;
 
 public class PathUtil {
-  public static double splineHeuristic(Translation2d position1, Translation2d position2) {
+  public static double straightTravelTimeWithoutObstacles(
+      Translation2d position1, Translation2d position2) {
     return position1.getDistance(position2) / (SwerveConstants.kMaxSpeed);
   }
 
-  public static double mockSplineHeuristic(Translation2d position1, Translation2d position2) {
-    double estimatedTime = splineHeuristic(position1, position2);
+  public static double straightTravelTimeWithObstacles(
+      Translation2d position1, Translation2d position2) {
+    double estimatedTime = straightTravelTimeWithoutObstacles(position1, position2);
     if (doesPathSegmentHitObstacles(position1, position2)) estimatedTime += ILLEGAL_TIME;
     return estimatedTime;
   }

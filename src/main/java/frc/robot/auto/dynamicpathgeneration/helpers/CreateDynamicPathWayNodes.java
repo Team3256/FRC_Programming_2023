@@ -18,16 +18,16 @@ import org.json.simple.JSONObject;
 
 public class CreateDynamicPathWayNodes {
   static double passageRes = 0.6;
-  // assume blue for now
+
   public static void init() {
     System.out.println("Path Generator Initialized");
 
-    // end
+    // add preSink nodes
     ArrayList<PathNode> preSinks = preSink(dynamicPathWayNodes);
     PathNode topPreSink = preSinks.get(preSinks.size() - 2);
     PathNode botPreSink = preSinks.get(1);
 
-    // passages
+    // add passages
     PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, true);
     PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75, true);
     ArrayList<PathNode> topPassage = passage(dynamicPathWayNodes, topPassageSrc, topPassageSink);
@@ -38,7 +38,7 @@ public class CreateDynamicPathWayNodes {
     ArrayList<PathNode> botPassage = passage(dynamicPathWayNodes, botPassageSrc, botPassageSink);
     fullyConnect(botPreSink, botPassageSink);
 
-    // station
+    // add station nodes
     PathNode leftStation = new PathNode(6.28, 6.39);
     dynamicPathWayNodes.add(leftStation);
     fullyConnect(leftStation, topPassageSrc);
@@ -47,13 +47,14 @@ public class CreateDynamicPathWayNodes {
     dynamicPathWayNodes.add(rightStation);
     fullyConnect(rightStation, topPassageSrc);
 
+    // mirror all points if red
     if (!blue) {
       for (PathNode p : dynamicPathWayNodes) {
         p.setPoint(new Translation2d(16.5 - p.getX(), p.getY()));
       }
     }
 
-    // debug
+    // display special points in Path Planner
     Path path = new Path(dynamicPathWayNodes, new Rotation2d(0), new Rotation2d(0));
     JSONObject json = path.getJson();
     String fileName = "SpecialPoints";
@@ -66,6 +67,7 @@ public class CreateDynamicPathWayNodes {
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
       preSinks.add(new PathNode(sink.getX() + 1, sink.getY()));
     }
+    // shift the ends of the preSink inwards to avoid colliding into the wall
     preSinks.get(0).addY(0.25);
     preSinks.get(preSinks.size() - 2).addY(-0.25);
     pathNodes.addAll(preSinks);
@@ -86,6 +88,7 @@ public class CreateDynamicPathWayNodes {
     return newNodes;
   }
 
+  // helper methods to connect/disconnect edges
   public static void fullyConnect(ArrayList<PathNode> pathNodes) {
     for (PathNode u : pathNodes) {
       for (PathNode v : pathNodes) {

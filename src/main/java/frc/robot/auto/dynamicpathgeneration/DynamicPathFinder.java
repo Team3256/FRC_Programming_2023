@@ -46,9 +46,7 @@ public class DynamicPathFinder {
     // Previous node in current optimal path to node
     pre = new int[nodes];
 
-    // Priorities with which to visit the nodes
-
-    // Q to pop from
+    // queue to pop from, sorted based on lowest distance
     PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> dist[a]));
     pq.add(src);
 
@@ -63,6 +61,7 @@ public class DynamicPathFinder {
       if (kDynamicPathGenerationDebug) {
         // System.out.println("explore node:" + currentNode);
       }
+
       nodesExplored++;
 
       // Found the shortest path to sink
@@ -78,11 +77,11 @@ public class DynamicPathFinder {
         if (kDynamicPathGenerationDebug) {
           // System.out.println("explore child: " + next);
         }
-        // calculate time (penalize paths with more points)
+        // Calculate time (penalize paths with more points)
         double newDist =
             0.000001
                 + dist[currentNode]
-                + PathUtil.splineHeuristic(
+                + PathUtil.straightTravelTimeWithoutObstacles(
                     pathNodes.get(currentNode).getPoint(), pathNodes.get(next).getPoint());
         // If path over this edge is better
         if (newDist < dist[next]) {
@@ -100,7 +99,6 @@ public class DynamicPathFinder {
     }
     // No paths available
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
-
     ArrayList<Integer> pathIds = new ArrayList<Integer>(Arrays.asList(nodes - 2, nodes - 1));
     return pathIds;
   }

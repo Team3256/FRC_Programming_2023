@@ -21,12 +21,13 @@ public class Path {
   private int points;
 
   public Path(List<PathNode> pathNodes, Rotation2d startRotation, Rotation2d endRotation) {
+    // convert path nodes to translations
     points = pathNodes.size();
     List<Translation2d> positions = new ArrayList<>();
     for (int i = 0; i < points; i++) {
       positions.add(pathNodes.get(i).getPoint());
     }
-    // path length from node to final node
+    // path length from node to final node, excluding passages
     double[] remainingPathLength = new double[points];
     remainingPathLength[points - 1] = 0;
     for (int i = points - 2; i >= 0; i--) {
@@ -39,6 +40,7 @@ public class Path {
     for (int i = 0; i < points; i++) {
       // calculate holonomicAngle
       Rotation2d holonomicAngle;
+      // first point case, use startRotation
       if (i == 0) {
         holonomicAngle = startRotation;
         System.out.println("WantedAngle:" + holonomicAngle.getDegrees());
@@ -79,28 +81,33 @@ public class Path {
       Translation2d anchorPoint = positions.get(i);
       Translation2d prevControl;
       Translation2d nextControl;
-      // horizontal passage case
+      // passage case, use horizontal bezier controls
       if (pathNodes.get(i).isPassage()) {
-        // horizontal bezier controls
         Translation2d prevControlVector =
             new Translation2d(positions.get(i - 1).minus(positions.get(i)).getX(), 0);
         prevControl = prevControlVector.times(kControlPointScalar).plus(anchorPoint);
         Translation2d nextControlVector =
             new Translation2d(positions.get(i + 1).minus(positions.get(i)).getX(), 0);
         nextControl = nextControlVector.times(kControlPointScalar).plus(anchorPoint);
-      } else if (i == 0) {
+      }
+      // first point case, use point to point bezier control
+      else if (i == 0) {
         prevControl = null;
         Translation2d thisPointToNextPoint =
             positions.get(i + 1).minus(positions.get(i)).times(kControlPointScalar);
 
         nextControl = anchorPoint.plus(thisPointToNextPoint);
-      } else if (i == points - 1) {
+      }
+      // last point case, use point to point bezier control
+      else if (i == points - 1) {
         Translation2d thisPointToPrevPoint =
             positions.get(i - 1).minus(positions.get(i)).times(kControlPointScalar);
 
         prevControl = anchorPoint.plus(thisPointToPrevPoint);
         nextControl = null;
-      } else {
+      }
+      // else use optimal bezier controls
+      else {
         Translation2d[] controlPoints =
             findControlPoints(positions.get(i - 1), positions.get(i), positions.get(i + 1));
 
@@ -130,6 +137,8 @@ public class Path {
     return fullJson;
   }
 
+  // find optimal bezier control points for a point given the point right before and the point right
+  // after
   public Translation2d[] findControlPoints(
       Translation2d startPoint, Translation2d desiredPoint, Translation2d endPoint) {
     Translation2d desiredToStartVector = startPoint.minus(desiredPoint);

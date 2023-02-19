@@ -31,8 +31,8 @@ public class DynamicPathFollower {
     PathPlannerTrajectory trajectory = generator.getTrajectory();
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command toRun = autoBuilder.createPathPlannerCommand(trajectory, false);
+    Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false);
     // run command
-    toRun.schedule();
+    pathPlannerCommand.schedule();
   }
 }

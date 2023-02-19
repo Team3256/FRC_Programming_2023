@@ -44,7 +44,7 @@ public class DynamicPathGenerator {
     PathNode ret = node;
     for (PathNode q : nodes) {
       if (q == node) continue;
-      double dist = PathUtil.mockSplineHeuristic(node.getPoint(), q.getPoint());
+      double dist = PathUtil.straightTravelTimeWithObstacles(node.getPoint(), q.getPoint());
       if (dist < closest) {
         closest = dist;
         ret = q;
