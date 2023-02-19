@@ -3,7 +3,8 @@
 * Use the method DynamicPathFollower.run() to make the robot travel to any wanted pose on SmartDashboard
 ### How it works:
 * DynamicPathFinder gets a list of points and finds the best path from start node to end node
-* DynamicPathFollower uses Finder to create a trajectory for the robot to travel
+* DynamicPathGenerator uses Finder to create a trajectory for the robot to travel from a given start pose to end pose
+* DynamicPathFollower uses Generator to create a trajectory from current robot pose to the wanted node from GUI. Then it schedules a command to make the robot run the route.
 * To mirror to red paths (default is blue), we subtract all x coordinates from 16.5 to form x' (including obstacles)
 ### Tests:
 * Follow DynamicPathGenerationTest functions to create your own test case and visualize it.

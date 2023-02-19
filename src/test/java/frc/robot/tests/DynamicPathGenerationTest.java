@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.FileUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
@@ -106,7 +106,7 @@ public class DynamicPathGenerationTest {
               16.5 - sink.getX(), sink.getY(), sink.getRotation().plus(new Rotation2d(Math.PI)));
     }
     long start = System.currentTimeMillis();
-    DynamicPathFollower generator = new DynamicPathFollower(src, sink);
+    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<PathNode> pathNodes = generator.getPathNodes();
     System.out.println("Time to find points: " + (System.currentTimeMillis() - start));
     testInterpolatePathBase(src.getRotation(), sink.getRotation(), pathNodes, fileName);
