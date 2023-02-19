@@ -28,8 +28,8 @@ public class CreateDynamicPathWayNodes {
 
     // add preSink nodes
     ArrayList<PathNode> preSinks = preSink(dynamicPathWayNodes);
-    PathNode topPreSink = preSinks.get(preSinks.size() - 2);
-    PathNode botPreSink = preSinks.get(1);
+    PathNode topPreSink = preSinks.get(preSinks.size() - 1);
+    PathNode botPreSink = preSinks.get(0);
 
     // add passages
     PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, true);
@@ -72,8 +72,8 @@ public class CreateDynamicPathWayNodes {
       preSinks.add(new PathNode(sink.getX() + 1, sink.getY()));
     }
     // shift the ends of the preSink inwards to avoid colliding into the wall
-    preSinks.get(0).addY(0.25);
-    preSinks.get(preSinks.size() - 2).addY(-0.25);
+    preSinks.get(0).addY(0.30);
+    preSinks.get(preSinks.size() - 1).addY(-0.30);
     pathNodes.addAll(preSinks);
     PathUtil.fullyConnect(preSinks);
     return preSinks;
