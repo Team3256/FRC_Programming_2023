@@ -8,6 +8,8 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.arm.ArmConstants.*;
+import static frc.robot.elevator.ElevatorConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -110,10 +112,10 @@ public class RobotContainer {
         .whileTrue(
             new TeleopSwerveWithAzimuth(
                 swerveDrive,
-                () -> driver.getRightY(),
-                () -> driver.getRightX(),
-                () -> driver.getLeftX(),
                 () -> driver.getLeftY(),
+                () -> driver.getLeftX(),
+                () -> driver.getRightX(),
+                () -> driver.getRightY(),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -140,11 +142,28 @@ public class RobotContainer {
 
     if (kArmEnabled) {
       operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
+      driver.b().onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorLowPositionMeters));
+      driver.rightTrigger().onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorHighPositionMeters));
+      driver.rightBumper().onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorMidPositionMeters));
     }
   }
 
   private void configureArm() {
     armSubsystem = new Arm();
+
+    if (kElevatorEnabled) {
+      driver.b().onTrue(new SetArmAngle(armSubsystem, kArmAngleLow));
+      driver.rightTrigger().onTrue(new SetArmAngle(armSubsystem, kArmAngleHigh));
+      driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, kArmAngleMid));
+    }
+
+    if (kArmIsStowed) {
+      // TODO run DefaultArmElevatorCommand once merged
+    }
+    else {
+      // TODO run DefaultArmElevatorCommand once merged
+    }
+
     // TODO: set button bindings for arm testing
   }
 
