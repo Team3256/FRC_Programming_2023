@@ -177,10 +177,46 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     return (kInvertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
 
-  public boolean shouldAddVisionMeasurement(Pose2d limelightPose) {
+  public boolean shouldAddVisionMeasurement(
+      Pose2d limelightPose,
+      double LimelightTranslationThresholdMeters,
+      double LimelightRotationThreshold) {
     Pose2d relativePose = limelightPose.relativeTo(poseEstimator.getEstimatedPosition());
-    return Math.abs(relativePose.getTranslation().getNorm()) < kLimelightTranslationThresholdMeters
-        && Math.abs(relativePose.getRotation().getRadians()) < kLimelightRotationThreshold;
+    return Math.abs(relativePose.getTranslation().getNorm()) < LimelightTranslationThresholdMeters
+        && Math.abs(relativePose.getRotation().getRadians()) < LimelightRotationThreshold;
+  }
+
+  public void localize(
+      String networkTablesName,
+      double fieldTransformOffsetX,
+      double fieldTransformOffsetY,
+      double LimelightTranslationThresholdMeters,
+      double LimelightRotationThreshold) {
+    if (Limelight.hasValidTargets(networkTablesName)) {
+      double[] visionBotPose = Limelight.getBotpose(networkTablesName);
+
+      if (visionBotPose.length != 0) {
+        double tx = visionBotPose[0] + fieldTransformOffsetX;
+        double ty = visionBotPose[1] + fieldTransformOffsetY;
+
+        // botpose from network tables uses degrees, not radians, so need to convert
+        double rx = visionBotPose[3];
+        double ry = visionBotPose[4];
+        double rz = ((visionBotPose[5] + 360) % 360);
+
+        double tl = Limelight.getLatency_Pipeline(networkTablesName);
+
+        Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
+
+        if (shouldAddVisionMeasurement(
+            limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)) {
+          poseEstimator.addVisionMeasurement(
+              limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+        }
+
+        limelightLocalizationField.setRobotPose(limelightPose);
+      }
+    }
   }
 
   @Override
@@ -189,30 +225,24 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     poseEstimator.update(getYaw(), getModulePositions());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
-    if (Limelight.hasValidTargets(kLimelightNetworkTablesName)) {
-      double[] visionBotPose = Limelight.getBotpose(kLimelightNetworkTablesName);
-
-      if (visionBotPose.length != 0) {
-        double tx = visionBotPose[0] + kFieldTranslationOffsetX;
-        double ty = visionBotPose[1] + kFieldTranslationOffsetY;
-
-        // botpose from network tables uses degrees, not radians, so need to convert
-        double rx = visionBotPose[3];
-        double ry = visionBotPose[4];
-        double rz = ((visionBotPose[5] + 360) % 360);
-
-        double tl = Limelight.getLatency_Pipeline(kLimelightNetworkTablesName);
-
-        Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
-
-        if (shouldAddVisionMeasurement(limelightPose)) {
-          poseEstimator.addVisionMeasurement(
-              limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
-        }
-
-        limelightLocalizationField.setRobotPose(limelightPose);
-      }
-    }
+    this.localize(
+        FrontConstants.kLimelightNetworkTablesName,
+        FrontConstants.kFieldTranslationOffsetX,
+        FrontConstants.kFieldTranslationOffsetY,
+        FrontConstants.kLimelightTranslationThresholdMeters,
+        FrontConstants.kLimelightRotationThreshold);
+    this.localize(
+        SideConstants.kLimelightNetworkTablesName,
+        SideConstants.kFieldTranslationOffsetX,
+        SideConstants.kFieldTranslationOffsetY,
+        SideConstants.kLimelightTranslationThresholdMeters,
+        SideConstants.kLimelightRotationThreshold);
+    this.localize(
+        BackConstants.kLimelightNetworkTablesName,
+        BackConstants.kFieldTranslationOffsetX,
+        BackConstants.kFieldTranslationOffsetY,
+        BackConstants.kLimelightTranslationThresholdMeters,
+        BackConstants.kLimelightTranslationThresholdMeters);
 
     for (SwerveModule mod : swerveModules) {
       SmartDashboard.putNumber(
