@@ -186,7 +186,7 @@ public class Path {
     Translation2d projDesiredToEndOnTransform =
         GeometryUtil.projectUonV(desiredToEndVector, desiredToEndTransformed);
     Translation2d endPointControlPoint =
-        desiredPoint.plus(projDesiredToEndOnTransform.times(prevControlPointScalar));
+        desiredPoint.plus(projDesiredToEndOnTransform.times(nextControlPointScalar));
 
     return new Translation2d[] {startPointControlPoint, endPointControlPoint};
   }
