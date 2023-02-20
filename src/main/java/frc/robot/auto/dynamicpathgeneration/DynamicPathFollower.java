@@ -7,7 +7,7 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueImportantLocations;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueEndpoints;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,7 +26,7 @@ public class DynamicPathFollower {
       System.out.println("LocationId entered was invalid.");
       return;
     }
-    Pose2d sink = kBlueImportantLocations[locationId];
+    Pose2d sink = kBlueEndpoints[locationId];
     // get trajectory
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     PathPlannerTrajectory trajectory = generator.getTrajectory();
