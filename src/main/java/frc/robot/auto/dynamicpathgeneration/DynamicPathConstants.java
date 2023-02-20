@@ -47,6 +47,7 @@ public final class DynamicPathConstants {
   // Universal path nodes
   public static final ArrayList<PathNode> dynamicPathWayNodes = new ArrayList<>();
   public static final double preSinkX = 2.1;
+  public static final double preSinkEndpointsOffset = 0.3;
 
   static {
     CreateDynamicPathWayNodes.init();
