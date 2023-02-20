@@ -7,6 +7,8 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
@@ -16,8 +18,6 @@ import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
-
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 public class CreateDynamicPathWayNodes {
   static double passagePoints = 8;
@@ -34,14 +34,16 @@ public class CreateDynamicPathWayNodes {
     PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
     PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
     ArrayList<PathNode> topPassage = passage(dynamicPathWayNodes, topPassageSrc, topPassageSink);
-    // link top passage with top PreSink
+    // link top passage with top 2 PreSink
     PathUtil.fullyConnect(topPreSink, topPassageSink);
+    PathUtil.fullyConnect(preSinks.get(preSinks.size() - 2), topPassageSink);
 
     PathNode botPassageSink = new PathNode(2.8, 0 + 0.73, PathNode.NodeType.PASSAGE);
     PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73, PathNode.NodeType.PASSAGE);
     ArrayList<PathNode> botPassage = passage(dynamicPathWayNodes, botPassageSrc, botPassageSink);
-    // link bottom passage with bottom preSink
+    // link bottom passage with bottom 2 preSink
     PathUtil.fullyConnect(botPreSink, botPassageSink);
+    PathUtil.fullyConnect(preSinks.get(1), botPassageSink);
 
     // add station nodes
     PathNode leftStation = new PathNode(6.28, 6.39);
@@ -75,8 +77,8 @@ public class CreateDynamicPathWayNodes {
       preSinks.add(new PathNode(preSinkX, sink.getY(), PathNode.NodeType.PRESINK));
     }
     // shift the ends of the preSink inwards to avoid colliding into the wall
-    preSinks.get(0).addY(0.30);
-    preSinks.get(preSinks.size() - 1).addY(-0.30);
+    preSinks.get(0).addY(preSinkEndpointsOffset);
+    preSinks.get(preSinks.size() - 1).addY(-preSinkEndpointsOffset);
     pathNodes.addAll(preSinks);
     PathUtil.fullyConnect(preSinks);
     return preSinks;
