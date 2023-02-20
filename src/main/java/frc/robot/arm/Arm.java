@@ -7,6 +7,7 @@
 
 package frc.robot.arm;
 
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -17,6 +18,9 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -30,8 +34,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
+import frc.robot.logging.DoubleSendable;
+import frc.robot.logging.Loggable;
 
-public class Arm extends SubsystemBase implements CANTestable {
+public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private WPI_TalonFX armMotor;
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
@@ -133,7 +139,20 @@ public class Arm extends SubsystemBase implements CANTestable {
     System.out.println("Testing arm CAN:");
     boolean result = CANDeviceTester.testTalonFX(armMotor);
     System.out.println("Arm CAN connected: " + result);
-    SmartDashboard.putBoolean("Arm CAN connected", result);
+    getLayout(kElectricalTabName).add("Arm CAN connected", result);
     return result;
+  }
+
+  @Override
+  public void logInit() {
+    getLayout(kDriverTabName).add("1", this);
+    getLayout(kDriverTabName)
+        .add("2", new DoubleSendable(() -> Math.toDegrees(getArmPositionRads())));
+    getLayout(kDriverTabName).add("3", armMotor);
+  }
+
+  @Override
+  public ShuffleboardLayout getLayout(String tab) {
+    return Shuffleboard.getTab(tab).getLayout(kArmLayoutName, BuiltInLayouts.kList).withSize(2, 4);
   }
 }

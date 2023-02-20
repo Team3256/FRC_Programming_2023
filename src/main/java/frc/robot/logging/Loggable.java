@@ -7,8 +7,10 @@
 
 package frc.robot.logging;
 
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+
 public interface Loggable {
   public void logInit();
 
-  public void logPeriodic();
+  public ShuffleboardLayout getLayout(String tab);
 }

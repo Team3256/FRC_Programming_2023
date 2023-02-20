@@ -7,11 +7,7 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
-import static frc.robot.swerve.SwerveConstants.*;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.Constants.VisionConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
@@ -26,18 +22,19 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
-import frc.robot.logging.Loggable;
 import frc.robot.limelight.Limelight;
+import frc.robot.logging.GyroSendable;
+import frc.robot.logging.Loggable;
 import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
@@ -61,8 +58,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
-  public SwerveDriveOdometry odometry;
-  public WPI_PigeonIMU gyro;
   public Pigeon2 gyro;
 
   public SwerveDrive() {
@@ -241,7 +236,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   @Override
   public void logInit() {
     getLayout(kDriverTabName).add("1", this);
-    getLayout(kDriverTabName).add("2", gyro);
+    getLayout(kDriverTabName).add("2", new GyroSendable(gyro::getYaw));
     for (int i = 0; i < swerveModules.length; i++) {
       getLayout(kDriverTabName).add("Encoder " + i, swerveModules[i].getAngleEncoder());
     }
@@ -250,11 +245,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     }
   }
 
-  @Override
-  public void logPeriodic() {}
-
   public ShuffleboardLayout getLayout(String tab) {
-    return Shuffleboard.getTab(tab).getLayout("Swerve", BuiltInLayouts.kList).withSize(2, 4);
+    return Shuffleboard.getTab(tab)
+        .getLayout(kSwerveLayoutName, BuiltInLayouts.kList)
+        .withSize(2, 4);
   }
 
   public boolean CANTest() {
@@ -265,7 +259,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     }
     result &= CANDeviceTester.testPigeon(gyro);
     System.out.println("Drivetrain CAN connected: " + result);
-    SmartDashboard.putBoolean("Drivetrain CAN connected", result);
+    getLayout(kElectricalTabName).add("Drivetrain CAN connected", result);
     return result;
   }
 

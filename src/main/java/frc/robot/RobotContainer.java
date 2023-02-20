@@ -15,9 +15,7 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,14 +25,14 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
+import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
-import frc.robot.logging.GyroSendable;
-import frc.robot.logging.Loggable;
-import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
+import frc.robot.logging.GyroSendable;
+import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
@@ -45,7 +43,7 @@ import java.util.ArrayList;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -75,13 +73,16 @@ public class RobotContainer {
     if (kElevatorEnabled) {
       configureElevator();
       testables.add(elevatorSubsystem);
+      loggables.add(elevatorSubsystem);
     }
     if (kArmEnabled) {
       configureArm();
       testables.add(armSubsystem);
+      loggables.add(armSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
+      loggables.add(ledStrip);
     }
 
     Shuffleboard.getTab(kElectricalTabName).add(pdp);
@@ -167,7 +168,8 @@ public class RobotContainer {
     return new InstantCommand();
   }
 
-  public void startLog() {
+  @Override
+  public void logInit() {
     for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
@@ -176,14 +178,17 @@ public class RobotContainer {
                 () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY()))));
   }
 
-  public void periodicLog() {
-    for (Loggable device : loggables) device.logPeriodic();
+  @Override
+  public ShuffleboardLayout getLayout(String tab) {
+    return null;
   }
 
-  public void test() {
+  @Override
+  public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
     for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
+    return result;
   }
 }

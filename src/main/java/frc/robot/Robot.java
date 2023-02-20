@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.kAdvatageKitReplayEnabled;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotMode;
@@ -73,13 +71,12 @@ public class Robot extends LoggedRobot {
 
     logger.start(); // Start advkit logger
     robotContainer = new RobotContainer();
-    robotContainer.startLog();
+    robotContainer.logInit();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    robotContainer.periodicLog();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -125,7 +122,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     // Run tests
-    robotContainer.test();
+    robotContainer.CANTest();
   }
 
   /** This function is called periodically during test mode. */

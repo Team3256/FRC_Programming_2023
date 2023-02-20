@@ -81,6 +81,7 @@ public class TalonFXFactory {
     }
     final WPI_TalonFX talon = createTalon(slave_id, kSlaveConfiguration);
     talon.set(ControlMode.Follower, master_id.getDeviceNumber());
+    return talon;
   }
 
   public static WPI_TalonFX createPermanentFollowerTalon(

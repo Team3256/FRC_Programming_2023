@@ -8,11 +8,8 @@
 package frc.robot.drivers;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;\
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.PowerDistribution;
 
@@ -42,7 +39,7 @@ public class CANDeviceTester {
    * @param device pigeon to test
    * @return Returns whether the Pigeon is online
    */
-  public static boolean testPigeon(WPI_PigeonIMU device) {
+  public static boolean testPigeon(Pigeon2 device) {
     double temp = device.getTemp();
     if (temp == 0) System.out.println("Pigeon " + device.getDeviceID() + " offline");
     return temp != 0;

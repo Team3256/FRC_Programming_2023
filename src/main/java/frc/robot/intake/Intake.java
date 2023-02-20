@@ -8,15 +8,16 @@
 package frc.robot.intake;
 
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
+import static frc.robot.Constants.ShuffleboardConstants.kIntakeLayoutName;
 import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
@@ -27,7 +28,8 @@ import frc.robot.intake.commands.IntakeCube;
 import frc.robot.logging.Loggable;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
-  private final WPI_TalonFX intakeMotor;
+  private WPI_TalonFX intakeMotor;
+
   public Intake() {
     if (RobotBase.isReal()) {
       configureRealHardware();
@@ -76,11 +78,10 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     getLayout(kDriverTabName).add("4", intakeMotor);
   }
 
-  @Override
-  public void logPeriodic() {}
-
   public ShuffleboardLayout getLayout(String tab) {
-    return Shuffleboard.getTab(tab).getLayout("Intake", BuiltInLayouts.kList).withSize(2, 4);
+    return Shuffleboard.getTab(tab)
+        .getLayout(kIntakeLayoutName, BuiltInLayouts.kList)
+        .withSize(2, 4);
   }
 
   public boolean CANTest() {
