@@ -7,12 +7,15 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
+import static frc.robot.Constants.field2d;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.blue;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueEndpoints;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
@@ -20,13 +23,16 @@ public class DynamicPathFollower {
   public static void run(SwerveDrive swerveDrive) {
     // get src, sink
     Pose2d src = swerveDrive.getPose();
-    int locationId = (int) SmartDashboard.getNumber("locationId", -1);
+    int locationId = (int) SmartDashboard.getNumber("locationId", 0);
     // handle invalid location
     if (locationId == -1) {
       System.out.println("LocationId entered was invalid.");
       return;
     }
     Pose2d sink = kBlueEndpoints[locationId];
+    if (!blue) {
+      sink = PathUtil.flip(sink);
+    }
     // get trajectory
     DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     PathPlannerTrajectory trajectory = generator.getTrajectory();
@@ -34,6 +40,8 @@ public class DynamicPathFollower {
     if (trajectory == null) {
       System.out.println("No trajectory was found.");
     }
+    // send trajectory to networktables for logging
+    field2d.getObject("DynamicTrajectory").setTrajectory(trajectory);
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false);

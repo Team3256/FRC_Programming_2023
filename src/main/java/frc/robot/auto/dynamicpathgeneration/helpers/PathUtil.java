@@ -9,8 +9,10 @@ package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants;
 import frc.robot.swerve.SwerveConstants;
 import java.util.ArrayList;
 
@@ -47,6 +49,17 @@ public class PathUtil {
       return true;
 
     return false;
+  }
+
+  public static Pose2d flip(Pose2d orig) {
+    return new Pose2d(
+        Constants.FieldConstants.kFieldLength - orig.getX(),
+        orig.getY(),
+        orig.getRotation().plus(new Rotation2d(Math.PI)));
+  }
+
+  public static Translation2d flip(Translation2d orig) {
+    return new Translation2d(Constants.FieldConstants.kFieldLength - orig.getX(), orig.getY());
   }
 
   // helper methods to connect/disconnect edges

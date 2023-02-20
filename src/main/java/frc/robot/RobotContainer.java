@@ -52,7 +52,7 @@ public class RobotContainer {
   public RobotContainer() {
     PowerDistribution pdp = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
     SmartDashboard.putData(pdp);
-
+    SmartDashboard.putData(field2d);
     if (kIntakeEnabled) {
       configureIntake();
       testables.add(intakeSubsystem);

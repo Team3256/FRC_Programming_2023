@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
@@ -31,6 +32,8 @@ public final class Constants {
 
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
+
+  public static final Field2d field2d = new Field2d();
 
   public enum RobotMode {
     REAL,

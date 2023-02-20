@@ -59,11 +59,7 @@ public class CreateDynamicPathWayNodes {
     PathUtil.fullyConnect(rightStation, botPassageSrc);
 
     // mirror all dynamic path way nodes if red
-    if (!blue) {
-      for (PathNode p : dynamicPathWayNodes) {
-        p.setPoint(new Translation2d(Constants.FieldConstants.kFieldLength - p.getX(), p.getY()));
-      }
-    }
+    if (!blue) for (PathNode p : dynamicPathWayNodes) p.flip();
 
     // display dynamic path way nodes in Path Planner
     Path path = new Path(dynamicPathWayNodes, new Rotation2d(0), new Rotation2d(0));

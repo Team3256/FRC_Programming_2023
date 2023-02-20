@@ -8,6 +8,7 @@
 package frc.robot.auto.dynamicpathgeneration.helpers;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants;
 import java.util.ArrayList;
 
 public class PathNode {
@@ -36,6 +37,10 @@ public class PathNode {
   public PathNode(Translation2d point) {
     this.point = point;
     this.edges = new ArrayList<>();
+  }
+
+  public void flip() {
+    point = new Translation2d(Constants.FieldConstants.kFieldLength - getX(), getY());
   }
 
   public void addEdge(PathNode node) {
