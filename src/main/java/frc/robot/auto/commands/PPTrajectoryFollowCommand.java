@@ -28,6 +28,8 @@ import frc.robot.swerve.SwerveDrive;
 
 public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
+  private final Timer endTimer = new Timer();
+  private boolean endTimerSet = false;
   private PathPlannerTrajectory trajectory;
   private final SwerveDriveController controller;
   private final SwerveDrive swerveSubsystem;
@@ -132,6 +134,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     this.controller.reset();
     timer.reset();
     timer.start();
+    endTimer.reset();
   }
 
   @Override
@@ -162,7 +165,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return withinTolerance();
+    return withinEndTolerance();
   }
 
   @Override
@@ -175,10 +178,25 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     swerveSubsystem.drive(new ChassisSpeeds(), false);
   }
 
-  public boolean withinTolerance() {
+  public boolean withinEndTolerance() {
+
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
-    return relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
-        && Math.abs(relativePose.getRotation().getRadians()) < kRotationToleranceRadians;
+
+    double now = MathUtil.clamp(timer.get(), 0, trajectoryDuration);
+
+    boolean reachedEndTolerance =
+        relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
+            && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
+            && now >= trajectoryDuration;
+
+    if (now >= trajectoryDuration && !endTimerSet) {
+      endTimer.start();
+      endTimerSet = true;
+    } else if (now >= trajectoryDuration && endTimer.get() >= kAutoTrajectoryTimeoutSeconds) {
+      return true;
+    }
+
+    return reachedEndTolerance;
   }
 }
