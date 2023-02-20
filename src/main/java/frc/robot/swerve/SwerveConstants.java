@@ -31,8 +31,7 @@ public final class SwerveConstants {
   public static int kYAccelRateLimit = 15;
   public static int kYDecelRateLimit = 10;
 
-  public static final COTSFalconSwerveConstants
-      kChosenModule = // TODO: This must be tuned to specific robot
+  public static final COTSFalconSwerveConstants kChosenModule =
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Drivetrain Constants */
@@ -107,10 +106,10 @@ public final class SwerveConstants {
 
   /* Swerve Profiling Values */
   /** Meters per Second */
-  public static final double kMaxSpeed = 4.5; // TODO: This must be tuned to specific robot
+  public static final double kMaxSpeed = 4.5;
   /** Radians per Second */
   public static final double kMaxAngularVelocity =
-      10.0; // TODO: This must be tuned to specific robot
+      5.0; // TODO: This must be tuned to specific robot
 
   /* Neutral Modes */
   public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;

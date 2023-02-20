@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -27,23 +28,26 @@ import frc.robot.swerve.SwerveDrive;
 
 public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
-  private final PathPlannerTrajectory trajectory;
+  private PathPlannerTrajectory trajectory;
   private final SwerveDriveController controller;
   private final SwerveDrive swerveSubsystem;
   private final double trajectoryDuration;
+  private boolean useAllianceColor;
   private Pose2d startPose;
   private AutoCommandRunner autoCommandRunner;
+  private boolean isFirstSegment;
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
-      PIDController xController,
-      PIDController yController,
+      PIDController xTranslationController,
+      PIDController yTranslationController,
       ProfiledPIDController thetaController,
       SwerveDrive swerveSubsystem) {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller = new SwerveDriveController(xController, yController, thetaController);
+    this.controller =
+        new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
 
     this.swerveSubsystem = swerveSubsystem;
     PathPlannerTrajectory.PathPlannerState start =
@@ -57,16 +61,42 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
-      PIDController xController,
-      PIDController yController,
+      PIDController xTranslationController,
+      PIDController yTranslationController,
+      ProfiledPIDController thetaController,
+      boolean useAllianceColor,
+      boolean isFirstSegment,
+      SwerveDrive swerveSubsystem) {
+
+    this(
+        trajectory,
+        xTranslationController,
+        yTranslationController,
+        thetaController,
+        swerveSubsystem);
+
+    this.useAllianceColor = useAllianceColor;
+    this.isFirstSegment = isFirstSegment;
+    addRequirements(swerveSubsystem);
+  }
+
+  public PPTrajectoryFollowCommand(
+      PathPlannerTrajectory trajectory,
+      PIDController xTranslationController,
+      PIDController yTranslationController,
       ProfiledPIDController thetaController,
       Pose2d startPose,
-      SwerveDrive swerveDrive) {
+      SwerveDrive swerveSubsystem) {
 
-    this(trajectory, xController, yController, thetaController, swerveDrive);
+    this(
+        trajectory,
+        xTranslationController,
+        yTranslationController,
+        thetaController,
+        swerveSubsystem);
     this.startPose = startPose;
 
-    addRequirements(swerveDrive);
+    addRequirements(swerveSubsystem);
   }
 
   public void setAutoCommandRunner(AutoCommandRunner commandRunner) {
@@ -81,10 +111,20 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public void initialize() {
+    if (this.useAllianceColor) {
+      trajectory =
+          PathPlannerTrajectory.transformTrajectoryForAlliance(
+              trajectory, DriverStation.getAlliance());
+      PathPlannerTrajectory.PathPlannerState start =
+          (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
+      Rotation2d rotation = start.holonomicRotation;
+      Translation2d translation = start.poseMeters.getTranslation();
+      this.startPose = new Pose2d(translation, rotation);
+    }
     if (kAutoDebug) {
       swerveSubsystem.setTrajectory(trajectory);
     }
-    if (this.startPose != null) { // use existing pose for more accuracy if it is the first path
+    if (isFirstSegment) { // use existing pose for more accuracy if it is the first path
       swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }
