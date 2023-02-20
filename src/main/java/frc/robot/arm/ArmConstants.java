@@ -22,7 +22,7 @@ public final class ArmConstants {
 
   private static final double kArmCountsPerRevolution = 8192;
   public static final double kArmEncoderConversionToRadians =
-          (1 / kArmCountsPerRevolution) * 2 * Math.PI;
+      (1 / kArmCountsPerRevolution) * 2 * Math.PI;
 
   // TODO Update
   public static final double kArmLengthMeters = 1.638059;
@@ -35,7 +35,7 @@ public final class ArmConstants {
   public static final double kI = 0;
   public static final double kD = 0.5;
   public static final TrapezoidProfile.Constraints kArmContraints =
-          new TrapezoidProfile.Constraints(2, 1);
+      new TrapezoidProfile.Constraints(2, 1);
 
   // TODO Update
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0);
