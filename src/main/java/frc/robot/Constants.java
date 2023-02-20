@@ -7,25 +7,36 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebugEnabled = false;
+  public static final boolean kDebugEnabled = true;
+
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
+  public static final boolean kArmEnabled = true;
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kLedStripEnabled = true;
-  public static final boolean kAdvatageKitReplayEnabled = false;
+  public static final boolean kLedStripEnabled = false;
 
   public static final RobotType kRobotType = RobotType.ALPHA;
+  public static final RobotMode kCurrentMode = RobotMode.SIM;
 
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
+
+  public enum RobotMode {
+    REAL,
+    SIM,
+    REPLAY
+  }
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);
@@ -264,5 +275,14 @@ public final class Constants {
                   Units.inchesToMeters(18.22),
                   new Rotation3d()));
     }
+  }
+
+  public static class VisionConstants {
+    public static final String kLimelightNetworkTablesName = "limelight";
+    public static final double kLimelightTranslationThresholdMeters = 1;
+    public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
+    public static final double kFieldTranslationOffsetX = 6;
+    public static final double kFieldTranslationOffsetY = 5;
+    Matrix<N3, N1> visionMeasurementStdDevs;
   }
 }
