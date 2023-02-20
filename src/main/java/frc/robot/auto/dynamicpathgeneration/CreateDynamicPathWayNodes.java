@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 public class CreateDynamicPathWayNodes {
-  static double passageRes = 0.6;
+  static double passagePoints = 8;
 
   public static void init() {
     System.out.println("Path Generator Initialized");
@@ -50,7 +50,7 @@ public class CreateDynamicPathWayNodes {
     // link left station node with top passage src
     PathUtil.fullyConnect(leftStation, topPassageSrc);
 
-    PathNode rightStation = new PathNode(16.5 - 6.28, 6.39);
+    PathNode rightStation = new PathNode(Constants.FieldConstants.kFieldLength - 6.28, 6.39);
     dynamicPathWayNodes.add(rightStation);
     // link right station node with top passage src
     PathUtil.fullyConnect(rightStation, topPassageSrc);
@@ -58,7 +58,7 @@ public class CreateDynamicPathWayNodes {
     // mirror all dynamic path way nodes if red
     if (!blue) {
       for (PathNode p : dynamicPathWayNodes) {
-        p.setPoint(new Translation2d(16.5 - p.getX(), p.getY()));
+        p.setPoint(new Translation2d(Constants.FieldConstants.kFieldLength - p.getX(), p.getY()));
       }
     }
 
@@ -71,9 +71,10 @@ public class CreateDynamicPathWayNodes {
   }
 
   public static ArrayList<PathNode> preSink(ArrayList<PathNode> pathNodes) {
+    double preSinkX = 2.1;
     ArrayList<PathNode> preSinks = new ArrayList<>();
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
-      preSinks.add(new PathNode(sink.getX() + 1, sink.getY(), PathNode.NodeType.PRESINK));
+      preSinks.add(new PathNode(preSinkX, sink.getY(), PathNode.NodeType.PRESINK));
     }
     // shift the ends of the preSink inwards to avoid colliding into the wall
     preSinks.get(0).addY(0.30);
@@ -87,8 +88,11 @@ public class CreateDynamicPathWayNodes {
       ArrayList<PathNode> pathNodes, PathNode src, PathNode sink) {
     ArrayList<PathNode> newNodes = new ArrayList<>();
     newNodes.add(sink);
-    for (double x = sink.getX() + passageRes; x <= src.getX() + passageRes; x += passageRes) {
-      newNodes.add(new PathNode(x, sink.getY(), PathNode.NodeType.PASSAGE));
+    double passageResolution = (src.getX() - sink.getX()) / (passagePoints - 1);
+    for (int i = 1; i <= passagePoints - 2; i++) {
+      newNodes.add(
+          new PathNode(
+              sink.getX() + i * passageResolution, sink.getY(), PathNode.NodeType.PASSAGE));
     }
     newNodes.add(src);
     PathUtil.fullyConnect(newNodes);
