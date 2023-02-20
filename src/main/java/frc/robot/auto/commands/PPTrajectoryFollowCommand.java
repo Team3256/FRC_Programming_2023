@@ -7,8 +7,6 @@
 
 package frc.robot.auto.commands;
 
-import static frc.robot.auto.AutoConstants.*;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -26,10 +24,11 @@ import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.SwerveDriveController;
 import frc.robot.swerve.SwerveDrive;
 
+import static frc.robot.auto.AutoConstants.*;
+
 public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
-  private final Timer endTimer = new Timer();
-  private boolean endTimerSet = false;
+  private boolean hasReachedTrajectoryEnd = false;
   private PathPlannerTrajectory trajectory;
   private final SwerveDriveController controller;
   private final SwerveDrive swerveSubsystem;
@@ -134,7 +133,6 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     this.controller.reset();
     timer.reset();
     timer.start();
-    endTimer.reset();
   }
 
   @Override
@@ -165,7 +163,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return withinEndTolerance();
+    return isTrajectoryFinished();
   }
 
   @Override
@@ -178,22 +176,19 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     swerveSubsystem.drive(new ChassisSpeeds(), false);
   }
 
-  public boolean withinEndTolerance() {
+  public boolean isTrajectoryFinished() {
 
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
 
-    double now = MathUtil.clamp(timer.get(), 0, trajectoryDuration);
+    double now = timer.get();
 
     boolean reachedEndTolerance =
         relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
             && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
             && now >= trajectoryDuration;
 
-    if (now >= trajectoryDuration && !endTimerSet) {
-      endTimer.start();
-      endTimerSet = true;
-    } else if (now >= trajectoryDuration && endTimer.get() >= kAutoTrajectoryTimeoutSeconds) {
+    if (now >= trajectoryDuration + kAutoTrajectoryTimeoutSeconds) {
       return true;
     }
 
