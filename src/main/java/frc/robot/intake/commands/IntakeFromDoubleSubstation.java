@@ -70,17 +70,16 @@ public class IntakeFromDoubleSubstation extends CommandBase {
 
     DoubleSubstationPattern doubleSubstationPattern = new DoubleSubstationPattern();
 
-    Command autoDoubleSubstation = new SequentialCommandGroup(
-        new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, 0.0),
-            new SetArmAngle(armSubsystem, new Rotation2d(0))),
-        new IntakeCone(intakeSubsystem),
-        autoBuilder.createPathPlannerCommand(trajectory, false),
-        new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationPattern));
+    Command autoDoubleSubstation =
+        new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                new SetElevatorHeight(elevatorSubsystem, 0.0),
+                new SetArmAngle(armSubsystem, new Rotation2d(0))),
+            new IntakeCone(intakeSubsystem),
+            autoBuilder.createPathPlannerCommand(trajectory, false),
+            new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationPattern));
     autoDoubleSubstation.schedule();
   }
-
-
 
   @Override
   public boolean isFinished() {
