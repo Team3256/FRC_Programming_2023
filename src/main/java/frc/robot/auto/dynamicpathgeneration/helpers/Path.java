@@ -83,12 +83,20 @@ public class Path {
       Translation2d nextControl;
       // passage case, use horizontal bezier controls
       if (pathNodes.get(i).getType() == PathNode.NodeType.PASSAGE) {
+        // set prev control
+        double prevControlPointScalar = kRegularControlPointScalar;
+        if (i > 0 && pathNodes.get(i - 1).getType() == PathNode.NodeType.PASSAGE)
+          prevControlPointScalar = kBetweenPassageControlPointScalar;
         Translation2d prevControlVector =
             new Translation2d(positions.get(i - 1).minus(positions.get(i)).getX(), 0);
-        prevControl = prevControlVector.times(kBetweenPassageControlPointScalar/ 2).plus(anchorPoint);
+        prevControl = prevControlVector.times(prevControlPointScalar).plus(anchorPoint);
+        // set next control
+        double nextControlPointScalar = kRegularControlPointScalar;
+        if (i < points - 1 && pathNodes.get(i + 1).getType() == PathNode.NodeType.PASSAGE)
+          nextControlPointScalar = kBetweenPassageControlPointScalar;
         Translation2d nextControlVector =
             new Translation2d(positions.get(i + 1).minus(positions.get(i)).getX(), 0);
-        nextControl = nextControlVector.times(kBetweenPassageControlPointScalar).plus(anchorPoint);
+        nextControl = nextControlVector.times(nextControlPointScalar).plus(anchorPoint);
       }
       // first point case, use point to point bezier control
       else if (i == 0) {
@@ -108,14 +116,25 @@ public class Path {
       }
       // else use optimal bezier controls
       else {
-        double controlPointScalar = kRegularControlPointScalar;
+        double prevControlPointScalar = kRegularControlPointScalar;
+        double nextControlPointScalar = kRegularControlPointScalar;
         // apply tight control point scalar in the community zone to avoid hitting charging station
         if (pathNodes.get(i).getType() == PathNode.NodeType.PRESINK) {
-          controlPointScalar = kTightControlPointScalar;
+          if (pathNodes.get(i - 1).getType() == PathNode.NodeType.PRESINK) {
+            prevControlPointScalar = kBetweenPreSinkPointScalar;
+          }
+          if (pathNodes.get(i + 1).getType() == PathNode.NodeType.PRESINK) {
+            nextControlPointScalar = kBetweenPreSinkPointScalar;
+          }
         }
+
         Translation2d[] controlPoints =
             findControlPoints(
-                positions.get(i - 1), positions.get(i), positions.get(i + 1), controlPointScalar);
+                positions.get(i - 1),
+                positions.get(i),
+                positions.get(i + 1),
+                prevControlPointScalar,
+                nextControlPointScalar);
 
         prevControl = controlPoints[0];
         nextControl = controlPoints[1];
@@ -149,7 +168,8 @@ public class Path {
       Translation2d startPoint,
       Translation2d desiredPoint,
       Translation2d endPoint,
-      double controlPointScalar) {
+      double prevControlPointScalar,
+      double nextControlPointScalar) {
     Translation2d desiredToStartVector = startPoint.minus(desiredPoint);
     Translation2d desiredToEndVector = endPoint.minus(desiredPoint);
 
@@ -160,13 +180,13 @@ public class Path {
     Translation2d projDesiredToStartOnTransform =
         GeometryUtil.projectUonV(desiredToStartVector, desiredToStartTransformed);
     Translation2d startPointControlPoint =
-        desiredPoint.plus(projDesiredToStartOnTransform.times(controlPointScalar));
+        desiredPoint.plus(projDesiredToStartOnTransform.times(prevControlPointScalar));
 
     Translation2d desiredToEndTransformed = desiredToEndVector.rotateBy(alpha);
     Translation2d projDesiredToEndOnTransform =
         GeometryUtil.projectUonV(desiredToEndVector, desiredToEndTransformed);
     Translation2d endPointControlPoint =
-        desiredPoint.plus(projDesiredToEndOnTransform.times(controlPointScalar));
+        desiredPoint.plus(projDesiredToEndOnTransform.times(prevControlPointScalar));
 
     return new Translation2d[] {startPointControlPoint, endPointControlPoint};
   }

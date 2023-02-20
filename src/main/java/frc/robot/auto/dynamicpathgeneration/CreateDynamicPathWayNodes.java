@@ -7,9 +7,6 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.blue;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.dynamicPathWayNodes;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
@@ -19,6 +16,8 @@ import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
+
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 public class CreateDynamicPathWayNodes {
   static double passagePoints = 8;
@@ -71,7 +70,6 @@ public class CreateDynamicPathWayNodes {
   }
 
   public static ArrayList<PathNode> preSink(ArrayList<PathNode> pathNodes) {
-    double preSinkX = 2.1;
     ArrayList<PathNode> preSinks = new ArrayList<>();
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
       preSinks.add(new PathNode(preSinkX, sink.getY(), PathNode.NodeType.PRESINK));
