@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.commands;
+package frc.robot.intake.commands;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -13,6 +13,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,7 +23,6 @@ import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeCone;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.DoubleSubstationPattern;
@@ -30,7 +30,7 @@ import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AutoDoubleSubstationCommand extends CommandBase {
+public class IntakeFromDoubleSubstation extends CommandBase {
   private SwerveDrive swerveSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
@@ -38,7 +38,7 @@ public class AutoDoubleSubstationCommand extends CommandBase {
   private AutoBuilder autoBuilder;
   private LED ledSubsystem;
 
-  public AutoDoubleSubstationCommand(
+  public IntakeFromDoubleSubstation(
       SwerveDrive swerveSubsystem,
       Elevator elevatorSubsystem,
       Arm armSubsystem,
@@ -70,20 +70,20 @@ public class AutoDoubleSubstationCommand extends CommandBase {
 
     DoubleSubstationPattern doubleSubstationPattern = new DoubleSubstationPattern();
 
-    new SequentialCommandGroup(
+    Command autoDoubleSubstation = new SequentialCommandGroup(
         new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, 0.0),
             new SetArmAngle(armSubsystem, new Rotation2d(0))),
         new IntakeCone(intakeSubsystem),
         autoBuilder.createPathPlannerCommand(trajectory, false),
         new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationPattern));
+    autoDoubleSubstation.schedule();
   }
 
-  @Override
-  public void execute() {}
+
 
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
