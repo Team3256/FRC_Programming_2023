@@ -7,6 +7,8 @@
 
 package frc.robot.auto.commands;
 
+import static frc.robot.auto.AutoConstants.*;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -23,8 +25,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.SwerveDriveController;
 import frc.robot.swerve.SwerveDrive;
-
-import static frc.robot.auto.AutoConstants.*;
 
 public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
