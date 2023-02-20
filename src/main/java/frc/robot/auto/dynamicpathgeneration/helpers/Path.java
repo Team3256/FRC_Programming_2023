@@ -85,10 +85,10 @@ public class Path {
       if (pathNodes.get(i).getType() == PathNode.NodeType.PASSAGE) {
         Translation2d prevControlVector =
             new Translation2d(positions.get(i - 1).minus(positions.get(i)).getX(), 0);
-        prevControl = prevControlVector.times(kRegularControlPointScalar).plus(anchorPoint);
+        prevControl = prevControlVector.times(kStraightControlPointScalar / 2).plus(anchorPoint);
         Translation2d nextControlVector =
             new Translation2d(positions.get(i + 1).minus(positions.get(i)).getX(), 0);
-        nextControl = nextControlVector.times(kRegularControlPointScalar).plus(anchorPoint);
+        nextControl = nextControlVector.times(kStraightControlPointScalar).plus(anchorPoint);
       }
       // first point case, use point to point bezier control
       else if (i == 0) {
