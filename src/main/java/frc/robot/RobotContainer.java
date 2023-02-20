@@ -161,4 +161,8 @@ public class RobotContainer {
     for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
   }
+
+  public void periodic() {
+    field2d.setRobotPose(swerveDrive.getPose());
+  }
 }

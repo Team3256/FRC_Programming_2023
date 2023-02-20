@@ -23,7 +23,7 @@ public class DynamicPathFollower {
   public static void run(SwerveDrive swerveDrive) {
     // get src, sink
     Pose2d src = swerveDrive.getPose();
-    int locationId = (int) SmartDashboard.getNumber("locationId", 0);
+    int locationId = (int) SmartDashboard.getNumber("locationId", 5);
     // handle invalid location
     if (locationId == -1) {
       System.out.println("LocationId entered was invalid.");
