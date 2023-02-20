@@ -21,9 +21,10 @@ import frc.robot.swerve.SwerveDrive;
 
 public class DynamicPathFollower {
   public static void run(SwerveDrive swerveDrive) {
+    long ms0 = System.currentTimeMillis();
     // get src, sink
     Pose2d src = swerveDrive.getPose();
-    int locationId = (int) SmartDashboard.getNumber("locationId", 5);
+    int locationId = (int) SmartDashboard.getNumber("locationId", (int) (Math.random() * 9));
     // handle invalid location
     if (locationId == -1) {
       System.out.println("LocationId entered was invalid.");
@@ -39,13 +40,18 @@ public class DynamicPathFollower {
     // handle invalid trajectory
     if (trajectory == null) {
       System.out.println("No trajectory was found.");
+    } else {
+      System.out.println("Trajectory was found.");
     }
+    System.out.println("Time to find trajectory: " + (System.currentTimeMillis() - ms0));
     // send trajectory to networktables for logging
     field2d.getObject("DynamicTrajectory").setTrajectory(trajectory);
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false);
     // run command
+    System.out.println("Time to run command: " + (System.currentTimeMillis() - ms0));
+    System.out.println();
     pathPlannerCommand.schedule();
   }
 }

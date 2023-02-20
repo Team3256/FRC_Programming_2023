@@ -20,10 +20,8 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 public class CreateDynamicPathWayNodes {
-  static double passagePoints = 8;
-
   public static void init() {
-    System.out.println("Path Generator Initialized");
+    System.out.println("Dynamic Path Way Nodes created");
 
     // add preSink nodes
     ArrayList<PathNode> preSinks = preSink(dynamicPathWayNodes);

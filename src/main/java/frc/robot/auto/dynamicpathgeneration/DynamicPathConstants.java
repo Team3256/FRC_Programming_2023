@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public final class DynamicPathConstants {
   // Flags
-  public static final boolean kDynamicPathGenerationDebug = true;
+  public static final boolean kDynamicPathGenerationDebug = false;
   public static final boolean blue = false;
 
   // Bezier
@@ -48,10 +48,7 @@ public final class DynamicPathConstants {
   public static final ArrayList<PathNode> dynamicPathWayNodes = new ArrayList<>();
   public static final double preSinkX = 2.1;
   public static final double preSinkEndpointsOffset = 0.3;
-
-  static {
-    CreateDynamicPathWayNodes.init();
-  }
+  public static final double passagePoints = 8;
 
   // Trajectory constraints
   public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 7.5);

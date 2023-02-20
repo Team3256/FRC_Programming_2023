@@ -43,7 +43,6 @@ public class Path {
       // first point case, use startRotation
       if (i == 0) {
         holonomicAngle = startRotation;
-        System.out.println("WantedAngle:" + holonomicAngle.getDegrees());
       } else {
         // total rotation to end
         Rotation2d prevRotation = waypoints.get(i - 1).getHolonomicAngle();
@@ -56,7 +55,6 @@ public class Path {
         holonomicAngle =
             prevRotation.plus(dRotation.times(remainingPathLength[i - 1] - remainingPathLength[i]));
         // passage case, convert to multiple of 90*
-        System.out.println("WantedAngle:" + holonomicAngle.getDegrees());
         if (pathNodes.get(i).getType() == PathNode.NodeType.PASSAGE) {
           double[] radLock = {-Math.PI, -Math.PI / 2, 0, Math.PI / 2, Math.PI};
 

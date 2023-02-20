@@ -49,7 +49,9 @@ public class DynamicPathGenerator {
         ret = q;
       }
     }
-    System.out.println("closest to " + node + " is " + ret);
+    if (kDynamicPathGenerationDebug) {
+      System.out.println("closest to " + node + " is " + ret);
+    }
     PathUtil.fullyConnect(ret, node);
     return ret;
   }
