@@ -159,7 +159,7 @@ public class RobotContainer {
     System.out.println("CAN fully connected: " + result);
   }
 
-  public void initPitRoutine() {
+  public void startPitRoutine() {
     PitTestRoutine pitSubsystemRoutine =
         new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
     pitSubsystemRoutine.pitRoutine();

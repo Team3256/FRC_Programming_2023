@@ -122,7 +122,7 @@ public class Robot extends LoggedRobot {
 
     // Run tests
     robotContainer.test();
-    robotContainer.initPitRoutine();
+    robotContainer.startPitRoutine();
   }
 
   /** This function is called periodically during test mode. */
