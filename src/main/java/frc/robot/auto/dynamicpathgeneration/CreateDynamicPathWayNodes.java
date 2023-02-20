@@ -48,13 +48,15 @@ public class CreateDynamicPathWayNodes {
     // add station nodes
     PathNode leftStation = new PathNode(6.28, 6.39);
     dynamicPathWayNodes.add(leftStation);
-    // link left station node with top passage src
+    // link left station node with top and bot passage src
     PathUtil.fullyConnect(leftStation, topPassageSrc);
+    PathUtil.fullyConnect(leftStation, botPassageSrc);
 
     PathNode rightStation = new PathNode(Constants.FieldConstants.kFieldLength - 6.28, 6.39);
     dynamicPathWayNodes.add(rightStation);
-    // link right station node with top passage src
+    // link right station node with top and bot passage src
     PathUtil.fullyConnect(rightStation, topPassageSrc);
+    PathUtil.fullyConnect(rightStation, botPassageSrc);
 
     // mirror all dynamic path way nodes if red
     if (!blue) {
