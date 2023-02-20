@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.elevator.ElevatorConstants.kElevatorStartingPose;
+import static frc.robot.elevator.ElevatorConstants.kElevatorStartingPositionMeters;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -28,14 +28,14 @@ import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.swerve.commands.TeleopSwerve;
 
-public class PitSubsystemRoutine {
+public class PitTestRoutine {
   Elevator elevatorSubsystem;
   Intake intakeSubsystem;
   SwerveDrive swerveSubsystem;
   Arm armSubsystem;
   private final CommandXboxController driver = new CommandXboxController(0);
 
-  public PitSubsystemRoutine(
+  public PitTestRoutine(
       Elevator elevatorSubsystem,
       Intake intakeSubsystem,
       SwerveDrive swerveSubsystem,
@@ -47,8 +47,6 @@ public class PitSubsystemRoutine {
   }
 
   public void pitRoutine() {
-    RobotContainer robotContainer = new RobotContainer();
-    robotContainer.test();
     Command startRoutine = new WaitCommand(1).until(driver.a());
     Command tests = new WaitCommand(1).beforeStarting(startRoutine);
     if (kIntakeEnabled) {
@@ -75,7 +73,7 @@ public class PitSubsystemRoutine {
     Command setElevatorHeightLOW =
         new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW).until(driver.a());
     Command setElevatorToStart =
-        new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPose).until(driver.a());
+        new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPositionMeters).until(driver.a());
 
     return zeroElevator.andThen(
         setElevatorHeightHIGH.andThen(
@@ -84,18 +82,22 @@ public class PitSubsystemRoutine {
 
   public Command intakeCommands() {
     Command intakeCone = new IntakeCone(intakeSubsystem).until(driver.a());
+    Command outtakeCone = new IntakeCube(intakeSubsystem).until(driver.a());
     Command intakeCube = new IntakeCube(intakeSubsystem).until(driver.a());
+    Command outtakeCube = new IntakeCone(intakeSubsystem).until(driver.a());
 
-    return intakeCube.andThen(intakeCone);
+    return intakeCone.andThen(outtakeCone.andThen(intakeCube.andThen(outtakeCube)));
   }
 
   public Command armCommands() {
+    Command setArmAngleHorizontal =
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(-12)).until(driver.a());
+    Command setArmAngleHalfway =
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)).until(driver.a());
     Command setArmAngleVertical =
         new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)).until(driver.a());
-    Command setArmAngleBack =
-        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(180)).until(driver.a());
 
-    return setArmAngleVertical.andThen(setArmAngleBack);
+    return setArmAngleHorizontal.andThen(setArmAngleHalfway.andThen(setArmAngleVertical));
   }
 
   public Command swerveCommands() {
@@ -103,7 +105,7 @@ public class PitSubsystemRoutine {
     Command teleopSwerveForward = // move forward
         new TeleopSwerve(
                 swerveSubsystem,
-                () -> kTeleopSwerveControllerLamda,
+                () -> kSwervePitTestSpeed,
                 () -> 0,
                 () -> 0,
                 kFieldRelative,
@@ -113,7 +115,7 @@ public class PitSubsystemRoutine {
     Command telopSwerveBackward = // move backward
         new TeleopSwerve(
                 swerveSubsystem,
-                () -> -kTeleopSwerveControllerLamda,
+                () -> -kSwervePitTestSpeed,
                 () -> 0,
                 () -> 0,
                 kFieldRelative,
@@ -124,7 +126,7 @@ public class PitSubsystemRoutine {
         new TeleopSwerve(
                 swerveSubsystem,
                 () -> 0,
-                () -> kTeleopSwerveControllerLamda,
+                () -> kSwervePitTestSpeed,
                 () -> 0,
                 kFieldRelative,
                 kOpenLoop)
@@ -134,7 +136,7 @@ public class PitSubsystemRoutine {
         new TeleopSwerve(
                 swerveSubsystem,
                 () -> 0,
-                () -> -kTeleopSwerveControllerLamda,
+                () -> -kSwervePitTestSpeed,
                 () -> 0,
                 kFieldRelative,
                 kOpenLoop)
@@ -145,7 +147,7 @@ public class PitSubsystemRoutine {
                 swerveSubsystem,
                 () -> 0,
                 () -> 0,
-                () -> kTeleopSwerveControllerLamda,
+                () -> kSwervePitTestSpeed,
                 kFieldRelative,
                 kOpenLoop)
             .until(driver.a());
@@ -155,7 +157,7 @@ public class PitSubsystemRoutine {
                 swerveSubsystem,
                 () -> 0,
                 () -> 0,
-                () -> -kTeleopSwerveControllerLamda,
+                () -> -kSwervePitTestSpeed,
                 kFieldRelative,
                 kOpenLoop)
             .until(driver.a());

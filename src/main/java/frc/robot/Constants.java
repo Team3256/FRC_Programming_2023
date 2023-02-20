@@ -32,7 +32,7 @@ public final class Constants {
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
 
-  public static final double kTeleopSwerveControllerLamda = 0.3;
+  public static final double kSwervePitTestSpeed = 0.3;
 
   public enum RobotMode {
     REAL,
