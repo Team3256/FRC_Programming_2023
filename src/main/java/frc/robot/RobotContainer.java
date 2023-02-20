@@ -8,15 +8,12 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.arm.ArmConstants.kArmAngleMinConstraint;
-import static frc.robot.elevator.ElevatorConstants.kMinHeight;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.*;
@@ -135,24 +132,15 @@ public class RobotContainer {
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
+    armSubsystem = new Arm();
 
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
 
     if (kArmEnabled) {
-      operator.y().onTrue(defaultArmElevator());
+      operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
     }
-  }
-
-  public ParallelCommandGroup
-      defaultArmElevator() { // sets default position (lower elevator and default position for arm)
-    elevatorSubsystem = new Elevator();
-    armSubsystem = new Arm();
-
-    return new ParallelCommandGroup(
-        new SetElevatorHeight(elevatorSubsystem, kMinHeight),
-        new SetArmAngle(armSubsystem, kArmAngleMinConstraint));
   }
 
   private void configureArm() {
