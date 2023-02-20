@@ -188,7 +188,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
             && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
             && now >= trajectoryDuration;
 
-    if (!reachedEndTolerance && now >= trajectoryDuration + kAutoTrajectoryTimeoutSeconds) {
+    if (now >= trajectoryDuration + kAutoTrajectoryTimeoutSeconds) {
       return true;
     }
 
