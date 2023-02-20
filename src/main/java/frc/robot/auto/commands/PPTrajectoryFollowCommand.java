@@ -7,7 +7,7 @@
 
 package frc.robot.auto.commands;
 
-import static frc.robot.auto.AutoConstants.kAutoDebug;
+import static frc.robot.auto.AutoConstants.*;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
@@ -160,10 +160,9 @@ public class PPTrajectoryFollowCommand extends CommandBase {
         false);
   }
 
-  // TODO: Fix to give a little more time to be in the right place
   @Override
   public boolean isFinished() {
-    return timer.get() >= trajectoryDuration; // * TRAJECTORY_DURATION_FACTOR;
+    return withinTolerance();
   }
 
   @Override
@@ -176,20 +175,10 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     swerveSubsystem.drive(new ChassisSpeeds(), false);
   }
 
-  private Pose2d poseTolerance = new Pose2d();
-  private Pose2d poseError;
-  private Rotation2d rotationError;
-
-  // calculates pose differences
-  public boolean atReference() {
-
-    // ---------------------------------------------
-    final Translation2d eTranslate = poseError.getTranslation();
-    final Rotation2d eRotate = rotationError;
-    final Translation2d tolTranslate = poseTolerance.getTranslation();
-    final Rotation2d tolRotate = poseTolerance.getRotation();
-    return Math.abs(eTranslate.getX()) < tolTranslate.getX()
-        && Math.abs(eTranslate.getY()) < tolTranslate.getY()
-        && Math.abs(eRotate.getRadians()) < tolRotate.getRadians();
+  public boolean withinTolerance() {
+    Pose2d currentPose = swerveSubsystem.getPose();
+    Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
+    return relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
+        && Math.abs(relativePose.getRotation().getRadians()) < kRotationToleranceRadians;
   }
 }

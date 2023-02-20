@@ -43,4 +43,7 @@ public final class AutoConstants {
       new TrapezoidProfile.Constraints(
           AutoConstants.kMaxAngularSpeedRadiansPerSecond,
           AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
+
+  public static double kTranslationToleranceMeters = 0.05;
+  public static double kRotationToleranceRadians = 0.01;
 }
