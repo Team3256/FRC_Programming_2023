@@ -35,7 +35,7 @@ public class IntakeTests extends UnitTestBase {
     runScheduler(1, command, intakeSubsystem);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
-    assertEquals(kIntakeCubeSpeed, velocity, DELTA);
+    assertEquals(kIntakeCubeSpeed, velocity, DELTA, "testing Intake Cube");
   }
 
   @Test
@@ -45,6 +45,6 @@ public class IntakeTests extends UnitTestBase {
     runScheduler(1, command, intakeSubsystem);
 
     double velocity = intakeSubsystem.getIntakeSpeed();
-    assertEquals(kIntakeConeSpeed, velocity, DELTA);
+    assertEquals(kIntakeConeSpeed, velocity, DELTA, "testing Intake Cone");
   }
 }
