@@ -46,12 +46,10 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller =
-        new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
+    this.controller = new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
 
     this.swerveSubsystem = swerveSubsystem;
-    PathPlannerTrajectory.PathPlannerState start =
-        (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
+    PathPlannerTrajectory.PathPlannerState start = (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
     Rotation2d rotation = start.holonomicRotation;
     Translation2d translation = start.poseMeters.getTranslation();
     this.startPose = new Pose2d(translation, rotation);
@@ -112,11 +110,9 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   @Override
   public void initialize() {
     if (this.useAllianceColor) {
-      trajectory =
-          PathPlannerTrajectory.transformTrajectoryForAlliance(
-              trajectory, DriverStation.getAlliance());
-      PathPlannerTrajectory.PathPlannerState start =
-          (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
+      trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(
+          trajectory, DriverStation.getAlliance());
+      PathPlannerTrajectory.PathPlannerState start = (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
       Rotation2d rotation = start.holonomicRotation;
       Translation2d translation = start.poseMeters.getTranslation();
       this.startPose = new Pose2d(translation, rotation);
@@ -138,8 +134,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   public void execute() {
     double now = MathUtil.clamp(timer.get(), 0, trajectoryDuration);
 
-    PathPlannerTrajectory.PathPlannerState desired =
-        (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
+    PathPlannerTrajectory.PathPlannerState desired = (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d desiredPose = desired.poseMeters;
     double desiredLinearVelocity = desired.velocityMetersPerSecond;
@@ -176,20 +171,17 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   }
 
   public boolean isTrajectoryFinished() {
+    double now = timer.get();
+    if (now >= trajectoryDuration + kAutoTrajectoryTimeoutSeconds) {
+      return true;
+    }
 
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
 
-    double now = timer.get();
-
-    boolean reachedEndTolerance =
-        relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
-            && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
-            && now >= trajectoryDuration;
-
-    if (now >= trajectoryDuration + kAutoTrajectoryTimeoutSeconds) {
-      return true;
-    }
+    boolean reachedEndTolerance = relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
+        && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
+        && now >= trajectoryDuration;
 
     return reachedEndTolerance;
   }
