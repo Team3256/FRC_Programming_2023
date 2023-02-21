@@ -20,9 +20,9 @@ import java.util.Map;
 public final class Constants {
   public static final boolean kDebugEnabled = true;
 
-  public static final boolean kIntakeEnabled = true;
+  public static final boolean kIntakeEnabled = false;
   public static final boolean kElevatorEnabled = false;
-  public static final boolean kArmEnabled = false;
+  public static final boolean kArmEnabled = true;
   public static final boolean kSwerveEnabled = false;
   public static final boolean kLedStripEnabled = false;
 

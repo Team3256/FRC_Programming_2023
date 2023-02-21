@@ -120,10 +120,10 @@ public final class SwerveConstants {
   public static final double kAzimuthI = 0.00;
   public static final double kAzimuthD = 0.01;
   public static final Rotation2d[] kAlphaOffsets = {
-    Rotation2d.fromDegrees(268.4179), // Front Left - 0
-    Rotation2d.fromDegrees(315), // Front Right - 1
-    Rotation2d.fromDegrees(77.950), // Back Left - 2
-    Rotation2d.fromDegrees(79.4631) // Back Right - 3
+    Rotation2d.fromDegrees(268.3300), // Front Left - 0
+    Rotation2d.fromDegrees(312.7148), // Front Right - 1
+    Rotation2d.fromDegrees(78.0469), // Back Left - 2
+    Rotation2d.fromDegrees(80.4199) // Back Right - 3
   };
 
   public static final Rotation2d[] kZiptideOffsets = {
@@ -137,8 +137,8 @@ public final class SwerveConstants {
   public static final class FrontLeft {
     // public static final int kDriveMotorID = 3;
     // public static final int kAngleMotorID = 4;
-    public static final int kDriveMotorID = 30;
-    public static final int kAngleMotorID = 31;
+    public static final int kDriveMotorID = 23;
+    public static final int kAngleMotorID = 23;
     public static final int kCanCoderID = 2;
     public static final Rotation2d kAngleOffset = kRobotType.getOffset(0);
 
@@ -149,8 +149,8 @@ public final class SwerveConstants {
   public static final class FrontRight {
     // public static final int kDriveMotorID = 6;
     // public static final int kAngleMotorID = 7;
-    public static final int kDriveMotorID = 32;
-    public static final int kAngleMotorID = 33;
+    public static final int kDriveMotorID = 23;
+    public static final int kAngleMotorID = 23;
     public static final int kCanCoderID = 5;
     public static final Rotation2d kAngleOffset = kRobotType.getOffset(1);
 
@@ -159,8 +159,10 @@ public final class SwerveConstants {
   }
 
   public static final class BackLeft {
-    public static final int kDriveMotorID = 9;
-    public static final int kAngleMotorID = 10;
+    // public static final int kDriveMotorID = 9;
+    // public static final int kAngleMotorID = 10;
+    public static final int kDriveMotorID = 23;
+    public static final int kAngleMotorID = 23;
     public static final int kCanCoderID = 8;
     public static final Rotation2d kAngleOffset = kRobotType.getOffset(2);
 
@@ -169,10 +171,8 @@ public final class SwerveConstants {
   }
 
   public static final class BackRight {
-    // public static final int kDriveMotorID = 12;
-    // public static final int kAngleMotorID = 13;
-    public static final int kDriveMotorID = 34;
-    public static final int kAngleMotorID = 35;
+    public static final int kDriveMotorID = 12;
+    public static final int kAngleMotorID = 13;
     public static final int kCanCoderID = 11;
     public static final Rotation2d angleOffset = kRobotType.getOffset(3);
 

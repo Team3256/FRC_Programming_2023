@@ -10,6 +10,7 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,12 +31,9 @@ import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -48,6 +46,9 @@ public class RobotContainer {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledStrip;
+
+  private WPI_TalonFX steer = new WPI_TalonFX(10);
+  private WPI_TalonFX drive = new WPI_TalonFX(9);
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -74,6 +75,16 @@ public class RobotContainer {
     if (kLedStripEnabled) {
       configureLEDStrip();
     }
+    driver.a().onTrue(new InstantCommand(() -> steer.set(0.2)));
+    driver.a().onTrue(new InstantCommand(() -> drive.set(0.6)));
+    driver
+        .a()
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  steer.neutralOutput();
+                  drive.neutralOutput();
+                }));
   }
 
   private void configureSwerve() {
@@ -153,7 +164,7 @@ public class RobotContainer {
   }
 
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] { 100 });
+    ledStrip = new LED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
@@ -165,8 +176,7 @@ public class RobotContainer {
   public void test() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables)
-      result &= subsystem.CANTest();
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
   }
 }
