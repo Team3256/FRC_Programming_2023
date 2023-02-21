@@ -24,13 +24,23 @@ public final class Constants {
   public static final boolean kElevatorEnabled = true;
   public static final boolean kArmEnabled = true;
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kLedStripEnabled = false;
+  public static final boolean kLedStripEnabled = true;
+  public static final boolean kAdvatageKitReplayEnabled = false;
 
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.SIM;
-
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
+
+  public static final class ShuffleboardConstants {
+    public static final String kDriverTabName = "Driver";
+    public static final String kElectricalTabName = "Electrical";
+    public static final String kIntakeLayoutName = "Intake";
+    public static final String kSwerveLayoutName = "Swerve";
+    public static final String kArmLayoutName = "Arm";
+    public static final String kElevatorLayoutName = "Elevator";
+    public static final String kLEDLayoutName = "LED";
+  }
 
   public enum RobotMode {
     REAL,
