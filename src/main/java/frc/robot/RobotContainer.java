@@ -80,6 +80,10 @@ public class RobotContainer implements CANTestable, Loggable {
       testables.add(armSubsystem);
       loggables.add(armSubsystem);
     }
+    if (kElevatorEnabled) {
+      configureElevator();
+      testables.add(elevatorSubsystem);
+    }
     if (kLedStripEnabled) {
       configureLEDStrip();
       loggables.add(ledStrip);
@@ -151,6 +155,10 @@ public class RobotContainer implements CANTestable, Loggable {
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+
+    if (kArmEnabled) {
+      operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
+    }
   }
 
   private void configureArm() {
