@@ -38,6 +38,8 @@ import frc.robot.helper.DPadButton;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+// TODO: OPERATOR - Right trigger and bumper, A button are free to assign to any function.
+
 public class RobotContainer {
 
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -153,6 +155,7 @@ public class RobotContainer {
                 kFieldRelative,
                 kOpenLoop));
   }
+
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
