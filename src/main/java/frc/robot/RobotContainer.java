@@ -8,8 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
-import static frc.robot.Constants.ShuffleboardConstants.kElectricalTabName;
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -26,8 +25,6 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
@@ -198,5 +195,11 @@ public class RobotContainer implements CANTestable, Loggable {
     for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
+  }
+
+  public void startPitRoutine() {
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
+    pitSubsystemRoutine.pitRoutine();
   }
 }
