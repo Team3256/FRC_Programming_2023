@@ -28,7 +28,6 @@ import frc.robot.swerve.SwerveDrive;
 
 public class PPTrajectoryFollowCommand extends CommandBase {
   private final Timer timer = new Timer();
-  private boolean hasReachedTrajectoryEnd = false;
   private PathPlannerTrajectory trajectory;
   private final SwerveDriveController controller;
   private final SwerveDrive swerveSubsystem;

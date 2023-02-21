@@ -47,5 +47,5 @@ public final class AutoConstants {
 
   public static double kTranslationToleranceMeters = 0.2;
   public static double kRotationTolerance = Units.degreesToRadians(2);
-  public static double kAutoTrajectoryTimeoutSeconds = 1;
+  public static double kAutoTrajectoryTimeoutSeconds = 2;
 }
