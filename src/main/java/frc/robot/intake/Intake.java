@@ -72,10 +72,10 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void logInit() {
-    getLayout(kDriverTabName).add("1", this);
-    getLayout(kDriverTabName).add("2", new IntakeCube(this));
-    getLayout(kDriverTabName).add("3", new IntakeCone(this));
-    getLayout(kDriverTabName).add("4", intakeMotor);
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName).add(new IntakeCube(this));
+    getLayout(kDriverTabName).add(new IntakeCone(this));
+    getLayout(kDriverTabName).add(intakeMotor);
   }
 
   public ShuffleboardLayout getLayout(String tab) {

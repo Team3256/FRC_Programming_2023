@@ -91,8 +91,8 @@ public class LED extends SubsystemBase implements Loggable {
 
   @Override
   public void logInit() {
-    getLayout(kDriverTabName).add("1", this);
-    getLayout(kDriverTabName).add("2", new LEDToggleGamePieceDisplay(this));
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName).add(new LEDToggleGamePieceDisplay(this));
   }
 
   @Override

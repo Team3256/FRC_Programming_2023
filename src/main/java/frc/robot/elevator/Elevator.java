@@ -140,10 +140,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
-    getLayout(kDriverTabName).add("1", this);
-    getLayout(kDriverTabName).add("2", new ZeroElevator(this));
-    getLayout(kDriverTabName).add("3", new DoubleSendable(this::getElevatorPosition));
-    getLayout(kDriverTabName).add("4", elevatorMotor);
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName).add(new ZeroElevator(this));
+    getLayout(kDriverTabName).add("Position", new DoubleSendable(this::getElevatorPosition));
+    getLayout(kDriverTabName).add(elevatorMotor);
   }
 
   @Override

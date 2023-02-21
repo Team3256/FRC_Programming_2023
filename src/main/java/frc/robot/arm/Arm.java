@@ -35,6 +35,7 @@ import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
 import frc.robot.logging.DoubleSendable;
+import frc.robot.logging.GyroSendable;
 import frc.robot.logging.Loggable;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
@@ -145,10 +146,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
-    getLayout(kDriverTabName).add("1", this);
+    getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName)
-        .add("2", new DoubleSendable(() -> Math.toDegrees(getArmPositionRads())));
-    getLayout(kDriverTabName).add("3", armMotor);
+        .add("Angle", new GyroSendable(() -> Math.toDegrees(getArmPositionRads())));
+    getLayout(kDriverTabName).add(armMotor);
   }
 
   @Override

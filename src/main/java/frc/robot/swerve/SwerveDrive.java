@@ -235,8 +235,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   @Override
   public void logInit() {
-    getLayout(kDriverTabName).add("1", this);
-    getLayout(kDriverTabName).add("2", new GyroSendable(gyro::getYaw));
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName).add("gyro", new GyroSendable(gyro::getYaw));
     for (int i = 0; i < swerveModules.length; i++) {
       getLayout(kDriverTabName).add("Encoder " + i, swerveModules[i].getAngleEncoder());
     }
