@@ -31,7 +31,6 @@ public final class Constants {
   public static final RobotMode kCurrentMode = RobotMode.SIM;
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
-  public static final double kSwervePitTestSpeed = 0.3;
 
   public static final class ShuffleboardConstants {
     public static final String kDriverTabName = "Driver";
