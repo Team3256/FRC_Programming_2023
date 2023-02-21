@@ -16,6 +16,8 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -87,7 +89,19 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates = kSwerveKinematics.toSwerveModuleStates(chassisSpeeds);
+    Pose2d robotPoseVelocity =
+        new Pose2d(
+            chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
+            chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
+            Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
+    Twist2d twistVelocity = robotPoseVelocity.log(new Pose2d());
+    ChassisSpeeds updatedChassisSpeeds =
+        new ChassisSpeeds(
+            twistVelocity.dx / kPeriodicDeltaTime,
+            twistVelocity.dy / kPeriodicDeltaTime,
+            twistVelocity.dtheta / kPeriodicDeltaTime);
+    SwerveModuleState[] swerveModuleStates =
+        kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 

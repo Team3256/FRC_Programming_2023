@@ -22,6 +22,7 @@ public final class SwerveConstants {
 
   public static final boolean kFieldRelative = true;
   public static final boolean kOpenLoop = true;
+  public static final double kPeriodicDeltaTime = 0.02;
 
   /* Meters per second squared */
   public static int kXAccelRateLimit = 15;

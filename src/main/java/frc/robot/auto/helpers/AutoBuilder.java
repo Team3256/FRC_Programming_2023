@@ -47,7 +47,7 @@ public class AutoBuilder {
     return commands;
   }
 
-  private Command createPathPlannerCommand(
+  public Command createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment) {
     PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
