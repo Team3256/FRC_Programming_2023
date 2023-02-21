@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
-import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.GyroSendable;
 import frc.robot.logging.Loggable;
 
