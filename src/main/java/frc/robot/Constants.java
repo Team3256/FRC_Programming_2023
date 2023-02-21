@@ -42,7 +42,6 @@ public final class Constants {
     public static final String kLEDLayoutName = "LED";
   }
 
-
   public enum RobotMode {
     REAL,
     SIM,

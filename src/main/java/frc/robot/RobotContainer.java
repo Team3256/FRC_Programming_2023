@@ -8,8 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
-import static frc.robot.Constants.ShuffleboardConstants.kElectricalTabName;
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -20,13 +19,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
+import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
@@ -37,12 +35,9 @@ import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -169,7 +164,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] { 100 });
+    ledStrip = new LED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
@@ -180,8 +175,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
-    for (Loggable device : loggables)
-      device.logInit();
+    for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
             "Joystick",
@@ -198,15 +192,14 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables)
-      result &= subsystem.CANTest();
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive,
-        armSubsystem);
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
     pitSubsystemRoutine.pitRoutine();
   }
 }

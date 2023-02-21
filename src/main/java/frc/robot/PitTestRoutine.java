@@ -65,14 +65,14 @@ public class PitTestRoutine {
 
   private Command elevatorCommands() {
     Command zeroElevator = new ZeroElevator(elevatorSubsystem).until(driver.a());
-    Command setElevatorHeightHIGH = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH)
-        .until(driver.a());
-    Command setElevatorHeightMID = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID)
-        .until(driver.a());
-    Command setElevatorHeightLOW = new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW)
-        .until(driver.a());
-    Command setElevatorToStart = new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPositionMeters)
-        .until(driver.a());
+    Command setElevatorHeightHIGH =
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH).until(driver.a());
+    Command setElevatorHeightMID =
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID).until(driver.a());
+    Command setElevatorHeightLOW =
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW).until(driver.a());
+    Command setElevatorToStart =
+        new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPositionMeters).until(driver.a());
 
     return zeroElevator.andThen(
         setElevatorHeightHIGH.andThen(
@@ -89,9 +89,12 @@ public class PitTestRoutine {
   }
 
   public Command armCommands() {
-    Command setArmAngleHorizontal = new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(-12)).until(driver.a());
-    Command setArmAngleHalfway = new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)).until(driver.a());
-    Command setArmAngleVertical = new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)).until(driver.a());
+    Command setArmAngleHorizontal =
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(-12)).until(driver.a());
+    Command setArmAngleHalfway =
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)).until(driver.a());
+    Command setArmAngleVertical =
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)).until(driver.a());
 
     return setArmAngleHorizontal.andThen(setArmAngleHalfway.andThen(setArmAngleVertical));
   }
@@ -100,62 +103,62 @@ public class PitTestRoutine {
     Command lockSwerve = new LockSwerve(swerveSubsystem).until(driver.a());
     Command teleopSwerveForward = // move forward
         new TeleopSwerve(
-            swerveSubsystem,
-            () -> kSwervePitTestSpeed,
-            () -> 0,
-            () -> 0,
-            kFieldRelative,
-            kOpenLoop)
+                swerveSubsystem,
+                () -> kSwervePitTestSpeed,
+                () -> 0,
+                () -> 0,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command telopSwerveBackward = // move backward
         new TeleopSwerve(
-            swerveSubsystem,
-            () -> -kSwervePitTestSpeed,
-            () -> 0,
-            () -> 0,
-            kFieldRelative,
-            kOpenLoop)
+                swerveSubsystem,
+                () -> -kSwervePitTestSpeed,
+                () -> 0,
+                () -> 0,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command teleopSwerveRight = // move right
         new TeleopSwerve(
-            swerveSubsystem,
-            () -> 0,
-            () -> kSwervePitTestSpeed,
-            () -> 0,
-            kFieldRelative,
-            kOpenLoop)
+                swerveSubsystem,
+                () -> 0,
+                () -> kSwervePitTestSpeed,
+                () -> 0,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command teleopSwerveLeft = // move left
         new TeleopSwerve(
-            swerveSubsystem,
-            () -> 0,
-            () -> -kSwervePitTestSpeed,
-            () -> 0,
-            kFieldRelative,
-            kOpenLoop)
+                swerveSubsystem,
+                () -> 0,
+                () -> -kSwervePitTestSpeed,
+                () -> 0,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command teleopSwerveRotateRight = // rotate right
         new TeleopSwerve(
-            swerveSubsystem,
-            () -> 0,
-            () -> 0,
-            () -> kSwervePitTestSpeed,
-            kFieldRelative,
-            kOpenLoop)
+                swerveSubsystem,
+                () -> 0,
+                () -> 0,
+                () -> kSwervePitTestSpeed,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
 
     Command teleopSwerveRotateLeft = // rotate left
         new TeleopSwerve(
-            swerveSubsystem,
-            () -> 0,
-            () -> 0,
-            () -> -kSwervePitTestSpeed,
-            kFieldRelative,
-            kOpenLoop)
+                swerveSubsystem,
+                () -> 0,
+                () -> 0,
+                () -> -kSwervePitTestSpeed,
+                kFieldRelative,
+                kOpenLoop)
             .until(driver.a());
     return lockSwerve.andThen(
         teleopSwerveForward.andThen(
