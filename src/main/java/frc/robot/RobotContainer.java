@@ -60,13 +60,13 @@ public class RobotContainer {
       configureSwerve();
       testables.add(swerveDrive);
     }
-    if (kElevatorEnabled) {
-      configureElevator();
-      testables.add(elevatorSubsystem);
-    }
     if (kArmEnabled) {
       configureArm();
       testables.add(armSubsystem);
+    }
+    if (kElevatorEnabled) {
+      configureElevator();
+      testables.add(elevatorSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -132,7 +132,6 @@ public class RobotContainer {
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
-    armSubsystem = new Arm();
 
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
