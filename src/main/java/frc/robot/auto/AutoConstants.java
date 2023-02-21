@@ -7,6 +7,8 @@
 
 package frc.robot.auto;
 
+import com.pathplanner.lib.PathConstraints;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -15,15 +17,14 @@ public final class AutoConstants {
   public static final boolean kAutoDebug = false;
   public static final double kCommandMarkerThreshold = 0.05; // meters
 
-  public static final double kMaxSpeedMetersPerSecond = 3;
-  public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+  public static final double kMaxSpeedMetersPerSecond = 5;
+  public static final double kMaxAccelerationMetersPerSecondSquared = 7.5;
   public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
   public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
   // Constraint for the motion profiled robot angle controller
-  public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-      new TrapezoidProfile.Constraints(
-          kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+      kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
   /* Auto translation constants */
   public static double kAutoXTranslationP = 2.2;
@@ -40,12 +41,14 @@ public final class AutoConstants {
   public static double kAutoThetaControllerP = 5.4;
   public static double kAutoThetaControllerI = 0.02;
   public static double kAutoThetaControllerD = 1.5;
-  public static TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
-      new TrapezoidProfile.Constraints(
-          AutoConstants.kMaxAngularSpeedRadiansPerSecond,
-          AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
+  public static TrapezoidProfile.Constraints kAutoThetaControllerConstraints = new TrapezoidProfile.Constraints(
+      AutoConstants.kMaxAngularSpeedRadiansPerSecond,
+      AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
 
   public static double kTranslationToleranceMeters = 0.2;
   public static double kRotationTolerance = Units.degreesToRadians(2);
   public static double kAutoTrajectoryTimeoutSeconds = 2;
+
+  public static PathConstraints kDefaultPathConstraints = new PathConstraints(kMaxSpeedMetersPerSecond,
+      kMaxAccelerationMetersPerSecondSquared);
 }

@@ -20,7 +20,6 @@ import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
 
 public class AutoBuilder {
-  // TODO: Add AutoSpec
   private SwerveDrive swerveSubsystem;
 
   public AutoBuilder(SwerveDrive swerveSubsystem) {
@@ -33,9 +32,25 @@ public class AutoBuilder {
   }
 
   public ArrayList<Command> createPaths(
+      String pathGroup, PathConstraints constraint) {
+
+    ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<>(
+        PathPlanner.loadPathGroup(pathGroup, constraint));
+    ArrayList<Command> commands = new ArrayList<>();
+
+    commands.add(createPathPlannerCommand(trajectories.get(0), true));
+    trajectories.remove(0);
+    for (PathPlannerTrajectory trajectory : trajectories) {
+      commands.add(createPathPlannerCommand(trajectory, false));
+    }
+
+    return commands;
+  }
+
+  public ArrayList<Command> createPaths(
       String pathGroup, PathConstraints constraint, PathConstraints... constraints) {
-    ArrayList<PathPlannerTrajectory> trajectories =
-        new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
+    ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<>(
+        PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
     ArrayList<Command> commands = new ArrayList<>();
 
     commands.add(createPathPlannerCommand(trajectories.get(0), true));
@@ -49,16 +64,15 @@ public class AutoBuilder {
 
   private Command createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment) {
-    PIDController xTranslationController =
-        new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
-    PIDController yTranslationController =
-        new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
-    ProfiledPIDController thetaController =
-        new ProfiledPIDController(
-            kAutoThetaControllerP,
-            kAutoThetaControllerI,
-            kAutoThetaControllerD,
-            kAutoThetaControllerConstraints);
+    PIDController xTranslationController = new PIDController(kAutoXTranslationP, kAutoXTranslationI,
+        kAutoXTranslationD);
+    PIDController yTranslationController = new PIDController(kAutoYTranslationP, kAutoYTranslationI,
+        kAutoYTranslationD);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+        kAutoThetaControllerP,
+        kAutoThetaControllerI,
+        kAutoThetaControllerD,
+        kAutoThetaControllerConstraints);
 
     return new PPTrajectoryFollowCommand(
         trajectory,

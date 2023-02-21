@@ -20,6 +20,10 @@ public class AutoChooser {
     return autoChooser;
   }
 
+  public static void createSinglePath(String commandName, Command command) {
+    autoChooser.addOption(commandName, command);
+  }
+
   public static void createIncrementalPaths(String commandName, List<Command> commands) {
     Command path = new InstantCommand();
     for (int i = 0; i < commands.size(); i++) {
