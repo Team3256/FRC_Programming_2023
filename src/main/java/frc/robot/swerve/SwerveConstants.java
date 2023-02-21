@@ -21,6 +21,7 @@ public final class SwerveConstants {
   public static final String kPigeonCanBus = "mani";
 
   public static final boolean kFieldRelative = true;
+  public static final double kPeriodicDeltaTime = 0.02;
   public static final boolean kOpenLoop = true;
 
   public static final double kSwervePitTestSpeed = 0.3;
