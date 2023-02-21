@@ -24,6 +24,8 @@ public final class Constants {
   public static final boolean kElevatorEnabled = true;
   public static final boolean kArmEnabled = true;
   public static final boolean kSwerveEnabled = true;
+  public static final boolean kClimbEnabled = true;
+
   public static final boolean kLedStripEnabled = true;
   public static final boolean kAdvatageKitReplayEnabled = false;
 

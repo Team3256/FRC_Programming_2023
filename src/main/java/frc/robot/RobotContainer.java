@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.*;
+import frc.robot.climb.Climb;
+import frc.robot.climb.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
@@ -49,6 +51,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
+  private Climb climbSubsystem;
   private LED ledStrip;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
@@ -80,6 +83,10 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kElevatorEnabled) {
       configureElevator();
       testables.add(elevatorSubsystem);
+    }
+    if (kClimbEnabled) {
+      configureClimb();
+      testables.add(climbSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -144,6 +151,13 @@ public class RobotContainer implements CANTestable, Loggable {
                 () -> driver.getLeftX(),
                 kFieldRelative,
                 kOpenLoop));
+  }
+
+  public void configureClimb() {
+    climbSubsystem = new Climb();
+
+    driver.x().onTrue(new DeployClimb(climbSubsystem));
+    driver.y().onTrue(new RetractClimb(climbSubsystem));
   }
 
   public void configureElevator() {
