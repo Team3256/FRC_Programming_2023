@@ -8,6 +8,7 @@
 package frc.robot.auto;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 
 public final class AutoConstants {
   public static final boolean changeAutosBasedOnAlliance = true;
@@ -43,4 +44,8 @@ public final class AutoConstants {
       new TrapezoidProfile.Constraints(
           AutoConstants.kMaxAngularSpeedRadiansPerSecond,
           AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
+
+  public static double kTranslationToleranceMeters = 0.2;
+  public static double kRotationTolerance = Units.degreesToRadians(2);
+  public static double kAutoTrajectoryTimeoutSeconds = 2;
 }
