@@ -8,11 +8,14 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -26,6 +29,8 @@ import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
+import frc.robot.logging.GyroSendable;
+import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
@@ -36,7 +41,7 @@ import java.util.ArrayList;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -51,29 +56,38 @@ public class RobotContainer {
   private WPI_TalonFX drive = new WPI_TalonFX(9);
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
+  private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    PowerDistribution pdp = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
-    SmartDashboard.putData(pdp);
+    PowerDistribution pdp = new PowerDistribution(1, ModuleType.kRev);
 
     if (kIntakeEnabled) {
       configureIntake();
       testables.add(intakeSubsystem);
+      loggables.add(intakeSubsystem);
     }
     if (kSwerveEnabled) {
       configureSwerve();
       testables.add(swerveDrive);
+      loggables.add(swerveDrive);
+    }
+    if (kElevatorEnabled) {
+      configureElevator();
+      testables.add(elevatorSubsystem);
+      loggables.add(elevatorSubsystem);
+    }
+    if (kArmEnabled) {
+      configureArm();
+      testables.add(armSubsystem);
+      loggables.add(armSubsystem);
     }
     if (kElevatorEnabled) {
       configureElevator();
       testables.add(elevatorSubsystem);
     }
-    if (kArmEnabled) {
-      configureArm();
-      testables.add(armSubsystem);
-    }
     if (kLedStripEnabled) {
       configureLEDStrip();
+      loggables.add(ledStrip);
     }
     driver.a().onTrue(new InstantCommand(() -> steer.set(0.2)));
     driver.a().onTrue(new InstantCommand(() -> drive.set(0.6)));
@@ -85,6 +99,15 @@ public class RobotContainer {
                   steer.neutralOutput();
                   drive.neutralOutput();
                 }));
+
+    Shuffleboard.getTab(kElectricalTabName).add(pdp);
+  }
+
+  private void configureIntake() {
+    intakeSubsystem = new Intake();
+
+    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
+    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
   }
 
   private void configureSwerve() {
@@ -155,6 +178,13 @@ public class RobotContainer {
     // Elevator.ElevatorPosition.MID));
     // operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem,
     // Elevator.ElevatorPosition.LOW));
+    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
+    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+
+    if (kArmEnabled) {
+      operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
+    }
   }
 
   private void configureArm() {
@@ -173,10 +203,33 @@ public class RobotContainer {
     return new InstantCommand();
   }
 
-  public void test() {
+  @Override
+  public void logInit() {
+    for (Loggable device : loggables) device.logInit();
+    Shuffleboard.getTab(kDriverTabName)
+        .add(
+            "Joystick",
+            new GyroSendable(
+                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY()))));
+  }
+
+  @Override
+  public ShuffleboardLayout getLayout(String tab) {
+    return null;
+  }
+
+  @Override
+  public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
     for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
+    return result;
+  }
+
+  public void startPitRoutine() {
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
+    pitSubsystemRoutine.pitRoutine();
   }
 }

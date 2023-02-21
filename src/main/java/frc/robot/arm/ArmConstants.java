@@ -16,6 +16,7 @@ public final class ArmConstants {
   public static final int kArmMotorID = 6;
   public static final String kArmCanBus = "mani";
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
+  public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(80);
   public static final int kArmSimulationID = 16;
 
   public static final int kArmEncoderDIOPort = 8;

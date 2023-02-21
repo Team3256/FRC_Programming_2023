@@ -7,6 +7,7 @@
 
 package frc.robot.elevator;
 
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.elevator.ElevatorConstants.*;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
@@ -17,6 +18,9 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -28,8 +32,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
+import frc.robot.elevator.commands.ZeroElevator;
+import frc.robot.logging.DoubleSendable;
+import frc.robot.logging.Loggable;
+import java.util.function.*;
 
-public class Elevator extends SubsystemBase implements CANTestable {
+public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPosition {
     HIGH(ElevatorConstants.kElevatorHighPositionMeters),
     MID(ElevatorConstants.kElevatorMidPositionMeters),
@@ -137,6 +145,19 @@ public class Elevator extends SubsystemBase implements CANTestable {
     SmartDashboard.putNumber("Elevator percent output", elevatorMotor.getMotorOutputPercent());
     SmartDashboard.putBoolean("Elevator spiking", isMotorCurrentSpiking());
   }
+  public void logInit() {
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName).add(new ZeroElevator(this));
+    getLayout(kDriverTabName).add("Position", new DoubleSendable(this::getElevatorPosition));
+    getLayout(kDriverTabName).add(elevatorMotor);
+  }
+
+  @Override
+  public ShuffleboardLayout getLayout(String tab) {
+    return Shuffleboard.getTab(tab)
+        .getLayout(kElevatorLayoutName, BuiltInLayouts.kList)
+        .withSize(2, 4);
+  }
 
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
@@ -149,7 +170,7 @@ public class Elevator extends SubsystemBase implements CANTestable {
     System.out.println("Testing Elevator CAN:");
     boolean result = CANDeviceTester.testTalonFX(elevatorMotor);
     System.out.println("Elevator CAN connected: " + result);
-    SmartDashboard.putBoolean("Elevator CAN connected", result);
+    getLayout(kElectricalTabName).add("Elevator CAN connected", result);
     return result;
   }
 }

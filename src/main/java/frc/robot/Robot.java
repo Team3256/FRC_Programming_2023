@@ -71,6 +71,7 @@ public class Robot extends LoggedRobot {
 
     logger.start(); // Start advkit logger
     robotContainer = new RobotContainer();
+    robotContainer.logInit();
   }
 
   @Override
@@ -121,7 +122,8 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     // Run tests
-    robotContainer.test();
+    robotContainer.CANTest();
+    robotContainer.startPitRoutine();
   }
 
   /** This function is called periodically during test mode. */
