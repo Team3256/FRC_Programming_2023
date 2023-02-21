@@ -34,7 +34,8 @@ public final class ArmConstants {
   public static final double kArmMassKg = 5.10881086;
   public static final double kArmGearing = 240;
   public static final boolean kArmSimGravity = true;
-  public static boolean kArmIsStowed = true; //TODO *replace with defaultArmElevatorCommand once merged*
+  public static boolean kArmIsStowed =
+      true; // TODO *replace with defaultArmElevatorCommand once merged*
   public static final double kP = 5.0;
   public static final double kI = 0;
   public static final double kD = 0.5;

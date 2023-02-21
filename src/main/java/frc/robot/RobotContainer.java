@@ -144,8 +144,12 @@ public class RobotContainer {
     if (kArmEnabled) {
       operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
       driver.b().onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorLowPositionMeters));
-      driver.rightTrigger().onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorHighPositionMeters));
-      driver.rightBumper().onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorMidPositionMeters));
+      driver
+          .rightTrigger()
+          .onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorHighPositionMeters));
+      driver
+          .rightBumper()
+          .onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorMidPositionMeters));
     }
   }
 
@@ -159,11 +163,9 @@ public class RobotContainer {
       driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, kArmAngleMid));
     }
 
-
     if (kArmIsStowed) {
       // TODO run DefaultArmElevatorCommand once merged
-    }
-    else {
+    } else {
       // TODO run DefaultArmElevatorCommand once merged
     }
 
