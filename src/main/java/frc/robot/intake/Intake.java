@@ -78,6 +78,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   public void periodic() {
     SmartDashboard.putNumber("Intake current", intakeMotor.getSupplyCurrent());
   }
+
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName).add(new IntakeCube(this));

@@ -42,7 +42,6 @@ import java.util.ArrayList;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
-
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
@@ -101,13 +100,6 @@ public class RobotContainer implements CANTestable, Loggable {
                 }));
 
     Shuffleboard.getTab(kElectricalTabName).add(pdp);
-  }
-
-  private void configureIntake() {
-    intakeSubsystem = new Intake();
-
-    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
-    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
   }
 
   private void configureSwerve() {

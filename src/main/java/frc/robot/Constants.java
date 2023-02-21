@@ -22,9 +22,9 @@ public final class Constants {
 
   public static final boolean kIntakeEnabled = false;
   public static final boolean kElevatorEnabled = false;
-  public static final boolean kArmEnabled = true;
-  public static final boolean kSwerveEnabled = true;
-  public static final boolean kLedStripEnabled = true;
+  public static final boolean kArmEnabled = false;
+  public static final boolean kSwerveEnabled = false;
+  public static final boolean kLedStripEnabled = false;
   public static final boolean kAdvatageKitReplayEnabled = false;
 
   public static final RobotType kRobotType = RobotType.ALPHA;

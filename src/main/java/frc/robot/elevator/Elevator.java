@@ -145,6 +145,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     SmartDashboard.putNumber("Elevator percent output", elevatorMotor.getMotorOutputPercent());
     SmartDashboard.putBoolean("Elevator spiking", isMotorCurrentSpiking());
   }
+
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName).add(new ZeroElevator(this));
