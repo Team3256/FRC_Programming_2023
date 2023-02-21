@@ -24,6 +24,8 @@ public final class SwerveConstants {
   public static final boolean kOpenLoop = true;
   public static final double kPeriodicDeltaTime = 0.02;
 
+  public static final double kSwervePitTestSpeed = 0.3;
+
   /* Meters per second squared */
   public static int kXAccelRateLimit = 15;
   public static int kXDecelRateLimit = 10;

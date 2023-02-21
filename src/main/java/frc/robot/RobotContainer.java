@@ -8,8 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
-import static frc.robot.Constants.ShuffleboardConstants.kElectricalTabName;
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
@@ -29,8 +28,6 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
@@ -211,5 +208,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void periodic() {
     field2d.setRobotPose(swerveDrive.getPose());
+  }
+  public void startPitRoutine() {
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
+    pitSubsystemRoutine.pitRoutine();
   }
 }
