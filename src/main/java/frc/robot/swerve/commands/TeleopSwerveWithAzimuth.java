@@ -103,4 +103,8 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     // Sets motors to the velocities defined here
     swerveSubsystem.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
   }
+
+  public void setDPadHeading() {
+
+  }
 }

@@ -108,17 +108,38 @@ public class RobotContainer {
               kOpenLoop));
     }
 
-    driver
-        .rightBumper()
-        .whileTrue(
-            new TeleopSwerveWithAzimuth(
-                swerveDrive,
-                () -> driver.getLeftY(),
-                () -> driver.getLeftX(),
-                () -> driver.getRightX(),
-                () -> driver.getRightY(),
-                kFieldRelative,
-                kOpenLoop));
+    new DPadButton(driver, DPadButton.Direction.UP).whileTrue(new TeleopSwerveWithAzimuth(
+            swerveDrive,
+            () -> 0,
+            () -> 0,
+            () -> 0,
+            () -> 1,
+            kFieldRelative,
+            kOpenLoop));
+    new DPadButton(driver, DPadButton.Direction.DOWN).whileTrue(new TeleopSwerveWithAzimuth(
+            swerveDrive,
+            () -> 0,
+            () -> 0,
+            () -> 0,
+            () -> -1,
+            kFieldRelative,
+            kOpenLoop));
+    new DPadButton(driver, DPadButton.Direction.RIGHT).whileTrue(new TeleopSwerveWithAzimuth(
+            swerveDrive,
+            () -> 0,
+            () -> 0,
+            () -> 1,
+            () -> 0,
+            kFieldRelative,
+            kOpenLoop));
+    new DPadButton(driver, DPadButton.Direction.LEFT).whileTrue(new TeleopSwerveWithAzimuth(
+            swerveDrive,
+            () -> 0,
+            () -> 0,
+            () -> -1,
+            () -> 0,
+            kFieldRelative,
+            kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     driver

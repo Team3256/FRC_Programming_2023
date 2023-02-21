@@ -8,6 +8,7 @@
 package frc.robot.helper;
 
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -20,7 +21,7 @@ public class DPadButton extends Trigger {
   CommandGenericHID joystick;
   Direction direction;
 
-  public DPadButton(CommandGenericHID joystick, Direction direction) {
+  public DPadButton(CommandXboxController joystick, Direction direction) {
     this.joystick = joystick;
     this.direction = direction;
   }
