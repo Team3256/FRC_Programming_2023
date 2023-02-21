@@ -30,6 +30,7 @@ import frc.robot.led.patterns.*;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
+import frc.robot.helper.DPadButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -152,10 +153,12 @@ public class RobotContainer {
     armSubsystem = new Arm();
 
     if (kElevatorEnabled) {
+//      new DPadButton(driver, DPadButton.Direction.UP).onTrue(new SetArmAngle(armSubsystem, kArmAngleLow));
       driver.b().onTrue(new SetArmAngle(armSubsystem, kArmAngleLow));
       driver.rightTrigger().onTrue(new SetArmAngle(armSubsystem, kArmAngleHigh));
       driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, kArmAngleMid));
     }
+
 
     if (kArmIsStowed) {
       // TODO run DefaultArmElevatorCommand once merged
