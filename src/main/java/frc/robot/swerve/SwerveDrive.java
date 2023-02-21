@@ -101,7 +101,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
             chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
             Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
-    Twist2d twistVelocity = robotPoseVelocity.log(new Pose2d());
+
+    Twist2d twistVelocity = (new Pose2d()).log(robotPoseVelocity);
     ChassisSpeeds updatedChassisSpeeds =
         new ChassisSpeeds(
             twistVelocity.dx / kPeriodicDeltaTime,
