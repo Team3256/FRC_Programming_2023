@@ -7,14 +7,32 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
+import static frc.robot.Constants.*;
+import static frc.robot.Constants.ShuffleboardConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
+
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.arm.Arm;
+import frc.robot.arm.commands.*;
+import frc.robot.drivers.CANTestable;
+import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.*;
+import frc.robot.intake.Intake;
+import frc.robot.intake.commands.*;
+import frc.robot.led.LED;
+import frc.robot.led.commands.*;
+import frc.robot.led.patterns.*;
+import frc.robot.logging.GyroSendable;
+import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.TeleopSwerve;
+import frc.robot.swerve.commands.*;
+import java.util.ArrayList;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,57 +40,166 @@ import frc.robot.swerve.commands.TeleopSwerve;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
-  /* Controllers */
-  private final Joystick driver = new Joystick(0);
+public class RobotContainer implements CANTestable, Loggable {
 
-  /* Drive Controls */
-  private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private final CommandXboxController driver = new CommandXboxController(0);
+  private final CommandXboxController operator = new CommandXboxController(1);
 
-  /* Driver Buttons */
-  private final JoystickButton zeroGyro =
-      new JoystickButton(driver, XboxController.Button.kA.value);
+  private SwerveDrive swerveDrive;
+  private Intake intakeSubsystem;
+  private Elevator elevatorSubsystem;
+  private Arm armSubsystem;
+  private LED ledStrip;
 
-  /* Subsystems */
-  private final SwerveDrive swerveDrive = new SwerveDrive();
+  private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
+  private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    boolean fieldRelative = true;
-    boolean openLoop = true;
-    swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            swerveDrive,
-            driver,
-            translationAxis,
-            strafeAxis,
-            rotationAxis,
-            fieldRelative,
-            openLoop));
+    PowerDistribution pdp = new PowerDistribution(1, ModuleType.kRev);
 
-    // Configure the button bindings
-    configureButtonBindings();
+    if (kIntakeEnabled) {
+      configureIntake();
+      testables.add(intakeSubsystem);
+      loggables.add(intakeSubsystem);
+    }
+    if (kSwerveEnabled) {
+      configureSwerve();
+      testables.add(swerveDrive);
+      loggables.add(swerveDrive);
+    }
+    if (kElevatorEnabled) {
+      configureElevator();
+      testables.add(elevatorSubsystem);
+      loggables.add(elevatorSubsystem);
+    }
+    if (kArmEnabled) {
+      configureArm();
+      testables.add(armSubsystem);
+      loggables.add(armSubsystem);
+    }
+    if (kElevatorEnabled) {
+      configureElevator();
+      testables.add(elevatorSubsystem);
+    }
+    if (kLedStripEnabled) {
+      configureLEDStrip();
+      loggables.add(ledStrip);
+    }
+
+    Shuffleboard.getTab(kElectricalTabName).add(pdp);
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    /* Driver Buttons */
-    zeroGyro.onTrue(new InstantCommand(() -> swerveDrive.zeroGyro()));
+  private void configureIntake() {
+    intakeSubsystem = new Intake();
+
+    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
+    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
+  private void configureSwerve() {
+    swerveDrive = new SwerveDrive();
+
+    if (kElevatorEnabled) {
+      // Enable elevator acceleration limiting
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              elevatorSubsystem,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    } else {
+      swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              swerveDrive,
+              () -> driver.getLeftY(),
+              () -> driver.getLeftX(),
+              () -> driver.getRightX(),
+              kFieldRelative,
+              kOpenLoop));
+    }
+
+    driver
+        .rightBumper()
+        .whileTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveDrive,
+                () -> driver.getRightY(),
+                () -> driver.getRightX(),
+                () -> driver.getLeftX(),
+                () -> driver.getLeftY(),
+                kFieldRelative,
+                kOpenLoop));
+
+    driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
+    driver
+        .b()
+        .toggleOnTrue(
+            new TeleopSwerveLimited(
+                swerveDrive,
+                () -> driver.getRightY(),
+                () -> driver.getRightX(),
+                () -> driver.getLeftX(),
+                kFieldRelative,
+                kOpenLoop));
+  }
+
+  public void configureElevator() {
+    elevatorSubsystem = new Elevator();
+
+    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
+    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+
+    if (kArmEnabled) {
+      operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
+    }
+  }
+
+  private void configureArm() {
+    armSubsystem = new Arm();
+    // TODO: set button bindings for arm testing
+  }
+
+  public void configureLEDStrip() {
+    ledStrip = new LED(0, new int[] {100});
+    driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
+  }
+
   public Command getAutonomousCommand() {
     return new InstantCommand();
+  }
+
+  @Override
+  public void logInit() {
+    for (Loggable device : loggables) device.logInit();
+    Shuffleboard.getTab(kDriverTabName)
+        .add(
+            "Joystick",
+            new GyroSendable(
+                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY()))));
+  }
+
+  @Override
+  public ShuffleboardLayout getLayout(String tab) {
+    return null;
+  }
+
+  @Override
+  public boolean CANTest() {
+    System.out.println("Testing CAN connections:");
+    boolean result = true;
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
+    System.out.println("CAN fully connected: " + result);
+    return result;
+  }
+
+  public void startPitRoutine() {
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
+    pitSubsystemRoutine.pitRoutine();
   }
 }
