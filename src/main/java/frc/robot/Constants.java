@@ -25,6 +25,7 @@ public final class Constants {
   public static final boolean kArmEnabled = true;
   public static final boolean kSwerveEnabled = true;
   public static final boolean kLedStripEnabled = false;
+  public static final boolean kClimbEnabled = true;
 
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.SIM;

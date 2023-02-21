@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.*;
+import frc.robot.climb.Climb;
+import frc.robot.climb.commands.DeployClimb;
+import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
@@ -45,6 +48,7 @@ public class RobotContainer {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledStrip;
+  private Climb climbSubsystem;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
 
@@ -67,6 +71,10 @@ public class RobotContainer {
     if (kElevatorEnabled) {
       configureElevator();
       testables.add(elevatorSubsystem);
+    }
+    if (kClimbEnabled) {
+      configureClimb();
+      testables.add(climbSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -153,6 +161,12 @@ public class RobotContainer {
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
 
+  public void configureClimb() {
+    climbSubsystem = new Climb();
+
+    operator.leftTrigger().onTrue(new DeployClimb(climbSubsystem));
+    operator.rightTrigger().onTrue(new RetractClimb(climbSubsystem));
+  }
   public Command getAutonomousCommand() {
     return new InstantCommand();
   }
