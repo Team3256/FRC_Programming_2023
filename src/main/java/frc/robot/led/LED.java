@@ -7,15 +7,23 @@
 
 package frc.robot.led;
 
+import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
+import static frc.robot.Constants.ShuffleboardConstants.kLEDLayoutName;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
 import frc.robot.led.patternBases.LEDPattern;
 import frc.robot.led.patterns.BlinkingConePattern;
 import frc.robot.led.patterns.BlinkingCubePattern;
+import frc.robot.logging.Loggable;
 import java.util.Arrays;
 
-public class LED extends SubsystemBase {
+public class LED extends SubsystemBase implements Loggable {
   private final int length;
   private final int sections;
   private final LEDSection[] LEDSections;
@@ -79,5 +87,16 @@ public class LED extends SubsystemBase {
       setAll(new BlinkingConePattern());
     }
     isCubePiece = !isCubePiece;
+  }
+
+  @Override
+  public void logInit() {
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName).add(new LEDToggleGamePieceDisplay(this));
+  }
+
+  @Override
+  public ShuffleboardLayout getLayout(String tab) {
+    return Shuffleboard.getTab(tab).getLayout(kLEDLayoutName, BuiltInLayouts.kList).withSize(2, 2);
   }
 }
