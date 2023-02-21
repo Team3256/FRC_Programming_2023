@@ -8,36 +8,35 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.swerve.SwerveConstants.kFieldRelative;
-import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kElectricalTabName;
 import static frc.robot.swerve.SwerveConstants.*;
+import static frc.robot.swerve.SwerveConstants.kFieldRelative;
+import static frc.robot.swerve.SwerveConstants.kOpenLoop;
+
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
+import frc.robot.arm.commands.DefaultArmElevatorDriveConfig;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
-import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
 import frc.robot.led.patterns.*;
+import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.logging.GyroSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
@@ -62,13 +61,11 @@ public class RobotContainer implements CANTestable, Loggable {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledStrip;
-  
+
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    PowerDistribution pdp = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
-    SmartDashboard.putData(pdp);
     SmartDashboard.putData(field2d);
 
     if (kIntakeEnabled) {
@@ -99,8 +96,6 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
-
-    Shuffleboard.getTab(kElectricalTabName).add(pdp);
   }
 
   private void configureIntake() {
@@ -190,6 +185,8 @@ public class RobotContainer implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
+    PowerDistribution pdp = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
+    Shuffleboard.getTab(kElectricalTabName).add(pdp);
     for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
