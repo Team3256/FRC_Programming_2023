@@ -74,6 +74,7 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
 
     CreateDynamicPathWayNodes.init();
+    robotContainer.logInit();
   }
 
   @Override
@@ -126,7 +127,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     // Run tests
-    robotContainer.test();
+    robotContainer.CANTest();
   }
 
   /** This function is called periodically during test mode. */

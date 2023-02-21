@@ -7,28 +7,32 @@
 
 package frc.robot.swerve.helpers;
 
+import static frc.robot.Constants.ShuffleboardConstants.kElectricalTabName;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.drivers.CANDeviceTester;
+import frc.robot.logging.Loggable;
 
-public class SwerveModule {
+public class SwerveModule implements Loggable {
   public int moduleNumber;
+  private WPI_TalonFX mAngleMotor;
+  private WPI_TalonFX mDriveMotor;
+  private WPI_CANCoder angleEncoder;
   private Rotation2d angleOffset;
   private Rotation2d lastAngle;
-
-  private TalonFX mAngleMotor;
-  private TalonFX mDriveMotor;
-  private CANCoder angleEncoder;
 
   private CTREConfigs ctreConfigs = new CTREConfigs();
 
@@ -39,15 +43,25 @@ public class SwerveModule {
     this.angleOffset = moduleConstants.angleOffset;
 
     /* Angle Encoder Config */
-    angleEncoder = new CANCoder(moduleConstants.cancoderID);
+    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID);
     configAngleEncoder();
 
     /* Angle Motor Config */
-    mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+    mAngleMotor = new WPI_TalonFX(moduleConstants.angleMotorID);
     configAngleMotor();
 
     /* Drive Motor Config */
-    mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+    mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
+    configDriveMotor();
+    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID);
+    configAngleEncoder();
+
+    /* Angle Motor Config */
+    mAngleMotor = new WPI_TalonFX(moduleConstants.angleMotorID);
+    configAngleMotor();
+
+    /* Drive Motor Config */
+    mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
     configDriveMotor();
 
     lastAngle = getState().angle;
@@ -161,6 +175,35 @@ public class SwerveModule {
 
   public void setAngleMotorNeutralMode(NeutralMode neutralMode) {
     mAngleMotor.setNeutralMode(neutralMode);
+  }
+
+  public WPI_TalonFX getAngleMotor() {
+    return mAngleMotor;
+  }
+
+  public WPI_TalonFX getDriveMotor() {
+    return mDriveMotor;
+  }
+
+  public WPI_CANCoder getAngleEncoder() {
+    return angleEncoder;
+  }
+
+  @Override
+  public void logInit() {
+    getLayout(kElectricalTabName).add("Turn Motor Bus Voltage", getAngleMotor().getBusVoltage());
+    getLayout(kElectricalTabName)
+        .add("Turn Motor Output Voltage", getAngleMotor().getMotorOutputVoltage());
+    getLayout(kElectricalTabName).add("Drive Motor Bus Voltage", getDriveMotor().getBusVoltage());
+    getLayout(kElectricalTabName)
+        .add("Drive Motor Output Voltage", getDriveMotor().getMotorOutputVoltage());
+  }
+
+  @Override
+  public ShuffleboardLayout getLayout(String tabName) {
+    return Shuffleboard.getTab(tabName)
+        .getLayout("Mod " + moduleNumber, BuiltInLayouts.kList)
+        .withSize(2, 2);
   }
 
   public boolean test() {
