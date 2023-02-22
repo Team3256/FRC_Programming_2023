@@ -33,13 +33,13 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
-import frc.robot.logging.GyroSendable;
+import frc.robot.drivers.TalonFXFactory;
+import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private WPI_TalonFX armMotor;
-  // private DutyCycleEncoder[] armEncoder = new DutyCycleEncoder[10];
-  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
+  private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
   private static final SingleJointedArmSim armSim =
@@ -84,8 +84,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void configureRealHardware() {
-    // armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
-    armMotor = new WPI_TalonFX(6, "mani");
+    armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
     armMotor.setInverted(true);
     armMotor.setNeutralMode(NeutralMode.Coast);
     armEncoder.reset();
@@ -156,7 +155,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName)
-        .add("Angle", new GyroSendable(() -> Math.toDegrees(getArmPositionRads())));
+        .add("Angle", new DoubleSendable(() -> Math.toDegrees(getArmPositionRads()), "Gyro"));
     getLayout(kDriverTabName).add(armMotor);
   }
 

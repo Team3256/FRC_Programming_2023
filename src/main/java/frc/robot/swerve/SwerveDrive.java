@@ -35,7 +35,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.limelight.Limelight;
-import frc.robot.logging.GyroSendable;
+import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
@@ -280,7 +280,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   @Override
   public void logInit() {
     getLayout(kDriverTabName).add(this);
-    getLayout(kDriverTabName).add("gyro", new GyroSendable(gyro::getYaw));
+    getLayout(kDriverTabName).add("gyro", new DoubleSendable(gyro::getYaw, "Gyro"));
     for (int i = 0; i < swerveModules.length; i++) {
       getLayout(kDriverTabName).add("Encoder " + i, swerveModules[i].getAngleEncoder());
     }

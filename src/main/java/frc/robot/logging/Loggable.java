@@ -10,7 +10,6 @@ package frc.robot.logging;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 public interface Loggable {
-  public void logInit();
-
-  public ShuffleboardLayout getLayout(String tab);
+  void logInit();
+  ShuffleboardLayout getLayout(String tab);
 }

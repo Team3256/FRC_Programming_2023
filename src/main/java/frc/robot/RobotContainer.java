@@ -10,6 +10,7 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +26,7 @@ import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
-import frc.robot.logging.GyroSendable;
+import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
@@ -146,12 +147,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
     driver.x().whileTrue(new SetElevatorVolts(elevatorSubsystem, 3));
     driver.y().whileTrue(new ZeroElevator(elevatorSubsystem));
-    // operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem,
-    // Elevator.ElevatorPosition.HIGH));
-    // operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem,
-    // Elevator.ElevatorPosition.MID));
-    // operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem,
-    // Elevator.ElevatorPosition.LOW));
+
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
@@ -180,11 +176,7 @@ public class RobotContainer implements CANTestable, Loggable {
   @Override
   public void logInit() {
     for (Loggable device : loggables) device.logInit();
-    Shuffleboard.getTab(kDriverTabName)
-        .add(
-            "Joystick",
-            new GyroSendable(
-                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY()))));
+    Shuffleboard.getTab(kDriverTabName).add("Joystick", new DoubleSendable(() -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY())), "Gyro"));
   }
 
   @Override

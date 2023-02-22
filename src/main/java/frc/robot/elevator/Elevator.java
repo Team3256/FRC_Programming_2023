@@ -35,7 +35,6 @@ import frc.robot.drivers.TalonFXFactory;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
-import java.util.function.*;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPosition {
