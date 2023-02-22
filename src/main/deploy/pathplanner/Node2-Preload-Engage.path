@@ -10,7 +10,7 @@
         "x": 2.880463822125561,
         "y": 0.670943385750703
       },
-      "holonomicAngle": 179.78048814039647,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -73,5 +73,18 @@
   "maxVelocity": 5.0,
   "maxAcceleration": 7.0,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.6,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 1.5003151633522795,
+      "names": [
+        "defaultPosition"
+      ]
+    }
+  ]
 }

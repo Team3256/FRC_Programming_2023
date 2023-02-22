@@ -8,7 +8,7 @@
 package frc.robot.arm.commands;
 
 import static frc.robot.arm.ArmConstants.kDefaultArmAngle;
-import static frc.robot.elevator.ElevatorConstants.kMinHeight;
+import static frc.robot.elevator.ElevatorConstants.kElevatorMinHeight;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
@@ -18,7 +18,7 @@ import frc.robot.elevator.commands.SetElevatorHeight;
 public class DefaultArmElevatorDriveConfig extends ParallelCommandGroup {
   public DefaultArmElevatorDriveConfig(Elevator elevatorSubsystem, Arm armSubsystem) {
     addCommands(
-        new SetElevatorHeight(elevatorSubsystem, kMinHeight),
+        new SetElevatorHeight(elevatorSubsystem, kElevatorMinHeight),
         new SetArmAngle(armSubsystem, kDefaultArmAngle));
   }
 }

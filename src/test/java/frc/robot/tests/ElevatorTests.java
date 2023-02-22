@@ -44,7 +44,7 @@ public class ElevatorTests extends UnitTestBase {
 
     double height = elevatorSubsystem.getElevatorPosition();
     System.out.println(height);
-    assertEquals(ElevatorConstants.kMinHeight, height, DELTA, "Zeroing elevator");
+    assertEquals(ElevatorConstants.kElevatorMinHeight, height, DELTA, "Zeroing elevator");
   }
 
   public void testElevatorHeight(double heightSetpointMeters) { // 1 meter

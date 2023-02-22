@@ -27,29 +27,29 @@ public final class AutoConstants {
           kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
   /* Auto translation constants */
-  public static double kAutoXTranslationP = 2.2;
-  public static double kAutoXTranslationI = 0.025;
-  public static double kAutoXTranslationD = 0;
+  public static final double kAutoXTranslationP = 2.2;
+  public static final double kAutoXTranslationI = 0.025;
+  public static final double kAutoXTranslationD = 0;
 
-  public static double kAutoYTranslationP = 2.2;
-  public static double kAutoYTranslationI = 0.025;
-  public static double kAutoYTranslationD = 0;
+  public static final double kAutoYTranslationP = 2.2;
+  public static final double kAutoYTranslationI = 0.025;
+  public static final double kAutoYTranslationD = 0;
 
-  public static double kTranslationFF = 0.3;
+  public static final double kTranslationFF = 0.3;
 
   /* ThetaController constants */
-  public static double kAutoThetaControllerP = 5.4;
-  public static double kAutoThetaControllerI = 0.02;
-  public static double kAutoThetaControllerD = 1.5;
-  public static TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
+  public static final double kAutoThetaControllerP = 5.4;
+  public static final double kAutoThetaControllerI = 0.02;
+  public static final double kAutoThetaControllerD = 1.5;
+  public static final TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
       new TrapezoidProfile.Constraints(
           AutoConstants.kMaxAngularSpeedRadiansPerSecond,
           AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
 
-  public static double kTranslationToleranceMeters = 0.2;
-  public static double kRotationTolerance = Units.degreesToRadians(2);
-  public static double kAutoTrajectoryTimeoutSeconds = 2;
+  public static final double kTranslationToleranceMeters = 0.2;
+  public static final double kRotationTolerance = Units.degreesToRadians(2);
+  public static final double kAutoTrajectoryTimeoutSeconds = 2;
 
-  public static PathConstraints kDefaultPathConstraints =
+  public static final PathConstraints kDefaultPathConstraints =
       new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
 }

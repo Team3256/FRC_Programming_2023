@@ -11,20 +11,29 @@ import static frc.robot.auto.AutoConstants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
+import frc.robot.arm.ArmConstants;
+import frc.robot.arm.commands.DefaultArmElevatorDriveConfig;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
+import frc.robot.intake.commands.IntakeCone;
+import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.IntakeOff;
 import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 
 public class AutoPaths {
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
+  private HashMap<String, Command> autoEventMap = new HashMap<>();
 
   public AutoPaths(
       SwerveDrive swerveSubsystem,
@@ -40,13 +49,40 @@ public class AutoPaths {
   public void sendCommandsToChooser() {
     AutoChooser.createSinglePath("Do Nothing", new InstantCommand());
 
-    if (swerveSubsystem == null) return;
+    if (swerveSubsystem == null)
+      return;
+    if (intakeSubsystem == null)
+      return;
+    if (armSubsystem == null)
+      return;
+    if (elevatorSubsystem == null)
+      return;
 
-    AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem);
-    ArrayList<Command> testAuto = autoBuilder.createPaths("OH2engageSS1", kDefaultPathConstraints);
-    AutoChooser.createIncrementalPaths(
-        new ArrayList<String>(Arrays.asList("Top 2 Piece Auto", "Top 2 Piece Auto Engage")),
-        testAuto);
+    autoEventMap.put(
+        "intakeCone",
+        new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
+            new SetArmAngle(armSubsystem, ArmConstants.kArmGroundIntakeRotation),
+            new IntakeCone(intakeSubsystem)));
+    autoEventMap.put(
+        "intakeCube",
+        new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
+            new SetArmAngle(armSubsystem, ArmConstants.kArmGroundIntakeRotation),
+            new IntakeCube(intakeSubsystem)));
+    autoEventMap.put(
+        "defaultPosition",
+        new ParallelCommandGroup(
+            new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem),
+            new IntakeOff(intakeSubsystem)));
+
+    AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
+    Command scorePreload = new IntakeCube(intakeSubsystem);
+
+    ArrayList<Command> node2PreloadEngage = autoBuilder.createPaths("Node2-Preload-Engage", kDefaultPathConstraints);
+    AutoChooser.addIncrementalPaths(scorePreload, "Node2-Preload-Engage", node2PreloadEngage);
+
+    AutoChooser.sendChooserToDashboard("Auto Chooser");
   }
 
   public Command getSelectedPath() {

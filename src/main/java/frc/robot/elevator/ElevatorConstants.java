@@ -23,6 +23,7 @@ public final class ElevatorConstants {
   public static final double kElevatorHighPositionMeters = Units.inchesToMeters(30);
   public static final double kElevatorMidPositionMeters = Units.inchesToMeters(15);
   public static final double kElevatorLowPositionMeters = Units.inchesToMeters(3);
+  public static final double kElevatorGroundIntakePositionMeters = Units.inchesToMeters(7);
 
   // https://www.reca.lc/linear
   // gradle simulateJava working constants
@@ -41,18 +42,11 @@ public final class ElevatorConstants {
 
   public static final double kDownSpeedVolts = -3;
 
-  // public static final double kElevatorGearing = 10;
-  // public static final double kCarriageMass = 4;
-  // public static final double kDrumRadius = Units.inchesToMeters(2);
-  // public static final double kMinHeight = Units.inchesToMeters(2);
-  // public static final double kMaxHeight = Units.inchesToMeters(50);
-
-  public static final double kDrumRadius = Units.inchesToMeters(2.5);
-  public static final double kMinHeight = Units.inchesToMeters(0.125); //
-  // meters 0.003175
-  public static final double kMaxHeight = Units.inchesToMeters(38.5); // 0.9779
+  public static final double kElevatorDrumRadius = Units.inchesToMeters(2.5);
+  public static final double kElevatorMinHeight = Units.inchesToMeters(0.125);
+  public static final double kElevatorMaxHeight = Units.inchesToMeters(38.5);
   public static final double kElevatorGearing = 5;
-  public static final double kCarriageMass = 4.0; // kg
+  public static final double kElevatorCarriageMass = 4.0; // kg
 
   public static final double kTolerancePosition = 0.025;
   public static final double kToleranceVelocity = 0.025;

@@ -44,6 +44,11 @@ public final class ArmConstants {
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-12.881991);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(90);
 
+  public static final Rotation2d kArmHighRotation = Rotation2d.fromDegrees(0);
+  public static final Rotation2d kArmMidRotation = Rotation2d.fromDegrees(-5);
+  public static final Rotation2d kArmLowRotation = Rotation2d.fromDegrees(-5);
+  public static final Rotation2d kArmGroundIntakeRotation = Rotation2d.fromDegrees(-10);
+
   // https://www.reca.lc/arm
   // TODO Update
   public static final double kArmS = 0.0;

@@ -70,15 +70,15 @@ public class RobotContainer implements CANTestable, Loggable {
       testables.add(swerveDrive);
       loggables.add(swerveDrive);
     }
-    if (kElevatorEnabled) {
-      configureElevator();
-      testables.add(elevatorSubsystem);
-      loggables.add(elevatorSubsystem);
-    }
     if (kArmEnabled) {
       configureArm();
       testables.add(armSubsystem);
       loggables.add(armSubsystem);
+    }
+    if (kElevatorEnabled) {
+      configureElevator();
+      testables.add(elevatorSubsystem);
+      loggables.add(elevatorSubsystem);
     }
     if (kElevatorEnabled) {
       configureElevator();

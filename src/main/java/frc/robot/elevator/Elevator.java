@@ -35,13 +35,14 @@ import frc.robot.drivers.TalonFXFactory;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
-import java.util.function.*;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPosition {
     HIGH(ElevatorConstants.kElevatorHighPositionMeters),
     MID(ElevatorConstants.kElevatorMidPositionMeters),
-    LOW(ElevatorConstants.kElevatorLowPositionMeters);
+    LOW(ElevatorConstants.kElevatorLowPositionMeters),
+    DEFAULT(ElevatorConstants.kElevatorMinHeight),
+    GROUND_INTAKE(ElevatorConstants.kElevatorGroundIntakePositionMeters);
 
     public double position;
 
@@ -58,10 +59,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
       new ElevatorSim(
           DCMotor.getFalcon500(kNumElevatorMotors),
           kElevatorGearing,
-          kCarriageMass,
-          kDrumRadius,
-          kMinHeight,
-          kMaxHeight,
+          kElevatorCarriageMass,
+          kElevatorDrumRadius,
+          kElevatorMinHeight,
+          kElevatorMaxHeight,
           true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
@@ -113,7 +114,9 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public double getElevatorPosition() {
     if (RobotBase.isReal()) {
       return falconToMeters(
-          elevatorMotor.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
+          elevatorMotor.getSelectedSensorPosition(),
+          2 * Math.PI * kElevatorDrumRadius,
+          kElevatorGearing);
     } else return elevatorSim.getPositionMeters();
   }
 
