@@ -74,10 +74,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
       configureSimHardware();
     }
 
-    // for (int i = 0; i <= 9; i++) {
-    // armEncoder[i] = new DutyCycleEncoder(i);
-    // }
-
     System.out.println("Arm initialized");
     off();
   }

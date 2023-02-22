@@ -50,10 +50,6 @@ public class RobotContainer implements CANTestable, Loggable {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledStrip;
-
-  private WPI_TalonFX steer = new WPI_TalonFX(10);
-  private WPI_TalonFX drive = new WPI_TalonFX(9);
-
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
@@ -88,16 +84,7 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
-    driver.a().onTrue(new InstantCommand(() -> steer.set(0.2)));
-    driver.a().onTrue(new InstantCommand(() -> drive.set(0.6)));
-    driver
-        .a()
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  steer.neutralOutput();
-                  drive.neutralOutput();
-                }));
+
 
     Shuffleboard.getTab(kElectricalTabName).add(pdp);
   }

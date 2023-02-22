@@ -21,8 +21,8 @@ public final class ArmConstants {
 
   public static final int kArmEncoderDIOPort = 8;
 
-  private static final double kArmCountsPerRevolution = 8192;
-  public static final double kArmCountsPerRadian = 2 * Math.PI / kArmCountsPerRevolution;
+  private static final double kArmCountsPerRevolution = 8192 / 4;
+  public static final double kArmCountsPerRadian = kArmCountsPerRevolution / (2 * Math.PI);
 
   // TODO Update
   public static final double kArmLengthMeters = 1.638059;
