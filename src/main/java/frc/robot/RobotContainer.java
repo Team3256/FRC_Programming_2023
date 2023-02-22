@@ -11,7 +11,6 @@ import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -84,7 +83,6 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
-
 
     Shuffleboard.getTab(kElectricalTabName).add(pdp);
   }
