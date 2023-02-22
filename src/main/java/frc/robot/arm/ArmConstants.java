@@ -21,6 +21,7 @@ public final class ArmConstants {
 
   public static final int kArmEncoderDIOPort = 10;
 
+  // TODO: Get exact angles (unless we are supposed to be using integers)
   public static final Rotation2d kArmAngleLow = Rotation2d.fromDegrees(30);
   public static final Rotation2d kArmAngleMid = Rotation2d.fromDegrees(45);
   public static final Rotation2d kArmAngleHigh = Rotation2d.fromDegrees(60);

@@ -13,8 +13,12 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+// import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.button.Trigger;
+// import frc.robot.helper.DPadButton;
+// import frc.robot.helper.DPadButton.Direction;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
@@ -50,6 +54,12 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     this.openLoop = openLoop;
     this.azimuthController = new PIDController(kAzimuthP, kAzimuthI, kAzimuthD);
     azimuthController.enableContinuousInput(-180, 180);
+  }
+
+  // to test if dpad works
+  @Override
+  public void initialize() {
+    System.out.println("recieved");
   }
 
   @Override
@@ -102,9 +112,5 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
         MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
     // Sets motors to the velocities defined here
     swerveSubsystem.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
-  }
-
-  public void setDPadHeading() {
-
   }
 }

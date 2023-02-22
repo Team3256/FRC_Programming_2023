@@ -39,10 +39,25 @@ public class DPadButton extends Trigger {
     }
   }
 
-  public boolean get() {
+  // see getDirectionalValue method, this is the corrected version of the get method, which had no
+  // documentation
+
+  // public boolean get() {
+  // int dPadValue = joystick.getHID().getPOV();
+  // return (dPadValue == direction.direction)
+  //     || (dPadValue == (direction.direction + 45) % 360)
+  //     || (dPadValue == (direction.direction + 315) % 360);
+
+  // }
+
+  // this method is supposed to return an intermediate value for inputs in which two dpads are
+  // pressed as a diagonal value
+  public boolean getDiagonalDirection() {
     int dPadValue = joystick.getHID().getPOV();
     return (dPadValue == direction.direction)
-        || (dPadValue == (direction.direction + 45) % 360)
-        || (dPadValue == (direction.direction + 315) % 360);
+        || (dPadValue == (direction.direction + 45) % 360) // accounts for the northeast direction
+        || (dPadValue == (direction.direction + 135) % 360) // accounts for the southeast direction
+        || (dPadValue == (direction.direction + 225) % 360) // accounts for the southwest direction
+        || (dPadValue == (direction.direction + 315) % 360); // accounts for the northwest direction
   }
 }
