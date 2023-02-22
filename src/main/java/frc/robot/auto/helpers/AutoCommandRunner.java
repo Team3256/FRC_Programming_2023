@@ -32,11 +32,12 @@ public class AutoCommandRunner {
     List<AutoCommandMarker> convertedMarkers = new ArrayList<>();
     for (PathPlannerTrajectory.EventMarker eventMarker : eventMarkers) {
       for (String name : eventMarker.names) {
-        if (!eventMap.containsKey(name)) continue;
-
+        if (!eventMap.containsKey(name)) {
+          System.out.println("Key now found for name: " + name);
+          continue;
+        }
         Command command = eventMap.get(name);
-        AutoCommandMarker commandMarker =
-            new AutoCommandMarker(eventMarker.positionMeters, command);
+        AutoCommandMarker commandMarker = new AutoCommandMarker(eventMarker.positionMeters, command);
         System.out.println(commandMarker);
         convertedMarkers.add(commandMarker);
       }
@@ -47,10 +48,9 @@ public class AutoCommandRunner {
   public void execute(Pose2d currentPose) {
     for (int i = 0; i < commandMarkers.size(); i++) {
       AutoCommandMarker marker = commandMarkers.get(i);
-      boolean atMarker =
-          lastPose == null
-              ? isAtMarker(marker.getStartingPosition(), currentPose)
-              : isAtMarker(marker.getStartingPosition(), currentPose, lastPose);
+      boolean atMarker = lastPose == null
+          ? isAtMarker(marker.getStartingPosition(), currentPose)
+          : isAtMarker(marker.getStartingPosition(), currentPose, lastPose);
 
       if (atMarker) {
         marker.getCommand().schedule();
@@ -62,10 +62,9 @@ public class AutoCommandRunner {
 
     for (int i = 0; i < startedCommandMarkers.size(); i++) { // cancel started commands
       AutoCommandMarker marker = startedCommandMarkers.get(i);
-      boolean atMarker =
-          lastPose == null
-              ? isAtMarker(marker.getStartingPosition(), currentPose)
-              : isAtMarker(marker.getStartingPosition(), currentPose, lastPose);
+      boolean atMarker = lastPose == null
+          ? isAtMarker(marker.getStartingPosition(), currentPose)
+          : isAtMarker(marker.getStartingPosition(), currentPose, lastPose);
 
       if (atMarker) {
         marker.getCommand().cancel();
@@ -101,8 +100,7 @@ public class AutoCommandRunner {
     Translation2d currentTranslation = currentPose.getTranslation();
     Translation2d lastTranslation = lastPose.getTranslation();
 
-    double distanceBetweenTrajectoryPoses =
-        Math.abs(currentTranslation.getDistance(lastTranslation)) * 6; // TODO: WTF
+    double distanceBetweenTrajectoryPoses = Math.abs(currentTranslation.getDistance(lastTranslation)) * 6; // TODO: WTF
     double distanceBetweenLastPose = Math.abs(lastTranslation.getDistance(marker));
     double distanceBetweenCurrentPose = Math.abs(currentTranslation.getDistance(marker));
 

@@ -16,7 +16,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "defaultPosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -66,7 +68,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "defaultPosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -116,7 +120,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "defaultPosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -173,5 +179,30 @@
   "maxVelocity": 12.0,
   "maxAcceleration": 8.0,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.6,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 1.2301258433948847,
+      "names": [
+        "defaultPosition"
+      ]
+    },
+    {
+      "position": 2.637677556818189,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 3.294803133877841,
+      "names": [
+        "defaultPosition"
+      ]
+    }
+  ]
 }

@@ -16,7 +16,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "defaultPosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -66,7 +68,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "defaultPosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -98,5 +102,18 @@
   "maxVelocity": 5.0,
   "maxAcceleration": 7.0,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.6882651589133515,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 1.2779080477627869,
+      "names": [
+        "defaultPosition"
+      ]
+    }
+  ]
 }

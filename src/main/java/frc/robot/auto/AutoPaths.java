@@ -75,6 +75,7 @@ public class AutoPaths {
         new ParallelCommandGroup(
             new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem),
             new IntakeOff(intakeSubsystem)));
+    // TODO: ADD SCORE COMMAND AND PUT IN AUTOS
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
     Command scorePreload = new IntakeCube(intakeSubsystem);

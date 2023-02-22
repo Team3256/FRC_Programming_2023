@@ -16,7 +16,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "defaultPosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -66,7 +68,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "defaultPosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -116,32 +120,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 2.264358022259881,
-        "y": 3.287429145957467
-      },
-      "prevControl": {
-        "x": 2.1665015222391553,
-        "y": 3.6578888730965393
-      },
-      "nextControl": {
-        "x": 2.2887646190874054,
-        "y": 3.1950320011668514
-      },
-      "holonomicAngle": 0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
+        "names": [
+          "defaultPosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -153,8 +134,8 @@
         "y": 3.359987944002038
       },
       "prevControl": {
-        "x": 2.964520999028977,
-        "y": 3.3215441895564775
+        "x": 1.8379689046161949,
+        "y": 2.718337087254687
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -173,5 +154,30 @@
   "maxVelocity": 12.0,
   "maxAcceleration": 8.0,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 1.3045498934659092,
+      "names": [
+        "defaultPosition"
+      ]
+    },
+    {
+      "position": 0.538543146306818,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 2.6232055664062486,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 3.2188443270596707,
+      "names": [
+        "defaultPosition"
+      ]
+    }
+  ]
 }
