@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
-import frc.robot.drivers.TalonFXFactory;
 import frc.robot.logging.GyroSendable;
 import frc.robot.logging.Loggable;
 
@@ -74,10 +73,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
       configureSimHardware();
     }
 
-    // for (int i = 0; i <= 9; i++) {
-    // armEncoder[i] = new DutyCycleEncoder(i);
-    // }
-
     System.out.println("Arm initialized");
     off();
   }
@@ -89,9 +84,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void configureRealHardware() {
-    armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
+    // armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
+    armMotor = new WPI_TalonFX(6, "mani");
     armMotor.setInverted(true);
     armMotor.setNeutralMode(NeutralMode.Coast);
+    armEncoder.reset();
+    // armEncoder.setPositionOffset(0.650);
     armEncoder.setDistancePerRotation(kArmCountsPerRadian);
   }
 

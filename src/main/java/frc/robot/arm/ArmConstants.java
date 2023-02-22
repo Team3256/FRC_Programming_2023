@@ -19,10 +19,10 @@ public final class ArmConstants {
   public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(80);
   public static final int kArmSimulationID = 16;
 
-  public static final int kArmEncoderDIOPort = 8;
+  public static final int kArmEncoderDIOPort = 4;
 
-  private static final double kArmCountsPerRevolution = 8192;
-  public static final double kArmCountsPerRadian = 2 * Math.PI / kArmCountsPerRevolution;
+  private static final double kArmCountsPerRevolution = 8192 / 4;
+  public static final double kArmCountsPerRadian = kArmCountsPerRevolution / (2 * Math.PI);
 
   // TODO Update
   public static final double kArmLengthMeters = 1.638059;
@@ -31,9 +31,9 @@ public final class ArmConstants {
   public static final double kArmGearing = 240;
   public static final boolean kArmSimGravity = true;
 
-  public static final double kP = 5.0;
+  public static final double kP = 0; // 5
   public static final double kI = 0;
-  public static final double kD = 0.5;
+  public static final double kD = 0; // 0.5
   public static final TrapezoidProfile.Constraints kArmContraints =
       new TrapezoidProfile.Constraints(2, 1);
 
@@ -45,9 +45,9 @@ public final class ArmConstants {
 
   // https://www.reca.lc/arm
   // TODO Update
-  public static final double kArmS = 0.0;
-  public static final double kArmG = 5.3;
-  public static final double kArmV = 4.21;
-  public static final double kArmA = 0.1;
+  public static final double kArmS = 0.13794;
+  public static final double kArmG = 0.35843;
+  public static final double kArmV = 4.19;
+  public static final double kArmA = 0.029772;
   public static final int kNumArmMotors = 1;
 }
