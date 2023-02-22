@@ -49,14 +49,10 @@ public class AutoPaths {
   public void sendCommandsToChooser() {
     AutoChooser.createSinglePath("Do Nothing", new InstantCommand());
 
-    if (swerveSubsystem == null)
-      return;
-    if (intakeSubsystem == null)
-      return;
-    if (armSubsystem == null)
-      return;
-    if (elevatorSubsystem == null)
-      return;
+    if (swerveSubsystem == null) return;
+    if (intakeSubsystem == null) return;
+    if (armSubsystem == null) return;
+    if (elevatorSubsystem == null) return;
 
     autoEventMap.put(
         "intakeCone",
@@ -80,7 +76,8 @@ public class AutoPaths {
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
     Command scorePreload = new IntakeCube(intakeSubsystem);
 
-    ArrayList<Command> node2PreloadEngage = autoBuilder.createPaths("Node2-Preload-Engage", kDefaultPathConstraints);
+    ArrayList<Command> node2PreloadEngage =
+        autoBuilder.createPaths("Node2-Preload-Engage", kDefaultPathConstraints);
     AutoChooser.addIncrementalPaths(scorePreload, "Node2-Preload-Engage", node2PreloadEngage);
 
     AutoChooser.sendChooserToDashboard("Auto Chooser");
