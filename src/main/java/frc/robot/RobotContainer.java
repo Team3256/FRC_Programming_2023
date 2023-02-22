@@ -11,6 +11,7 @@ import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -159,8 +160,11 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureArm() {
     armSubsystem = new Arm();
-    driver.rightTrigger().whileTrue(new SetArmVoltage(armSubsystem, 3));
-    driver.leftTrigger().whileTrue(new SetArmVoltage(armSubsystem, -3));
+    // driver.rightTrigger().whileTrue(new SetArmVoltage(armSubsystem, 3));
+    // driver.leftTrigger().whileTrue(new SetArmVoltage(armSubsystem, -3));
+    driver.y().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)));
+    driver.x().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)));
+    driver.a().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)));
   }
 
   public void configureLEDStrip() {

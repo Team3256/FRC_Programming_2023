@@ -86,19 +86,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private void configureRealHardware() {
     armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
     armMotor.setInverted(true);
-    armMotor.setNeutralMode(NeutralMode.Coast);
-    armEncoder.reset();
-    // armEncoder.setPositionOffset(0.650);
-    armEncoder.setDistancePerRotation(kArmCountsPerRadian);
+    armMotor.setNeutralMode(NeutralMode.Brake);
+    armEncoder.setDistancePerRotation(kArmRadiansPerCount);
   }
 
   public double calculateFeedForward(double angleRadians, double velocity) {
-    double clampedPosition =
-        MathUtil.clamp(
-            angleRadians, kArmAngleMinConstraint.getRadians(), kArmAngleMaxConstraint.getRadians());
-
-    SmartDashboard.putNumber("Position setpoint", Units.radiansToDegrees(clampedPosition));
-    return armFeedforward.calculate(clampedPosition, velocity);
+    return armFeedforward.calculate(angleRadians, velocity);
   }
 
   public void setInputVoltage(double voltage) {
@@ -106,7 +99,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public double getArmPositionRads() {
-    if (RobotBase.isReal()) return armEncoder.getAbsolutePosition();
+    if (RobotBase.isReal()) return (armEncoder.getDistance() - kArmEncoderOffsetRadians);
     else return armSim.getAngleRads();
   }
 
@@ -118,8 +111,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Is Arm Encoder Connected", armEncoder.isConnected());
+    // TODO say hi lucas
     SmartDashboard.putNumber("Arm Raw Encoder value", armEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
+    SmartDashboard.putNumber("Arm Encoder Offset", armEncoder.getPositionOffset());
+    SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm motor percent output", armMotor.getMotorOutputPercent() * 12);
   }

@@ -21,8 +21,9 @@ public final class ArmConstants {
 
   public static final int kArmEncoderDIOPort = 4;
 
-  private static final double kArmCountsPerRevolution = 8192 / 4;
-  public static final double kArmCountsPerRadian = kArmCountsPerRevolution / (2 * Math.PI);
+  // private static final double kArmCountsPerRevolution = 8192 / 4;
+  public static final double kArmRadiansPerCount = -2 * Math.PI / 4;
+  public static final double kArmEncoderOffsetRadians = 0.650724 * kArmRadiansPerCount;
 
   // TODO Update
   public static final double kArmLengthMeters = 1.638059;
@@ -31,22 +32,22 @@ public final class ArmConstants {
   public static final double kArmGearing = 240;
   public static final boolean kArmSimGravity = true;
 
-  public static final double kP = 0; // 5
+  public static final double kP = 4.4118; // 5
   public static final double kI = 0;
-  public static final double kD = 0; // 0.5
+  public static final double kD = 0.29266; // 0.5
   public static final TrapezoidProfile.Constraints kArmContraints =
-      new TrapezoidProfile.Constraints(2, 1);
+      new TrapezoidProfile.Constraints(10, 4);
 
   // TODO Update
-  public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(2);
-  public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(2);
+  public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
+  public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-12.881991);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(90);
 
   // https://www.reca.lc/arm
   // TODO Update
   public static final double kArmS = 0.13794;
-  public static final double kArmG = 0.35843;
+  public static final double kArmG = 0.60843;
   public static final double kArmV = 4.19;
   public static final double kArmA = 0.029772;
   public static final int kNumArmMotors = 1;
