@@ -7,6 +7,8 @@
 
 package frc.robot.intake.commands;
 
+import static frc.robot.intake.IntakeConstants.IntakeFromDoubleSubstation.*;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -38,20 +40,30 @@ public class IntakeFromDoubleSubstation extends CommandBase {
   private AutoBuilder autoBuilder;
   private LED ledSubsystem;
 
+  private enum GamePiece {
+    CONE,
+    CUBE
+  }
+
+  private GamePiece gamePiece;
+
   public IntakeFromDoubleSubstation(
       SwerveDrive swerveSubsystem,
       Elevator elevatorSubsystem,
       Arm armSubsystem,
       Intake intakeSubsystem,
-      LED ledSubsystem) {
+      LED ledSubsystem,
+      GamePiece gamePiece) {
     this.swerveSubsystem = swerveSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.armSubsystem = armSubsystem;
     this.intakeSubsystem = intakeSubsystem;
     this.ledSubsystem = ledSubsystem;
+    this.gamePiece = gamePiece;
     autoBuilder = new AutoBuilder(swerveSubsystem);
 
-    addRequirements(swerveSubsystem, elevatorSubsystem, armSubsystem, ledSubsystem);
+    addRequirements(
+        swerveSubsystem, elevatorSubsystem, armSubsystem, ledSubsystem, intakeSubsystem);
   }
 
   // TODO: check the set arm angle after merged with the fixed arm commands
@@ -60,6 +72,7 @@ public class IntakeFromDoubleSubstation extends CommandBase {
 
     List<PathPoint> waypoints = new ArrayList<>();
 
+    // Right Double Substation for Blue Alliance
     waypoints.add(
         new PathPoint(
             swerveSubsystem.getPose().getTranslation(), swerveSubsystem.getPose().getRotation()));
@@ -70,12 +83,23 @@ public class IntakeFromDoubleSubstation extends CommandBase {
 
     DoubleSubstationPattern doubleSubstationPattern = new DoubleSubstationPattern();
 
+    Command intakeGamePieceCommand = null;
+
+    switch (gamePiece) {
+      case CONE:
+        intakeGamePieceCommand = new IntakeCone(intakeSubsystem);
+        break;
+      case CUBE:
+        intakeGamePieceCommand = new IntakeCube(intakeSubsystem);
+        break;
+    }
+
     Command autoDoubleSubstation =
         new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, 0.0),
-                new SetArmAngle(armSubsystem, new Rotation2d(0))),
-            new IntakeCone(intakeSubsystem),
+                new SetElevatorHeight(elevatorSubsystem, kElevatorHeight),
+                new SetArmAngle(armSubsystem, new Rotation2d(kArmAngle))),
+            intakeGamePieceCommand,
             autoBuilder.createPathPlannerCommand(trajectory, false),
             new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationPattern));
     autoDoubleSubstation.schedule();

@@ -16,4 +16,9 @@ public final class IntakeConstants {
 
   public static final double kIntakeConeSpeed = 0.5;
   public static final double kIntakeCubeSpeed = -0.5;
+
+  public final class IntakeFromDoubleSubstation {
+    public static final double kArmAngle = 0.0;
+    public static final double kElevatorHeight = 0.0;
+  }
 }
