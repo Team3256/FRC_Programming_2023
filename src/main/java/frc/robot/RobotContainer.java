@@ -176,7 +176,11 @@ public class RobotContainer implements CANTestable, Loggable {
   @Override
   public void logInit() {
     for (Loggable device : loggables) device.logInit();
-    Shuffleboard.getTab(kDriverTabName).add("Joystick", new DoubleSendable(() -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY())), "Gyro"));
+    Shuffleboard.getTab(kDriverTabName)
+        .add(
+            "Joystick",
+            new DoubleSendable(
+                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY())), "Gyro"));
   }
 
   @Override

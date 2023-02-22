@@ -19,7 +19,7 @@ public class DoubleSendable implements Sendable {
     this.doubleSupplier = doubleSupplier;
   }
 
-  public DoubleSendable(DoubleSupplier doubleSupplier, String dashboardType ) {
+  public DoubleSendable(DoubleSupplier doubleSupplier, String dashboardType) {
     this(doubleSupplier);
     this.dashboardType = dashboardType;
   }

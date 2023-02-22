@@ -75,7 +75,13 @@ public class PitTestRoutine {
     Command setElevatorToStart =
         new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPositionMeters).until(driver.b());
 
-    return new SequentialCommandGroup(zeroElevator, setElevatorHeightHIGH, setElevatorHeightMID, setElevatorHeightLOW, zeroElevator, setElevatorToStart);
+    return new SequentialCommandGroup(
+        zeroElevator,
+        setElevatorHeightHIGH,
+        setElevatorHeightMID,
+        setElevatorHeightLOW,
+        zeroElevator,
+        setElevatorToStart);
   }
 
   public Command intakeCommands() {
@@ -95,7 +101,8 @@ public class PitTestRoutine {
     Command setArmAngleVertical =
         new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)).until(driver.b());
 
-    return new SequentialCommandGroup(setArmAngleHorizontal, setArmAngleHalfway, setArmAngleVertical);
+    return new SequentialCommandGroup(
+        setArmAngleHorizontal, setArmAngleHalfway, setArmAngleVertical);
   }
 
   public Command swerveCommands() {
@@ -159,7 +166,13 @@ public class PitTestRoutine {
                 kFieldRelative,
                 kOpenLoop)
             .until(driver.b());
-    return new SequentialCommandGroup(lockSwerve, teleopSwerveForward, teleopSwerveBackward, teleopSwerveRight, teleopSwerveLeft, teleopSwerveRotateRight, teleopSwerveRotateLeft);
-
+    return new SequentialCommandGroup(
+        lockSwerve,
+        teleopSwerveForward,
+        teleopSwerveBackward,
+        teleopSwerveRight,
+        teleopSwerveLeft,
+        teleopSwerveRotateRight,
+        teleopSwerveRotateLeft);
   }
 }

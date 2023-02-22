@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class Limelight {

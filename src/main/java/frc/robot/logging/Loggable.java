@@ -11,5 +11,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 public interface Loggable {
   void logInit();
+
   ShuffleboardLayout getLayout(String tab);
 }
