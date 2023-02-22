@@ -10,7 +10,8 @@ package frc.robot.climb;
 import frc.robot.drivers.CanDeviceId;
 
 public final class ClimbConstants {
-  // TODO Check CAN ID
+  //TODO: Check CAN ID and tune position before merging
+  
   public static final int kClimbMotorID = 7;
   public static final String kClimbCANBus = "mani";
 
