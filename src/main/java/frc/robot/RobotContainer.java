@@ -22,6 +22,7 @@ import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
+import frc.robot.helper.DPadButton;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
@@ -30,7 +31,6 @@ import frc.robot.led.patterns.*;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
-import frc.robot.helper.DPadButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -65,13 +65,13 @@ public class RobotContainer {
       configureSwerve();
       testables.add(swerveDrive);
     }
-    if (kArmEnabled) {
-      configureArm();
-      testables.add(armSubsystem);
-    }
     if (kElevatorEnabled) {
       configureElevator();
       testables.add(elevatorSubsystem);
+    }
+    if (kArmEnabled) {
+      configureArm();
+      testables.add(armSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -96,7 +96,7 @@ public class RobotContainer {
               elevatorSubsystem,
               () -> driver.getLeftY(),
               () -> driver.getLeftX(),
-              () -> driver.getRightX(),
+              () -> driver.getRightX(),s
               kFieldRelative,
               kOpenLoop));
     } else {
@@ -110,38 +110,22 @@ public class RobotContainer {
               kOpenLoop));
     }
 
-    new DPadButton(driver, DPadButton.Direction.UP).whileTrue(new TeleopSwerveWithAzimuth(
-            swerveDrive,
-            () -> 0,
-            () -> 0,
-            () -> 0,
-            () -> 1,
-            kFieldRelative,
-            kOpenLoop));
-    new DPadButton(driver, DPadButton.Direction.DOWN).whileTrue(new TeleopSwerveWithAzimuth(
-            swerveDrive,
-            () -> 0,
-            () -> 0,
-            () -> 0,
-            () -> -1,
-            kFieldRelative,
-            kOpenLoop));
-    new DPadButton(driver, DPadButton.Direction.RIGHT).whileTrue(new TeleopSwerveWithAzimuth(
-            swerveDrive,
-            () -> 0,
-            () -> 0,
-            () -> 1,
-            () -> 0,
-            kFieldRelative,
-            kOpenLoop));
-    new DPadButton(driver, DPadButton.Direction.LEFT).whileTrue(new TeleopSwerveWithAzimuth(
-            swerveDrive,
-            () -> 0,
-            () -> 0,
-            () -> -1,
-            () -> 0,
-            kFieldRelative,
-            kOpenLoop));
+    new DPadButton(driver, DPadButton.Direction.UP)
+        .whileTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveDrive, () -> 0, () -> 0, () -> 0, () -> 1, kFieldRelative, kOpenLoop));
+    new DPadButton(driver, DPadButton.Direction.DOWN)
+        .whileTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveDrive, () -> 0, () -> 0, () -> 0, () -> -1, kFieldRelative, kOpenLoop));
+    new DPadButton(driver, DPadButton.Direction.RIGHT)
+        .whileTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveDrive, () -> 0, () -> 0, () -> 1, () -> 0, kFieldRelative, kOpenLoop));
+    new DPadButton(driver, DPadButton.Direction.LEFT)
+        .whileTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveDrive, () -> 0, () -> 0, () -> -1, () -> 0, kFieldRelative, kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     driver
@@ -156,10 +140,28 @@ public class RobotContainer {
                 kOpenLoop));
   }
 
+  private void configureArm() {
+    armSubsystem = new Arm();
+
+    if (kElevatorEnabled) {
+      //      new DPadButton(driver, DPadButton.Direction.UP).onTrue(new SetArmAngle(armSubsystem,
+      // kArmAngleLow));
+      driver.b().onTrue(new SetArmAngle(armSubsystem, kArmAngleLow));
+      driver.rightTrigger().onTrue(new SetArmAngle(armSubsystem, kArmAngleHigh));
+      driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, kArmAngleMid));
+    }
+
+    if (kArmIsStowed) {
+      // TODO run DefaultArmElevatorCommand once merged
+    } else {
+      // TODO run DefaultArmElevatorCommand once merged
+    }
+
+    // TODO: set button bindings for arm testing
+  }
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
-    armSubsystem = new Arm();
 
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
@@ -175,25 +177,6 @@ public class RobotContainer {
           .rightBumper()
           .onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorMidPositionMeters));
     }
-  }
-
-  private void configureArm() {
-    armSubsystem = new Arm();
-
-    if (kElevatorEnabled) {
-//      new DPadButton(driver, DPadButton.Direction.UP).onTrue(new SetArmAngle(armSubsystem, kArmAngleLow));
-      driver.b().onTrue(new SetArmAngle(armSubsystem, kArmAngleLow));
-      driver.rightTrigger().onTrue(new SetArmAngle(armSubsystem, kArmAngleHigh));
-      driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, kArmAngleMid));
-    }
-
-    if (kArmIsStowed) {
-      // TODO run DefaultArmElevatorCommand once merged
-    } else {
-      // TODO run DefaultArmElevatorCommand once merged
-    }
-
-    // TODO: set button bindings for arm testing
   }
 
   public void configureLEDStrip() {
