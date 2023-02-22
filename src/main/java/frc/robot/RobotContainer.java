@@ -10,9 +10,6 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
-
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,7 +50,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    PowerDistribution pdp = new PowerDistribution(1, ModuleType.kRev);
+    // PowerDistribution pdp = new PowerDistribution(1, ModuleType.kRev);
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -84,7 +81,7 @@ public class RobotContainer implements CANTestable, Loggable {
       loggables.add(ledStrip);
     }
 
-    Shuffleboard.getTab(kElectricalTabName).add(pdp);
+    // Shuffleboard.getTab(kElectricalTabName).add(pdp);
   }
 
   private void configureSwerve() {
