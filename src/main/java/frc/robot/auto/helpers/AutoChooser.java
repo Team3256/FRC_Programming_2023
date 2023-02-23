@@ -24,7 +24,11 @@ public class AutoChooser {
     Command path = intitialCommand;
     for (int i = 0; i < commands.size(); i++) {
       path = path.andThen(commands.get(i));
-      autoChooser.addOption(commandName + " - " + i, path);
+      if (i == commands.size() - 1) {
+        autoChooser.addOption(commandName + " - FULL", path);
+      } else {
+        autoChooser.addOption(commandName + " - " + i, path);
+      }
     }
   }
 
@@ -41,7 +45,11 @@ public class AutoChooser {
     Command path = new InstantCommand();
     for (int i = 0; i < commands.size(); i++) {
       path = path.andThen(commands.get(i));
-      autoChooser.addOption(commandName + " - " + i, path);
+      if (i == commands.size() - 1) {
+        autoChooser.addOption(commandName + " - FULL", path);
+      } else {
+        autoChooser.addOption(commandName + " - " + i, path);
+      }
     }
   }
 

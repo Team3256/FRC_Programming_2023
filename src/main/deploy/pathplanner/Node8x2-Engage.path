@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2514140215997447,
-        "y": 4.496478631669828
+        "x": 4.845585288718321,
+        "y": 4.764437838391736
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -19,9 +19,9 @@
         "names": [
           "defaultPosition"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
-        "waitTime": 0
+        "waitTime": 3.0
       }
     },
     {
@@ -30,12 +30,12 @@
         "y": 4.581361684017856
       },
       "prevControl": {
-        "x": 5.392708969988252,
-        "y": 5.297155588085591
+        "x": 4.825256883369669,
+        "y": 4.903733080551014
       },
       "nextControl": {
-        "x": 5.392708969988252,
-        "y": 5.297155588085591
+        "x": 4.825256883369669,
+        "y": 4.903733080551014
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -51,16 +51,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.921308480475034,
-        "y": 4.437486298827849
+        "x": 1.8901508229991286,
+        "y": 4.445977911188678
       },
       "prevControl": {
-        "x": 1.9126799825354321,
-        "y": 4.433462764160239
+        "x": 1.8815223250595268,
+        "y": 4.441954376521068
       },
       "nextControl": {
-        "x": 1.9299369784146345,
-        "y": 4.44150983349546
+        "x": 1.898779320938729,
+        "y": 4.450001445856289
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -69,11 +69,12 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
+          "cubeMid",
           "defaultPosition"
         ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 3.0
       }
     },
     {
@@ -92,9 +93,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "defaultPosition"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -106,9 +105,15 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 1.2901861017400598,
+      "position": 1.3467174183238675,
       "names": [
-        "intakeCube"
+        "event"
+      ]
+    },
+    {
+      "position": 1.2669949618252876,
+      "names": [
+        "defaultPosition"
       ]
     }
   ]

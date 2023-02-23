@@ -69,11 +69,12 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
+          "cubeMid",
           "defaultPosition"
         ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 3.0
       }
     },
     {

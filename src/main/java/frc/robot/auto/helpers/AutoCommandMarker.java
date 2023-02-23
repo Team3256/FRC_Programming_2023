@@ -13,22 +13,29 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class AutoCommandMarker {
   private Translation2d startingPosition;
   private Translation2d endingPosition;
+  private double time;
   private Command command;
 
-  public AutoCommandMarker(Translation2d startingPosition, Command command) {
+  public AutoCommandMarker(Translation2d startingPosition, double time, Command command) {
     this.startingPosition = startingPosition;
     this.command = command;
+    this.time = time;
   }
 
   public AutoCommandMarker(
-      Translation2d startingPosition, Translation2d endingPosition, Command command) {
+      Translation2d startingPosition, Translation2d endingPosition, double time, Command command) {
     this.startingPosition = startingPosition;
     this.endingPosition = endingPosition;
     this.command = command;
+    this.time = time;
   }
 
   public Command getCommand() {
     return command;
+  }
+
+  public double getTime() {
+    return time;
   }
 
   public Translation2d getStartingPosition() {

@@ -38,7 +38,7 @@ public class AutoCommandRunner {
         }
         Command command = eventMap.get(name);
         AutoCommandMarker commandMarker =
-            new AutoCommandMarker(eventMarker.positionMeters, command);
+            new AutoCommandMarker(eventMarker.positionMeters, eventMarker.timeSeconds, command);
         System.out.println(commandMarker);
         convertedMarkers.add(commandMarker);
       }
@@ -46,7 +46,7 @@ public class AutoCommandRunner {
     return convertedMarkers;
   }
 
-  public void execute(Pose2d currentPose) {
+  public void execute(Pose2d currentPose, double currentTime) {
     for (int i = 0; i < commandMarkers.size(); i++) {
       AutoCommandMarker marker = commandMarkers.get(i);
       boolean atMarker =
@@ -54,7 +54,11 @@ public class AutoCommandRunner {
               ? isAtMarker(marker.getStartingPosition(), currentPose)
               : isAtMarker(marker.getStartingPosition(), currentPose, lastPose);
 
-      if (atMarker) {
+      boolean markerHappeningNow =
+          Math.abs(currentTime - marker.getTime()) <= kAutoMarkerTimeThreshold;
+      boolean markerTimeout = marker.getTime() + kAutoMarkerTimeout > currentTime;
+
+      if ((atMarker && markerHappeningNow) || markerTimeout) {
         marker.getCommand().schedule();
         startedCommandMarkers.add(marker);
         commandMarkers.remove(i);

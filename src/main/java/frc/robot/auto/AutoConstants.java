@@ -47,9 +47,12 @@ public final class AutoConstants {
           AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
 
   public static final double kTranslationToleranceMeters = 0.2;
+  public static final double kAutoMarkerTimeThreshold = 0.1; // seconds
+  public static final double kAutoMarkerTimeout = 0.5; // seconds
   public static final double kRotationTolerance = Units.degreesToRadians(2);
   public static final double kAutoTrajectoryTimeoutSeconds = 2;
 
   public static final PathConstraints kDefaultPathConstraints =
       new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
+  public static final PathConstraints kEngagePathConstraints = new PathConstraints(3, 3);
 }
