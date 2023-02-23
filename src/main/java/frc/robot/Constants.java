@@ -33,7 +33,8 @@ public final class Constants {
   public static final double kStickDeadband = 0.1;
   public static final double kAzimuthStickDeadband = 0.3;
 
-  public static final Field2d field2d = new Field2d();
+  public static final Field2d trajectoryViewer = new Field2d();
+  public static final Field2d waypointViewer = new Field2d();
 
   public static final class ShuffleboardConstants {
     public static final String kDriverTabName = "Driver";

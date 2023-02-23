@@ -7,11 +7,14 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
-import static frc.robot.Constants.field2d;
+import static frc.robot.Constants.trajectoryViewer;
+import static frc.robot.Constants.waypointViewer;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
@@ -33,7 +36,8 @@ public class DynamicPathFollower {
     Pose2d sink = kBlueStationPose;
     if (type != GoalType.STATION) {
       // TODO: change random to -1 when not testing
-      int locationId = (int) SmartDashboard.getNumber("locationId", (int) (Math.random() * 9));
+      int rand = (int) (Math.random() * 9);
+      int locationId = (int) SmartDashboard.getNumber("locationId", rand);
       // handle invalid location
       if (locationId == -1) {
         System.out.println("LocationId entered was invalid.");
@@ -47,7 +51,8 @@ public class DynamicPathFollower {
         sink = kHighBlueScoringPoses[locationId];
       }
     }
-    if (!blue) {
+    // TODO: DriverStation.getAlliance() != Alliance.Red
+    if () {
       sink = PathUtil.flip(sink);
     }
     // get trajectory
@@ -56,12 +61,17 @@ public class DynamicPathFollower {
     // handle invalid trajectory
     if (trajectory == null) {
       System.out.println("No trajectory was found.");
+      return;
     } else {
       System.out.println("Trajectory was found.");
     }
     System.out.println("Time to find trajectory: " + (System.currentTimeMillis() - ms0));
     // send trajectory to networktables for logging
-    field2d.getObject("DynamicTrajectory").setTrajectory(trajectory);
+    if (kDynamicPathGenerationDebug) {
+      trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
+      waypointViewer.getObject("Src").setPose(trajectory.getInitialHolonomicPose());
+      waypointViewer.getObject("Sink").setPose(trajectory.sample(1000).poseMeters);
+    }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false);

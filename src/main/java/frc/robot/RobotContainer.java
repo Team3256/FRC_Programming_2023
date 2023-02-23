@@ -61,7 +61,8 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    SmartDashboard.putData(field2d);
+    SmartDashboard.putData("trajectoryViewer", trajectoryViewer);
+    SmartDashboard.putData("waypointViewer", waypointViewer);
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -217,7 +218,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void periodic() {
-    field2d.setRobotPose(swerveDrive.getPose());
+    trajectoryViewer.setRobotPose(swerveDrive.getPose());
   }
 
   public void startPitRoutine() {

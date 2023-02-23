@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public final class DynamicPathConstants {
   // Flags
-  public static final boolean kDynamicPathGenerationDebug = false;
+  public static final boolean kDynamicPathGenerationDebug = true;
   public static final boolean blue = true;
 
   // Bezier
