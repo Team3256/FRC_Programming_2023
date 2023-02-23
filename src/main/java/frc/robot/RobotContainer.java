@@ -21,6 +21,7 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.ElevatorConstants;
 import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
@@ -69,14 +70,14 @@ public class RobotContainer implements CANTestable, Loggable {
       testables.add(elevatorSubsystem);
       loggables.add(elevatorSubsystem);
     }
+    if (kElevatorEnabled) {
+      configureElevator();
+      testables.add(elevatorSubsystem);
+    }
     if (kArmEnabled) {
       configureArm();
       testables.add(armSubsystem);
       loggables.add(armSubsystem);
-    }
-    if (kElevatorEnabled) {
-      configureElevator();
-      testables.add(elevatorSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -146,15 +147,21 @@ public class RobotContainer implements CANTestable, Loggable {
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
-    driver.x().whileTrue(new SetElevatorVolts(elevatorSubsystem, 3));
+    driver.a().onTrue(new SetElevatorHeight(elevatorSubsystem, ElevatorConstants.kMaxHeight));
+    driver.b().onTrue(new SetElevatorHeight(elevatorSubsystem, 0));
+    // driver.x().whileTrue(new SetElevatorVolts(elevatorSubsystem, 1));
     driver.y().whileTrue(new ZeroElevator(elevatorSubsystem));
 
-    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
-    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
-    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+    // operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.HIGH));
+    // operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.MID));
+    // operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.LOW));
 
     if (kArmEnabled) {
-      operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
+      // operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem,
+      // armSubsystem));
     }
   }
 
@@ -162,9 +169,10 @@ public class RobotContainer implements CANTestable, Loggable {
     armSubsystem = new Arm();
     // driver.rightTrigger().whileTrue(new SetArmVoltage(armSubsystem, 3));
     // driver.leftTrigger().whileTrue(new SetArmVoltage(armSubsystem, -3));
-    driver.y().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)));
-    driver.x().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)));
-    driver.a().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)));
+    // driver.y().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)));
+    // driver.x().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)));
+    driver.a().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)));
+    driver.b().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)));
   }
 
   public void configureLEDStrip() {

@@ -84,13 +84,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private void configureSimHardware() {
     elevatorMotor = new WPI_TalonFX(kElevatorID);
     SmartDashboard.putData("Elevator Sim", mechanism2d);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   private void configureRealHardware() {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
     elevatorMotor.setInverted(kElevatorInverted);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -106,6 +106,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public void setInputVoltage(double voltage) {
+    SmartDashboard.putNumber("Elevator Voltage", voltage);
     elevatorMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
@@ -140,6 +141,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Elevator position", elevatorMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber(
+        "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
     SmartDashboard.putNumber("Elevator percent output", elevatorMotor.getMotorOutputPercent());
     SmartDashboard.putBoolean("Elevator spiking", isMotorCurrentSpiking());

@@ -23,7 +23,8 @@ public final class ArmConstants {
 
   // private static final double kArmCountsPerRevolution = 8192 / 4;
   public static final double kArmRadiansPerCount = -2 * Math.PI / 4;
-  public static final double kArmEncoderOffsetRadians = 0.650724 * kArmRadiansPerCount;
+  public static final double kArmEncoderOffsetRadians =
+      0.832282 * kArmRadiansPerCount + (Math.PI / 2);
 
   // TODO Update
   public static final double kArmLengthMeters = 1.638059;
