@@ -171,13 +171,16 @@ public class RobotContainer {
       driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, kArmAngleMid));
     }
 
+    // TODO: clarify what thiss if else statement is supposed to do
     if (kArmIsStowed) {
-      // TODO run DefaultArmElevatorCommand once merged
+      new SetElevatorHeight(elevatorSubsystem, kMinHeight);
+      kArmIsStowed = true;
     } else {
-      // TODO run DefaultArmElevatorCommand once merged
+      armSubsystem.setDefaultCommand(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
+      kArmIsStowed = true;
     }
 
-    // TODO: set button bindings for arm testing
+    // TODO: set button bindings for arm testings
   }
 
   public void configureElevator() {
