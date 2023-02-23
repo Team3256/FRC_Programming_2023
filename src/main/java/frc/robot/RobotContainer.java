@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.DefaultArmElevatorDriveConfig;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.HeightType;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
@@ -41,6 +42,8 @@ import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
+
+import com.ctre.phoenix.motorcontrol.FollowerType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -150,7 +153,10 @@ public class RobotContainer implements CANTestable, Loggable {
                 () -> driver.getLeftX(),
                 kFieldRelative,
                 kOpenLoop));
-    driver.x().onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive)));
+
+    driver.rightTrigger().onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, HeightType.HIGH)));
+    driver.rightBumper().onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, HeightType.MID)));
+    driver.b().onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, HeightType.LOW)));
   }
 
   public void configureElevator() {

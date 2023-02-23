@@ -55,15 +55,15 @@ public final class DynamicPathConstants {
   public static final Pose2d[] kBlueEndpoints =
       new Pose2d[] {
         // scoring locations (bottom to top)
-        new Pose2d(new Translation2d(1.94, 0.61), Rotation2d.fromDegrees(-174.75)),
-        new Pose2d(new Translation2d(1.98, 1.04), Rotation2d.fromDegrees(180)),
-        new Pose2d(new Translation2d(1.98, 1.61), Rotation2d.fromDegrees(180)),
-        new Pose2d(new Translation2d(1.98, 2.12), Rotation2d.fromDegrees(180)),
-        new Pose2d(new Translation2d(1.98, 2.71), Rotation2d.fromDegrees(180)),
-        new Pose2d(new Translation2d(1.98, 3.24), Rotation2d.fromDegrees(180)),
-        new Pose2d(new Translation2d(1.98, 3.82), Rotation2d.fromDegrees(180)),
-        new Pose2d(new Translation2d(1.98, 4.35), Rotation2d.fromDegrees(180)),
-        new Pose2d(new Translation2d(2.05, 4.81), Rotation2d.fromDegrees(174)),
+        new Pose2d(new Translation2d(1.47, 0.61), Rotation2d.fromDegrees(-174)), //x, rotation should be smaller/larger
+        new Pose2d(new Translation2d(1.4, 1.04), Rotation2d.fromDegrees(180)),
+        new Pose2d(new Translation2d(1.4, 1.61), Rotation2d.fromDegrees(180)),
+        new Pose2d(new Translation2d(1.4, 2.12), Rotation2d.fromDegrees(180)),
+        new Pose2d(new Translation2d(1.4, 2.71), Rotation2d.fromDegrees(180)),
+        new Pose2d(new Translation2d(1.4, 3.24), Rotation2d.fromDegrees(180)),
+        new Pose2d(new Translation2d(1.4, 3.82), Rotation2d.fromDegrees(180)),
+        new Pose2d(new Translation2d(1.4, 4.35), Rotation2d.fromDegrees(180)),
+        new Pose2d(new Translation2d(1.47, 4.81), Rotation2d.fromDegrees(174)), //x, rotation should be smaller/larger
         // loading locations (dummy)
         new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(21)),
         // charging station locations (dummy)

@@ -13,6 +13,9 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueEnd
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
@@ -20,7 +23,13 @@ import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
 public class DynamicPathFollower {
-  public static void run(SwerveDrive swerveDrive) {
+  public static enum HeightType {
+    LOW,
+    MID,
+    HIGH,
+    DIRECT,
+  }
+  public static void run(SwerveDrive swerveDrive, HeightType type) {
     long ms0 = System.currentTimeMillis();
     // get src, sink
     Pose2d src = swerveDrive.getPose();
@@ -30,7 +39,17 @@ public class DynamicPathFollower {
       System.out.println("LocationId entered was invalid.");
       return;
     }
-    Pose2d sink = kBlueEndpoints[locationId];
+    double sinkX = kBlueEndpoints[locationId].getX();
+    double sinkY = kBlueEndpoints[locationId].getY();
+    Rotation2d sinkRot = kBlueEndpoints[locationId].getRotation();
+    if (type==HeightType.LOW){
+        sinkX += Units.inchesToMeters(33) + 0.47;
+    } else if (type==HeightType.MID){
+        sinkX += Units.inchesToMeters(23) + 0.47;
+    } else if (type==HeightType.HIGH){
+      sinkX += Units.inchesToMeters(0) + 0.47;
+    }
+    Pose2d sink = new Pose2d(new Translation2d(sinkX,sinkY), sinkRot);
     if (!blue) {
       sink = PathUtil.flip(sink);
     }
