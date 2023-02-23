@@ -29,11 +29,8 @@ public class DynamicPathFinder {
     this.sink = sink;
     this.pathNodes = pathNodes;
     this.nodes = pathNodes.size();
-    if (kDynamicPathGenerationDebug) {
-      System.out.println("Running Path Finder Algorithm");
-      System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
-    }
-    // this.heuristic = HeuristicHelper.generateHeuristicTable(sink, positions);
+    System.out.println("Running Path Finder Algorithm");
+    System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
   }
 
   public List<Integer> findPath() {
@@ -62,7 +59,7 @@ public class DynamicPathFinder {
 
       // Found the shortest path to sink
       if (currentNode == sink) {
-        System.out.println("Path found");
+        System.out.println("Path found. Explored " + nodesExplored + " nodes.");
         return getPathIdsFromNode(sink);
       }
 

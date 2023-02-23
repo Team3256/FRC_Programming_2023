@@ -9,7 +9,6 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.swerve.SwerveConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -23,17 +22,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.DefaultArmElevatorDriveConfig;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.HeightType;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
-import frc.robot.led.commands.*;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patterns.*;
 import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.logging.GyroSendable;
 import frc.robot.logging.Loggable;
@@ -42,8 +39,6 @@ import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
-
-import com.ctre.phoenix.motorcontrol.FollowerType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -154,9 +149,18 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    driver.rightTrigger().onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, HeightType.HIGH)));
-    driver.rightBumper().onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, HeightType.MID)));
-    driver.b().onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, HeightType.LOW)));
+    driver
+        .y()
+        .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.HIGH_GRID)));
+    driver
+        .x()
+        .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.MID_GRID)));
+    driver
+        .b()
+        .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.LOW_GRID)));
+    driver
+        .a()
+        .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.STATION)));
   }
 
   public void configureElevator() {

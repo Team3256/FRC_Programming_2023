@@ -21,12 +21,12 @@ import java.util.Map;
 public final class Constants {
   public static final boolean kDebugEnabled = true;
 
-  public static final boolean kIntakeEnabled = true;
-  public static final boolean kElevatorEnabled = true;
-  public static final boolean kArmEnabled = true;
+  public static final boolean kIntakeEnabled = false;
+  public static final boolean kElevatorEnabled = false;
+  public static final boolean kArmEnabled = false;
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kLedStripEnabled = true;
-  public static final boolean kAdvatageKitReplayEnabled = false;
+  public static final boolean kLedStripEnabled = false;
+  public static final boolean kAdvantageKitReplayEnabled = false;
 
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.SIM;
@@ -50,6 +50,9 @@ public final class Constants {
     SIM,
     REPLAY
   }
+
+  public static final double kRobotLength = 0.94;
+  public static final double kRobotWidth = 0.94;
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);

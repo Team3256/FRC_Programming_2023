@@ -8,14 +8,10 @@
 package frc.robot.auto.dynamicpathgeneration;
 
 import static frc.robot.Constants.field2d;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.blue;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueEndpoints;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
@@ -23,33 +19,34 @@ import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
 public class DynamicPathFollower {
-  public static enum HeightType {
-    LOW,
-    MID,
-    HIGH,
-    DIRECT,
+  public enum GoalType {
+    LOW_GRID,
+    MID_GRID,
+    HIGH_GRID,
+    STATION;
   }
-  public static void run(SwerveDrive swerveDrive, HeightType type) {
+
+  public static void run(SwerveDrive swerveDrive, GoalType type) {
     long ms0 = System.currentTimeMillis();
     // get src, sink
     Pose2d src = swerveDrive.getPose();
-    int locationId = (int) SmartDashboard.getNumber("locationId", (int) (Math.random() * 9));
-    // handle invalid location
-    if (locationId == -1) {
-      System.out.println("LocationId entered was invalid.");
-      return;
+    Pose2d sink = kBlueStationPose;
+    if (type != GoalType.STATION) {
+      // TODO: change random to -1 when not testing
+      int locationId = (int) SmartDashboard.getNumber("locationId", (int) (Math.random() * 9));
+      // handle invalid location
+      if (locationId == -1) {
+        System.out.println("LocationId entered was invalid.");
+        return;
+      }
+      if (type == GoalType.LOW_GRID) {
+        sink = kBottomBlueScoringPoses[locationId];
+      } else if (type == GoalType.MID_GRID) {
+        sink = kMidBlueScoringPoses[locationId];
+      } else if (type == GoalType.HIGH_GRID) {
+        sink = kHighBlueScoringPoses[locationId];
+      }
     }
-    double sinkX = kBlueEndpoints[locationId].getX();
-    double sinkY = kBlueEndpoints[locationId].getY();
-    Rotation2d sinkRot = kBlueEndpoints[locationId].getRotation();
-    if (type==HeightType.LOW){
-        sinkX += Units.inchesToMeters(33) + 0.47;
-    } else if (type==HeightType.MID){
-        sinkX += Units.inchesToMeters(23) + 0.47;
-    } else if (type==HeightType.HIGH){
-      sinkX += Units.inchesToMeters(0) + 0.47;
-    }
-    Pose2d sink = new Pose2d(new Translation2d(sinkX,sinkY), sinkRot);
     if (!blue) {
       sink = PathUtil.flip(sink);
     }
