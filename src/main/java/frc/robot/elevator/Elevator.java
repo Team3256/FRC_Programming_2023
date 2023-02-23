@@ -38,9 +38,10 @@ import frc.robot.logging.Loggable;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPosition {
-    HIGH(ElevatorConstants.kElevatorHighPositionMeters),
-    MID(ElevatorConstants.kElevatorMidPositionMeters),
-    LOW(ElevatorConstants.kElevatorLowPositionMeters);
+    CUBE_HIGH(ElevatorConstants.kCubeHighPositionMeters),
+    CONE_HIGH(ElevatorConstants.kConeHighPositionMeters),
+    ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
+    ANY_PIECE_LOW(ElevatorConstants.kAnyPieceLowPositionMeters);
 
     public double position;
 

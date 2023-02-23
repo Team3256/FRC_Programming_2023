@@ -20,10 +20,10 @@ public final class ElevatorConstants {
   public static final int kNumElevatorMotors = 1;
   public static final boolean kElevatorInverted = true;
 
-  // TODO: Change to real values
-  public static final double kElevatorHighPositionMeters = Units.inchesToMeters(30);
-  public static final double kElevatorMidPositionMeters = Units.inchesToMeters(15);
-  public static final double kElevatorLowPositionMeters = Units.inchesToMeters(3);
+  public static final double kCubeHighPositionMeters = Units.inchesToMeters(0);
+  public static final double kConeHighPositionMeters = Units.inchesToMeters(15.372696);
+  public static final double kAnyPieceMidPositionMeters = Units.inchesToMeters(0);
+  public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(0);
 
   // https://www.reca.lc/linear
   // gradle simulateJava working constants

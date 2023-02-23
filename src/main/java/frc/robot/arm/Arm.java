@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -38,6 +39,20 @@ import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
+  public enum ArmPosition {
+    ANY_PIECE_LOW(ArmConstants.kAnyPieceLowRotation),
+    CUBE_MID(ArmConstants.kCubeMidRotation),
+    CONE_MID(ArmConstants.kConeMidRotation),
+    CUBE_HIGH(ArmConstants.kCubeHighRotation),
+    CONE_HIGH(ArmConstants.kConeHighRotation);
+
+    public Rotation2d rotation;
+
+    private ArmPosition(Rotation2d rotation) {
+      this.rotation = rotation;
+    }
+  }
+
   private WPI_TalonFX armMotor;
   private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
