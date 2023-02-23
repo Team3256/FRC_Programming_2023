@@ -101,7 +101,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private void configureRealHardware() {
     armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
     armMotor.setInverted(true);
-    armMotor.setNeutralMode(NeutralMode.Coast);
+    armMotor.setNeutralMode(NeutralMode.Brake);
     armEncoder.setDistancePerRotation(kArmRadiansPerCount);
   }
 

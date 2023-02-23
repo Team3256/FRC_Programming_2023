@@ -45,7 +45,7 @@ public final class ArmConstants {
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-12.881991);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(90);
 
-  public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-10.524089);
+  public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-8.524089);
   public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(8.505781);
   public static final Rotation2d kConeMidRotation = Rotation2d.fromDegrees(17.488844);
   public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(21.249449);

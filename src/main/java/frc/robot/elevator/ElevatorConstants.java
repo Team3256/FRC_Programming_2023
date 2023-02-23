@@ -34,7 +34,7 @@ public final class ElevatorConstants {
   public static final double kElevatorA = 0;
 
   // public static final double kP = 0.0032534;
-  public static final double kP = 20;
+  public static final double kP = 18;
   public static final double kI = 0;
   public static final double kD = 0;
   // public static final double kD = 0.0012892;

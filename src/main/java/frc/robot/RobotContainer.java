@@ -89,9 +89,6 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
-
-    driver.rightBumper().onTrue(new InstantCommand(this::setPieceToCone));
-    driver.leftBumper().onTrue(new InstantCommand(this::setPieceToCube));
   }
 
   private void configureSwerve() {
@@ -148,7 +145,9 @@ public class RobotContainer implements CANTestable, Loggable {
     intakeSubsystem = new Intake();
 
     driver.rightBumper().whileTrue(new IntakeCube(intakeSubsystem));
+    driver.rightBumper().onTrue(new InstantCommand(this::setPieceToCube));
     driver.leftBumper().whileTrue(new IntakeCone(intakeSubsystem));
+    driver.leftBumper().onTrue(new InstantCommand(this::setPieceToCone));
   }
 
   public void configureElevator() {
