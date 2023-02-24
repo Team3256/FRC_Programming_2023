@@ -80,6 +80,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             new Pose2d());
 
     SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
+    SmartDashboard.putData("Field", field);
     /*
      * By pausing init for a second before setting module offsets, we avoid a bug
      * with inverting motors.
