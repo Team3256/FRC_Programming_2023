@@ -9,7 +9,6 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kDynamicPathGenerationDebug;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
