@@ -22,8 +22,6 @@ public final class IntakeConstants {
   public static final double kIntakeCubeSpeed = -0.5;
 
   public static final class IntakeFromDoubleSubstation {
-    public static final double kArmAngle = 0.0;
-    public static final double kElevatorHeight = 0.0;
 
     public static final PathPoint kLeftSubstationBlue =
         new PathPoint(new Translation2d(16.19, 8.01), new Rotation2d(Units.degreesToRadians(180)));

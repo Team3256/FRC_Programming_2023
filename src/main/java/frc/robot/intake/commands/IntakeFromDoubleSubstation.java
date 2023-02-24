@@ -7,6 +7,8 @@
 
 package frc.robot.intake.commands;
 
+import static frc.robot.arm.ArmConstants.kArmAngleDoubleSubstation;
+import static frc.robot.elevator.ElevatorConstants.kElevatorHeightDoubleSubstation;
 import static frc.robot.intake.IntakeConstants.IntakeFromDoubleSubstation.*;
 
 import com.pathplanner.lib.PathConstraints;
@@ -92,11 +94,11 @@ public class IntakeFromDoubleSubstation extends CommandBase {
     if (alliance == DriverStation.Alliance.Blue) {
       if (substationSide == SubstationSide.LEFT) {
         waypoints.add(kLeftSubstationBlue);
-      } else waypoints.add(kRightSubstationBlue);
+      } else if (substationSide == SubstationSide.RIGHT) waypoints.add(kRightSubstationBlue);
     } else {
       if (substationSide == SubstationSide.LEFT) {
         waypoints.add(kLeftSubstationRed);
-      } else waypoints.add(kRightSubstationRed);
+      } else if (substationSide == SubstationSide.RIGHT) waypoints.add(kRightSubstationRed);
     }
 
     PathPlannerTrajectory trajectory =
@@ -104,7 +106,7 @@ public class IntakeFromDoubleSubstation extends CommandBase {
 
     DoubleSubstationPattern doubleSubstationPattern = new DoubleSubstationPattern();
 
-    Command intakeGamePieceCommand = null;
+    Command intakeGamePieceCommand;
 
     switch (gamePiece) {
       case CONE:
@@ -113,13 +115,15 @@ public class IntakeFromDoubleSubstation extends CommandBase {
       case CUBE:
         intakeGamePieceCommand = new IntakeCube(intakeSubsystem);
         break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + gamePiece);
     }
 
     Command autoDoubleSubstation =
         new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, kElevatorHeight),
-                new SetArmAngle(armSubsystem, new Rotation2d(kArmAngle))),
+                new SetElevatorHeight(elevatorSubsystem, kElevatorHeightDoubleSubstation),
+                new SetArmAngle(armSubsystem, new Rotation2d(kArmAngleDoubleSubstation))),
             intakeGamePieceCommand,
             autoBuilder.createPathPlannerCommand(trajectory, false),
             new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationPattern));

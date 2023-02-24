@@ -51,4 +51,6 @@ public final class ArmConstants {
   public static final double kArmV = 4.21;
   public static final double kArmA = 0.1;
   public static final int kNumArmMotors = 1;
+
+  public static final double kArmAngleDoubleSubstation = 0.0;
 }

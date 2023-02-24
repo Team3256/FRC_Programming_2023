@@ -60,4 +60,6 @@ public final class ElevatorConstants {
   public static final double kRateLimiting = 0.05;
   public static final double kEncoderToMetersConversionFactor = -1;
   public static final double kElevatorCurrentThreshold = 10; // amps
+
+  public static final double kElevatorHeightDoubleSubstation = 0.0;
 }
