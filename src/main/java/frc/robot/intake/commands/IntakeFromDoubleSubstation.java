@@ -18,7 +18,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.arm.Arm;
+import frc.robot.arm.commands.DefaultArmElevatorDriveConfig;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.elevator.Elevator;
@@ -26,6 +28,7 @@ import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.patterns.DoubleSubstationDonePattern;
 import frc.robot.led.patterns.DoubleSubstationPattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
@@ -101,6 +104,7 @@ public class IntakeFromDoubleSubstation extends CommandBase {
     PathPlannerTrajectory trajectory = PathPlanner.generatePath(kPathContraints, waypoints);
 
     DoubleSubstationPattern doubleSubstationPattern = new DoubleSubstationPattern(gamePiece);
+    DoubleSubstationDonePattern doubleSubstationDonePattern = new DoubleSubstationDonePattern();
 
     Command intakeGamePieceCommand;
 
@@ -117,12 +121,15 @@ public class IntakeFromDoubleSubstation extends CommandBase {
     }
 
     Command autoDoubleSubstation =
-        new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, kElevatorHeightDoubleSubstation),
-            new SetArmAngle(armSubsystem, kArmAngleDoubleSubstation),
+        new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                new SetElevatorHeight(elevatorSubsystem, kElevatorHeightDoubleSubstation),
+                new SetArmAngle(armSubsystem, kArmAngleDoubleSubstation),
+                autoBuilder.createPathPlannerCommand(trajectory, false),
+                new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationPattern)),
             intakeGamePieceCommand,
-            autoBuilder.createPathPlannerCommand(trajectory, false),
-            new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationPattern));
+            new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem),
+            new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationDonePattern));
 
     autoDoubleSubstation.schedule();
   }

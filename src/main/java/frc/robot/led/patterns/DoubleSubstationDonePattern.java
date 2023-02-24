@@ -10,13 +10,12 @@ package frc.robot.led.patterns;
 import static frc.robot.led.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.intake.commands.IntakeFromDoubleSubstation.GamePiece;
 import frc.robot.led.patternBases.LEDPattern;
 
-/** Purple for Cube, Yellow for Cone */
-public class DoubleSubstationPattern extends LEDPattern {
-  public DoubleSubstationPattern(GamePiece gamePiece) {
+/** Full Green */
+public class DoubleSubstationDonePattern extends LEDPattern {
+  public DoubleSubstationDonePattern() {
     super();
-    setPixelRange(1, kResolution, gamePiece == GamePiece.CONE ? Color.kYellow : Color.kPurple);
+    setPixelRange(1, kResolution, Color.kDarkGreen);
   }
 }
