@@ -13,29 +13,31 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto.dynamicpathgeneration.helpers.*;
 import java.util.*;
 
 public class DynamicPathGenerator {
-  private final Pose2d startPose;
-  private final int src;
-  private final Pose2d goalPose;
-  private final int sink;
-  private final int numNodes;
+  private final Pose2d srcPose;
+  private final PathNode srcNode;
+  private final Pose2d sinkPose;
+  private final PathNode sinkNode;
   private final ArrayList<PathNode> dynamicPathNodes;
 
-  public DynamicPathGenerator(Pose2d startPose, Pose2d goalPose) {
-    this.startPose = startPose;
-    this.goalPose = goalPose;
-    dynamicPathNodes = new ArrayList<>(dynamicPathWayNodes);
-    dynamicPathNodes.add(new PathNode(startPose.getTranslation()));
-    dynamicPathNodes.add(new PathNode(goalPose.getTranslation()));
-    numNodes = dynamicPathNodes.size();
-    src = numNodes - 2;
-    sink = numNodes - 1;
-    for (int i = 0; i < numNodes; i++) {
-      dynamicPathNodes.get(i).setIndex(i);
+  public DynamicPathGenerator(Pose2d srcPose, Pose2d sinkPose) {
+    this.srcPose = srcPose;
+    this.sinkPose = sinkPose;
+    dynamicPathNodes = new ArrayList<>();
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+      dynamicPathNodes.addAll(blueDynamicPathWayNodes);
+    } else {
+      dynamicPathNodes.addAll(redDynamicPathWayNodes);
     }
+    srcNode = new PathNode(srcPose.getX(), srcPose.getY(), PathNode.NodeType.SRC);
+    sinkNode = new PathNode(sinkPose.getX(), sinkPose.getY(), PathNode.NodeType.SINK);
+    // start node must be added before goal node
+    dynamicPathNodes.add(srcNode);
+    dynamicPathNodes.add(sinkNode);
   }
 
   public PathNode connectToClosest(PathNode node, ArrayList<PathNode> nodes) {
@@ -57,21 +59,23 @@ public class DynamicPathGenerator {
   }
 
   public List<Integer> getPathIds() {
-    PathNode srcClosest = connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
-    PathNode sinkClosest = connectToClosest(dynamicPathNodes.get(sink), dynamicPathNodes);
+    // PathNode srcClosest = connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
+    PathUtil.fullyConnect(srcNode, blueDynamicPathWayNodes);
+    PathNode sinkClosest = connectToClosest(sinkNode, dynamicPathNodes);
     if (kDynamicPathGenerationDebug) {
-      System.out.println("src edges:" + dynamicPathNodes.get(src).getEdges().size());
-      System.out.println("sink edges:" + dynamicPathNodes.get(sink).getEdges().size());
+      System.out.println("src edges:" + srcNode.getEdges().size());
+      System.out.println("sink edges:" + sinkNode.getEdges().size());
     }
-    DynamicPathFinder pathFinder = new DynamicPathFinder(src, sink, dynamicPathNodes);
-    List<Integer> positions = pathFinder.findPath();
+    DynamicPathFinder pathFinder =
+        new DynamicPathFinder(srcNode.getIndex(), sinkNode.getIndex(), dynamicPathNodes);
+    List<Integer> pathIndexes = pathFinder.findPath();
     if (kDynamicPathGenerationDebug) {
-      System.out.println("This is the path generated:");
-      System.out.println(positions);
+      System.out.println("These are the path indexes:");
+      System.out.println(pathIndexes);
     }
-    PathUtil.fullyDisconnect(srcClosest, dynamicPathNodes.get(src));
-    PathUtil.fullyDisconnect(sinkClosest, dynamicPathNodes.get(sink));
-    return positions;
+    // PathUtil.fullyDisconnect(srcClosest, dynamicPathNodes.get(src));
+    PathUtil.fullyDisconnect(sinkClosest, sinkNode);
+    return pathIndexes;
   }
 
   public List<PathNode> getPathNodes() {
@@ -85,7 +89,7 @@ public class DynamicPathGenerator {
   }
 
   public PathPlannerTrajectory getTrajectory() {
-    Path path = new Path(getPathNodes(), startPose.getRotation(), goalPose.getRotation());
+    Path path = new Path(getPathNodes(), srcPose.getRotation(), sinkPose.getRotation());
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());

@@ -65,13 +65,13 @@ public class DynamicPathFinder {
 
       // Update all unvisited neighboring nodes
       for (int childId = 0; childId < pathNodes.get(currentNode).getEdges().size(); childId++) {
-        int next = pathNodes.get(currentNode).getEdges().get(childId).getIndex();
+        int next = pathNodes.get(currentNode).getEdges().get(childId);
         if (visitedNodes[next]) continue;
         // Calculate time (penalize paths with more points)
         double newDist =
             0.000001
                 + dist[currentNode]
-                + PathUtil.straightTravelTimeWithoutObstacles(
+                + PathUtil.straightTravelTimeWithObstacles(
                     pathNodes.get(currentNode).getPoint(), pathNodes.get(next).getPoint());
         // If path over this edge is better
         if (newDist < dist[next]) {

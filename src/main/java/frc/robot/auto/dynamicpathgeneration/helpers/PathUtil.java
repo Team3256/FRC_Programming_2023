@@ -86,13 +86,13 @@ public class PathUtil {
   }
 
   public static void fullyConnect(PathNode u, PathNode v) {
-    u.addEdge(v);
-    v.addEdge(u);
+    u.addEdge(v.getIndex());
+    v.addEdge(u.getIndex());
   }
 
   public static void fullyDisconnect(PathNode u, PathNode v) {
-    u.remEdge(v);
-    v.remEdge(u);
+    u.remEdge(v.getIndex());
+    v.remEdge(u.getIndex());
   }
 
   public static void fullyDisconnect(PathNode u, ArrayList<PathNode> pathNodes) {

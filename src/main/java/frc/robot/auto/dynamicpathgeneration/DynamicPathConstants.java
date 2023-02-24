@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public final class DynamicPathConstants {
   // Flags
   public static final boolean kDynamicPathGenerationDebug = true;
-  public static final boolean blue = true;
 
   // Bezier
   public static final double kRegularControlPointScalar = 0.5087764111;
@@ -47,7 +46,8 @@ public final class DynamicPathConstants {
   };
 
   // Universal path nodes
-  public static final ArrayList<PathNode> dynamicPathWayNodes = new ArrayList<>();
+  public static final ArrayList<PathNode> blueDynamicPathWayNodes = new ArrayList<>();
+  public static final ArrayList<PathNode> redDynamicPathWayNodes = new ArrayList<>();
   public static final double preSinkX = 2.1;
   public static final double preSinkEndpointsOffset = 0.3;
   public static final double passagePoints = 8;
@@ -190,5 +190,5 @@ public final class DynamicPathConstants {
   // Path finding constraints
   public static final double INF_TIME = Double.MAX_VALUE / 10;
   public static final double ILLEGAL_TIME = Double.MAX_VALUE / 20;
-  public static final double kRobotRadius = 0.455 * Math.sqrt(2);
+  public static final double kRobotRadius = 0.47 * Math.sqrt(2);
 }

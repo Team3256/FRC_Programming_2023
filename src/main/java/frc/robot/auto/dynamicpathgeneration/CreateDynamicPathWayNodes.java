@@ -24,45 +24,55 @@ public class CreateDynamicPathWayNodes {
     System.out.println("Dynamic Path Way Nodes created");
 
     // add preSink nodes
-    ArrayList<PathNode> preSinks = preSink(dynamicPathWayNodes);
+    ArrayList<PathNode> preSinks = preSink(blueDynamicPathWayNodes);
     PathNode topPreSink = preSinks.get(preSinks.size() - 1);
     PathNode botPreSink = preSinks.get(0);
 
     // add passages
     PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
     PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
-    ArrayList<PathNode> topPassage = passage(dynamicPathWayNodes, topPassageSrc, topPassageSink);
+    ArrayList<PathNode> topPassage =
+        passage(blueDynamicPathWayNodes, topPassageSrc, topPassageSink);
     // link top passage with top 2 PreSink
     PathUtil.fullyConnect(topPreSink, topPassageSink);
     PathUtil.fullyConnect(preSinks.get(preSinks.size() - 2), topPassageSink);
 
     PathNode botPassageSink = new PathNode(2.8, 0 + 0.73, PathNode.NodeType.PASSAGE);
     PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73, PathNode.NodeType.PASSAGE);
-    ArrayList<PathNode> botPassage = passage(dynamicPathWayNodes, botPassageSrc, botPassageSink);
+    ArrayList<PathNode> botPassage =
+        passage(blueDynamicPathWayNodes, botPassageSrc, botPassageSink);
     // link bottom passage with bottom 2 preSink
     PathUtil.fullyConnect(botPreSink, botPassageSink);
     PathUtil.fullyConnect(preSinks.get(1), botPassageSink);
 
     // add station nodes
-    PathNode leftStation = new PathNode(6.28, 6.39);
-    dynamicPathWayNodes.add(leftStation);
+    PathNode leftStation = new PathNode(6.28, 6.39, PathNode.NodeType.NORMAL);
+    blueDynamicPathWayNodes.add(leftStation);
     // link left station node with top and bot passage src
     PathUtil.fullyConnect(leftStation, topPassageSrc);
     PathUtil.fullyConnect(leftStation, botPassageSrc);
 
-    PathNode rightStation = new PathNode(Constants.FieldConstants.kFieldLength - 6.28, 6.39);
-    dynamicPathWayNodes.add(rightStation);
+    PathNode rightStation =
+        new PathNode(Constants.FieldConstants.kFieldLength - 6.28, 6.39, PathNode.NodeType.NORMAL);
+    blueDynamicPathWayNodes.add(rightStation);
     // link right station node with top and bot passage src
     PathUtil.fullyConnect(rightStation, topPassageSrc);
     PathUtil.fullyConnect(rightStation, botPassageSrc);
 
-    // mirror all dynamic path way nodes if red
-    if (!blue) for (PathNode p : dynamicPathWayNodes) p.flip();
+    // create redDynamicPathWayNodes
+    for (PathNode node : blueDynamicPathWayNodes) {
+      redDynamicPathWayNodes.add(node.getRedVersion());
+    }
 
     // display dynamic path way nodes in Path Planner
-    Path path = new Path(dynamicPathWayNodes, new Rotation2d(0), new Rotation2d(0));
+    displayWayNodes(blueDynamicPathWayNodes, true);
+    displayWayNodes(redDynamicPathWayNodes, false);
+  }
+
+  public static void displayWayNodes(ArrayList<PathNode> nodes, boolean blue) {
+    Path path = new Path(blueDynamicPathWayNodes, new Rotation2d(0), new Rotation2d(0));
     JSONObject json = path.getJson();
-    String fileName = "DynamicPathWayNodes";
+    String fileName = (blue ? "Blue" : "Red") + "DynamicPathWayNodes";
     String pathPlannerJsonPath = "src/main/deploy/pathplanner/" + fileName + ".path";
     FileUtil.saveJson(json, pathPlannerJsonPath);
   }

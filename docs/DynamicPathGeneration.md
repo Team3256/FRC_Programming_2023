@@ -28,3 +28,7 @@
 * Locked rotation during passages that minimizes the robot's radius
 * Fastest path algorithm
 * Visibility graph
+### Bugs:
+* DO NOT add/remove blue or red dynamic path way point nodes OUTSIDE of CreateDynamicPathWayNodes 
+* DO NOT use anything inside dynamicpathgeneration folder EXCEPT for DynamicPathFollower outside of the folder
+* We don't want DPG breaking during competition

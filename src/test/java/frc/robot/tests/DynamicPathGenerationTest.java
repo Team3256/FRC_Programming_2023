@@ -7,12 +7,12 @@
 
 package frc.robot.tests;
 
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.blue;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.FileUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
@@ -105,7 +105,7 @@ public class DynamicPathGenerationTest {
   }
 
   public void testGeneratePathBase(Pose2d src, Pose2d sink, String fileName) {
-    if (!blue) {
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
       src = PathUtil.flip(src);
       sink = PathUtil.flip(sink);
     }

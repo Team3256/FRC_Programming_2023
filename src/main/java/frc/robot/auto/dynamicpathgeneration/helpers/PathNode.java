@@ -12,42 +12,53 @@ import frc.robot.Constants;
 import java.util.ArrayList;
 
 public class PathNode {
+  static int curIndex = 0;
   private Translation2d point;
-  private ArrayList<PathNode> edges;
+  private ArrayList<Integer> edges;
   private int index;
   private NodeType nodeType;
 
   public enum NodeType {
     NORMAL,
     PASSAGE,
-    PRESINK
-  }
-
-  public PathNode(double x, double y) {
-    this.point = new Translation2d(x, y);
-    this.edges = new ArrayList<>();
-    this.nodeType = NodeType.NORMAL;
+    PRESINK,
+    SRC,
+    SINK
   }
 
   public PathNode(double x, double y, NodeType nodeType) {
-    this(x, y);
+    if (nodeType == NodeType.SRC) {
+      index = curIndex;
+    } else if (nodeType == NodeType.SINK) {
+      index = curIndex + 1;
+    } else {
+      index = curIndex;
+      curIndex++;
+    }
+    this.point = new Translation2d(x, y);
     this.nodeType = nodeType;
+    edges = new ArrayList<>();
   }
 
-  public PathNode(Translation2d point) {
+  private PathNode(Translation2d point, NodeType nodeType, int index, ArrayList<Integer> edges) {
     this.point = point;
+    this.nodeType = nodeType;
+    this.index = index;
     this.edges = new ArrayList<>();
+    this.edges.addAll(edges);
   }
 
-  public void flip() {
-    point = new Translation2d(Constants.FieldConstants.kFieldLength - getX(), getY());
+  public PathNode getRedVersion() {
+    Translation2d newPoint =
+        new Translation2d(Constants.FieldConstants.kFieldLength - getX(), getY());
+    return new PathNode(newPoint, nodeType, index, edges);
   }
 
-  public void addEdge(PathNode node) {
+  public void addEdge(Integer node) {
     edges.add(node);
   }
 
-  public void remEdge(PathNode node) {
+  public void remEdge(Integer node) {
     edges.remove(node);
   }
 
@@ -71,10 +82,6 @@ public class PathNode {
     return index;
   }
 
-  public void setIndex(int index) {
-    this.index = index;
-  }
-
   public NodeType getType() {
     return nodeType;
   }
@@ -87,7 +94,7 @@ public class PathNode {
     this.point = point;
   }
 
-  public ArrayList<PathNode> getEdges() {
+  public ArrayList<Integer> getEdges() {
     return edges;
   }
 

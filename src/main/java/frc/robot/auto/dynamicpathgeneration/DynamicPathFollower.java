@@ -14,7 +14,6 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
@@ -51,8 +50,7 @@ public class DynamicPathFollower {
         sink = kHighBlueScoringPoses[locationId];
       }
     }
-    // TODO: DriverStation.getAlliance() != Alliance.Red
-    if () {
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
       sink = PathUtil.flip(sink);
     }
     // get trajectory
