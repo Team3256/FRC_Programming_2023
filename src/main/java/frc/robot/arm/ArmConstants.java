@@ -52,5 +52,5 @@ public final class ArmConstants {
   public static final double kArmA = 0.1;
   public static final int kNumArmMotors = 1;
 
-  public static final Rotation2d kArmAngleDoubleSubstation = new Rotation2d(0.0);
+  public static final Rotation2d kArmAngleDoubleSubstation = Rotation2d.fromDegrees(0.0);
 }
