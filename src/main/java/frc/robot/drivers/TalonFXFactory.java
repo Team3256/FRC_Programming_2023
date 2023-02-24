@@ -75,6 +75,15 @@ public class TalonFXFactory {
     return createTalon(id, kDefaultConfiguration);
   }
 
+  public static WPI_TalonFX createPermanentSlaveTalon(CanDeviceId slave_id, CanDeviceId master_id) {
+    if (slave_id.getBus() != master_id.getBus()) {
+      throw new RuntimeException("Master and Slave Talons must be on the same CAN bus");
+    }
+    final WPI_TalonFX talon = createTalon(slave_id, kSlaveConfiguration);
+    talon.set(ControlMode.Follower, master_id.getDeviceNumber());
+    return talon;
+  }
+
   public static WPI_TalonFX createPermanentFollowerTalon(
       CanDeviceId followerId, CanDeviceId masterId) {
     if (followerId.getBus() != masterId.getBus()) {
@@ -86,7 +95,7 @@ public class TalonFXFactory {
   }
 
   public static WPI_TalonFX createTalon(CanDeviceId id, Configuration config) {
-    WPI_TalonFX talon = new LazyTalonFX(id);
+    WPI_TalonFX talon = new WPI_TalonFX(id.getDeviceNumber());
     talon.set(ControlMode.PercentOutput, 0.0);
 
     talon.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
