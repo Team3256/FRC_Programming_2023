@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.arm.Arm;
 
 public class SetArmAngle extends ProfiledPIDCommand {
-  private Arm armSubsystem;
+  private final Arm armSubsystem;
 
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(

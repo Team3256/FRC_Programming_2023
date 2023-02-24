@@ -21,11 +21,11 @@ import java.util.Map;
 public final class Constants {
   public static final boolean kDebugEnabled = true;
 
-  public static final boolean kIntakeEnabled = false;
-  public static final boolean kElevatorEnabled = false;
-  public static final boolean kArmEnabled = false;
+  public static final boolean kIntakeEnabled = true;
+  public static final boolean kElevatorEnabled = true;
+  public static final boolean kArmEnabled = true;
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kLedStripEnabled = false;
+  public static final boolean kLedStripEnabled = true;
   public static final boolean kAdvantageKitReplayEnabled = false;
 
   public static final RobotType kRobotType = RobotType.ALPHA;
@@ -39,6 +39,7 @@ public final class Constants {
 
   public static final class ShuffleboardConstants {
     public static final String kDriverTabName = "Driver";
+    public static final String kOperatorTabName = "Operator";
     public static final String kElectricalTabName = "Electrical";
     public static final String kIntakeLayoutName = "Intake";
     public static final String kSwerveLayoutName = "Swerve";
