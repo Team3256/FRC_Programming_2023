@@ -31,7 +31,6 @@ public class AutoBuilder {
 
   public Command createPath(String path, PathConstraints constraints, boolean isFirstSegment) {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, constraints);
-    swerveSubsystem.setTrajectory(trajectory);
     return createPathPlannerCommand(trajectory, isFirstSegment);
   }
 
