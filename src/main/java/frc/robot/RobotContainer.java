@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kDynamicPathGenerationDebug;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -61,8 +62,6 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    SmartDashboard.putData("trajectoryViewer", trajectoryViewer);
-    SmartDashboard.putData("waypointViewer", waypointViewer);
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -193,6 +192,9 @@ public class RobotContainer implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
+    SmartDashboard.putData("trajectoryViewer", trajectoryViewer);
+    SmartDashboard.putData("waypointViewer", waypointViewer);
+    SmartDashboard.putData("swerveViewer", swerveViewer);
     PowerDistribution pdp = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
     Shuffleboard.getTab(kElectricalTabName).add(pdp);
     for (Loggable device : loggables) device.logInit();
@@ -218,7 +220,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void periodic() {
-    trajectoryViewer.setRobotPose(swerveDrive.getPose());
+    swerveViewer.setRobotPose(swerveDrive.getPose());
   }
 
   public void startPitRoutine() {
