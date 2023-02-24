@@ -180,7 +180,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    return setArmElevatorAfterStart();
+    return new InstantCommand();
   }
 
   @Override
