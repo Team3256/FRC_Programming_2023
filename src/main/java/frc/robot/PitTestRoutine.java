@@ -13,13 +13,14 @@ import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.elevator.commands.ZeroElevator;
+import frc.robot.helpers.WaitCommand;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -48,19 +49,29 @@ public class PitTestRoutine {
   public void pitRoutine() {
     Command startRoutine = new WaitCommand(1).until(driver.a());
     Command tests = new WaitCommand(1).beforeStarting(startRoutine);
+
+    Command intakeTests = new InstantCommand();
+    Command armTests = new InstantCommand();
+    Command elevatorTests = new InstantCommand();
+    Command swerveTests = new InstantCommand();
     if (kIntakeEnabled) {
-      tests.andThen(intakeCommands());
+      intakeTests = intakeCommands();
     }
     if (kArmEnabled) {
-      tests.andThen(armCommands());
+      armTests = armCommands();
     }
     if (kSwerveEnabled) {
-      tests.andThen(swerveCommands());
+      swerveTests = swerveCommands();
     }
     if (kElevatorEnabled) {
-      tests.andThen(elevatorCommands());
+      elevatorTests = elevatorCommands();
     }
-    tests.schedule();
+    tests
+        .andThen(intakeTests)
+        .andThen(armTests)
+        .andThen(swerveTests)
+        .andThen(elevatorTests)
+        .schedule();
   }
 
   private Command elevatorCommands() {

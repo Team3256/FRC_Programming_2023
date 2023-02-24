@@ -17,8 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
@@ -26,6 +25,7 @@ import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
+import frc.robot.helpers.WaitCommand;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
@@ -170,8 +170,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command setArmElevatorAfterStart() {
     if (kArmEnabled && kElevatorEnabled) {
-      return new ParallelDeadlineGroup(
-          new WaitCommand(2),
+      return new ParallelCommandGroup(
           new ZeroElevator(elevatorSubsystem),
           new WaitCommand(0.5)
               .andThen(new SetArmAngle(armSubsystem, ArmConstants.kDefaultArmAngle)));

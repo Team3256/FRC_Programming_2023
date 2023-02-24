@@ -33,8 +33,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
     getController()
         .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
-    this.armSubsystem = armSubsystem;
     addRequirements(armSubsystem);
+    this.armSubsystem = armSubsystem;
   }
 
   @Override
