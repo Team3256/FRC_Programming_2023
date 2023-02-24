@@ -14,7 +14,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -40,12 +40,19 @@ public class IntakeFromDoubleSubstation extends CommandBase {
   private AutoBuilder autoBuilder;
   private LED ledSubsystem;
 
-  private enum GamePiece {
+  public enum GamePiece {
     CONE,
     CUBE
   }
 
+  public enum SubstationSide {
+    RIGHT,
+    LEFT
+  }
+
   private GamePiece gamePiece;
+  private SubstationSide substationSide;
+  private DriverStation.Alliance alliance;
 
   public IntakeFromDoubleSubstation(
       SwerveDrive swerveSubsystem,
@@ -53,13 +60,18 @@ public class IntakeFromDoubleSubstation extends CommandBase {
       Arm armSubsystem,
       Intake intakeSubsystem,
       LED ledSubsystem,
-      GamePiece gamePiece) {
+      GamePiece gamePiece,
+      SubstationSide substationSide) {
+
     this.swerveSubsystem = swerveSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.armSubsystem = armSubsystem;
     this.intakeSubsystem = intakeSubsystem;
     this.ledSubsystem = ledSubsystem;
     this.gamePiece = gamePiece;
+    this.substationSide = substationSide;
+    this.alliance = DriverStation.getAlliance();
+
     autoBuilder = new AutoBuilder(swerveSubsystem);
 
     addRequirements(
@@ -76,7 +88,16 @@ public class IntakeFromDoubleSubstation extends CommandBase {
     waypoints.add(
         new PathPoint(
             swerveSubsystem.getPose().getTranslation(), swerveSubsystem.getPose().getRotation()));
-    waypoints.add(new PathPoint(new Translation2d(14.25, 6.03), new Rotation2d(180)));
+
+    if (alliance == DriverStation.Alliance.Blue) {
+      if (substationSide == SubstationSide.LEFT) {
+        waypoints.add(kLeftSubstationBlue);
+      } else waypoints.add(kRightSubstationBlue);
+    } else {
+      if (substationSide == SubstationSide.LEFT) {
+        waypoints.add(kLeftSubstationRed);
+      } else waypoints.add(kRightSubstationRed);
+    }
 
     PathPlannerTrajectory trajectory =
         PathPlanner.generatePath(new PathConstraints(5, 5), waypoints);

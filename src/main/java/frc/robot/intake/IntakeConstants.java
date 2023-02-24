@@ -7,6 +7,10 @@
 
 package frc.robot.intake;
 
+import com.pathplanner.lib.PathPoint;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.drivers.CanDeviceId;
 
 public final class IntakeConstants {
@@ -17,8 +21,18 @@ public final class IntakeConstants {
   public static final double kIntakeConeSpeed = 0.5;
   public static final double kIntakeCubeSpeed = -0.5;
 
-  public final class IntakeFromDoubleSubstation {
+  public static final class IntakeFromDoubleSubstation {
     public static final double kArmAngle = 0.0;
     public static final double kElevatorHeight = 0.0;
+
+    public static final PathPoint kLeftSubstationBlue =
+        new PathPoint(new Translation2d(16.19, 8.01), new Rotation2d(Units.degreesToRadians(180)));
+    public static final PathPoint kRightSubstationBlue =
+        new PathPoint(new Translation2d(16.19, 5.01), new Rotation2d(Units.degreesToRadians(180)));
+
+    public static final PathPoint kRightSubstationRed =
+        new PathPoint(new Translation2d(0.3556, 8.01), new Rotation2d(Units.degreesToRadians(180)));
+    public static final PathPoint kLeftSubstationRed =
+        new PathPoint(new Translation2d(0.3556, 5.01), new Rotation2d(Units.degreesToRadians(180)));
   }
 }
