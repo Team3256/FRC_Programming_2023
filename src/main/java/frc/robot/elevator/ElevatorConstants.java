@@ -39,7 +39,7 @@ public final class ElevatorConstants {
   public static final TrapezoidProfile.Constraints kElevatorContraints =
       new TrapezoidProfile.Constraints(2.45, 2.45);
 
-  public static final double kDownSpeedVolts = -3;
+  public static final double kDownSpeedVolts = -5;
 
   // public static final double kElevatorGearing = 10;
   // public static final double kCarriageMass = 4;

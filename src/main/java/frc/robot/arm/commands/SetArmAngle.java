@@ -41,5 +41,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
     armSubsystem.off();
+    System.out.println("Done setting arm angle");
   }
 }

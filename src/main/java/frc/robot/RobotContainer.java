@@ -17,8 +17,11 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
+import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
@@ -152,10 +155,6 @@ public class RobotContainer implements CANTestable, Loggable {
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
-
-    if (kArmEnabled) {
-      operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
-    }
   }
 
   private void configureArm() {
@@ -169,8 +168,20 @@ public class RobotContainer implements CANTestable, Loggable {
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
 
+  public Command setArmElevatorAfterStart() {
+    if (kArmEnabled && kElevatorEnabled) {
+      return new ParallelDeadlineGroup(
+          new WaitCommand(2),
+          new ZeroElevator(elevatorSubsystem),
+          new WaitCommand(0.5)
+              .andThen(new SetArmAngle(armSubsystem, ArmConstants.kDefaultArmAngle)));
+    } else {
+      return new InstantCommand();
+    }
+  }
+
   public Command getAutonomousCommand() {
-    return new InstantCommand();
+    return setArmElevatorAfterStart();
   }
 
   @Override
