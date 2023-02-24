@@ -10,12 +10,13 @@ package frc.robot.led.patterns;
 import static frc.robot.led.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.intake.commands.IntakeFromDoubleSubstation.GamePiece;
 import frc.robot.led.patternBases.LEDPattern;
 
 /** Full Green */
 public class DoubleSubstationPattern extends LEDPattern {
-  public DoubleSubstationPattern() {
+  public DoubleSubstationPattern(GamePiece gamePiece) {
     super();
-    setPixelRange(1, kResolution, Color.kGreen);
+    setPixelRange(1, kResolution, gamePiece == GamePiece.CONE ? Color.kYellow : Color.kPurple);
   }
 }

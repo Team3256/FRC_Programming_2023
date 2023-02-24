@@ -7,6 +7,7 @@
 
 package frc.robot.intake;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,5 +33,6 @@ public final class IntakeConstants {
         new PathPoint(new Translation2d(0.3556, 8.01), new Rotation2d(Units.degreesToRadians(180)));
     public static final PathPoint kLeftSubstationRed =
         new PathPoint(new Translation2d(0.3556, 5.01), new Rotation2d(Units.degreesToRadians(180)));
+    public static final PathConstraints kPathContraints = new PathConstraints(5, 5);
   }
 }

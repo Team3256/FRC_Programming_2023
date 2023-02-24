@@ -11,16 +11,13 @@ import static frc.robot.arm.ArmConstants.kArmAngleDoubleSubstation;
 import static frc.robot.elevator.ElevatorConstants.kElevatorHeightDoubleSubstation;
 import static frc.robot.intake.IntakeConstants.IntakeFromDoubleSubstation.*;
 
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.helpers.AutoBuilder;
@@ -101,10 +98,9 @@ public class IntakeFromDoubleSubstation extends CommandBase {
       } else if (substationSide == SubstationSide.RIGHT) waypoints.add(kRightSubstationRed);
     }
 
-    PathPlannerTrajectory trajectory =
-        PathPlanner.generatePath(new PathConstraints(5, 5), waypoints);
+    PathPlannerTrajectory trajectory = PathPlanner.generatePath(kPathContraints, waypoints);
 
-    DoubleSubstationPattern doubleSubstationPattern = new DoubleSubstationPattern();
+    DoubleSubstationPattern doubleSubstationPattern = new DoubleSubstationPattern(gamePiece);
 
     Command intakeGamePieceCommand;
 
@@ -116,17 +112,18 @@ public class IntakeFromDoubleSubstation extends CommandBase {
         intakeGamePieceCommand = new IntakeCube(intakeSubsystem);
         break;
       default:
-        throw new IllegalStateException("Unexpected value: " + gamePiece);
+        intakeGamePieceCommand = new IntakeCube(intakeSubsystem);
+        break;
     }
 
     Command autoDoubleSubstation =
-        new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, kElevatorHeightDoubleSubstation),
-                new SetArmAngle(armSubsystem, new Rotation2d(kArmAngleDoubleSubstation))),
+        new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, kElevatorHeightDoubleSubstation),
+            new SetArmAngle(armSubsystem, kArmAngleDoubleSubstation),
             intakeGamePieceCommand,
             autoBuilder.createPathPlannerCommand(trajectory, false),
             new LEDSetAllSectionsPattern(ledSubsystem, doubleSubstationPattern));
+
     autoDoubleSubstation.schedule();
   }
 
