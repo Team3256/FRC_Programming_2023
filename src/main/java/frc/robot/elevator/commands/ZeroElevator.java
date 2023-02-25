@@ -35,7 +35,6 @@ public class ZeroElevator extends CommandBase {
   @Override
   public boolean isFinished() {
     System.out.println("ZERO ELEVATOR is finished");
-    return Math.abs(elevatorSubsystem.getElevatorSpeed()) < kZeroThreshold
-        && elevatorSubsystem.isMotorCurrentSpiking();
+    return elevatorSubsystem.isMotorCurrentSpiking();
   }
 }

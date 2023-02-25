@@ -147,8 +147,8 @@ public class RobotContainer implements CANTestable, Loggable {
 
     driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
     driver
-        .leftBumper()
-        .toggleOnTrue(
+        .leftTrigger()
+        .onTrue(
             new TeleopSwerveLimited(
                 swerveSubsystem,
                 driver::getRightY,
@@ -170,12 +170,17 @@ public class RobotContainer implements CANTestable, Loggable {
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
-    elevatorSubsystem.setDefaultCommand(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
+    //    elevatorSubsystem.setDefaultCommand(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
 
-    driver
+    operator
         .b()
         .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW));
-    driver
+
+    operator
+        .rightBumper()
+        .onTrue(new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID));
+
+    operator
         .rightTrigger()
         .onTrue(
             new ConditionalCommand(
@@ -183,26 +188,26 @@ public class RobotContainer implements CANTestable, Loggable {
                 new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
                 this::isCurrentPieceCone));
     driver
-        .rightBumper()
-        .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW));
+        .leftBumper()
+        .onTrue(new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION));
 
-    // driver.x().whileTrue(new ZeroElevator(elevatorSubsystem));
+    driver.rightBumper().whileTrue(new ZeroElevator(elevatorSubsystem));
   }
 
   private void configureArm() {
     armSubsystem = new Arm();
 
     armSubsystem = new Arm();
-    armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem, kDefaultArmAngle));
+    //    armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem, kDefaultArmAngle));
 
-    driver
+    operator
         .rightTrigger()
         .onTrue(
             new ConditionalCommand(
                 new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
                 new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
                 this::isCurrentPieceCone));
-    driver
+    operator
         .rightBumper()
         .onTrue(
             new ConditionalCommand(
@@ -210,12 +215,13 @@ public class RobotContainer implements CANTestable, Loggable {
                 new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
                 this::isCurrentPieceCone));
 
-    driver.b().onTrue(new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
-    driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DEFAULT));
+    operator.b().onTrue(new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
+    driver.leftBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION));
+    //    driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DEFAULT));
 
     // TODO: remove after testing
-    operator.leftTrigger().onTrue(new InstantCommand(armSubsystem::setArmFlaccid));
-    operator.rightTrigger().onTrue(new InstantCommand(armSubsystem::setArmErect));
+    //    operator.leftTrigger().onTrue(new InstantCommand(armSubsystem::setArmFlaccid));
+    //    operator.rightTrigger().onTrue(new InstantCommand(armSubsystem::setArmErect));
 
     // TODO: move to auto and remove after testing
     if (kElevatorEnabled) {
@@ -228,7 +234,7 @@ public class RobotContainer implements CANTestable, Loggable {
     ledStrip.setDefaultCommand(
         (new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern())));
     // Change to left bumper and right bumper
-    operator.leftBumper().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+    //    operator.leftBumper().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
   }
 
   public Command getAutonomousCommand() {
