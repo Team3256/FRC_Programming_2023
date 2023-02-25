@@ -13,25 +13,26 @@ import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.elevator.ElevatorConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
+import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.commands.*;
+import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.Elevator.ElevatorPosition;
 import frc.robot.elevator.commands.*;
 import frc.robot.helper.DPadButton;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
-import frc.robot.logging.GyroSendable;
+import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
@@ -44,22 +45,25 @@ import java.util.ArrayList;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
+  public enum Piece {
+    CUBE,
+    CONE
+  }
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
-  private SwerveDrive swerveDrive;
+  private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledStrip;
+  private Piece currentPiece = Piece.CONE;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    PowerDistribution pdp = new PowerDistribution(1, ModuleType.kRev);
-
     if (kIntakeEnabled) {
       configureIntake();
       testables.add(intakeSubsystem);
@@ -67,8 +71,8 @@ public class RobotContainer implements CANTestable, Loggable {
     }
     if (kSwerveEnabled) {
       configureSwerve();
-      testables.add(swerveDrive);
-      loggables.add(swerveDrive);
+      testables.add(swerveSubsystem);
+      loggables.add(swerveSubsystem);
     }
     if (kElevatorEnabled) {
       configureElevator();
@@ -80,30 +84,20 @@ public class RobotContainer implements CANTestable, Loggable {
       testables.add(armSubsystem);
       loggables.add(armSubsystem);
     }
-    if (kElevatorEnabled) {
-      configureElevator();
-      testables.add(elevatorSubsystem);
-    }
     if (kLedStripEnabled) {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
-
-    Shuffleboard.getTab(kElectricalTabName).add(pdp);
-  }
-
-  private void configureIntake() {
-    intakeSubsystem = new Intake();
   }
 
   private void configureSwerve() {
-    swerveDrive = new SwerveDrive();
+    swerveSubsystem = new SwerveDrive();
 
     if (kElevatorEnabled) {
       // Enable elevator acceleration limiting
-      swerveDrive.setDefaultCommand(
+      swerveSubsystem.setDefaultCommand(
           new TeleopSwerve(
-              swerveDrive,
+              swerveSubsystem,
               elevatorSubsystem,
               driver::getLeftY,
               driver::getLeftX,
@@ -111,9 +105,9 @@ public class RobotContainer implements CANTestable, Loggable {
               kFieldRelative,
               kOpenLoop));
     } else {
-      swerveDrive.setDefaultCommand(
+      swerveSubsystem.setDefaultCommand(
           new TeleopSwerve(
-              swerveDrive,
+              swerveSubsystem,
               driver::getLeftY,
               driver::getLeftX,
               driver::getRightX,
@@ -124,26 +118,26 @@ public class RobotContainer implements CANTestable, Loggable {
     new DPadButton(driver, DPadButton.Direction.UP)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive, () -> 0, () -> 0, () -> 0, () -> 1, kFieldRelative, kOpenLoop));
+                swerveSubsystem, () -> 0, () -> 0, () -> 0, () -> 1, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.DOWN)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive, () -> 0, () -> 0, () -> 0, () -> -1, kFieldRelative, kOpenLoop));
+                swerveSubsystem, () -> 0, () -> 0, () -> 0, () -> -1, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.RIGHT)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive, () -> 0, () -> 0, () -> 1, () -> 0, kFieldRelative, kOpenLoop));
+                swerveSubsystem, () -> 0, () -> 0, () -> 1, () -> 0, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.LEFT)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive, () -> 0, () -> 0, () -> -1, () -> 0, kFieldRelative, kOpenLoop));
+                swerveSubsystem, () -> 0, () -> 0, () -> -1, () -> 0, kFieldRelative, kOpenLoop));
 
-    driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
+    driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
     driver
         .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
-                swerveDrive,
+                swerveSubsystem,
                 driver::getRightY,
                 driver::getRightX,
                 driver::getLeftX,
@@ -151,28 +145,70 @@ public class RobotContainer implements CANTestable, Loggable {
                 kOpenLoop));
   }
 
-  private void configureArm() {
-    armSubsystem = new Arm();
-    armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem, kDefaultArmAngle));
+  private void configureIntake() {
+    intakeSubsystem = new Intake();
 
-    if (kElevatorEnabled) {
-      driver.b().onTrue(new SetArmAngle(armSubsystem, kArmAngleLow));
-      driver.rightTrigger().onTrue(new SetArmAngle(armSubsystem, kArmAngleHigh));
-      driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, kArmAngleMid));
-    }
+    //    driver.rightBumper().whileTrue(new IntakeCube(intakeSubsystem));
+    //    driver.rightBumper().onTrue(new InstantCommand(this::setPieceToCube));
+    //    driver.leftBumper().whileTrue(new IntakeCone(intakeSubsystem));
+    //    driver.leftBumper().onTrue(new InstantCommand(this::setPieceToCone));
+
   }
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
+
     elevatorSubsystem.setDefaultCommand(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
 
-    driver.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+    driver
+        .b()
+        .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW));
     driver
         .rightTrigger()
-        .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+        .onTrue(
+            new ConditionalCommand(
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                this::isCurrentPieceCone));
     driver
         .rightBumper()
-        .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
+        .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW));
+
+    //    driver.x().whileTrue(new ZeroElevator(elevatorSubsystem));
+  }
+
+  private void configureArm() {
+    armSubsystem = new Arm();
+
+    armSubsystem = new Arm();
+    armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem, kDefaultArmAngle));
+
+    driver
+        .rightTrigger()
+        .onTrue(
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                this::isCurrentPieceCone));
+    driver
+        .rightBumper()
+        .onTrue(
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                this::isCurrentPieceCone));
+
+    driver.b().onTrue(new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
+    driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DEFAULT));
+
+    // TODO: remove after testing
+    operator.leftTrigger().onTrue(new InstantCommand(armSubsystem::setArmFlaccid));
+    operator.rightTrigger().onTrue(new InstantCommand(armSubsystem::setArmErect));
+
+    // TODO: move to auto and remove after testing
+    if (kElevatorEnabled) {
+      operator.leftBumper().onTrue(SetArmElevatorStart.getCommand(elevatorSubsystem, armSubsystem));
+    }
   }
 
   public void configureLEDStrip() {
@@ -184,7 +220,15 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    return new InstantCommand();
+    Command setArmElevatorOnRightSide;
+    if (kElevatorEnabled && kArmEnabled) {
+      setArmElevatorOnRightSide = SetArmElevatorStart.getCommand(elevatorSubsystem, armSubsystem);
+    } else {
+      setArmElevatorOnRightSide = new InstantCommand();
+    }
+    Command autoPath = new InstantCommand();
+
+    return setArmElevatorOnRightSide.andThen(autoPath);
   }
 
   @Override
@@ -193,8 +237,8 @@ public class RobotContainer implements CANTestable, Loggable {
     Shuffleboard.getTab(kDriverTabName)
         .add(
             "Joystick",
-            new GyroSendable(
-                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY()))));
+            new DoubleSendable(
+                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY())), "Gyro"));
   }
 
   @Override
@@ -213,7 +257,19 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void startPitRoutine() {
     PitTestRoutine pitSubsystemRoutine =
-        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
     pitSubsystemRoutine.pitRoutine();
+  }
+
+  public boolean isCurrentPieceCone() {
+    return Piece.CONE.equals(currentPiece);
+  }
+
+  public void setPieceToCone() {
+    currentPiece = Piece.CONE;
+  }
+
+  public void setPieceToCube() {
+    currentPiece = Piece.CUBE;
   }
 }

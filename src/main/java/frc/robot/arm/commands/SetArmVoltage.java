@@ -5,33 +5,33 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.intake.commands;
+package frc.robot.arm.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.intake.Intake;
+import frc.robot.arm.Arm;
 
-public class IntakeCone extends CommandBase {
-  private final Intake intakeSubsystem;
+public class SetArmVoltage extends CommandBase {
+  private Arm armSubsystem;
+  private double volts = 0;
 
-  public IntakeCone(Intake intakeSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
-
-    addRequirements(intakeSubsystem);
+  public SetArmVoltage(Arm armSubsystem, double volts) {
+    this.armSubsystem = armSubsystem;
+    this.volts = volts;
+    addRequirements(armSubsystem);
   }
 
   @Override
   public void initialize() {
-    intakeSubsystem.intakeCone();
+    armSubsystem.setInputVoltage(volts);
   }
 
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.off();
+    armSubsystem.off();
   }
 
   @Override
   public boolean isFinished() {
-    // return intakeSubsystem.isCurrentSpiking();
     return false;
   }
 }
