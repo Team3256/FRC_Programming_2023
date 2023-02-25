@@ -123,10 +123,10 @@ public final class SwerveConstants {
   public static final double kAzimuthI = 0.00;
   public static final double kAzimuthD = 0.01;
   public static final Rotation2d[] kAlphaOffsets = {
-    Rotation2d.fromDegrees(268.3300), // Front Left - 0
-    Rotation2d.fromDegrees(312.7148), // Front Right - 1
-    Rotation2d.fromDegrees(78.0469), // Back Left - 2
-    Rotation2d.fromDegrees(326.4258) // Back Right - 3
+    Rotation2d.fromDegrees(268.4179), // Front Left - 0
+    Rotation2d.fromDegrees(314.9121), // Front Right - 1
+    Rotation2d.fromDegrees(77.6953), // Back Left - 2
+    Rotation2d.fromDegrees(310.3418) // Back Right - 3
   };
 
   public static final Rotation2d[] kZiptideOffsets = {

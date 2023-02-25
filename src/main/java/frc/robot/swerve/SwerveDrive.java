@@ -245,6 +245,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   public void periodic() {
 
     poseEstimator.update(getYaw(), getModulePositions());
+    SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
     this.localize(
