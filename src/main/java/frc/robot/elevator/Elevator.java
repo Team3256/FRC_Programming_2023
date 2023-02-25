@@ -85,13 +85,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private void configureSimHardware() {
     elevatorMotor = new WPI_TalonFX(kElevatorID);
     SmartDashboard.putData("Elevator Sim", mechanism2d);
-    elevatorMotor.setNeutralMode(NeutralMode.Coast);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   private void configureRealHardware() {
     elevatorMotor = new WPI_TalonFX(kElevatorID, kElevatorCANBus);
     elevatorMotor.setInverted(kElevatorInverted);
-    elevatorMotor.setNeutralMode(NeutralMode.Coast);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public boolean isMotorCurrentSpiking() {
