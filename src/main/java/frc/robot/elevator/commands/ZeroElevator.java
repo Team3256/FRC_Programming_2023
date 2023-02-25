@@ -23,6 +23,7 @@ public class ZeroElevator extends CommandBase {
   @Override
   public void initialize() {
     elevatorSubsystem.setInputVoltage(kDownSpeedVolts);
+    System.out.println("Zeroing elevator");
   }
 
   @Override
