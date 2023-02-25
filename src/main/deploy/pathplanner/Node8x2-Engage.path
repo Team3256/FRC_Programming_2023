@@ -69,7 +69,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "cubeMid",
+          "cubeHigh",
           "defaultPosition"
         ],
         "executionBehavior": "sequential",
