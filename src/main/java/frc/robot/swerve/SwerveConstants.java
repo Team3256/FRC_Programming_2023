@@ -13,12 +13,12 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.COTSFalconSwerveConstants;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class SwerveConstants {
   public static final int kPigeonID = 1;
+  public static final String kPigeonCanBus = "mani";
 
   public static final boolean kFieldRelative = true;
   public static final double kPeriodicDeltaTime = 0.02;
@@ -37,9 +37,9 @@ public final class SwerveConstants {
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Drivetrain Constants */
-  public static final double kTrackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
-  public static final double kWheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
-  public static final double kWheelDiameter = Units.inchesToMeters(3.94);
+  public static final double kTrackWidth = 0.61595; // 0.4445 in 2022 Constants
+  public static final double kWheelBase = 0.61595; // 0.4445 in 2022 Constants
+  public static final double kWheelDiameter = 0.1016;
   public static final double kWheelCircumference = kWheelDiameter * Math.PI;
 
   /*
@@ -108,10 +108,10 @@ public final class SwerveConstants {
 
   /* Swerve Profiling Values */
   /** Meters per Second */
-  public static final double kMaxSpeed = 4.5;
+  public static final double kMaxSpeed = 4.96824; // TODO: This must be tuned to specific robot
   /** Radians per Second */
   public static final double kMaxAngularVelocity =
-      5.0; // TODO: This must be tuned to specific robot
+      Math.PI; // TODO: This must be tuned to specific robot
 
   /* Neutral Modes */
   public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
@@ -123,10 +123,10 @@ public final class SwerveConstants {
   public static final double kAzimuthI = 0.00;
   public static final double kAzimuthD = 0.01;
   public static final Rotation2d[] kAlphaOffsets = {
-    Rotation2d.fromDegrees(258.8379), // Front Left - 0
-    Rotation2d.fromDegrees(320.7129), // Front Right - 1
-    Rotation2d.fromDegrees(197.8418), // Back Left - 2
-    Rotation2d.fromDegrees(88.9453) // Back Right - 3
+    Rotation2d.fromDegrees(268.4179), // Front Left - 0
+    Rotation2d.fromDegrees(314.9121), // Front Right - 1
+    Rotation2d.fromDegrees(77.6953), // Back Left - 2
+    Rotation2d.fromDegrees(310.3418) // Back Right - 3
   };
 
   public static final Rotation2d[] kZiptideOffsets = {

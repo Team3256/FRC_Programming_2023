@@ -65,9 +65,9 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void execute() {
-    double yAxis = -translationAxis.getAsDouble();
-    double xAxis = -strafeAxis.getAsDouble();
-    double rAxis = -rotationAxis.getAsDouble();
+    double yAxis = Math.pow(-translationAxis.getAsDouble(), 3);
+    double xAxis = Math.pow(-strafeAxis.getAsDouble(), 3);
+    double rAxis = Math.pow(-rotationAxis.getAsDouble(), 3);
 
     /* Deadbands */
     yAxis = (Math.abs(yAxis) < Constants.kStickDeadband) ? 0 : yAxis;

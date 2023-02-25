@@ -9,11 +9,11 @@ package frc.robot.arm.commands;
 
 import static frc.robot.arm.ArmConstants.*;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.arm.Arm;
+import frc.robot.arm.Arm.ArmPosition;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
@@ -22,10 +22,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
     super(
         new ProfiledPIDController(kP, kI, kD, kArmContraints),
         armSubsystem::getArmPositionRads,
-        MathUtil.clamp(
-            angleRotation2d.getRadians(),
-            kArmAngleMinConstraint.getRadians(),
-            kArmAngleMaxConstraint.getRadians()),
+        angleRotation2d.getRadians(),
         (output, setpoint) ->
             armSubsystem.setInputVoltage(
                 output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
@@ -33,13 +30,18 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
     getController()
         .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
-    this.armSubsystem = armSubsystem;
     addRequirements(armSubsystem);
+    this.armSubsystem = armSubsystem;
+  }
+
+  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
+    this(armSubsystem, armPosition.rotation);
   }
 
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
     armSubsystem.off();
+    System.out.println("Done setting arm angle");
   }
 }
