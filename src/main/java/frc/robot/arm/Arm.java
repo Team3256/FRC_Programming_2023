@@ -40,6 +40,7 @@ import frc.robot.swerve.helpers.Conversions;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public enum ArmPosition {
+    DEFAULT(ArmConstants.kDefaultArmAngle),
     ANY_PIECE_LOW(ArmConstants.kAnyPieceLowRotation),
     CUBE_MID(ArmConstants.kCubeMidRotation),
     CONE_MID(ArmConstants.kConeMidRotation),
@@ -105,7 +106,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setSelectedSensorPosition(0);
   }
 
-  public void setArmLimp() {
+  public void setArmFlaccid() {
     armMotor.setNeutralMode(NeutralMode.Coast);
   }
 

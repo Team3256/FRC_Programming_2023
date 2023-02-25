@@ -37,12 +37,9 @@ import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -155,6 +152,7 @@ public class RobotContainer implements CANTestable, Loggable {
     driver
         .a()
         .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW));
+    driver.rightBumper().onTrue(new ZeroElevator(elevatorSubsystem));
   }
 
   private void configureArm() {
@@ -174,13 +172,17 @@ public class RobotContainer implements CANTestable, Loggable {
                 new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
                 this::isCurrentPieceCone));
     driver.a().onTrue(new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
+    driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DEFAULT));
 
-    operator.a().onTrue(new InstantCommand(armSubsystem::setArmLimp));
+    operator.a().onTrue(new InstantCommand(armSubsystem::setArmFlaccid));
     operator.b().onTrue(new InstantCommand(armSubsystem::setArmErect));
+    if (kElevatorEnabled) {
+      operator.leftBumper().onTrue(SetArmElevatorStart.getCommand(elevatorSubsystem, armSubsystem));
+    }
   }
 
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] { 100 });
+    ledStrip = new LED(0, new int[] {100});
     driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
     driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
   }
@@ -199,8 +201,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
-    for (Loggable device : loggables)
-      device.logInit();
+    for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
             "Joystick",
@@ -217,15 +218,14 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables)
-      result &= subsystem.CANTest();
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive,
-        armSubsystem);
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
     pitSubsystemRoutine.pitRoutine();
   }
 

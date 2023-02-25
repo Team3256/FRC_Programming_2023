@@ -23,7 +23,7 @@ public final class ElevatorConstants {
   public static final double kCubeHighPositionMeters = Units.inchesToMeters(0);
   public static final double kConeHighPositionMeters = Units.inchesToMeters(15.372696);
   public static final double kAnyPieceMidPositionMeters = Units.inchesToMeters(0);
-  public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(0);
+  public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(31);
 
   // https://www.reca.lc/linear
   // gradle simulateJava working constants
@@ -55,5 +55,5 @@ public final class ElevatorConstants {
   // TODO: TUNE THIS
   public static final double kRateLimiting = 0.05;
   public static final double kEncoderToMetersConversionFactor = 1;
-  public static final double kElevatorCurrentThreshold = 8; // amps
+  public static final double kElevatorCurrentThreshold = 16; // amps
 }

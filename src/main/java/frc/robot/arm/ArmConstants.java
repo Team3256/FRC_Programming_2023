@@ -42,9 +42,9 @@ public final class ArmConstants {
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-12.881991);
-  public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(90);
+  public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(360);
 
-  public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-9);
+  public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-30.5);
   public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(10);
   public static final Rotation2d kConeMidRotation = Rotation2d.fromDegrees(17.5);
   public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(21);

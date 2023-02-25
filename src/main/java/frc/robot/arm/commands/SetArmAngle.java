@@ -9,7 +9,6 @@ package frc.robot.arm.commands;
 
 import static frc.robot.arm.ArmConstants.*;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
@@ -23,10 +22,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
     super(
         new ProfiledPIDController(kP, kI, kD, kArmContraints),
         armSubsystem::getArmPositionRads,
-        MathUtil.clamp(
-            angleRotation2d.getRadians(),
-            kArmAngleMinConstraint.getRadians(),
-            kArmAngleMaxConstraint.getRadians()),
+        angleRotation2d.getRadians(),
         (output, setpoint) ->
             armSubsystem.setInputVoltage(
                 output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),

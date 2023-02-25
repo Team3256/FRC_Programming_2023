@@ -7,20 +7,25 @@
 
 package frc.robot.auto.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.arm.Arm;
-import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.helpers.WaitCommand;
 
 public class SetArmElevatorStart {
-
   public static Command getCommand(Elevator elevatorSubsystem, Arm armSubsystem) {
-    return new ParallelCommandGroup(
-        new ZeroElevator(elevatorSubsystem),
-        new WaitCommand(0.5).andThen(new SetArmAngle(armSubsystem, ArmConstants.kDefaultArmAngle)));
+    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135))
+        .andThen(
+            new ParallelCommandGroup(
+                new WaitCommand(0.6)
+                    .andThen(
+                        new ProxyCommand(
+                            new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(80)))),
+                new ZeroElevator(elevatorSubsystem)));
   }
 }
