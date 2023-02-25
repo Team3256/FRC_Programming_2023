@@ -19,7 +19,7 @@ import frc.robot.helpers.WaitCommand;
 
 public class SetArmElevatorStart {
   public static Command getCommand(Elevator elevatorSubsystem, Arm armSubsystem) {
-    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135))
+    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(180))
         .andThen(
             new ParallelCommandGroup(
                 new WaitCommand(0.6)
