@@ -49,6 +49,13 @@ public class AutoBuilder {
 
   public Command createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment) {
+    return createPathPlannerCommand(trajectory, isFirstSegment, changeAutosBasedOnAlliance);
+  }
+
+  public Command createPathPlannerCommand(
+      PathPlannerTrajectory trajectory,
+      boolean isFirstSegment,
+      boolean doesChangeAutosBasedOnAlliance) {
     PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
     PIDController yTranslationController =
@@ -65,7 +72,7 @@ public class AutoBuilder {
         xTranslationController,
         yTranslationController,
         thetaController,
-        changeAutosBasedOnAlliance,
+        doesChangeAutosBasedOnAlliance,
         isFirstSegment,
         this.swerveSubsystem);
   }

@@ -36,7 +36,7 @@ public class DynamicPathFollower {
     if (type != GoalType.STATION) {
       // TODO: change random to -1 when not testing
       int rand = (int) (Math.random() * 9);
-      int locationId = (int) SmartDashboard.getNumber("locationId", rand);
+      int locationId = (int) SmartDashboard.getNumber("locationId", -1);
       // handle invalid location
       if (locationId == -1) {
         System.out.println("LocationId entered was invalid.");
@@ -72,7 +72,7 @@ public class DynamicPathFollower {
     }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false);
+    Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
     // run command
     System.out.println("Time to run command: " + (System.currentTimeMillis() - ms0));
     System.out.println();

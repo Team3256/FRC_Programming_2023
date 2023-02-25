@@ -59,7 +59,8 @@ public class DynamicPathGenerator {
   }
 
   public List<Integer> getPathIds() {
-    // PathNode srcClosest = connectToClosest(dynamicPathNodes.get(src), dynamicPathNodes);
+    // PathNode srcClosest = connectToClosest(dynamicPathNodes.get(src),
+    // dynamicPathNodes);
     PathUtil.fullyConnect(srcNode, blueDynamicPathWayNodes);
     PathNode sinkClosest = connectToClosest(sinkNode, dynamicPathNodes);
     if (kDynamicPathGenerationDebug) {

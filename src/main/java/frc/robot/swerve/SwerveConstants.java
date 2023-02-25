@@ -19,6 +19,7 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class SwerveConstants {
   public static final int kPigeonID = 1;
+  public static final String kPigeonCanBus = "mani";
 
   public static final boolean kFieldRelative = true;
   public static final double kPeriodicDeltaTime = 0.02;
@@ -123,10 +124,10 @@ public final class SwerveConstants {
   public static final double kAzimuthI = 0.00;
   public static final double kAzimuthD = 0.01;
   public static final Rotation2d[] kAlphaOffsets = {
-    Rotation2d.fromDegrees(258.8379), // Front Left - 0
-    Rotation2d.fromDegrees(320.7129), // Front Right - 1
-    Rotation2d.fromDegrees(197.8418), // Back Left - 2
-    Rotation2d.fromDegrees(88.9453) // Back Right - 3
+    Rotation2d.fromDegrees(268.4179), // Front Left - 0
+    Rotation2d.fromDegrees(314.9121), // Front Right - 1
+    Rotation2d.fromDegrees(77.6953), // Back Left - 2
+    Rotation2d.fromDegrees(310.3418) // Back Right - 3
   };
 
   public static final Rotation2d[] kZiptideOffsets = {

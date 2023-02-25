@@ -23,22 +23,28 @@ import org.json.simple.*;
 import org.junit.jupiter.api.Test;
 
 public class DynamicPathGenerationTest {
-
-  //  @Test
-  //  public void testInterpolateTurnPath() {
-  //    List<Translation2d> positions = new ArrayList<>();
-  //    positions.add(new Translation2d(6, 0.5));
-  //    positions.add(new Translation2d(6, 2));
-  //    positions.add(new Translation2d(7.5, 2));
-  //    testInterpolatePathBase(
-  //        new Rotation2d(0), new Rotation2d(0), positions, "InterpolateTest-Turn");
-  //  }
+  // @Test
+  // public void testInterpolateTurnPath() {
+  // List<Translation2d> positions = new ArrayList<>();
+  // positions.add(new Translation2d(6, 0.5));
+  // positions.add(new Translation2d(6, 2));
+  // positions.add(new Translation2d(7.5, 2));
+  // testInterpolatePathBase(
+  // new Rotation2d(0), new Rotation2d(0), positions, "InterpolateTest-Turn");
+  // }
 
   @Test
   public void testGeneratePathHigh() {
     Pose2d src = new Pose2d(new Translation2d(7.8, 4.8), new Rotation2d(0));
     Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
     testGeneratePathBase(src, sink, "DynamicTest-High");
+  }
+
+  @Test
+  public void testGeneratePathYo() {
+    Pose2d src = new Pose2d(new Translation2d(7.05, 2.15), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
+    testGeneratePathBase(src, sink, "DynamicTest-Yo");
   }
 
   @Test

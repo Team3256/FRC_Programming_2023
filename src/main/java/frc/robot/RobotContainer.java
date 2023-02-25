@@ -103,27 +103,14 @@ public class RobotContainer implements CANTestable, Loggable {
   private void configureSwerve() {
     swerveDrive = new SwerveDrive();
 
-    if (kElevatorEnabled) {
-      // Enable elevator acceleration limiting
-      swerveDrive.setDefaultCommand(
-          new TeleopSwerve(
-              swerveDrive,
-              elevatorSubsystem,
-              () -> driver.getLeftY(),
-              () -> driver.getLeftX(),
-              () -> driver.getRightX(),
-              kFieldRelative,
-              kOpenLoop));
-    } else {
-      swerveDrive.setDefaultCommand(
-          new TeleopSwerve(
-              swerveDrive,
-              () -> driver.getLeftY(),
-              () -> driver.getLeftX(),
-              () -> driver.getRightX(),
-              kFieldRelative,
-              kOpenLoop));
-    }
+    swerveDrive.setDefaultCommand(
+        new TeleopSwerve(
+            swerveDrive,
+            () -> driver.getLeftY(),
+            () -> driver.getLeftX(),
+            () -> driver.getRightX(),
+            kFieldRelative,
+            kOpenLoop));
 
     driver
         .rightBumper()
@@ -149,15 +136,18 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    driver
-        .y()
-        .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.HIGH_GRID)));
-    driver
-        .x()
-        .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.MID_GRID)));
-    driver
-        .b()
-        .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.LOW_GRID)));
+    // driver
+    // .y()
+    // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
+    // GoalType.HIGH_GRID)));
+    // driver
+    // .x()
+    // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
+    // GoalType.MID_GRID)));
+    // driver
+    // .b()
+    // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
+    // GoalType.LOW_GRID)));
     driver
         .a()
         .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.STATION)));

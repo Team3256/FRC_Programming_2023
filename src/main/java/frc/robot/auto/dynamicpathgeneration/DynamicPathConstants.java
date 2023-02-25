@@ -52,19 +52,21 @@ public final class DynamicPathConstants {
   public static final double preSinkEndpointsOffset = 0.3;
   public static final double passagePoints = 8;
 
-  // TODO: Find a way for this to not be called during first command press (takes 45 ms gen)
+  // TODO: Find a way for this to not be called during first command press (takes
+  // 45 ms gen)
   static {
     CreateDynamicPathWayNodes.init();
   }
 
   // Trajectory constraints
-  public static final PathConstraints dynamicPathConstraints = new PathConstraints(5, 7.5);
+  public static final PathConstraints dynamicPathConstraints = new PathConstraints(3, 3);
   public static final double kBlueGridTapeX = 1.38;
   public static final double kBlueLowTapeOffset = Units.inchesToMeters(33);
   public static final double kBlueMidTapeOffset = Units.inchesToMeters(23);
   public static final double kBlueHighTapeOffset = Units.inchesToMeters(0);
   // (lowest y location to highest y location)
-  // TODO: LOW PRIORITY - Use robust center pivot radius vector method instead of mass setting (only
+  // TODO: LOW PRIORITY - Use robust center pivot radius vector method instead of
+  // mass setting (only
   // set angle for each and not this monstrous equation)
   public static final Pose2d[] kBottomBlueScoringPoses =
       new Pose2d[] {
@@ -145,7 +147,7 @@ public final class DynamicPathConstants {
                 kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 4.81),
             Rotation2d.fromDegrees(180))
       };
-  public static final Pose2d kBlueStationPose = new Pose2d(15.01, 7.29, new Rotation2d(0));
+  public static final Pose2d kBlueStationPose = new Pose2d(1.97, 4.73, new Rotation2d(0));
 
   public static final Pose2d[] kHighBlueScoringPoses =
       new Pose2d[] {

@@ -34,18 +34,18 @@ public final class AutoConstants {
   public static double kAutoYTranslationI = 0.025;
   public static double kAutoYTranslationD = 0;
 
-  public static double kTranslationFF = 0.3;
+  public static double kTranslationFF = 0.6;
 
   /* ThetaController constants */
-  public static double kAutoThetaControllerP = 5.4;
+  public static double kAutoThetaControllerP = 3.4;
   public static double kAutoThetaControllerI = 0.02;
-  public static double kAutoThetaControllerD = 1.5;
+  public static double kAutoThetaControllerD = 0.5;
   public static TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
       new TrapezoidProfile.Constraints(
           AutoConstants.kMaxAngularSpeedRadiansPerSecond,
           AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
 
-  public static double kTranslationToleranceMeters = 0.2;
-  public static double kRotationTolerance = Units.degreesToRadians(2);
+  public static double kTranslationToleranceMeters = 0.5;
+  public static double kRotationTolerance = Units.degreesToRadians(5);
   public static double kAutoTrajectoryTimeoutSeconds = 2;
 }
