@@ -43,7 +43,6 @@ import java.util.ArrayList;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-
 public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -169,11 +168,11 @@ public class RobotContainer implements CANTestable, Loggable {
 
     driver.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
     driver
-            .rightTrigger()
-            .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+        .rightTrigger()
+        .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     driver
-            .rightBumper()
-            .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
+        .rightBumper()
+        .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
   }
 
   public void configureLEDStrip() {
