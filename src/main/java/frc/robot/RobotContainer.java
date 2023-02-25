@@ -105,19 +105,19 @@ public class RobotContainer implements CANTestable, Loggable {
     new DPadButton(driver, DPadButton.Direction.UP)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveSubsystem, () -> 0, () -> 0, () -> 0, () -> 1, kFieldRelative, kOpenLoop));
+                swerveSubsystem, driver::getLeftY, driver::getLeftX, () -> 0, () -> 1, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.DOWN)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveSubsystem, () -> 0, () -> 0, () -> 0, () -> -1, kFieldRelative, kOpenLoop));
+                swerveSubsystem, driver::getLeftY, driver::getLeftX, () -> 0, () -> -1, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.RIGHT)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveSubsystem, () -> 0, () -> 0, () -> 1, () -> 0, kFieldRelative, kOpenLoop));
+                swerveSubsystem, driver::getLeftY, driver::getLeftX, () -> 1, () -> 0, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.LEFT)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveSubsystem, () -> 0, () -> 0, () -> -1, () -> 0, kFieldRelative, kOpenLoop));
+                swerveSubsystem, driver::getLeftY, driver::getLeftX, () -> -1, () -> 0, kFieldRelative, kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
     driver
