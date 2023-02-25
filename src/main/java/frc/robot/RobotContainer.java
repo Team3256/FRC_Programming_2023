@@ -93,27 +93,14 @@ public class RobotContainer implements CANTestable, Loggable {
   private void configureSwerve() {
     swerveSubsystem = new SwerveDrive();
 
-    if (kElevatorEnabled) {
-      // Enable elevator acceleration limiting
-      swerveSubsystem.setDefaultCommand(
-          new TeleopSwerve(
-              swerveSubsystem,
-              elevatorSubsystem,
-              driver::getLeftY,
-              driver::getLeftX,
-              driver::getRightX,
-              kFieldRelative,
-              kOpenLoop));
-    } else {
-      swerveSubsystem.setDefaultCommand(
-          new TeleopSwerve(
-              swerveSubsystem,
-              driver::getLeftY,
-              driver::getLeftX,
-              driver::getRightX,
-              kFieldRelative,
-              kOpenLoop));
-    }
+    swerveSubsystem.setDefaultCommand(
+        new TeleopSwerve(
+            swerveSubsystem,
+            driver::getLeftY,
+            driver::getLeftX,
+            driver::getRightX,
+            kFieldRelative,
+            kOpenLoop));
 
     new DPadButton(driver, DPadButton.Direction.UP)
         .whileTrue(
