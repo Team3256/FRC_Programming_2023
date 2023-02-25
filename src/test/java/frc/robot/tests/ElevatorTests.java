@@ -33,7 +33,7 @@ public class ElevatorTests extends UnitTestBase {
 
   @Test
   public void testElevatorHeightMax() {
-    testElevatorHeight(0.997);
+    testElevatorHeight(ElevatorConstants.kMaxHeight);
   }
 
   @Test

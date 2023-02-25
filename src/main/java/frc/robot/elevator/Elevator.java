@@ -35,13 +35,14 @@ import frc.robot.drivers.TalonFXFactory;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
-import java.util.function.*;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPosition {
-    HIGH(ElevatorConstants.kElevatorHighPositionMeters),
-    MID(ElevatorConstants.kElevatorMidPositionMeters),
-    LOW(ElevatorConstants.kElevatorLowPositionMeters);
+    CUBE_HIGH(ElevatorConstants.kCubeHighPositionMeters),
+    CONE_HIGH(ElevatorConstants.kConeHighPositionMeters),
+    ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
+    ANY_PIECE_LOW(ElevatorConstants.kAnyPieceLowPositionMeters),
+    GROUND_INTAKE(ElevatorConstants.kAnyPieceLowPositionMeters);
 
     public double position;
 
@@ -85,13 +86,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private void configureSimHardware() {
     elevatorMotor = new WPI_TalonFX(kElevatorID);
     SmartDashboard.putData("Elevator Sim", mechanism2d);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   private void configureRealHardware() {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
-    elevatorMotor.enableVoltageCompensation(true);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor.setInverted(kElevatorInverted);
+    elevatorMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -107,6 +108,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public void setInputVoltage(double voltage) {
+    SmartDashboard.putNumber("Elevator Voltage", voltage);
     elevatorMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
@@ -139,6 +141,15 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Elevator position", elevatorMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber(
+        "Elevator position inches", Units.metersToInches(getElevatorPosition()));
+    SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Elevator percent output", elevatorMotor.getMotorOutputPercent());
+    SmartDashboard.putBoolean("Elevator spiking", isMotorCurrentSpiking());
+  }
+
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName).add(new ZeroElevator(this));

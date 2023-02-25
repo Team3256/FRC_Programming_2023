@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.arm.Arm;
+import frc.robot.arm.Arm.ArmPosition;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
@@ -35,6 +36,10 @@ public class SetArmAngle extends ProfiledPIDCommand {
         .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
     addRequirements(armSubsystem);
     this.armSubsystem = armSubsystem;
+  }
+
+  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
+    this(armSubsystem, armPosition.rotation);
   }
 
   @Override
