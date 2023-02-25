@@ -23,7 +23,6 @@ public class SetArmElevatorStart extends SequentialCommandGroup {
     return new SequentialCommandGroup(
         new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135)),
         new ZeroElevator(elevatorSubsystem),
-        new WaitCommand(1).andThen(new SetArmAngle(armSubsystem, kDefaultArmAngle))
-    );
+        new WaitCommand(1).andThen(new SetArmAngle(armSubsystem, kDefaultArmAngle)));
   }
 }
