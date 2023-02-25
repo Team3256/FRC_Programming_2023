@@ -44,7 +44,6 @@ import java.util.ArrayList;
  * subsystems, commands, and button mappings) should be declared here.
  */
 
-// TODO: OPERATOR - Right trigger and bumper, A button are free to assign to any function.
 public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -168,20 +167,13 @@ public class RobotContainer implements CANTestable, Loggable {
     elevatorSubsystem = new Elevator();
     elevatorSubsystem.setDefaultCommand(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
 
-    // Remove these button bindings after testing
-    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
-    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
-    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
-
-    if (kArmEnabled) {
-      driver.b().onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorLowPositionMeters));
-      driver
-          .rightTrigger()
-          .onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorHighPositionMeters));
-      driver
-          .rightBumper()
-          .onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorMidPositionMeters));
-    }
+    driver.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+    driver
+            .rightTrigger()
+            .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
+    driver
+            .rightBumper()
+            .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
   }
 
   public void configureLEDStrip() {
