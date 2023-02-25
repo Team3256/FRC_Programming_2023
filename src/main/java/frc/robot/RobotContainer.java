@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.commands.*;
+import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPosition;
@@ -185,7 +186,15 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    return new InstantCommand();
+    Command setArmElevatorOnRightSide;
+    if (kElevatorEnabled && kArmEnabled) {
+      setArmElevatorOnRightSide = SetArmElevatorStart.getCommand(elevatorSubsystem, armSubsystem);
+    } else {
+      setArmElevatorOnRightSide = new InstantCommand();
+    }
+    Command autoPath = new InstantCommand();
+
+    return setArmElevatorOnRightSide.andThen(autoPath);
   }
 
   @Override
