@@ -118,6 +118,11 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     } else return elevatorSim.getPositionMeters();
   }
 
+  public double getElevatorSpeed() {
+    return falconToMeters(
+        elevatorMotor.getSelectedSensorVelocity(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
+  }
+
   public void zeroElevator() {
     elevatorMotor.setSelectedSensorPosition(0);
   }
@@ -141,12 +146,14 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Elevator position", elevatorMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
-    SmartDashboard.putNumber("Elevator percent output", elevatorMotor.getMotorOutputPercent());
-    SmartDashboard.putBoolean("Elevator spiking", isMotorCurrentSpiking());
+    SmartDashboard.putNumber("Elevator Speed", getElevatorSpeed());
+    SmartDashboard.putBoolean(
+        "Elevator Zero with speed",
+            Math.abs(getElevatorSpeed()) < kZeroThreshold
+                    && isMotorCurrentSpiking());
   }
 
   public void logInit() {

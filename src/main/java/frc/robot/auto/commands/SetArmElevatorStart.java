@@ -16,12 +16,14 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
+import frc.robot.helpers.WaitCommand;
 
 public class SetArmElevatorStart extends SequentialCommandGroup {
   public static Command getCommand(Elevator elevatorSubsystem, Arm armSubsystem) {
     return new SequentialCommandGroup(
         new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135)),
         new ZeroElevator(elevatorSubsystem),
-        new SetArmAngle(armSubsystem, kDefaultArmAngle));
+        new WaitCommand(1).andThen(new SetArmAngle(armSubsystem, kDefaultArmAngle))
+    );
   }
 }

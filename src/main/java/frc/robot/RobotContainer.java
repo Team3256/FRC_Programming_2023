@@ -20,8 +20,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.commands.*;
-import frc.robot.climb.Climb;
-import frc.robot.climb.commands.*;
 import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
@@ -57,7 +55,6 @@ public class RobotContainer implements CANTestable, Loggable {
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
-  private Climb climbSubsystem;
   private LED ledStrip;
   private Piece currentPiece = Piece.CONE;
 
@@ -84,10 +81,6 @@ public class RobotContainer implements CANTestable, Loggable {
       configureArm();
       testables.add(armSubsystem);
       loggables.add(armSubsystem);
-    }
-    if (kClimbEnabled) {
-      configureClimb();
-      testables.add(climbSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -160,12 +153,6 @@ public class RobotContainer implements CANTestable, Loggable {
         .a()
         .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW));
     driver.rightBumper().onTrue(new ZeroElevator(elevatorSubsystem));
-  }
-  public void configureClimb() {
-    climbSubsystem = new Climb();
-
-    driver.x().onTrue(new DeployClimb(climbSubsystem));
-    driver.y().onTrue(new RetractClimb(climbSubsystem));
   }
 
   private void configureArm() {
