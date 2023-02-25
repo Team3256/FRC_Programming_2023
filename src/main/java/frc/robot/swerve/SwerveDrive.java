@@ -107,6 +107,15 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     // twistVelocity.dx / kPeriodicDeltaTime,
     // twistVelocity.dy / kPeriodicDeltaTime,
     // twistVelocity.dtheta / kPeriodicDeltaTime);
+    chassisSpeeds.vxMetersPerSecond =
+        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+    chassisSpeeds.vyMetersPerSecond =
+        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+
+    SmartDashboard.putNumber(
+        "Swerve Speed",
+        new Translation2d(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond)
+            .getNorm());
     SwerveModuleState[] swerveModuleStates = kSwerveKinematics.toSwerveModuleStates(chassisSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);

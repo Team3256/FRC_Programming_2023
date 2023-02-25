@@ -20,6 +20,7 @@ public final class ElevatorConstants {
   public static final int kNumElevatorMotors = 1;
   public static final boolean kElevatorInverted = true;
 
+  public static final double kDoubleSubstationPositionMeters = Units.inchesToMeters(22);
   public static final double kCubeHighPositionMeters = Units.inchesToMeters(0);
   public static final double kConeHighPositionMeters = Units.inchesToMeters(15.372696);
   public static final double kAnyPieceMidPositionMeters = Units.inchesToMeters(0);

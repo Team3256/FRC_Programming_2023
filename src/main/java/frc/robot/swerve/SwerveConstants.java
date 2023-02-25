@@ -27,18 +27,18 @@ public final class SwerveConstants {
   public static final double kSwervePitTestSpeed = 0.3;
 
   /* Meters per second squared */
-  public static int kXAccelRateLimit = 15;
-  public static int kXDecelRateLimit = 10;
+  public static int kXAccelRateLimit = 10;
+  public static int kXDecelRateLimit = 7;
 
-  public static int kYAccelRateLimit = 15;
-  public static int kYDecelRateLimit = 10;
+  public static int kYAccelRateLimit = 10;
+  public static int kYDecelRateLimit = 7;
 
   public static final COTSFalconSwerveConstants kChosenModule =
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Drivetrain Constants */
-  public static final double kTrackWidth = 0.61595; // 0.4445 in 2022 Constants
-  public static final double kWheelBase = 0.61595; // 0.4445 in 2022 Constants
+  public static final double kTrackWidth = 0.914;
+  public static final double kWheelBase = 0.914;
   public static final double kWheelDiameter = 0.1016;
   public static final double kWheelCircumference = kWheelDiameter * Math.PI;
 

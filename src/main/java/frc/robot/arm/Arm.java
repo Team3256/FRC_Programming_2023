@@ -46,7 +46,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     CONE_MID(ArmConstants.kConeMidRotation),
     CUBE_HIGH(ArmConstants.kCubeHighRotation),
     CONE_HIGH(ArmConstants.kConeHighRotation),
-    GROUND_INTAKE(ArmConstants.kGroundIntakeRotation);
+    GROUND_INTAKE(ArmConstants.kGroundIntakeRotation),
+    DOUBLE_SUBSTATION(ArmConstants.kDoubleSubstationRotation);
 
     public Rotation2d rotation;
 
