@@ -8,9 +8,9 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.elevator.ElevatorConstants.*;
-import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
- 
+
 // TODO: OPERATOR - Right trigger and bumper, A button are free to assign to any function.
 public class RobotContainer implements CANTestable, Loggable {
 
@@ -96,9 +96,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureIntake() {
     intakeSubsystem = new Intake();
-
-    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
-    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
   }
 
   private void configureSwerve() {
@@ -110,18 +107,18 @@ public class RobotContainer implements CANTestable, Loggable {
           new TeleopSwerve(
               swerveDrive,
               elevatorSubsystem,
-              () -> driver.getLeftY(),
-              () -> driver.getLeftX(),
-              () -> driver.getRightX(),
+              driver::getLeftY,
+              driver::getLeftX,
+              driver::getRightX,
               kFieldRelative,
               kOpenLoop));
     } else {
       swerveDrive.setDefaultCommand(
           new TeleopSwerve(
               swerveDrive,
-              () -> driver.getLeftY(),
-              () -> driver.getLeftX(),
-              () -> driver.getRightX(),
+              driver::getLeftY,
+              driver::getLeftX,
+              driver::getRightX,
               kFieldRelative,
               kOpenLoop));
     }
@@ -129,85 +126,54 @@ public class RobotContainer implements CANTestable, Loggable {
     new DPadButton(driver, DPadButton.Direction.UP)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive, 
-                () -> 0, 
-                () -> 0, 
-                () -> 0, 
-                () -> 1, 
-                kFieldRelative, kOpenLoop));
+                swerveDrive, () -> 0, () -> 0, () -> 0, () -> 1, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.DOWN)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive, 
-                () -> 0, 
-                () -> 0, 
-                () -> 0, 
-                () -> -1, 
-                kFieldRelative, kOpenLoop));
+                swerveDrive, () -> 0, () -> 0, () -> 0, () -> -1, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.RIGHT)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive, 
-                () -> 0, 
-                () -> 0, 
-                () -> 1, 
-                () -> 0, 
-                kFieldRelative, kOpenLoop));
+                swerveDrive, () -> 0, () -> 0, () -> 1, () -> 0, kFieldRelative, kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.LEFT)
         .whileTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive, 
-                () -> 0, 
-                () -> 0, 
-                () -> -1, 
-                () -> 0, 
-                kFieldRelative, kOpenLoop));
+                swerveDrive, () -> 0, () -> 0, () -> -1, () -> 0, kFieldRelative, kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     driver
-        .b()
+        .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
                 swerveDrive,
-                () -> driver.getRightY(),
-                () -> driver.getRightX(),
-                () -> driver.getLeftX(),
+                driver::getRightY,
+                driver::getRightX,
+                driver::getLeftX,
                 kFieldRelative,
                 kOpenLoop));
   }
 
   private void configureArm() {
     armSubsystem = new Arm();
+    armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem, kDefaultArmAngle));
 
     if (kElevatorEnabled) {
-      //      new DPadButton(driver, DPadButton.Direction.UP).onTrue(new SetArmAngle(armSubsystem,
-      // kArmAngleLow));
       driver.b().onTrue(new SetArmAngle(armSubsystem, kArmAngleLow));
       driver.rightTrigger().onTrue(new SetArmAngle(armSubsystem, kArmAngleHigh));
       driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, kArmAngleMid));
     }
-
-    // TODO: clarify what thiss if else statement is supposed to do
-    if (kArmIsStowed) {
-      new SetElevatorHeight(elevatorSubsystem, kMinHeight);
-      kArmIsStowed = true;
-    } else {
-      armSubsystem.setDefaultCommand(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
-      kArmIsStowed = true;
-    }
-
-    // TODO: set button bindings for arm testings
   }
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
+    elevatorSubsystem.setDefaultCommand(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
 
+    // Remove these button bindings after testing
     operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
     operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
     operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
 
     if (kArmEnabled) {
-      operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
       driver.b().onTrue(new SetElevatorHeight(elevatorSubsystem, kElevatorLowPositionMeters));
       driver
           .rightTrigger()
@@ -220,8 +186,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void configureLEDStrip() {
     ledStrip = new LED(0, new int[] {100});
-    driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
-    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
+    ledStrip.setDefaultCommand(
+        (new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern())));
+    // Change to left bumper and right bumper
+    operator.leftBumper().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
   }
 
   public Command getAutonomousCommand() {

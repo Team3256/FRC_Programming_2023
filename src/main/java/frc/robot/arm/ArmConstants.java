@@ -37,7 +37,8 @@ public final class ArmConstants {
   public static final double kArmGearing = 240;
   public static final boolean kArmSimGravity = true;
   public static boolean kArmIsStowed =
-      false; // See RobotContainer configureArm command, updates this variable in the if else statements
+      false; // See RobotContainer configureArm command, updates this variable in the if else
+  // statements
   public static final double kP = 5.0;
   public static final double kI = 0;
   public static final double kD = 0.5;

@@ -10,19 +10,15 @@ package frc.robot.arm.commands;
 import static frc.robot.arm.ArmConstants.kDefaultArmAngle;
 import static frc.robot.elevator.ElevatorConstants.kMinHeight;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 
-public class DefaultArmElevatorDriveConfig extends ParallelCommandGroup {
-  public DefaultArmElevatorDriveConfig(Elevator elevatorSubsystem, Arm armSubsystem) {
+public class StowArmElevator extends ParallelCommandGroup {
+  public StowArmElevator(Elevator elevatorSubsystem, Arm armSubsystem) {
     addCommands(
         new SetElevatorHeight(elevatorSubsystem, kMinHeight),
-        // TODO: fix this number (the 90)
-        new SetArmAngle(armSubsystem, new Rotation2d(Units.degreesToRadians(90))));
-    new SetArmAngle(armSubsystem, kDefaultArmAngle);
+        new SetArmAngle(armSubsystem, kDefaultArmAngle));
   }
 }
