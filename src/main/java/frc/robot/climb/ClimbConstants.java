@@ -16,8 +16,7 @@ public final class ClimbConstants {
   public static final String kClimbCANBus = "mani";
 
   public static final CanDeviceId kClimbCANDevice = new CanDeviceId(kClimbMotorID, kClimbCANBus);
-
-  public static final double kClimbDeployPosition = 0.5;
+  public static final double kClimbDeployPosition = 2048 * 125 * 1.68;
 
   public static final double kClimbRetractPosition = 0;
 }
