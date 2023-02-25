@@ -17,16 +17,15 @@ public final class ArmConstants {
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
   public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(80);
   public static final int kArmSimulationID = 16;
-  public static final int kArmEncoderDIOPort = 4;
 
-  public static final double kArmRadiansPerCount = -2 * Math.PI / 4;
-  public static final double kArmEncoderOffsetRadians =
-      0.832282 * kArmRadiansPerCount + (Math.PI / 2);
+  public static final double kArmGearing = 240;
+  public static final double kEncoderOffsetRadians = 4.2246340316;
+  // public static final double kArmEncoderOffsetRadians =
+  // 0.832282 * kArmRadiansPerCount + (Math.PI / 2);
 
   public static final double kArmLengthMeters = 1.638059;
   public static final double kArmInertia = 35.627712818;
   public static final double kArmMassKg = 5.10881086;
-  public static final double kArmGearing = 240;
   public static final boolean kArmSimGravity = true;
   public static final int kNumArmMotors = 1;
 
@@ -45,9 +44,10 @@ public final class ArmConstants {
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-12.881991);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(90);
 
-  public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-8.524089);
-  public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(8.505781);
-  public static final Rotation2d kConeMidRotation = Rotation2d.fromDegrees(17.488844);
-  public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(21.249449);
-  public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(26.529929);
+  public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-9);
+  public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(10);
+  public static final Rotation2d kConeMidRotation = Rotation2d.fromDegrees(17.5);
+  public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(21);
+  public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(32);
+  public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-4);
 }

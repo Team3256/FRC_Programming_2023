@@ -41,7 +41,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     CUBE_HIGH(ElevatorConstants.kCubeHighPositionMeters),
     CONE_HIGH(ElevatorConstants.kConeHighPositionMeters),
     ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
-    ANY_PIECE_LOW(ElevatorConstants.kAnyPieceLowPositionMeters);
+    ANY_PIECE_LOW(ElevatorConstants.kAnyPieceLowPositionMeters),
+    GROUND_INTAKE(ElevatorConstants.kAnyPieceLowPositionMeters);
 
     public double position;
 

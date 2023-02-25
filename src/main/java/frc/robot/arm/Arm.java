@@ -17,7 +17,6 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,6 +36,7 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
+import frc.robot.swerve.helpers.Conversions;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public enum ArmPosition {
@@ -44,7 +44,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     CUBE_MID(ArmConstants.kCubeMidRotation),
     CONE_MID(ArmConstants.kConeMidRotation),
     CUBE_HIGH(ArmConstants.kCubeHighRotation),
-    CONE_HIGH(ArmConstants.kConeHighRotation);
+    CONE_HIGH(ArmConstants.kConeHighRotation),
+    GROUND_INTAKE(ArmConstants.kGroundIntakeRotation);
 
     public Rotation2d rotation;
 
@@ -54,7 +55,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private WPI_TalonFX armMotor;
-  private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
   private static final SingleJointedArmSim armSim =
@@ -102,7 +102,15 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
     armMotor.setInverted(true);
     armMotor.setNeutralMode(NeutralMode.Brake);
-    armEncoder.setDistancePerRotation(kArmRadiansPerCount);
+    armMotor.setSelectedSensorPosition(0);
+  }
+
+  public void setArmLimp() {
+    armMotor.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public void setArmErect() {
+    armMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public double calculateFeedForward(double angleRadians, double velocity) {
@@ -113,8 +121,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
+  public void zeroEncoder() {
+    armMotor.setSelectedSensorPosition(0);
+  }
+
   public double getArmPositionRads() {
-    if (RobotBase.isReal()) return (armEncoder.getDistance() - kArmEncoderOffsetRadians);
+    if (RobotBase.isReal())
+      return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
+          + kEncoderOffsetRadians;
     else return armSim.getAngleRads();
   }
 
@@ -125,10 +139,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Is Arm Encoder Connected", armEncoder.isConnected());
-    // TODO say hi lucas
-    SmartDashboard.putNumber("Arm Raw Encoder value", armEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Arm Encoder Offset", armEncoder.getPositionOffset());
+    SmartDashboard.putNumber("Arm Raw Encoder value", armMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm motor percent output", armMotor.getMotorOutputPercent() * 12);
