@@ -7,6 +7,8 @@
 
 package frc.robot.auto.commands;
 
+import static frc.robot.arm.ArmConstants.*;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -14,15 +16,12 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
-import static frc.robot.arm.ArmConstants.*;
-import frc.robot.helpers.WaitCommand;
 
 public class SetArmElevatorStart extends SequentialCommandGroup {
   public static Command getCommand(Elevator elevatorSubsystem, Arm armSubsystem) {
     return new SequentialCommandGroup(
-      new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135)),
-      new ZeroElevator(elevatorSubsystem),
-      new SetArmAngle(armSubsystem, kDefaultArmAngle)
-    );
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135)),
+        new ZeroElevator(elevatorSubsystem),
+        new SetArmAngle(armSubsystem, kDefaultArmAngle));
   }
 }
