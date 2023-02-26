@@ -74,7 +74,8 @@ public class SwerveDriveController {
       SmartDashboard.putNumber("Current Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber("Current Pose Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber(
-          "Current Rotation Error", Units.radiansToDegrees(currentRotation) - angleRef.getDegrees());
+          "Current Rotation Error",
+          Units.radiansToDegrees(currentRotation) - angleRef.getDegrees());
     }
 
     // Calculate feedforward velocities (field-relative).
