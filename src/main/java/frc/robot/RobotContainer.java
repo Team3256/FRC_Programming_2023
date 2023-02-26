@@ -23,7 +23,6 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPosition;
 import frc.robot.elevator.commands.*;
-import frc.robot.helpers.DPadButton;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -99,18 +98,8 @@ public class RobotContainer implements CANTestable, Loggable {
             kFieldRelative,
             kOpenLoop));
 
-    new DPadButton(driver, DPadButton.Direction.UP)
-        .onTrue(
-            new TeleopSwerveWithAzimuth(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                () -> 0,
-                () -> 1,
-                kFieldRelative,
-                kOpenLoop));
-
-    new DPadButton(driver, DPadButton.Direction.DOWN)
+    driver
+        .povUp()
         .onTrue(
             new TeleopSwerveWithAzimuth(
                 swerveSubsystem,
@@ -118,9 +107,24 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> 0,
                 () -> -1,
+                () -> isRotating(driver),
                 kFieldRelative,
                 kOpenLoop));
-    new DPadButton(driver, DPadButton.Direction.RIGHT)
+
+    driver
+        .povDown()
+        .onTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> 0,
+                () -> 1,
+                () -> isRotating(driver),
+                kFieldRelative,
+                kOpenLoop));
+    driver
+        .povRight()
         .onTrue(
             new TeleopSwerveWithAzimuth(
                 swerveSubsystem,
@@ -128,10 +132,12 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> 1,
                 () -> 0,
+                () -> isRotating(driver),
                 kFieldRelative,
                 kOpenLoop));
 
-    new DPadButton(driver, DPadButton.Direction.LEFT)
+    driver
+        .povLeft()
         .onTrue(
             new TeleopSwerveWithAzimuth(
                 swerveSubsystem,
@@ -139,6 +145,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> -1,
                 () -> 0,
+                () -> isRotating(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -255,6 +262,10 @@ public class RobotContainer implements CANTestable, Loggable {
             "Joystick",
             new DoubleSendable(
                 () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY())), "Gyro"));
+  }
+
+  public boolean isRotating(CommandXboxController controller) {
+    return Math.abs(controller.getRightX()) > 0.3; // threshold
   }
 
   @Override

@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.COTSFalconSwerveConstants;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
 
@@ -37,8 +38,8 @@ public final class SwerveConstants {
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Drivetrain Constants */
-  public static final double kTrackWidth = 0.914;
-  public static final double kWheelBase = 0.914;
+  public static final double kTrackWidth = Units.inchesToMeters(24.25);
+  public static final double kWheelBase = Units.inchesToMeters(24.25);
   public static final double kWheelDiameter = 0.1016;
   public static final double kWheelCircumference = kWheelDiameter * Math.PI;
 
@@ -110,8 +111,7 @@ public final class SwerveConstants {
   /** Meters per Second */
   public static final double kMaxSpeed = 4.96824; // TODO: This must be tuned to specific robot
   /** Radians per Second */
-  public static final double kMaxAngularVelocity =
-      Math.PI; // TODO: This must be tuned to specific robot
+  public static final double kMaxAngularVelocity = 2 * Math.PI;
 
   /* Neutral Modes */
   public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
@@ -119,7 +119,7 @@ public final class SwerveConstants {
   public static final boolean kInvertGyro = false; // Always ensure Gyro is CCW+ CW-
 
   /* PID Constants Trapezoid Profile for the Azimuth Control */
-  public static final double kAzimuthP = 0.09;
+  public static final double kAzimuthP = 0.12;
   public static final double kAzimuthI = 0.00;
   public static final double kAzimuthD = 0.01;
   public static final Rotation2d[] kAlphaOffsets = {
