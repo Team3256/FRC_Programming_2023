@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.commands.*;
+import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
@@ -57,6 +58,8 @@ public class RobotContainer implements CANTestable, Loggable {
   private LED ledStrip;
   private Piece currentPiece = Piece.CONE;
 
+  private AutoPaths autoPaths;
+
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
@@ -85,6 +88,9 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
+
+    autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
+    autoPaths.sendCommandsToChooser();
   }
 
   private void configureSwerve() {
@@ -249,7 +255,7 @@ public class RobotContainer implements CANTestable, Loggable {
     } else {
       setArmElevatorOnRightSide = new InstantCommand();
     }
-    Command autoPath = new InstantCommand();
+    Command autoPath = autoPaths.getSelectedPath();
 
     return setArmElevatorOnRightSide.andThen(autoPath);
   }
