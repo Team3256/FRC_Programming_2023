@@ -170,7 +170,8 @@ public class RobotContainer implements CANTestable, Loggable {
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
-    //    elevatorSubsystem.setDefaultCommand(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
+    // elevatorSubsystem.setDefaultCommand(new SetElevatorHeight(elevatorSubsystem,
+    // kMinHeight));
 
     operator
         .b()
@@ -198,7 +199,8 @@ public class RobotContainer implements CANTestable, Loggable {
     armSubsystem = new Arm();
 
     armSubsystem = new Arm();
-    //    armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem, kDefaultArmAngle));
+    // armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem,
+    // kDefaultArmAngle));
 
     operator
         .rightTrigger()
@@ -217,16 +219,16 @@ public class RobotContainer implements CANTestable, Loggable {
 
     operator.b().onTrue(new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
     driver.leftBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION));
-    //    driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DEFAULT));
+    // driver.rightBumper().onTrue(new SetArmAngle(armSubsystem,
+    // ArmPosition.DEFAULT));
 
     // TODO: remove after testing
-    //    operator.leftTrigger().onTrue(new InstantCommand(armSubsystem::setArmFlaccid));
-    //    operator.rightTrigger().onTrue(new InstantCommand(armSubsystem::setArmErect));
+    // operator.leftTrigger().onTrue(new
+    // InstantCommand(armSubsystem::setArmFlaccid));
+    // operator.rightTrigger().onTrue(new
+    // InstantCommand(armSubsystem::setArmErect));
 
     // TODO: move to auto and remove after testing
-    if (kElevatorEnabled) {
-      operator.leftBumper().onTrue(SetArmElevatorStart.getCommand(elevatorSubsystem, armSubsystem));
-    }
   }
 
   public void configureLEDStrip() {
@@ -234,13 +236,13 @@ public class RobotContainer implements CANTestable, Loggable {
     ledStrip.setDefaultCommand(
         (new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern())));
     // Change to left bumper and right bumper
-    //    operator.leftBumper().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+    // operator.leftBumper().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
   }
 
   public Command getAutonomousCommand() {
     Command setArmElevatorOnRightSide;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide = SetArmElevatorStart.getCommand(elevatorSubsystem, armSubsystem);
+      setArmElevatorOnRightSide = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
     } else {
       setArmElevatorOnRightSide = new InstantCommand();
     }
