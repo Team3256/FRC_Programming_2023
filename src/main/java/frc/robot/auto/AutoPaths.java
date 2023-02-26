@@ -114,7 +114,10 @@ public class AutoPaths {
             new WaitCommand(2).andThen(new IntakeCube(intakeSubsystem))));
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
-    Supplier<Command> scorePreload = () -> new IntakeCube(intakeSubsystem);
+    Supplier<Command> scorePreload = () -> new ParallelCommandGroup(
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH),
+        new SetArmAngle(armSubsystem, ArmConstants.kArmHighRotation),
+        new WaitCommand(2).andThen(new IntakeCone(intakeSubsystem)));
 
     // Node5-Engage
     Command node5Engage = autoBuilder
