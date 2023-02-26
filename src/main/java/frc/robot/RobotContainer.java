@@ -170,6 +170,9 @@ public class RobotContainer implements CANTestable, Loggable {
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
+    //TODO: remove after testing
+    operator.a().whileTrue(new ZeroElevator(elevatorSubsystem));
+
     if (kArmEnabled) {
       // TODO: move to auto and remove after testing
       driver.x().onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
