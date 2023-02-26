@@ -38,8 +38,8 @@ public final class SwerveConstants {
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Drivetrain Constants */
-  public static final double kTrackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
-  public static final double kWheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
+  public static final double kTrackWidth = Units.inchesToMeters(24.25); // 0.4445 in 2022 Constants
+  public static final double kWheelBase = Units.inchesToMeters(24.25); // 0.4445 in 2022 Constants
   public static final double kWheelDiameter = Units.inchesToMeters(3.94);
   public static final double kWheelCircumference = kWheelDiameter * Math.PI;
 

@@ -42,8 +42,8 @@ public class DynamicPathGenerationTest {
 
   @Test
   public void testGeneratePathYo() {
-    Pose2d src = new Pose2d(new Translation2d(7.05, 2.15), new Rotation2d(0));
-    Pose2d sink = new Pose2d(new Translation2d(1.89, 2.70), new Rotation2d(Math.PI));
+    Pose2d src = new Pose2d(new Translation2d(7.05, 4.59), new Rotation2d(0));
+    Pose2d sink = new Pose2d(new Translation2d(2.02, 4.74), new Rotation2d(Math.PI));
     testGeneratePathBase(src, sink, "DynamicTest-Yo");
   }
 

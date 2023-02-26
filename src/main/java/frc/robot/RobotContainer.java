@@ -141,7 +141,7 @@ public class RobotContainer implements CANTestable, Loggable {
     // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
     // GoalType.HIGH_GRID)));
     // driver
-    // .x()
+    // .rightBumper()
     // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
     // GoalType.MID_GRID)));
     // driver
@@ -149,7 +149,7 @@ public class RobotContainer implements CANTestable, Loggable {
     // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
     // GoalType.LOW_GRID)));
     driver
-        .a()
+        .x()
         .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.STATION)));
   }
 

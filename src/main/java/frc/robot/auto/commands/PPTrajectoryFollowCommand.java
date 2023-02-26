@@ -124,7 +124,6 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       swerveSubsystem.setTrajectory(trajectory);
     }
     if (isFirstSegment) { // use existing pose for more accuracy if it is the first path
-      swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }
 

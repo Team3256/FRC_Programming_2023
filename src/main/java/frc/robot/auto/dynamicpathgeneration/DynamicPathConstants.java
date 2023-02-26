@@ -147,7 +147,7 @@ public final class DynamicPathConstants {
                 kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 4.81),
             Rotation2d.fromDegrees(180))
       };
-  public static final Pose2d kBlueStationPose = new Pose2d(1.97, 4.73, new Rotation2d(0));
+  public static final Pose2d kBlueStationPose = new Pose2d(2.14, 2.70, Rotation2d.fromDegrees(180));
 
   public static final Pose2d[] kHighBlueScoringPoses =
       new Pose2d[] {
