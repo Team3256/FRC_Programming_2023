@@ -10,21 +10,21 @@ package frc.robot.led.patterns;
 import frc.robot.led.patternBases.TimeFunctionPattern;
 
 /** Blue Sin Wave Animation */
-public class ColorChaseBluePattern extends TimeFunctionPattern {
-  public ColorChaseBluePattern() {
-    super(true);
+public class FIREPattern extends TimeFunctionPattern {
+  public FIREPattern() {
+    super(false);
   }
 
   private final double cycleTicks = 10;
 
   @Override
   protected double calculateA(int ticks) {
-    return 0.25 + 0.25 * Math.cos(ticks / cycleTicks);
+    return (7 / 2 * Math.cos(ticks / cycleTicks) + 7 / 2) / 360;
   }
 
   @Override
   protected double calculateB(int ticks) {
-    return 0.25 + 0.25 * Math.cos(ticks / cycleTicks);
+    return 1;
   }
 
   @Override

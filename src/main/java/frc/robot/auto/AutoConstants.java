@@ -13,7 +13,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class AutoConstants {
   public static final boolean changeAutosBasedOnAlliance = true;
-  public static final boolean kAutoDebug = false;
+  public static final boolean kAutoDebug = true;
   public static final double kCommandMarkerThreshold = 0.05; // meters
 
   public static final double kMaxSpeedMetersPerSecond = 5;

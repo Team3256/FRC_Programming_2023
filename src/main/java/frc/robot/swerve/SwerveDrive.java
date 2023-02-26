@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.limelight.Limelight;
@@ -246,7 +247,9 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
         }
 
-        limelightLocalizationField.setRobotPose(limelightPose);
+        if (Constants.kDebugEnabled) {
+          limelightLocalizationField.setRobotPose(limelightPose);
+        }
       }
     }
   }
@@ -256,7 +259,17 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
-    // Logger.getInstance().recordOutput("Odometry", getPose());
+    if (Constants.kDebugEnabled) {
+      field.setRobotPose(poseEstimator.getEstimatedPosition());
+      Logger.getInstance().recordOutput("Odometry", getPose());
+
+      for (SwerveModule mod : swerveModules) {
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+      }
+    }
 
     this.localize(
         FrontConstants.kLimelightNetworkTablesName,
@@ -276,13 +289,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
         BackConstants.kFieldTranslationOffsetY,
         BackConstants.kLimelightTranslationThresholdMeters,
         BackConstants.kLimelightTranslationThresholdMeters);
-
-    for (SwerveModule mod : swerveModules) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-    }
   }
 
   public void setTrajectory(Trajectory trajectory) {
