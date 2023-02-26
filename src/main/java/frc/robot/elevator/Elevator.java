@@ -150,10 +150,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
-    SmartDashboard.putNumber("Elevator Speed", getElevatorSpeed());
-    SmartDashboard.putBoolean(
-        "Elevator Zero with speed",
-        Math.abs(getElevatorSpeed()) < kZeroThreshold && isMotorCurrentSpiking());
   }
 
   public void logInit() {

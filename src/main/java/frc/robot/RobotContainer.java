@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
@@ -76,15 +77,15 @@ public class RobotContainer implements CANTestable, Loggable {
       testables.add(swerveSubsystem);
       loggables.add(swerveSubsystem);
     }
-    if (kElevatorEnabled) {
-      configureElevator();
-      testables.add(elevatorSubsystem);
-      loggables.add(elevatorSubsystem);
-    }
     if (kArmEnabled) {
       configureArm();
       testables.add(armSubsystem);
       loggables.add(armSubsystem);
+    }
+    if (kElevatorEnabled) {
+      configureElevator();
+      testables.add(elevatorSubsystem);
+      loggables.add(elevatorSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -94,7 +95,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureSwerve() {
     swerveSubsystem = new SwerveDrive();
-
     swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
             swerveSubsystem,
@@ -148,7 +148,7 @@ public class RobotContainer implements CANTestable, Loggable {
     driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
     driver
         .leftTrigger()
-        .onTrue(
+        .toggleOnTrue(
             new TeleopSwerveLimited(
                 swerveSubsystem,
                 driver::getRightY,
@@ -161,86 +161,75 @@ public class RobotContainer implements CANTestable, Loggable {
   private void configureIntake() {
     intakeSubsystem = new Intake();
 
-    driver.x().whileTrue(new IntakeCube(intakeSubsystem));
-    driver.x().onTrue(new InstantCommand(this::setPieceToCube));
-    driver.y().whileTrue(new IntakeCone(intakeSubsystem));
-    driver.y().onTrue(new InstantCommand(this::setPieceToCone));
+    operator.leftTrigger().whileTrue(new IntakeCube(intakeSubsystem));
+    operator.leftTrigger().onTrue(new InstantCommand(this::setPieceToCube));
+    operator.rightTrigger().whileTrue(new IntakeCone(intakeSubsystem));
+    operator.rightTrigger().onTrue(new InstantCommand(this::setPieceToCone));
   }
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
-    //    elevatorSubsystem.setDefaultCommand(new SetElevatorHeight(elevatorSubsystem, kMinHeight));
+    if (kArmEnabled) {
+      // TODO: move to auto and remove after testing
+      driver.x().onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+      driver
+          .b()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
+                  new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW)));
 
-    operator
-        .b()
-        .onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW));
+      driver
+          .rightBumper()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+                  new ConditionalCommand(
+                      new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                      new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                      this::isCurrentPieceCone)));
 
-    operator
-        .rightBumper()
-        .onTrue(new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID));
+      driver
+          .rightTrigger()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new ConditionalCommand(
+                      new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
+                      new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                      this::isCurrentPieceCone),
+                  new ConditionalCommand(
+                      new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                      new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                      this::isCurrentPieceCone)));
 
-    operator
-        .rightTrigger()
-        .onTrue(
-            new ConditionalCommand(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
-                this::isCurrentPieceCone));
-    driver
-        .leftBumper()
-        .onTrue(new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION));
-
-    driver.rightBumper().whileTrue(new ZeroElevator(elevatorSubsystem));
+      driver
+          .leftTrigger()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
+                  new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION)));
+    }
   }
 
   private void configureArm() {
     armSubsystem = new Arm();
-
-    armSubsystem = new Arm();
-    //    armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem, kDefaultArmAngle));
-
-    operator
-        .rightTrigger()
-        .onTrue(
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
-                this::isCurrentPieceCone));
-    operator
-        .rightBumper()
-        .onTrue(
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
-                this::isCurrentPieceCone));
-
-    operator.b().onTrue(new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
-    driver.leftBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION));
-    //    driver.rightBumper().onTrue(new SetArmAngle(armSubsystem, ArmPosition.DEFAULT));
-
-    // TODO: remove after testing
-    //    operator.leftTrigger().onTrue(new InstantCommand(armSubsystem::setArmFlaccid));
-    //    operator.rightTrigger().onTrue(new InstantCommand(armSubsystem::setArmErect));
-
-    // TODO: move to auto and remove after testing
-    if (kElevatorEnabled) {
-      operator.leftBumper().onTrue(SetArmElevatorStart.getCommand(elevatorSubsystem, armSubsystem));
-    }
+    operator.leftTrigger().onTrue(new InstantCommand(armSubsystem::setArmFlaccid));
+    operator.rightTrigger().onTrue(new InstantCommand(armSubsystem::setArmErect));
   }
 
   public void configureLEDStrip() {
     ledStrip = new LED(0, new int[] {100});
     ledStrip.setDefaultCommand(
         (new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern())));
-    // Change to left bumper and right bumper
+    //    Change to left bumper and right bumper
     //    operator.leftBumper().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
   }
 
   public Command getAutonomousCommand() {
     Command setArmElevatorOnRightSide;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide = SetArmElevatorStart.getCommand(elevatorSubsystem, armSubsystem);
+      setArmElevatorOnRightSide = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
     } else {
       setArmElevatorOnRightSide = new InstantCommand();
     }
