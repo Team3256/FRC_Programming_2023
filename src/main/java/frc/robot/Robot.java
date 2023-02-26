@@ -69,7 +69,7 @@ public class Robot extends LoggedRobot {
         break;
     }
 
-    logger.start(); // Start advkit logger
+    // logger.start(); // Start advkit logger
     robotContainer = new RobotContainer();
     robotContainer.logInit();
   }
@@ -128,5 +128,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    // CommandScheduler.getInstance().run();
+  }
 }

@@ -27,7 +27,7 @@ public class Limelight {
   static boolean profileJSON = false;
 
   static final String sanitizeName(String name) {
-    if (name == "" || name == null) {
+    if (name.equals("") || name == null) {
       return "limelight";
     }
     return name;

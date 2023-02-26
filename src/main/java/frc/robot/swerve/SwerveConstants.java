@@ -19,6 +19,7 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class SwerveConstants {
   public static final int kPigeonID = 1;
+  public static final String kPigeonCanBus = "mani";
 
   public static final boolean kFieldRelative = true;
   public static final double kPeriodicDeltaTime = 0.02;
@@ -27,19 +28,19 @@ public final class SwerveConstants {
   public static final double kSwervePitTestSpeed = 0.3;
 
   /* Meters per second squared */
-  public static int kXAccelRateLimit = 15;
-  public static int kXDecelRateLimit = 10;
+  public static int kXAccelRateLimit = 10;
+  public static int kXDecelRateLimit = 7;
 
-  public static int kYAccelRateLimit = 15;
-  public static int kYDecelRateLimit = 10;
+  public static int kYAccelRateLimit = 10;
+  public static int kYDecelRateLimit = 7;
 
   public static final COTSFalconSwerveConstants kChosenModule =
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Drivetrain Constants */
-  public static final double kTrackWidth = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
-  public static final double kWheelBase = Units.inchesToMeters(21.73); // 0.4445 in 2022 Constants
-  public static final double kWheelDiameter = Units.inchesToMeters(3.94);
+  public static final double kTrackWidth = Units.inchesToMeters(24.25);
+  public static final double kWheelBase = Units.inchesToMeters(24.25);
+  public static final double kWheelDiameter = 0.1016;
   public static final double kWheelCircumference = kWheelDiameter * Math.PI;
 
   /*
@@ -108,10 +109,9 @@ public final class SwerveConstants {
 
   /* Swerve Profiling Values */
   /** Meters per Second */
-  public static final double kMaxSpeed = 4.5;
+  public static final double kMaxSpeed = 4.96824; // TODO: This must be tuned to specific robot
   /** Radians per Second */
-  public static final double kMaxAngularVelocity =
-      5.0; // TODO: This must be tuned to specific robot
+  public static final double kMaxAngularVelocity = 2 * Math.PI;
 
   /* Neutral Modes */
   public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
@@ -119,14 +119,14 @@ public final class SwerveConstants {
   public static final boolean kInvertGyro = false; // Always ensure Gyro is CCW+ CW-
 
   /* PID Constants Trapezoid Profile for the Azimuth Control */
-  public static final double kAzimuthP = 0.09;
+  public static final double kAzimuthP = 0.12;
   public static final double kAzimuthI = 0.00;
   public static final double kAzimuthD = 0.01;
   public static final Rotation2d[] kAlphaOffsets = {
-    Rotation2d.fromDegrees(258.8379), // Front Left - 0
-    Rotation2d.fromDegrees(320.7129), // Front Right - 1
-    Rotation2d.fromDegrees(197.8418), // Back Left - 2
-    Rotation2d.fromDegrees(88.9453) // Back Right - 3
+    Rotation2d.fromDegrees(268.4179), // Front Left - 0
+    Rotation2d.fromDegrees(314.9121), // Front Right - 1
+    Rotation2d.fromDegrees(77.6953), // Back Left - 2
+    Rotation2d.fromDegrees(310.3418) // Back Right - 3
   };
 
   public static final Rotation2d[] kZiptideOffsets = {
@@ -177,5 +177,5 @@ public final class SwerveConstants {
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, angleOffset);
   }
 
-  public static final double kSensitivityScale = 0.20;
+  public static final double kSensitivityScale = 0.35;
 }

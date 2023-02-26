@@ -53,16 +53,6 @@ public class SwerveModule implements Loggable {
     /* Drive Motor Config */
     mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
     configDriveMotor();
-    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID);
-    configAngleEncoder();
-
-    /* Angle Motor Config */
-    mAngleMotor = new WPI_TalonFX(moduleConstants.angleMotorID);
-    configAngleMotor();
-
-    /* Drive Motor Config */
-    mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
-    configDriveMotor();
 
     lastAngle = getState().angle;
   }

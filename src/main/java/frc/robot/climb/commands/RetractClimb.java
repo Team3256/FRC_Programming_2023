@@ -5,33 +5,32 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.intake.commands;
+package frc.robot.climb.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.intake.Intake;
+import frc.robot.climb.Climb;
 
-public class IntakeCone extends CommandBase {
-  private final Intake intakeSubsystem;
+public class RetractClimb extends CommandBase {
+  private final Climb climbSubsystem;
 
-  public IntakeCone(Intake intakeSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
+  public RetractClimb(Climb climbSubsystem) {
+    this.climbSubsystem = climbSubsystem;
 
-    addRequirements(intakeSubsystem);
+    addRequirements(climbSubsystem);
   }
 
   @Override
   public void initialize() {
-    intakeSubsystem.intakeCone();
+    climbSubsystem.retractClimb();
   }
 
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.off();
+    climbSubsystem.off();
   }
 
   @Override
   public boolean isFinished() {
-    // return intakeSubsystem.isCurrentSpiking();
     return false;
   }
 }
