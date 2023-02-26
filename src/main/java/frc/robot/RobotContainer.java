@@ -38,12 +38,9 @@ import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -188,7 +185,7 @@ public class RobotContainer implements CANTestable, Loggable {
     operator.a().whileTrue(new ZeroElevator(elevatorSubsystem));
 
     if (kArmEnabled) {
-      // TODO: move to auto and remove after testing
+      // TODO: comment out flaccid during match
 
       operator
           .leftBumper()
@@ -197,7 +194,15 @@ public class RobotContainer implements CANTestable, Loggable {
                   new InstantCommand(armSubsystem::setArmFlaccid),
                   new InstantCommand(elevatorSubsystem::setElevatorFlaccid)));
 
-      driver.x().onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+      (operator.leftTrigger())
+          .or(operator.rightTrigger())
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
+                  new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE)));
+
+      driver.x().or(driver.y()).onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+
       driver
           .b()
           .onTrue(
@@ -239,24 +244,26 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureArm() {
     armSubsystem = new Arm();
+
+    // TODO: comment out erect during match
     operator.rightBumper().onTrue(new InstantCommand(armSubsystem::setArmErect));
   }
 
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] { 100 });
-    ledStrip.setDefaultCommand(
-        (new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
-    operator.leftBumper().onTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()));
+    ledStrip = new LED(0, new int[] {100});
+    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
+    operator.leftBumper().onTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingCubePattern()));
     operator
         .rightBumper()
-        .onTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingCubePattern()));
+        .onTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()));
   }
 
   public Command getAutonomousCommand() {
     Command setArmElevatorOnRightSide;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide = new ParallelRaceGroup(
-          new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+      setArmElevatorOnRightSide =
+          new ParallelRaceGroup(
+              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
     } else {
       setArmElevatorOnRightSide = new InstantCommand();
     }
@@ -269,8 +276,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
-    for (Loggable device : loggables)
-      device.logInit();
+    for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
             "Joystick",
@@ -291,15 +297,14 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables)
-      result &= subsystem.CANTest();
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
-        armSubsystem);
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
     pitSubsystemRoutine.pitRoutine();
   }
 
