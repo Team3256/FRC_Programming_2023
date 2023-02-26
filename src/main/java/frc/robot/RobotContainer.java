@@ -24,6 +24,7 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPosition;
 import frc.robot.elevator.commands.*;
+import frc.robot.helpers.WaitCommand;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -251,7 +252,9 @@ public class RobotContainer implements CANTestable, Loggable {
   public Command getAutonomousCommand() {
     Command setArmElevatorOnRightSide;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
+      setArmElevatorOnRightSide =
+          new ParallelRaceGroup(
+              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
     } else {
       setArmElevatorOnRightSide = new InstantCommand();
     }
