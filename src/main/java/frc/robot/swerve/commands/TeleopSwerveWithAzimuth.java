@@ -62,7 +62,7 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("received");
+    System.out.println("TeleopSwerveWithAzimuth started");
   }
 
   @Override

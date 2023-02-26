@@ -50,6 +50,6 @@ public final class ArmConstants {
   public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(10);
   public static final Rotation2d kConeMidRotation = Rotation2d.fromDegrees(17.5);
   public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(21);
-  public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(35);
+  public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(40);
   public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-4);
 }

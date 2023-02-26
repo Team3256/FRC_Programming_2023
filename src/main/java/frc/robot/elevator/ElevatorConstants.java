@@ -55,7 +55,6 @@ public final class ElevatorConstants {
 
   public static final double kTolerancePosition = 0.025;
   public static final double kToleranceVelocity = 0.025;
-  // TODO: TUNE THIS
   public static final double kRateLimiting = 0.05;
   public static final double kElevatorCurrentThreshold = 30; // amps
 }

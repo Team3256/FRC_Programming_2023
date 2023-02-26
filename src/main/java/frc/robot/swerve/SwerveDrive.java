@@ -198,10 +198,16 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   public void zeroGyro() {
     gyro.setYaw(0);
+    // resetOdometry(
+    // new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), new
+    // Rotation2d()));
   }
 
-  public void setGyro(double yaw) {
-    gyro.setYaw(yaw);
+  public void setGyro(double yawDegrees) {
+    gyro.setYaw(yawDegrees);
+    // resetOdometry(
+    // new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(),
+    // Rotation2d.fromDegrees(yawDegrees)));
   }
 
   public Rotation2d getYaw() {
@@ -249,6 +255,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
         if (Constants.kDebugEnabled) {
           limelightLocalizationField.setRobotPose(limelightPose);
+          SmartDashboard.putNumber("Lime Light pose x", limelightPose.getX());
+          SmartDashboard.putNumber("Lime Light pose y", limelightPose.getY());
+          SmartDashboard.putNumber(
+              "Lime Light pose theta", limelightPose.getRotation().getDegrees());
         }
       }
     }

@@ -59,6 +59,7 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void initialize() {
+    System.out.println("TeleopSwerve started");
     swerveSubsystem.setAngleMotorsNeutralMode(kAngleNeutralMode);
     swerveSubsystem.setDriveMotorsNeutralMode(kDriveNeutralMode);
   }

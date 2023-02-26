@@ -15,6 +15,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.auto.commands.PPTrajectoryFollowCommand;
 import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class AutoBuilder {
     return commands;
   }
 
-  public PPTrajectoryFollowCommand createPathPlannerCommand(
+  public Command createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment) {
     PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
@@ -91,6 +92,6 @@ public class AutoBuilder {
             this.swerveSubsystem);
     path.setAutoCommandRunner(commandRunner);
 
-    return path;
+    return new ProxyCommand(path);
   }
 }

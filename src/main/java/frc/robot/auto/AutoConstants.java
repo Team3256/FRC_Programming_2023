@@ -38,9 +38,9 @@ public final class AutoConstants {
   public static final double kTranslationFF = 0.3;
 
   /* ThetaController constants */
-  public static final double kAutoThetaControllerP = 5.4;
-  public static final double kAutoThetaControllerI = 0.02;
-  public static final double kAutoThetaControllerD = 1.5;
+  public static final double kAutoThetaControllerP = 5.0;
+  public static final double kAutoThetaControllerI = 0.00;
+  public static final double kAutoThetaControllerD = 0.0;
   public static final TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
       new TrapezoidProfile.Constraints(
           AutoConstants.kMaxAngularSpeedRadiansPerSecond,
@@ -52,7 +52,9 @@ public final class AutoConstants {
   public static final double kRotationTolerance = Units.degreesToRadians(2);
   public static final double kAutoTrajectoryTimeoutSeconds = 2;
 
-  public static final PathConstraints kDefaultPathConstraints =
-      new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
+  // public static final PathConstraints kDefaultPathConstraints = new
+  // PathConstraints(kMaxSpeedMetersPerSecond,
+  // kMaxAccelerationMetersPerSecondSquared);
+  public static final PathConstraints kDefaultPathConstraints = new PathConstraints(3, 3);
   public static final PathConstraints kEngagePathConstraints = new PathConstraints(3, 3);
 }

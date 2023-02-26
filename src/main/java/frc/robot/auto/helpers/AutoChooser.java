@@ -28,12 +28,13 @@ public class AutoChooser {
     Command path = intitialCommand;
     for (int i = 0; i < commands.size(); i++) {
       path = path.andThen(commands.get(i));
-      if (i == commands.size() - 1) {
-        autoChooser.addOption(commandName + " - FULL", path);
-      } else {
-        autoChooser.addOption(commandName + " - " + i, path);
-      }
+      // if (i == commands.size() - 1) {
+      // // autoChooser.addOption(commandName + " - " + i, path);
+      // } else {
+      // // autoChooser.addOption(commandName + " - " + i, path);
+      // }
     }
+    autoChooser.addOption(commandName, path);
   }
 
   public static void addIncrementalPaths(

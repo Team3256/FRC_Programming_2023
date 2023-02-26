@@ -39,7 +39,6 @@ public class AutoCommandRunner {
         Command command = eventMap.get(name);
         AutoCommandMarker commandMarker =
             new AutoCommandMarker(eventMarker.positionMeters, eventMarker.timeSeconds, command);
-        System.out.println(commandMarker);
         convertedMarkers.add(commandMarker);
       }
     }
@@ -75,8 +74,7 @@ public class AutoCommandRunner {
 
       if (atMarker) {
         marker.getCommand().cancel();
-        startedCommandMarkers.add(marker);
-        commandMarkers.remove(i);
+        startedCommandMarkers.remove(i);
         i--;
       }
     }

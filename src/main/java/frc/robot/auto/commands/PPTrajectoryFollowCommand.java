@@ -110,6 +110,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public void initialize() {
+    System.out.println("initialize pp");
     if (this.useAllianceColor) {
       trajectory =
           PathPlannerTrajectory.transformTrajectoryForAlliance(
@@ -124,7 +125,6 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       swerveSubsystem.setTrajectory(trajectory);
     }
     if (isFirstSegment) { // use existing pose for more accuracy if it is the first path
-      swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }
 
@@ -161,16 +161,20 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return isTrajectoryFinished();
+    boolean isTrajectoryFinished = isTrajectoryFinished();
+    SmartDashboard.putBoolean("Is traj finished", isTrajectoryFinished);
+
+    return isTrajectoryFinished;
   }
 
   @Override
   public void end(boolean interrupted) {
     if (autoCommandRunner != null) {
-      // find out what to call the method on
-      // .atReference();
       autoCommandRunner.end();
     }
+    System.out.println(
+        "Ended trajectory at time " + timer.get() + " seconds out of " + trajectoryDuration);
+    System.out.println("Trajectory was interrupted? " + interrupted);
     swerveSubsystem.drive(new ChassisSpeeds(), false);
   }
 
@@ -178,16 +182,21 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     double now = timer.get();
     if (now >= trajectoryDuration + kAutoTrajectoryTimeoutSeconds) {
       return true;
+    } else {
+      return false;
     }
 
-    Pose2d currentPose = swerveSubsystem.getPose();
-    Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
-
-    boolean reachedEndTolerance =
-        relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
-            && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
-            && now >= trajectoryDuration;
-
-    return reachedEndTolerance;
+    /*
+     * Pose2d currentPose = swerveSubsystem.getPose();
+     * Pose2d relativePose =
+     * currentPose.relativeTo(trajectory.getEndState().poseMeters);
+     *
+     * boolean reachedEndTolerance = relativePose.getTranslation().getNorm() <
+     * kTranslationToleranceMeters
+     * && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
+     * && now >= trajectoryDuration;
+     *
+     * return now >= trajectoryDuration;
+     */
   }
 }

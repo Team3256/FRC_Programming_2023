@@ -260,10 +260,7 @@ public class RobotContainer implements CANTestable, Loggable {
       setArmElevatorOnRightSide = new InstantCommand();
     }
     Command autoPath = autoPaths.getSelectedPath();
-    // TODO ADD back
-    // setArmElevatorOnRightSide.andThen()
-
-    return autoPath;
+    return setArmElevatorOnRightSide.asProxy().andThen(autoPath);
   }
 
   @Override
@@ -295,9 +292,10 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine =
-        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
-    pitSubsystemRoutine.pitRoutine();
+    // PitTestRoutine pitSubsystemRoutine =
+    // new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
+    // armSubsystem);
+    // pitSubsystemRoutine.pitRoutine();
   }
 
   public boolean isCurrentPieceCone() {
