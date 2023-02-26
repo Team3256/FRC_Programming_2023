@@ -225,8 +225,11 @@ public class RobotContainer implements CANTestable, Loggable {
     ledStrip = new LED(0, new int[] {100});
     ledStrip.setDefaultCommand(
         (new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern())));
-    //    Change to left bumper and right bumper
-    //    operator.leftBumper().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+
+    operator.leftBumper().onTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()));
+    operator
+        .rightBumper()
+        .onTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingCubePattern()));
   }
 
   public Command getAutonomousCommand() {
