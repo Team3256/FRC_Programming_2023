@@ -9,16 +9,11 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.arm.ArmConstants.*;
-import static frc.robot.elevator.ElevatorConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
@@ -28,7 +23,7 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPosition;
 import frc.robot.elevator.commands.*;
-import frc.robot.helper.DPadButton;
+import frc.robot.helpers.DPadButton;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -42,12 +37,9 @@ import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -108,7 +100,7 @@ public class RobotContainer implements CANTestable, Loggable {
             kOpenLoop));
 
     new DPadButton(driver, DPadButton.Direction.UP)
-        .whileTrue(
+        .onTrue(
             new TeleopSwerveWithAzimuth(
                 swerveSubsystem,
                 driver::getLeftY,
@@ -117,8 +109,9 @@ public class RobotContainer implements CANTestable, Loggable {
                 () -> 1,
                 kFieldRelative,
                 kOpenLoop));
+
     new DPadButton(driver, DPadButton.Direction.DOWN)
-        .whileTrue(
+        .onTrue(
             new TeleopSwerveWithAzimuth(
                 swerveSubsystem,
                 driver::getLeftY,
@@ -128,7 +121,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
     new DPadButton(driver, DPadButton.Direction.RIGHT)
-        .whileTrue(
+        .onTrue(
             new TeleopSwerveWithAzimuth(
                 swerveSubsystem,
                 driver::getLeftY,
@@ -137,8 +130,9 @@ public class RobotContainer implements CANTestable, Loggable {
                 () -> 0,
                 kFieldRelative,
                 kOpenLoop));
+
     new DPadButton(driver, DPadButton.Direction.LEFT)
-        .whileTrue(
+        .onTrue(
             new TeleopSwerveWithAzimuth(
                 swerveSubsystem,
                 driver::getLeftY,
@@ -150,13 +144,13 @@ public class RobotContainer implements CANTestable, Loggable {
 
     driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
     driver
-        .leftTrigger()
+        .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
                 swerveSubsystem,
-                driver::getRightY,
-                driver::getRightX,
+                driver::getLeftY,
                 driver::getLeftX,
+                driver::getRightX,
                 kFieldRelative,
                 kOpenLoop));
   }
@@ -178,6 +172,14 @@ public class RobotContainer implements CANTestable, Loggable {
 
     if (kArmEnabled) {
       // TODO: move to auto and remove after testing
+
+      operator
+          .leftBumper()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new InstantCommand(armSubsystem::setArmFlaccid),
+                  new InstantCommand(elevatorSubsystem::setElevatorFlaccid)));
+
       driver.x().onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
       driver
           .b()
@@ -220,12 +222,11 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureArm() {
     armSubsystem = new Arm();
-    operator.leftTrigger().onTrue(new InstantCommand(armSubsystem::setArmFlaccid));
-    operator.rightTrigger().onTrue(new InstantCommand(armSubsystem::setArmErect));
+    operator.rightBumper().onTrue(new InstantCommand(armSubsystem::setArmErect));
   }
 
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] { 100 });
+    ledStrip = new LED(0, new int[] {100});
     ledStrip.setDefaultCommand(
         (new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern())));
     operator.leftBumper().onTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()));
@@ -248,8 +249,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
-    for (Loggable device : loggables)
-      device.logInit();
+    for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
             "Joystick",
@@ -266,15 +266,14 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables)
-      result &= subsystem.CANTest();
+    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
-        armSubsystem);
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
     pitSubsystemRoutine.pitRoutine();
   }
 

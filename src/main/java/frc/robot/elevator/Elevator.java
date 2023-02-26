@@ -119,9 +119,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     } else return elevatorSim.getPositionMeters();
   }
 
-  public double getElevatorSpeed() {
-    return falconToMeters(
-        elevatorMotor.getSelectedSensorVelocity(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
+  public void setElevatorFlaccid() {
+    elevatorMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   public void zeroElevator() {

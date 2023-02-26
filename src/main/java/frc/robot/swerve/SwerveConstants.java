@@ -177,5 +177,5 @@ public final class SwerveConstants {
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, angleOffset);
   }
 
-  public static final double kSensitivityScale = 0.20;
+  public static final double kSensitivityScale = 0.35;
 }

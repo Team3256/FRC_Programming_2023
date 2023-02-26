@@ -17,8 +17,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 // import edu.wpi.first.wpilibj2.command.button.Trigger;
-// import frc.robot.helper.DPadButton;
-// import frc.robot.helper.DPadButton.Direction;
+// import frc.robot.helpers.DPadButton;
+// import frc.robot.helpers.DPadButton.Direction;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
