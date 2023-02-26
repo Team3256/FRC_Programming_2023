@@ -27,6 +27,7 @@ public final class ElevatorConstants {
   public static final double kConeHighPositionMeters = Units.inchesToMeters(15.372696);
   public static final double kAnyPieceMidPositionMeters = Units.inchesToMeters(0);
   public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(31);
+  public static final double kGroundIntakePositionMeters = Units.inchesToMeters(0);
 
   // https://www.reca.lc/linear
   // gradle simulateJava working constants

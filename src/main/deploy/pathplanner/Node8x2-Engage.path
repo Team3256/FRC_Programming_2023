@@ -103,19 +103,13 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.43177934126420425,
+      "position": 0.5447221235795449,
       "names": [
         "intakeCube"
       ]
     },
     {
       "position": 1.2669949618252876,
-      "names": [
-        "defaultPosition"
-      ]
-    },
-    {
-      "position": 0.030596923828125035,
       "names": [
         "defaultPosition"
       ]
