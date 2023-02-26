@@ -151,7 +151,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     }
 
     if (autoCommandRunner != null) {
-      autoCommandRunner.execute(desiredPose);
+      autoCommandRunner.execute(desiredPose, now);
     }
 
     swerveSubsystem.drive(

@@ -18,18 +18,34 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.commands.PPTrajectoryFollowCommand;
 import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class AutoBuilder {
-  // TODO: Add AutoSpec
   private SwerveDrive swerveSubsystem;
+  private Map<String, Command> eventMap;
 
-  public AutoBuilder(SwerveDrive swerveSubsystem) {
+  public AutoBuilder(SwerveDrive swerveSubsystem, Map<String, Command> eventMap) {
     this.swerveSubsystem = swerveSubsystem;
+    this.eventMap = eventMap;
   }
 
   public Command createPath(String path, PathConstraints constraints, boolean isFirstSegment) {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, constraints);
     return createPathPlannerCommand(trajectory, isFirstSegment);
+  }
+
+  public ArrayList<Command> createPaths(String pathGroup, PathConstraints constraint) {
+    ArrayList<PathPlannerTrajectory> trajectories =
+        new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint));
+    ArrayList<Command> commands = new ArrayList<>();
+
+    commands.add(createPathPlannerCommand(trajectories.get(0), true));
+    trajectories.remove(0);
+    for (PathPlannerTrajectory trajectory : trajectories) {
+      commands.add(createPathPlannerCommand(trajectory, false));
+    }
+
+    return commands;
   }
 
   public ArrayList<Command> createPaths(
@@ -47,7 +63,7 @@ public class AutoBuilder {
     return commands;
   }
 
-  private Command createPathPlannerCommand(
+  public PPTrajectoryFollowCommand createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment) {
     PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
@@ -60,13 +76,19 @@ public class AutoBuilder {
             kAutoThetaControllerD,
             kAutoThetaControllerConstraints);
 
-    return new PPTrajectoryFollowCommand(
-        trajectory,
-        xTranslationController,
-        yTranslationController,
-        thetaController,
-        changeAutosBasedOnAlliance,
-        isFirstSegment,
-        this.swerveSubsystem);
+    AutoCommandRunner commandRunner = new AutoCommandRunner(trajectory.getMarkers(), eventMap);
+
+    PPTrajectoryFollowCommand path =
+        new PPTrajectoryFollowCommand(
+            trajectory,
+            xTranslationController,
+            yTranslationController,
+            thetaController,
+            changeAutosBasedOnAlliance,
+            isFirstSegment,
+            this.swerveSubsystem);
+    path.setAutoCommandRunner(commandRunner);
+
+    return path;
   }
 }
