@@ -10,12 +10,12 @@ package frc.robot.auto.commands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
-import frc.robot.helpers.WaitCommand;
 
 public class SetArmElevatorStart extends ParallelCommandGroup {
   public SetArmElevatorStart(Elevator elevatorSubsystem, Arm armSubsystem) {

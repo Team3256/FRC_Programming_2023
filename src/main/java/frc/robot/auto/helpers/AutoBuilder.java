@@ -55,12 +55,13 @@ public class AutoBuilder {
 
   public ArrayList<Command> createPaths(
       String pathGroup, PathConstraints constraint, PathConstraints... constraints) {
-    ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<>(
-        PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
+    ArrayList<PathPlannerTrajectory> trajectories =
+        new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
     ArrayList<Command> commands = new ArrayList<>();
 
     PathPlannerTrajectory firstTrajectory = trajectories.get(0);
     Command start = createCommandFromStopEvent(firstTrajectory.getStartStopEvent());
+    System.out.println(start.getName());
     commands.add(start.andThen(createPathPlannerCommand(firstTrajectory, true)));
     trajectories.remove(0);
 
@@ -76,26 +77,28 @@ public class AutoBuilder {
 
   public Command createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment) {
-    PIDController xTranslationController = new PIDController(kAutoXTranslationP, kAutoXTranslationI,
-        kAutoXTranslationD);
-    PIDController yTranslationController = new PIDController(kAutoYTranslationP, kAutoYTranslationI,
-        kAutoYTranslationD);
-    ProfiledPIDController thetaController = new ProfiledPIDController(
-        kAutoThetaControllerP,
-        kAutoThetaControllerI,
-        kAutoThetaControllerD,
-        kAutoThetaControllerConstraints);
+    PIDController xTranslationController =
+        new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
+    PIDController yTranslationController =
+        new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
+    ProfiledPIDController thetaController =
+        new ProfiledPIDController(
+            kAutoThetaControllerP,
+            kAutoThetaControllerI,
+            kAutoThetaControllerD,
+            kAutoThetaControllerConstraints);
 
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    PPTrajectoryFollowCommand pathCommand = new PPTrajectoryFollowCommand(
-        trajectory,
-        xTranslationController,
-        yTranslationController,
-        thetaController,
-        changeAutosBasedOnAlliance,
-        isFirstSegment,
-        this.swerveSubsystem);
+    PPTrajectoryFollowCommand pathCommand =
+        new PPTrajectoryFollowCommand(
+            trajectory,
+            xTranslationController,
+            yTranslationController,
+            thetaController,
+            changeAutosBasedOnAlliance,
+            isFirstSegment,
+            this.swerveSubsystem);
 
     return new FollowPathWithEvents(pathCommand, trajectory.getMarkers(), suppliedEventMap);
   }
@@ -123,27 +126,27 @@ public class AutoBuilder {
   }
 
   protected Command getStopEventCommands(StopEvent stopEvent) {
-    List<Supplier<Command>> commands = new ArrayList<>();
+    List<Command> commands = new ArrayList<>();
 
     int startIndex = stopEvent.executionBehavior == ExecutionBehavior.PARALLEL_DEADLINE ? 1 : 0;
     for (int i = startIndex; i < stopEvent.names.size(); i++) {
       String name = stopEvent.names.get(i);
       if (eventMap.containsKey(name)) {
-        commands.add(eventMap.get(name));
+        System.out.println(name);
+        commands.add(eventMap.get(name).get());
       }
     }
 
     switch (stopEvent.executionBehavior) {
       case SEQUENTIAL:
-        return Commands.sequence(
-            commands.stream().map(supplier -> supplier.get()).toArray(Command[]::new));
+        return Commands.sequence(commands.toArray(Command[]::new));
       case PARALLEL:
-        return Commands.parallel(
-            commands.stream().map(supplier -> supplier.get()).toArray(Command[]::new));
+        return Commands.parallel(commands.toArray(Command[]::new));
       case PARALLEL_DEADLINE:
-        Command deadline = eventMap.containsKey(stopEvent.names.get(0))
-            ? eventMap.get(stopEvent.names.get(0)).get()
-            : Commands.none();
+        Command deadline =
+            eventMap.containsKey(stopEvent.names.get(0))
+                ? eventMap.get(stopEvent.names.get(0)).get()
+                : Commands.none();
         return Commands.deadline(deadline, commands.toArray(Command[]::new));
       default:
         throw new IllegalArgumentException(

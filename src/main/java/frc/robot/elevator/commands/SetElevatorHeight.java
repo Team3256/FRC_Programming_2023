@@ -38,6 +38,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
 
   public SetElevatorHeight(Elevator elevatorSubsystem, Elevator.ElevatorPosition elevatorPosition) {
     this(elevatorSubsystem, elevatorPosition.position);
+    this.elevatorPosition = elevatorPosition;
   }
 
   @Override
