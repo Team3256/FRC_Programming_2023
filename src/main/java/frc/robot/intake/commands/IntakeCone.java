@@ -31,6 +31,7 @@ public class IntakeCone extends CommandBase {
 
   @Override
   public boolean isFinished() {
+    // return intakeSubsystem.isCurrentSpiking();
     return false;
   }
 }

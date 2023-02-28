@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotMode;
@@ -54,6 +55,7 @@ public class Robot extends LoggedRobot {
         logger.addDataReceiver(new NT4Publisher());
         break;
       case SIM:
+        DriverStation.silenceJoystickConnectionWarning(true);
         logger.addDataReceiver(new WPILOGWriter(""));
         logger.addDataReceiver(new NT4Publisher());
         break;
@@ -69,7 +71,7 @@ public class Robot extends LoggedRobot {
         break;
     }
 
-    logger.start(); // Start advkit logger
+    // logger.start(); // Start advkit logger
     robotContainer = new RobotContainer();
     robotContainer.logInit();
   }
@@ -123,7 +125,7 @@ public class Robot extends LoggedRobot {
 
     // Run tests
     robotContainer.CANTest();
-    robotContainer.startPitRoutine();
+    // robotContainer.startPitRoutine();
   }
 
   /** This function is called periodically during test mode. */

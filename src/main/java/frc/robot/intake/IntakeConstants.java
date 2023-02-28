@@ -19,9 +19,6 @@ public final class IntakeConstants {
   public static final String kIntakeCANBus = "mani";
   public static final CanDeviceId kIntakeCANDevice = new CanDeviceId(kIntakeMotorID, kIntakeCANBus);
 
-  public static final double kIntakeConeSpeed = 0.5;
-  public static final double kIntakeCubeSpeed = -0.5;
-
   public static final class IntakeFromDoubleSubstation {
 
     public static final PathPoint kLeftSubstationBlue =
@@ -35,4 +32,8 @@ public final class IntakeConstants {
         new PathPoint(new Translation2d(0.3556, 5.01), new Rotation2d(Units.degreesToRadians(180)));
     public static final PathConstraints kPathContraints = new PathConstraints(5, 5);
   }
+
+  public static final double kIntakeConeSpeed = 0.9;
+  public static final double kIntakeCubeSpeed = -0.9;
+  public static final double kIntakeCurrentSpikingThreshold = 40;
 }
