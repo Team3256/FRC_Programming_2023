@@ -65,7 +65,6 @@ public class AutoBuilder {
 
     PathPlannerTrajectory firstTrajectory = trajectories.get(0);
     Command start = createCommandFromStopEvent(firstTrajectory.getStartStopEvent());
-    System.out.println(start.getName());
     commands.add(start.andThen(createPathPlannerCommand(firstTrajectory, true)));
     trajectories.remove(0);
 
@@ -85,9 +84,7 @@ public class AutoBuilder {
   }
 
   public Command createPathPlannerCommand(
-      PathPlannerTrajectory trajectory,
-      boolean isFirstSegment,
-      boolean doesChangeAutosBasedOnAlliance) {
+      PathPlannerTrajectory trajectory, boolean isFirstSegment, boolean useAllianceColor) {
     PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
     PIDController yTranslationController =
@@ -107,7 +104,7 @@ public class AutoBuilder {
             xTranslationController,
             yTranslationController,
             thetaController,
-            changeAutosBasedOnAlliance,
+            useAllianceColor,
             isFirstSegment,
             this.swerveSubsystem);
 

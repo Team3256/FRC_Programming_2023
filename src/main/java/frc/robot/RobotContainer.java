@@ -171,18 +171,18 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    // driver
-    // .y()
-    // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
-    // GoalType.HIGH_GRID)));
-    // driver
-    // .rightBumper()
-    // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
-    // GoalType.MID_GRID)));
-    // driver
-    // .b()
-    // .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive,
-    // GoalType.LOW_GRID)));
+    driver
+        .y()
+        .onTrue(
+            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.HIGH_GRID)));
+    driver
+        .rightBumper()
+        .onTrue(
+            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.MID_GRID)));
+    driver
+        .b()
+        .onTrue(
+            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.LOW_GRID)));
     driver
         .x()
         .onTrue(

@@ -72,7 +72,8 @@ public class Waypoint {
   }
 
   private JSONObject createJSONFromTranslation(Translation2d point) {
-    if (point == null) return null;
+    if (point == null)
+      return null;
 
     JSONObject json = new JSONObject();
     json.put("x", point.getX());

@@ -36,7 +36,7 @@ public class DynamicPathFollower {
     if (type != GoalType.STATION) {
       // TODO: change random to -1 when not testing
       int rand = (int) (Math.random() * 9);
-      int locationId = (int) SmartDashboard.getNumber("locationId", -1);
+      int locationId = (int) SmartDashboard.getNumber("locationId", rand);
       // handle invalid location
       if (locationId == -1) {
         System.out.println("LocationId entered was invalid.");
@@ -63,6 +63,7 @@ public class DynamicPathFollower {
     } else {
       System.out.println("Trajectory was found.");
     }
+
     System.out.println("Time to find trajectory: " + (System.currentTimeMillis() - ms0));
     // send trajectory to networktables for logging
     if (kDynamicPathGenerationDebug) {

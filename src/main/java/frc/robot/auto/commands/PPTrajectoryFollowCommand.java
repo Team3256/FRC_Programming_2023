@@ -114,21 +114,19 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    this.alliance = DriverStation.getAlliance();
     if (this.useAllianceColor) {
-      PathPlannerTrajectory.PathPlannerState start =
-          TrajectoryMirrorer.mirrorState(
-              (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0), alliance);
-      Rotation2d rotation = start.holonomicRotation;
-      Translation2d translation = start.poseMeters.getTranslation();
-      this.startPose = new Pose2d(translation, rotation);
+      this.alliance = DriverStation.getAlliance();
     } else {
-      PathPlannerTrajectory.PathPlannerState start =
-          (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
-      Rotation2d rotation = start.holonomicRotation;
-      Translation2d translation = start.poseMeters.getTranslation();
-      this.startPose = new Pose2d(translation, rotation);
+      this.alliance = Alliance.Blue;
+      // No mirroring on blue alliance
     }
+
+    PathPlannerTrajectory.PathPlannerState start =
+        TrajectoryMirrorer.mirrorState(
+            (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0), alliance);
+    Rotation2d rotation = start.holonomicRotation;
+    Translation2d translation = start.poseMeters.getTranslation();
+    this.startPose = new Pose2d(translation, rotation);
 
     if (kAutoDebug) {
       swerveSubsystem.setTrajectory(trajectory);
@@ -149,6 +147,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     PathPlannerTrajectory.PathPlannerState nonMirroredDesired =
         (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
+
     PathPlannerTrajectory.PathPlannerState desired =
         TrajectoryMirrorer.mirrorState(nonMirroredDesired, alliance);
     Pose2d currentPose = swerveSubsystem.getPose();
