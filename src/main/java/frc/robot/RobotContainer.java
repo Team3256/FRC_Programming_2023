@@ -186,7 +186,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
     if (kArmEnabled) {
       // TODO: comment out flaccid during match
-      elevatorSubsystem.setDefaultCommand(new ZeroElevator(elevatorSubsystem));
+      // elevatorSubsystem.setDefaultCommand(new ZeroElevator(elevatorSubsystem));
 
       operator
           .leftBumper()
@@ -245,7 +245,8 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureArm() {
     armSubsystem = new Arm();
-    armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem, ArmPosition.DEFAULT));
+    // armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem,
+    // ArmPosition.DEFAULT));
 
     // TODO: comment out erect during match
     operator.rightBumper().onTrue(new InstantCommand(armSubsystem::setArmErect));

@@ -19,6 +19,7 @@ import frc.robot.helpers.WaitCommand;
 
 public class SetArmElevatorStart extends ParallelCommandGroup {
   public SetArmElevatorStart(Elevator elevatorSubsystem, Arm armSubsystem) {
+    // TODO arm not going to default
     addCommands(
         new ParallelDeadlineGroup(
                 new WaitCommand(0.45), new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135)))

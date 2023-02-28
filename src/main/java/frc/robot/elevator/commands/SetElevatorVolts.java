@@ -8,6 +8,7 @@
 package frc.robot.elevator.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
 
 public class SetElevatorVolts extends CommandBase {
@@ -24,6 +25,9 @@ public class SetElevatorVolts extends CommandBase {
   @Override
   public void initialize() {
     elevatorSubsystem.setInputVoltage(volts);
+    if (Constants.kDebugEnabled) {
+      System.out.println(this.getName() + " started (volts: " + volts + ")");
+    }
   }
 
   @Override

@@ -67,7 +67,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           kArmLengthMeters,
           kArmAngleMinConstraint.getRadians(),
           kArmAngleMaxConstraint.getRadians(),
-          kArmMassKg,
           true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);

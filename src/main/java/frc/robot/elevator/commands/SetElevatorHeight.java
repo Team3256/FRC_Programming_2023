@@ -13,9 +13,14 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.Elevator.ElevatorPosition;
 
 public class SetElevatorHeight extends ProfiledPIDCommand {
+  private double setpointPositionMeters;
+  private ElevatorPosition elevatorPosition;
+
   public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
     super(
         new ProfiledPIDController(kP, kI, kD, kElevatorContraints),
@@ -26,12 +31,41 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
                 output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
         elevatorSubsystem);
 
+    this.setpointPositionMeters = setpointPositionMeters;
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);
   }
 
   public SetElevatorHeight(Elevator elevatorSubsystem, Elevator.ElevatorPosition elevatorPosition) {
     this(elevatorSubsystem, elevatorPosition.position);
+  }
+
+  @Override
+  public void initialize() {
+    super.initialize();
+    if (Constants.kDebugEnabled) {
+      System.out.println(
+          this.getName()
+              + " started (position: "
+              + this.elevatorPosition
+              + ", height: "
+              + setpointPositionMeters
+              + " meters)");
+    }
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    super.end(interrupted);
+    if (Constants.kDebugEnabled) {
+      System.out.println(
+          this.getName()
+              + " finished (position: "
+              + this.elevatorPosition
+              + ", height: "
+              + setpointPositionMeters
+              + " meters)");
+    }
   }
 
   @Override

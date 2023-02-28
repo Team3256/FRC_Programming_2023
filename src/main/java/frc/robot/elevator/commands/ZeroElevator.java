@@ -28,6 +28,7 @@ public class ZeroElevator extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    System.out.println("Zero elevator finished");
     elevatorSubsystem.off();
     if (!interrupted) elevatorSubsystem.zeroElevator();
   }

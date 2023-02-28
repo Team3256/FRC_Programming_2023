@@ -53,11 +53,25 @@ public class AutoCommandRunner {
               ? isAtMarker(marker.getStartingPosition(), currentPose)
               : isAtMarker(marker.getStartingPosition(), currentPose, lastPose);
 
-      boolean markerHappeningNow =
-          Math.abs(currentTime - marker.getTime()) <= kAutoMarkerTimeThreshold;
+      boolean markerHappeningNow = currentTime - marker.getTime() >= -kAutoMarkerTimeThreshold;
       boolean markerTimeout = marker.getTime() + kAutoMarkerTimeout > currentTime;
 
       if ((atMarker && markerHappeningNow) || markerTimeout) {
+        if (kAutoDebug) {
+          System.out.println(
+              "Starting "
+                  + marker.getCommand().getName()
+                  + " at pose "
+                  + currentPose
+                  + ". Marker pose: "
+                  + marker.getStartingPosition()
+                  + "; atMarker: "
+                  + atMarker
+                  + ", markerHappeningNow: "
+                  + markerHappeningNow
+                  + ", markerTimeout: "
+                  + markerTimeout);
+        }
         marker.getCommand().schedule();
         startedCommandMarkers.add(marker);
         commandMarkers.remove(i);

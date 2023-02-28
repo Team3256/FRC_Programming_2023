@@ -8,6 +8,7 @@
 package frc.robot.climb.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.climb.Climb;
 
 public class RetractClimb extends CommandBase {
@@ -21,6 +22,9 @@ public class RetractClimb extends CommandBase {
 
   @Override
   public void initialize() {
+    if (Constants.kDebugEnabled) {
+      System.out.println(this.getName() + " started");
+    }
     climbSubsystem.retractClimb();
   }
 
