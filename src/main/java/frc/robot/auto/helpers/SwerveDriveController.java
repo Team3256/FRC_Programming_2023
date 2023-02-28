@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDriveController {
@@ -61,19 +62,20 @@ public class SwerveDriveController {
 
     double currentRotation = currentPose.getRotation().getRadians();
 
-    if (Math.abs(currentRotation - prevCurrentRotation) >= Math.PI) {
-      if (prevCurrentRotation > 0) {
-        currentRotation = prevCurrentRotation + Math.abs(-Math.PI - currentRotation);
-      } else {
-        currentRotation = prevCurrentRotation + Math.abs(Math.PI - currentRotation);
-      }
-    }
+    // if (Math.abs(currentRotation - prevCurrentRotation) >= Math.PI) {
+    // if (prevCurrentRotation > 0) {
+    // currentRotation = prevCurrentRotation + Math.abs(-Math.PI - currentRotation);
+    // } else {
+    // currentRotation = prevCurrentRotation + Math.abs(Math.PI - currentRotation);
+    // }
+    // }
 
     if (kDebugEnabled) {
-      SmartDashboard.putNumber("Current Rotation", currentRotation * 180 / Math.PI);
+      SmartDashboard.putNumber("Current Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber("Current Pose Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber(
-          "Current Rotation Error", (currentRotation * 180 / Math.PI) - angleRef.getDegrees());
+          "Current Rotation Error",
+          Units.radiansToDegrees(currentRotation) - angleRef.getDegrees());
     }
 
     // Calculate feedforward velocities (field-relative).
@@ -83,7 +85,7 @@ public class SwerveDriveController {
     double thetaFF = thetaController.calculate(currentRotation, angleRef.getRadians());
 
     if (kDebugEnabled) {
-      SmartDashboard.putNumber("Theta Current", currentRotation * 180 / Math.PI);
+      SmartDashboard.putNumber("Theta Current", Units.radiansToDegrees(currentRotation));
       SmartDashboard.putNumber("Theta Setpoint", angleRef.getDegrees());
     }
 

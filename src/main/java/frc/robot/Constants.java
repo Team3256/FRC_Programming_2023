@@ -21,16 +21,15 @@ import java.util.Map;
 public final class Constants {
   public static final boolean kDebugEnabled = true;
 
-  public static final boolean kIntakeEnabled = false;
-  public static final boolean kElevatorEnabled = false;
-  public static final boolean kArmEnabled = false;
   public static final boolean kSwerveEnabled = true;
+  public static final boolean kIntakeEnabled = true;
+  public static final boolean kElevatorEnabled = true;
+  public static final boolean kArmEnabled = true;
   public static final boolean kLedStripEnabled = true;
-  public static final boolean kAdvantageKitReplayEnabled = false;
 
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.SIM;
-  public static final double kStickDeadband = 0.1;
+  public static final double kStickDeadband = 0.05;
   public static final double kAzimuthStickDeadband = 0.3;
 
   public static final Field2d trajectoryViewer = new Field2d();

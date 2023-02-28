@@ -31,17 +31,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
-import frc.robot.drivers.TalonFXFactory;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
-import java.util.function.*;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPosition {
-    HIGH(ElevatorConstants.kElevatorHighPositionMeters),
-    MID(ElevatorConstants.kElevatorMidPositionMeters),
-    LOW(ElevatorConstants.kElevatorLowPositionMeters);
+    CUBE_HIGH(ElevatorConstants.kCubeHighPositionMeters),
+    CONE_HIGH(ElevatorConstants.kConeHighPositionMeters),
+    ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
+    ANY_PIECE_LOW(ElevatorConstants.kAnyPieceLowPositionMeters),
+    GROUND_INTAKE(ElevatorConstants.kGroundIntakePositionMeters),
+    DOUBLE_SUBSTATION(ElevatorConstants.kDoubleSubstationPositionMeters);
 
     public double position;
 
@@ -89,8 +90,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void configureRealHardware() {
-    elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
-    elevatorMotor.enableVoltageCompensation(true);
+    elevatorMotor = new WPI_TalonFX(kElevatorID, kElevatorCANBus);
+    elevatorMotor.setInverted(kElevatorInverted);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
@@ -107,6 +108,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public void setInputVoltage(double voltage) {
+    SmartDashboard.putNumber("Elevator Voltage", voltage);
     elevatorMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
@@ -115,6 +117,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
       return falconToMeters(
           elevatorMotor.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
     } else return elevatorSim.getPositionMeters();
+  }
+
+  public void setElevatorFlaccid() {
+    elevatorMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   public void zeroElevator() {
@@ -139,6 +145,12 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   @Override
+  public void periodic() {
+    SmartDashboard.putNumber(
+        "Elevator position inches", Units.metersToInches(getElevatorPosition()));
+    SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
+  }
+
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName).add(new ZeroElevator(this));

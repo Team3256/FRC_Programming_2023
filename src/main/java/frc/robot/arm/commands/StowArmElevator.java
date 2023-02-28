@@ -9,13 +9,13 @@ package frc.robot.arm.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
 
-public class DefaultArmElevatorDriveConfig extends ParallelCommandGroup {
-  public DefaultArmElevatorDriveConfig(Elevator elevatorSubsystem, Arm armSubsystem) {
+public class StowArmElevator extends ParallelCommandGroup {
+  public StowArmElevator(Elevator elevatorSubsystem, Arm armSubsystem) {
     addCommands(
-        new ZeroElevator(elevatorSubsystem), new SetArmAngle(armSubsystem, ArmPosition.DEFAULT));
+        new ZeroElevator(elevatorSubsystem),
+        new SetArmAngle(armSubsystem, Arm.ArmPosition.DEFAULT));
   }
 }

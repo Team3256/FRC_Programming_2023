@@ -10,28 +10,21 @@ package frc.robot.intake.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
 
-public class IntakeCone extends CommandBase {
+public class IntakeOff extends CommandBase {
   private final Intake intakeSubsystem;
 
-  public IntakeCone(Intake intakeSubsystem) {
+  public IntakeOff(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-
     addRequirements(intakeSubsystem);
   }
 
   @Override
   public void initialize() {
-    intakeSubsystem.intakeCone();
-  }
-
-  @Override
-  public void end(boolean interrupted) {
     intakeSubsystem.off();
   }
 
   @Override
   public boolean isFinished() {
-    // return intakeSubsystem.isCurrentSpiking();
-    return false;
+    return true;
   }
 }

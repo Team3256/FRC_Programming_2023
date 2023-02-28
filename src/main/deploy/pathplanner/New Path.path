@@ -2,6 +2,7 @@
   "waypoints": [
     {
       "anchorPoint": {
+<<<<<<< HEAD:src/main/deploy/pathplanner/OH1engageSS3H.path
         "x": 15.006196333573223,
         "y": 7.285375744362599
       },
@@ -9,6 +10,15 @@
       "nextControl": {
         "x": 16.064553907484864,
         "y": 6.959376585642328
+=======
+        "x": 1.96,
+        "y": 4.45
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.96,
+        "y": 4.45
+>>>>>>> fix/testing-2-17:src/main/deploy/pathplanner/New Path.path
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -24,6 +34,7 @@
     },
     {
       "anchorPoint": {
+<<<<<<< HEAD:src/main/deploy/pathplanner/OH1engageSS3H.path
         "x": 4.1355987885586885,
         "y": 1.555527112790337
       },
@@ -34,6 +45,18 @@
       "nextControl": {
         "x": 3.7690460434834137,
         "y": 1.7125330290278877
+=======
+        "x": 12.664,
+        "y": 2.109
+      },
+      "prevControl": {
+        "x": 12.664,
+        "y": 1.109
+      },
+      "nextControl": {
+        "x": 12.664,
+        "y": 1.109
+>>>>>>> fix/testing-2-17:src/main/deploy/pathplanner/New Path.path
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -49,6 +72,7 @@
     },
     {
       "anchorPoint": {
+<<<<<<< HEAD:src/main/deploy/pathplanner/OH1engageSS3H.path
         "x": 4.909100229658793,
         "y": 3.337671185759038
       },
@@ -59,10 +83,18 @@
       "nextControl": {
         "x": 2.750442123768362,
         "y": 3.2320026198212117
+=======
+        "x": 16.528461913097875,
+        "y": 7.972800623044009
+      },
+      "prevControl": {
+        "x": 15.528461913097875,
+        "y": 7.972800623044009
+>>>>>>> fix/testing-2-17:src/main/deploy/pathplanner/New Path.path
       },
       "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": 3.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -120,8 +152,5 @@
       }
     }
   ],
-  "maxVelocity": 12.0,
-  "maxAcceleration": 8.0,
-  "isReversed": null,
   "markers": []
 }

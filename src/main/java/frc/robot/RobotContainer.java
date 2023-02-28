@@ -12,32 +12,32 @@ import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.DefaultArmElevatorDriveConfig;
+import frc.robot.arm.Arm.ArmPosition;
+import frc.robot.arm.commands.*;
+import frc.robot.auto.AutoPaths;
+import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.Elevator.ElevatorPosition;
+import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.*;
+import frc.robot.intake.commands.IntakeCone;
+import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patterns.ColorChaseBluePattern;
-import frc.robot.logging.GyroSendable;
+import frc.robot.led.commands.*;
+import frc.robot.led.patterns.*;
+import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.TeleopSwerve;
-import frc.robot.swerve.commands.TeleopSwerveLimited;
-import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
+import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
@@ -47,21 +47,27 @@ import java.util.ArrayList;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
+  public enum Piece {
+    CUBE,
+    CONE
+  }
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
-  private SwerveDrive swerveDrive;
+  private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledStrip;
+  private Piece currentPiece = Piece.CONE;
+
+  private AutoPaths autoPaths;
 
   private final ArrayList<CANTestable> testables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-
     if (kIntakeEnabled) {
       configureIntake();
       testables.add(intakeSubsystem);
@@ -69,8 +75,8 @@ public class RobotContainer implements CANTestable, Loggable {
     }
     if (kSwerveEnabled) {
       configureSwerve();
-      testables.add(swerveDrive);
-      loggables.add(swerveDrive);
+      testables.add(swerveSubsystem);
+      loggables.add(swerveSubsystem);
     }
     if (kArmEnabled) {
       configureArm();
@@ -82,57 +88,86 @@ public class RobotContainer implements CANTestable, Loggable {
       testables.add(elevatorSubsystem);
       loggables.add(elevatorSubsystem);
     }
-
-    if (kElevatorEnabled) {
-      configureElevator();
-      testables.add(elevatorSubsystem);
-    }
     if (kLedStripEnabled) {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
-  }
 
-  private void configureIntake() {
-    intakeSubsystem = new Intake();
-
-    driver.leftBumper().whileTrue(new IntakeCube(intakeSubsystem));
-    driver.leftTrigger().whileTrue(new IntakeCone(intakeSubsystem));
+    autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
+    autoPaths.sendCommandsToChooser();
   }
 
   private void configureSwerve() {
-    swerveDrive = new SwerveDrive();
-
-    swerveDrive.setDefaultCommand(
+    swerveSubsystem = new SwerveDrive();
+    swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
-            swerveDrive,
-            () -> driver.getLeftY(),
-            () -> driver.getLeftX(),
-            () -> driver.getRightX(),
+            swerveSubsystem,
+            driver::getLeftY,
+            driver::getLeftX,
+            driver::getRightX,
             kFieldRelative,
             kOpenLoop));
 
     driver
-        .rightBumper()
-        .whileTrue(
+        .povUp()
+        .onTrue(
             new TeleopSwerveWithAzimuth(
-                swerveDrive,
-                () -> driver.getRightY(),
-                () -> driver.getRightX(),
-                () -> driver.getLeftX(),
-                () -> driver.getLeftY(),
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> 0,
+                () -> -1,
+                () -> isRotating(driver),
                 kFieldRelative,
                 kOpenLoop));
 
-    driver.a().onTrue(new InstantCommand(swerveDrive::zeroGyro));
     driver
-        .b()
+        .povDown()
+        .onTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> 0,
+                () -> 1,
+                () -> isRotating(driver),
+                kFieldRelative,
+                kOpenLoop));
+    driver
+        .povRight()
+        .onTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> 1,
+                () -> 0,
+                () -> isRotating(driver),
+                kFieldRelative,
+                kOpenLoop));
+
+    driver
+        .povLeft()
+        .onTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> -1,
+                () -> 0,
+                () -> isRotating(driver),
+                kFieldRelative,
+                kOpenLoop));
+
+    driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
+    driver
+        .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
-                swerveDrive,
-                () -> driver.getRightY(),
-                () -> driver.getRightX(),
-                () -> driver.getLeftX(),
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                driver::getRightX,
                 kFieldRelative,
                 kOpenLoop));
 
@@ -150,34 +185,115 @@ public class RobotContainer implements CANTestable, Loggable {
     // GoalType.LOW_GRID)));
     driver
         .x()
-        .onTrue(new InstantCommand(() -> DynamicPathFollower.run(swerveDrive, GoalType.STATION)));
+        .onTrue(
+            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.STATION)));
+  }
+
+  private void configureIntake() {
+    intakeSubsystem = new Intake();
+
+    operator.leftTrigger().whileTrue(new IntakeCube(intakeSubsystem));
+    operator.leftTrigger().onTrue(new InstantCommand(this::setPieceToCube));
+    operator.rightTrigger().whileTrue(new IntakeCone(intakeSubsystem));
+    operator.rightTrigger().onTrue(new InstantCommand(this::setPieceToCone));
   }
 
   public void configureElevator() {
     elevatorSubsystem = new Elevator();
 
-    operator.a().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.HIGH));
-    operator.b().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.MID));
-    operator.x().onTrue(new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.LOW));
+    // TODO: remove after testing
+    operator.a().whileTrue(new ZeroElevator(elevatorSubsystem));
 
     if (kArmEnabled) {
-      operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
+      // TODO: comment out flaccid during match
+      // elevatorSubsystem.setDefaultCommand(new ZeroElevator(elevatorSubsystem));
+
+      operator
+          .leftBumper()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new InstantCommand(armSubsystem::setArmFlaccid),
+                  new InstantCommand(elevatorSubsystem::setElevatorFlaccid)));
+
+      (operator.leftTrigger())
+          .or(operator.rightTrigger())
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
+                  new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE)));
+
+      driver.x().or(driver.y()).onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+
+      driver
+          .b()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
+                  new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW)));
+
+      driver
+          .rightBumper()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+                  new ConditionalCommand(
+                      new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                      new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                      this::isCurrentPieceCone)));
+
+      driver
+          .rightTrigger()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new ConditionalCommand(
+                      new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
+                      new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                      this::isCurrentPieceCone),
+                  new ConditionalCommand(
+                      new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                      new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                      this::isCurrentPieceCone)));
+
+      driver
+          .leftTrigger()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
+                  new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION)));
     }
   }
 
   private void configureArm() {
     armSubsystem = new Arm();
-    // TODO: set button bindings for arm testing
+    // armSubsystem.setDefaultCommand(new SetArmAngle(armSubsystem,
+    // ArmPosition.DEFAULT));
+
+    // TODO: comment out erect during match
+    operator.rightBumper().onTrue(new InstantCommand(armSubsystem::setArmErect));
   }
 
   public void configureLEDStrip() {
     ledStrip = new LED(0, new int[] {100});
-    driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
-    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
+    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
+    operator
+        .leftBumper()
+        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()));
+    operator
+        .rightBumper()
+        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingCubePattern()));
   }
 
   public Command getAutonomousCommand() {
-    return new InstantCommand();
+    Command setArmElevatorOnRightSide;
+    if (kElevatorEnabled && kArmEnabled) {
+      setArmElevatorOnRightSide =
+          new ParallelRaceGroup(
+              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+    } else {
+      setArmElevatorOnRightSide = new InstantCommand();
+    }
+    Command autoPath = autoPaths.getSelectedPath();
+    return setArmElevatorOnRightSide.asProxy().andThen(autoPath);
   }
 
   @Override
@@ -185,14 +301,17 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("trajectoryViewer", trajectoryViewer);
     SmartDashboard.putData("waypointViewer", waypointViewer);
     SmartDashboard.putData("swerveViewer", swerveViewer);
-    PowerDistribution pdp = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
-    Shuffleboard.getTab(kElectricalTabName).add(pdp);
+
     for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
             "Joystick",
-            new GyroSendable(
-                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY()))));
+            new DoubleSendable(
+                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY())), "Gyro"));
+  }
+
+  public boolean isRotating(CommandXboxController controller) {
+    return Math.abs(controller.getRightX()) > 0.3; // threshold
   }
 
   @Override
@@ -209,13 +328,22 @@ public class RobotContainer implements CANTestable, Loggable {
     return result;
   }
 
-  public void periodic() {
-    swerveViewer.setRobotPose(swerveDrive.getPose());
+  public void startPitRoutine() {
+    // PitTestRoutine pitSubsystemRoutine =
+    // new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
+    // armSubsystem);
+    // pitSubsystemRoutine.pitRoutine();
   }
 
-  public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine =
-        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveDrive, armSubsystem);
-    pitSubsystemRoutine.pitRoutine();
+  public boolean isCurrentPieceCone() {
+    return Piece.CONE.equals(currentPiece);
+  }
+
+  public void setPieceToCone() {
+    currentPiece = Piece.CONE;
+  }
+
+  public void setPieceToCube() {
+    currentPiece = Piece.CUBE;
   }
 }

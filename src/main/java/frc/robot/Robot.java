@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotMode;
@@ -54,7 +55,8 @@ public class Robot extends LoggedRobot {
         logger.addDataReceiver(new NT4Publisher());
         break;
       case SIM:
-        // logger.addDataReceiver(new WPILOGWriter(""));
+        DriverStation.silenceJoystickConnectionWarning(true);
+        logger.addDataReceiver(new WPILOGWriter(""));
         logger.addDataReceiver(new NT4Publisher());
         break;
       case REPLAY:
@@ -114,9 +116,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    robotContainer.periodic();
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
@@ -125,7 +125,7 @@ public class Robot extends LoggedRobot {
 
     // Run tests
     robotContainer.CANTest();
-    robotContainer.startPitRoutine();
+    // robotContainer.startPitRoutine();
   }
 
   /** This function is called periodically during test mode. */

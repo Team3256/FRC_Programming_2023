@@ -30,6 +30,8 @@ public class IntakeCube extends CommandBase {
 
   @Override
   public boolean isFinished() {
+    // TODO: MAKE THIS END WHEN CURRENT SPIKING BY TUNING THRESHOLD
+    // return intakeSubsystem.isCurrentSpiking();
     return false;
   }
 }

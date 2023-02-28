@@ -7,34 +7,36 @@
 
 package frc.robot.elevator.commands;
 
-import static frc.robot.elevator.ElevatorConstants.*;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
 
-public class ZeroElevator extends CommandBase {
-  Elevator elevatorSubsystem;
+public class SetElevatorVolts extends CommandBase {
+  // TODO: Make controller rumble when current spiking
+  private Elevator elevatorSubsystem;
+  private double volts = 0;
 
-  public ZeroElevator(Elevator elevatorSubsystem) {
+  public SetElevatorVolts(Elevator elevatorSubsystem, double volts) {
     this.elevatorSubsystem = elevatorSubsystem;
+    this.volts = volts;
     addRequirements(elevatorSubsystem);
   }
 
   @Override
   public void initialize() {
-    elevatorSubsystem.setInputVoltage(kDownSpeedVolts);
-    System.out.println("Zeroing elevator");
+    elevatorSubsystem.setInputVoltage(volts);
+    if (Constants.kDebugEnabled) {
+      System.out.println(this.getName() + " started (volts: " + volts + ")");
+    }
   }
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Zero elevator finished");
     elevatorSubsystem.off();
-    if (!interrupted) elevatorSubsystem.zeroElevator();
   }
 
   @Override
   public boolean isFinished() {
-    return elevatorSubsystem.isMotorCurrentSpiking();
+    return false;
   }
 }
