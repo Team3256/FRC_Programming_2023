@@ -178,7 +178,7 @@ public class AutoPaths {
     // Node8-Preload-Ready
     Command node8PreloadReady =
         autoBuilder
-            .createPath("Node8-Preload-Ready", kDefaultPathConstraints, true)
+            .createPath("Node8-Preload-Ready", kSafePathConstraints, true)
             .beforeStarting(scorePreload.get());
     AutoChooser.createSinglePath("Node8-Preload-Ready", node8PreloadReady);
 
@@ -191,18 +191,18 @@ public class AutoPaths {
 
     // Node8x2-Engage
     ArrayList<Command> node8x2Engage =
-        autoBuilder.createPaths("Node8x2-Engage", kDefaultPathConstraints, kEngagePathConstraints);
+        autoBuilder.createPaths("Node8x2-Engage", kSafePathConstraints, kEngagePathConstraints);
     AutoChooser.addPathGroup(scorePreload.get(), "Node8x2-Engage", node8x2Engage);
 
     // Node2x2-Engage
     ArrayList<Command> node2x2Engage =
-        autoBuilder.createPaths("Node2x2-Engage", kDefaultPathConstraints, kEngagePathConstraints);
+        autoBuilder.createPaths("Node2x2-Engage", kSafePathConstraints, kEngagePathConstraints);
     AutoChooser.addPathGroup(scorePreload.get(), "Node2x2-Engage", node2x2Engage);
 
     // Node2-Preload-Ready
     Command node2PreloadReady =
         autoBuilder
-            .createPath("Node2-Preload-Ready", kDefaultPathConstraints, true)
+            .createPath("Node2-Preload-Ready", kSafePathConstraints, true)
             .beforeStarting(scorePreload.get());
     AutoChooser.createSinglePath("Node2-Preload-Ready", node2PreloadReady);
 
@@ -217,8 +217,8 @@ public class AutoPaths {
     // TODO: make name better
     // ArrayList<Command> node8x3Engage = autoBuilder.createPaths(
     // "Node8x3-Engage",
-    // kDefaultPathConstraints,
-    // kDefaultPathConstraints,
+    // kFastPathConstraints,
+    // kFastPathConstraints,
     // kEngagePathConstraints);
     // AutoChooser.addIncrementalPaths(scorePreload.get(), "Node8x3-Engage",
     // node8x3Engage);
@@ -239,14 +239,14 @@ public class AutoPaths {
 
     // Node8x2-Ready
     ArrayList<Command> node8x2Ready =
-        autoBuilder.createPaths("Node8x2-Ready", kDefaultPathConstraints);
+        autoBuilder.createPaths("Node8x2-Ready", kSafePathConstraints);
     AutoChooser.addPathGroup(scorePreload.get(), "Node8x2-Ready", node8x2Ready);
 
     // Node2x3-Engage
     // ArrayList<Command> node2x3Engage = autoBuilder.createPaths(
     // "Node2x3-Engage",
-    // kDefaultPathConstraints,
-    // kDefaultPathConstraints,
+    // kFastPathConstraints,
+    // kFastPathConstraints,
     // kEngagePathConstraints);
     // AutoChooser.addIncrementalPaths(scorePreload.get(), "Node2x3-Engage",
     // node2x3Engage);

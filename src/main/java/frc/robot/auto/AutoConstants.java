@@ -10,10 +10,11 @@ package frc.robot.auto;
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
 
 public final class AutoConstants {
+  public static final boolean kAutoDebug = true && Constants.kDebugEnabled;
   public static final boolean changeAutosBasedOnAlliance = true;
-  public static final boolean kAutoDebug = true;
   public static final double kCommandMarkerThreshold = 0.05; // meters
 
   public static final double kMaxSpeedMetersPerSecond = 5;
@@ -52,9 +53,8 @@ public final class AutoConstants {
   public static final double kRotationTolerance = Units.degreesToRadians(2);
   public static final double kAutoTrajectoryTimeoutSeconds = 2;
 
-  // public static final PathConstraints kDefaultPathConstraints = new
-  // PathConstraints(kMaxSpeedMetersPerSecond,
-  // kMaxAccelerationMetersPerSecondSquared);
-  public static final PathConstraints kDefaultPathConstraints = new PathConstraints(3, 3);
+  public static final PathConstraints kFastPathConstraints =
+      new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
+  public static final PathConstraints kSafePathConstraints = new PathConstraints(4, 5);
   public static final PathConstraints kEngagePathConstraints = new PathConstraints(3, 3);
 }

@@ -13,6 +13,7 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,7 +32,11 @@ public class DynamicPathFollower {
   public static void run(SwerveDrive swerveDrive, GoalType type) {
     long ms0 = System.currentTimeMillis();
     // get src, sink
-    Pose2d src = swerveDrive.getPose();
+    // HUGE TODO CHANGE
+    // Pose2d src = swerveDrive.getPose();
+    Pose2d src =
+        new Pose2d(
+            Math.random() * 8, Math.random() * 8, Rotation2d.fromDegrees(Math.random() * 180));
     Pose2d sink = kBlueStationPose;
     if (type != GoalType.STATION) {
       // TODO: change random to -1 when not testing
@@ -69,7 +74,7 @@ public class DynamicPathFollower {
     if (kDynamicPathGenerationDebug) {
       trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
       waypointViewer.getObject("Src").setPose(trajectory.getInitialHolonomicPose());
-      waypointViewer.getObject("Sink").setPose(trajectory.sample(1000).poseMeters);
+      waypointViewer.getObject("Sink").setPose(trajectory.getEndState().poseMeters);
     }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);

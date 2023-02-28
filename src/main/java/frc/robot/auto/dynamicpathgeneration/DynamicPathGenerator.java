@@ -44,8 +44,7 @@ public class DynamicPathGenerator {
     double closest = INF_TIME;
     PathNode ret = node;
     for (PathNode q : nodes) {
-      if (q == node)
-        continue;
+      if (q == node) continue;
       double dist = PathUtil.straightTravelTimeWithObstacles(node.getPoint(), q.getPoint());
       if (dist < closest) {
         closest = dist;
@@ -68,7 +67,8 @@ public class DynamicPathGenerator {
       System.out.println("src edges:" + srcNode.getEdges().size());
       System.out.println("sink edges:" + sinkNode.getEdges().size());
     }
-    DynamicPathFinder pathFinder = new DynamicPathFinder(srcNode.getIndex(), sinkNode.getIndex(), dynamicPathNodes);
+    DynamicPathFinder pathFinder =
+        new DynamicPathFinder(srcNode.getIndex(), sinkNode.getIndex(), dynamicPathNodes);
     List<Integer> pathIndexes = pathFinder.findPath();
     if (kDynamicPathGenerationDebug) {
       System.out.println("These are the path indexes:");
@@ -96,8 +96,7 @@ public class DynamicPathGenerator {
       pathPoints.add(waypoint.waypointToPathPoint());
     }
     // if no path points were found then there should be no trajectory
-    if (pathPoints.size() == 0)
-      return null;
+    if (pathPoints.size() == 0) return null;
     // convert pathPoints into Trajectory we return
     return PathPlanner.generatePath(dynamicPathConstraints, pathPoints);
   }

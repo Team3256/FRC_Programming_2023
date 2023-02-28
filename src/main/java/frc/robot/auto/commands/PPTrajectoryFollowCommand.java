@@ -10,6 +10,7 @@ package frc.robot.auto.commands;
 import static frc.robot.auto.AutoConstants.*;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -131,6 +132,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     if (kAutoDebug) {
       swerveSubsystem.setTrajectory(trajectory);
       autoVisualization.getObject("traj").setTrajectory(trajectory);
+      PathPlannerServer.sendActivePath(trajectory.getStates());
     }
     if (isFirstSegment) { // use existing pose for more accuracy if it is the first path
       swerveSubsystem.resetOdometry(this.startPose);
@@ -162,6 +164,9 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
       if (RobotBase.isSimulation()) {
         autoVisualization.setRobotPose(new Pose2d(desiredPose.getTranslation(), desiredRotation));
+        PathPlannerServer.sendPathFollowingData(
+            new Pose2d(desiredPose.getTranslation(), desiredRotation),
+            new Pose2d(desiredPose.getTranslation(), desiredRotation));
       }
     }
 

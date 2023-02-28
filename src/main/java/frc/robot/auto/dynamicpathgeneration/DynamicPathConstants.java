@@ -22,12 +22,12 @@ import java.util.ArrayList;
 
 public final class DynamicPathConstants {
   // Flags
-  public static final boolean kDynamicPathGenerationDebug = true;
+  public static final boolean kDynamicPathGenerationDebug = true && Constants.kDebugEnabled;
 
   // Bezier
-  public static final double kRegularControlPointScalar = 0.5087764111;
-  public static final double kBetweenPreSinkPointScalar = 0.1007753469;
-  public static final double kBetweenPassageControlPointScalar = 0.9999813901;
+  public static final double kRegularControlPointScalar = 0.50;
+  public static final double kBetweenPreSinkPointScalar = 0.1;
+  public static final double kBetweenPassageControlPointScalar = 0.99;
 
   // Obstacles
   public static final Obstacle kBarrierAboveGrid =
@@ -59,21 +59,28 @@ public final class DynamicPathConstants {
   }
 
   // Trajectory constraints
-  public static final PathConstraints dynamicPathConstraints = new PathConstraints(3, 3);
+  public static final PathConstraints dynamicPathConstraints = new PathConstraints(4, 4);
   public static final double kBlueGridTapeX = 1.38;
-  public static final double kBlueLowTapeOffset = Units.inchesToMeters(33);
-  public static final double kBlueMidTapeOffset = Units.inchesToMeters(23);
+  public static final double kBlueLowTapeOffset = Units.inchesToMeters(22);
+  public static final double kBlueMidTapeOffset = Units.inchesToMeters(12);
   public static final double kBlueHighTapeOffset = Units.inchesToMeters(0);
+  public static final double kOuterNodeRotationBuffer = Units.inchesToMeters(2);
+
   // (lowest y location to highest y location)
   // TODO: LOW PRIORITY - Use robust center pivot radius vector method instead of
   // mass setting (only
   // set angle for each and not this monstrous equation)
+  public static final Pose2d kBlueStationPose = new Pose2d(15.33, 7.35, Rotation2d.fromDegrees(0));
   public static final Pose2d[] kBottomBlueScoringPoses =
       new Pose2d[] {
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 0.61),
-            Rotation2d.fromDegrees(180)),
+                kBlueGridTapeX
+                    + kBlueLowTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                0.64),
+            Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 1.04),
@@ -104,16 +111,24 @@ public final class DynamicPathConstants {
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 4.81),
-            Rotation2d.fromDegrees(180))
+                kBlueGridTapeX
+                    + kBlueLowTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                4.79),
+            Rotation2d.fromDegrees(173))
       };
 
   public static final Pose2d[] kMidBlueScoringPoses =
       new Pose2d[] {
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 0.61),
-            Rotation2d.fromDegrees(180)),
+                kBlueGridTapeX
+                    + kBlueMidTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                0.64),
+            Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 1.04),
@@ -144,17 +159,24 @@ public final class DynamicPathConstants {
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 4.81),
-            Rotation2d.fromDegrees(180))
+                kBlueGridTapeX
+                    + kBlueMidTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                4.79),
+            Rotation2d.fromDegrees(173))
       };
-  public static final Pose2d kBlueStationPose = new Pose2d(2.14, 2.70, Rotation2d.fromDegrees(180));
 
   public static final Pose2d[] kHighBlueScoringPoses =
       new Pose2d[] {
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 0.61),
-            Rotation2d.fromDegrees(180)),
+                kBlueGridTapeX
+                    + kBlueHighTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                0.64),
+            Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 1.04),
@@ -185,8 +207,12 @@ public final class DynamicPathConstants {
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 4.81),
-            Rotation2d.fromDegrees(180))
+                kBlueGridTapeX
+                    + kBlueHighTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                4.79),
+            Rotation2d.fromDegrees(173))
       };
 
   // Path finding constraints
