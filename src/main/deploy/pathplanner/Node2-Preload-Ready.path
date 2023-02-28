@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.901045987365135,
-        "y": 1.0472543510407684
+        "x": 1.7533046662230478,
+        "y": 1.0201088455291059
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.880463822125561,
-        "y": 0.670943385750703
+        "x": 2.732722500983473,
+        "y": 0.6437978802390405
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -34,7 +34,7 @@
         "y": 0.9183091640109057
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 0.1,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -49,7 +49,7 @@
   ],
   "markers": [
     {
-      "position": 0.5907809170809651,
+      "position": 0.566812966086648,
       "names": [
         "intakeCube"
       ]

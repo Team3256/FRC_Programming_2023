@@ -9,10 +9,12 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.swerve.SwerveConstants.*;
+import static frc.robot.swerve.SwerveConstants.kFieldRelative;
+import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
@@ -20,6 +22,8 @@ import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.commands.*;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPosition;
@@ -166,6 +170,23 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getRightX,
                 kFieldRelative,
                 kOpenLoop));
+
+    driver
+        .y()
+        .onTrue(
+            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.HIGH_GRID)));
+    driver
+        .rightBumper()
+        .onTrue(
+            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.MID_GRID)));
+    driver
+        .b()
+        .onTrue(
+            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.LOW_GRID)));
+    driver
+        .x()
+        .onTrue(
+            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.STATION)));
   }
 
   private void configureIntake() {
@@ -277,6 +298,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
   @Override
   public void logInit() {
+    SmartDashboard.putData("trajectoryViewer", trajectoryViewer);
+    SmartDashboard.putData("waypointViewer", waypointViewer);
+    SmartDashboard.putData("swerveViewer", swerveViewer);
+
     for (Loggable device : loggables) device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(

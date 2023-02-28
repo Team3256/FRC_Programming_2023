@@ -77,7 +77,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               backLeftModule.getPosition(),
               backRightModule.getPosition()
             },
-            new Pose2d());
+            new Pose2d(new Translation2d(7.09, 4.59), Rotation2d.fromDegrees(180))); // 3.91
 
     SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
     SmartDashboard.putData("Field", field);
@@ -109,10 +109,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     // twistVelocity.dx / kPeriodicDeltaTime,
     // twistVelocity.dy / kPeriodicDeltaTime,
     // twistVelocity.dtheta / kPeriodicDeltaTime);
-    chassisSpeeds.vxMetersPerSecond =
-        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
-    chassisSpeeds.vyMetersPerSecond =
-        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+
+    // chassisSpeeds.vxMetersPerSecond =
+    // adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+    // chassisSpeeds.vyMetersPerSecond =
+    // adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
 
     SmartDashboard.putNumber(
         "Swerve Speed",

@@ -193,7 +193,7 @@ public class SwerveModule implements Loggable {
   public ShuffleboardLayout getLayout(String tabName) {
     return Shuffleboard.getTab(tabName)
         .getLayout("Mod " + moduleNumber, BuiltInLayouts.kList)
-        .withSize(2, 2);
+        .withSize(2, 1);
   }
 
   public boolean test() {

@@ -125,12 +125,10 @@ public class Robot extends LoggedRobot {
 
     // Run tests
     robotContainer.CANTest();
-    robotContainer.startPitRoutine();
+    // robotContainer.startPitRoutine();
   }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {
-    // CommandScheduler.getInstance().run();
-  }
+  public void testPeriodic() {}
 }

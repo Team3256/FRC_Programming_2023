@@ -32,6 +32,10 @@ public class AutoBuilder {
   private Map<String, Supplier<Command>> eventMap;
   private Map<String, Command> suppliedEventMap = new HashMap<>();
 
+  public AutoBuilder(SwerveDrive swerveSubsystem) {
+    this(swerveSubsystem, new HashMap<>());
+  }
+
   public AutoBuilder(SwerveDrive swerveSubsystem, Map<String, Supplier<Command>> eventMap) {
     this.swerveSubsystem = swerveSubsystem;
     this.eventMap = eventMap;
@@ -61,7 +65,6 @@ public class AutoBuilder {
 
     PathPlannerTrajectory firstTrajectory = trajectories.get(0);
     Command start = createCommandFromStopEvent(firstTrajectory.getStartStopEvent());
-    System.out.println(start.getName());
     commands.add(start.andThen(createPathPlannerCommand(firstTrajectory, true)));
     trajectories.remove(0);
 
@@ -77,6 +80,11 @@ public class AutoBuilder {
 
   public Command createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment) {
+    return createPathPlannerCommand(trajectory, isFirstSegment, changeAutosBasedOnAlliance);
+  }
+
+  public Command createPathPlannerCommand(
+      PathPlannerTrajectory trajectory, boolean isFirstSegment, boolean useAllianceColor) {
     PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
     PIDController yTranslationController =
@@ -96,7 +104,7 @@ public class AutoBuilder {
             xTranslationController,
             yTranslationController,
             thetaController,
-            changeAutosBasedOnAlliance,
+            useAllianceColor,
             isFirstSegment,
             this.swerveSubsystem);
 
