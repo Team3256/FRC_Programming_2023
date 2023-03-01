@@ -38,7 +38,8 @@ public class TalonFXFactory {
 
     public int CONTROL_FRAME_PERIOD_MS = 10;
     public int MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
-    public int GENERAL_STATUS_FRAME_RATE_MS = 10;
+    // TODO check if this should be 10
+    public int GENERAL_STATUS_FRAME_RATE_MS = 20;
     public int FEEDBACK_STATUS_FRAME_RATE_MS = 1000;
     public int QUAD_ENCODER_STATUS_FRAME_RATE_MS = 1000;
     public int ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 1000;
