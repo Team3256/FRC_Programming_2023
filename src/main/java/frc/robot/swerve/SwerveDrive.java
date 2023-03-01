@@ -67,6 +67,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     gyro.configFactoryDefault();
     zeroGyro();
 
+    // TODO MAKE POSITION 0,0
     poseEstimator =
         new SwerveDrivePoseEstimator(
             kSwerveKinematics,
@@ -77,7 +78,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               backLeftModule.getPosition(),
               backRightModule.getPosition()
             },
-            new Pose2d(new Translation2d(4.15, 4.67), Rotation2d.fromDegrees(180))); // 3.91
+            new Pose2d(new Translation2d(2.15, 4.58), Rotation2d.fromDegrees(180))); // 3.91
 
     SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
     SmartDashboard.putData("Field", field);

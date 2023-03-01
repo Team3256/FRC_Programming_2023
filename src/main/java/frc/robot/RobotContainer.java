@@ -79,11 +79,6 @@ public class RobotContainer implements CANTestable, Loggable {
       canBusTestables.add(intakeSubsystem);
       loggables.add(intakeSubsystem);
     }
-    if (kSwerveEnabled) {
-      configureSwerve();
-      canBusTestables.add(swerveSubsystem);
-      loggables.add(swerveSubsystem);
-    }
     if (kArmEnabled) {
       configureArm();
       canBusTestables.add(armSubsystem);
@@ -97,6 +92,11 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kLedStripEnabled) {
       configureLEDStrip();
       loggables.add(ledStrip);
+    }
+    if (kSwerveEnabled) {
+      configureSwerve();
+      canBusTestables.add(swerveSubsystem);
+      loggables.add(swerveSubsystem);
     }
 
     autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
@@ -192,19 +192,29 @@ public class RobotContainer implements CANTestable, Loggable {
           .deadlineWith(new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy())
           .andThen(getScoreCommand(GoalType.LOW_GRID).asProxy());
 
-      Command doubleSubstationIntakeCommand = new ParallelCommandGroup(
-          new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION),
-          new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
-          new ConditionalCommand(
-              new IntakeCone(intakeSubsystem),
-              new IntakeCube(intakeSubsystem),
-              this::isCurrentPieceCone));
+      Supplier<Command> doubleSubstationIntakeCommand = () -> {
+        return new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION),
+            new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
+            new ConditionalCommand(
+                new IntakeCone(intakeSubsystem),
+                new IntakeCube(intakeSubsystem),
+                this::isCurrentPieceCone));
+      };
 
-      Supplier<Command> goToDoubleStationTop = () -> DynamicPathFollower
-          .run(swerveSubsystem, GoalType.DOUBLE_STATION_TOP, ledStrip, doubleSubstationIntakeCommand)
+      Supplier<Command> goToDoubleStationTop = () -> DynamicPathFollower.run(
+          swerveSubsystem,
+          GoalType.DOUBLE_STATION_TOP,
+          ledStrip,
+          true,
+          doubleSubstationIntakeCommand)
           .deadlineWith(new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
-      Supplier<Command> goToDoubleStationBottom = () -> DynamicPathFollower
-          .run(swerveSubsystem, GoalType.DOUBLE_STATION_BOTTOM, ledStrip, doubleSubstationIntakeCommand)
+      Supplier<Command> goToDoubleStationBottom = () -> DynamicPathFollower.run(
+          swerveSubsystem,
+          GoalType.DOUBLE_STATION_BOTTOM,
+          ledStrip,
+          true,
+          doubleSubstationIntakeCommand)
           .deadlineWith(new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
 
       driver.rightTrigger().onTrue(new InstantCommand(() -> scoreHighGrid.get().schedule()));
@@ -289,10 +299,14 @@ public class RobotContainer implements CANTestable, Loggable {
                   new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
                   new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE)));
 
+      CommandBase stowAndCancelDPG = new StowArmElevator(elevatorSubsystem, armSubsystem);
+      stowAndCancelDPG.addRequirements(swerveSubsystem);
+
       driver
           .leftTrigger()
           .or(operator.a())
-          .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+          .onTrue(stowAndCancelDPG);
+      driver.leftTrigger().or(operator.povUp()).whileTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
 
       // driver
       // .b()

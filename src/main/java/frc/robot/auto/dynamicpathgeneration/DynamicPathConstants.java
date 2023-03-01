@@ -31,17 +31,19 @@ public final class DynamicPathConstants {
   public static final double kBetweenPassageControlPointScalar = 0.90;
 
   // Obstacles
-  public static final Obstacle kBarrierAboveGrid = new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
+  public static final Obstacle kBarrierAboveGrid =
+      new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
   public static final Obstacle kLowerWall = new Obstacle(new Translation2d(0, 0), kFieldLength, 0);
-  public static final Obstacle kChargingStation = new Obstacle(
-      kBlueChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
+  public static final Obstacle kChargingStation =
+      new Obstacle(
+          kBlueChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
   public static final Obstacle[] obstacles = {
-      kBarrierAboveGrid,
-      kLowerWall,
-      kChargingStation,
-      kChargingStation.getRedVersion(),
-      kLowerWall.getRedVersion(),
-      kBarrierAboveGrid.getRedVersion()
+    kBarrierAboveGrid,
+    kLowerWall,
+    kChargingStation,
+    kChargingStation.getRedVersion(),
+    kLowerWall.getRedVersion(),
+    kBarrierAboveGrid.getRedVersion()
   };
 
   // Universal path nodes
@@ -71,149 +73,155 @@ public final class DynamicPathConstants {
   // TODO: LOW PRIORITY - Use robust center pivot radius vector method instead of
   // mass setting (only
   // set angle for each and not this monstrous equation)
-  public static final Transform2d kSubstationPreSink = new Transform2d(new Translation2d(-1.22, 0), new Rotation2d());
-  public static final Pose2d kBlueTopDoubleSubstationPose = new Pose2d(15.40, 7.35, Rotation2d.fromDegrees(0));
-  public static final Pose2d kBlueBottomDoubleSubstationPose = new Pose2d(15.40, 6.20, Rotation2d.fromDegrees(0));
-  public static final Pose2d[] kBottomBlueScoringPoses = new Pose2d[] {
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX
-                  + kBlueLowTapeOffset
-                  + kOuterNodeRotationBuffer
-                  + Constants.kRobotLength / 2,
-              0.69),
-          Rotation2d.fromDegrees(-175)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 1.04),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 1.61),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 2.12),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 2.71),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 3.24),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 3.82),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 4.35),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX
-                  + kBlueLowTapeOffset
-                  + kOuterNodeRotationBuffer
-                  + Constants.kRobotLength / 2,
-              4.72),
-          Rotation2d.fromDegrees(173))
-  };
+  public static final Transform2d kSubstationPreSink =
+      new Transform2d(new Translation2d(-1.22, 0), new Rotation2d());
+  public static final Pose2d kBlueTopDoubleSubstationPose =
+      new Pose2d(15.40, 7.35, Rotation2d.fromDegrees(0));
+  public static final Pose2d kBlueBottomDoubleSubstationPose =
+      new Pose2d(15.40, 6.20, Rotation2d.fromDegrees(0));
+  public static final Pose2d[] kBottomBlueScoringPoses =
+      new Pose2d[] {
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX
+                    + kBlueLowTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                0.69),
+            Rotation2d.fromDegrees(-175)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 1.04),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 1.61),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 2.12),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 2.71),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 3.24),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 3.82),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 4.35),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX
+                    + kBlueLowTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                4.72),
+            Rotation2d.fromDegrees(173))
+      };
 
-  public static final Pose2d[] kMidBlueScoringPoses = new Pose2d[] {
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX
-                  + kBlueMidTapeOffset
-                  + kOuterNodeRotationBuffer
-                  + Constants.kRobotLength / 2,
-              0.67),
-          Rotation2d.fromDegrees(-175)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 1.04),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 1.61),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 2.12),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 2.71),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 3.24),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 3.82),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 4.35),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX
-                  + kBlueMidTapeOffset
-                  + kOuterNodeRotationBuffer
-                  + Constants.kRobotLength / 2,
-              4.75),
-          Rotation2d.fromDegrees(173))
-  };
+  public static final Pose2d[] kMidBlueScoringPoses =
+      new Pose2d[] {
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX
+                    + kBlueMidTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                0.67),
+            Rotation2d.fromDegrees(-175)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 1.04),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 1.61),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 2.12),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 2.71),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 3.24),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 3.82),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 4.35),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX
+                    + kBlueMidTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                4.75),
+            Rotation2d.fromDegrees(173))
+      };
 
-  public static final Pose2d[] kHighBlueScoringPoses = new Pose2d[] {
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX
-                  + kBlueHighTapeOffset
-                  + kOuterNodeRotationBuffer
-                  + Constants.kRobotLength / 2,
-              0.64),
-          Rotation2d.fromDegrees(-175)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 1.04),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 1.61),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 2.12),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 2.71),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 3.24),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 3.82),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 4.35),
-          Rotation2d.fromDegrees(180)),
-      new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX
-                  + kBlueHighTapeOffset
-                  + kOuterNodeRotationBuffer
-                  + Constants.kRobotLength / 2,
-              4.79),
-          Rotation2d.fromDegrees(173))
-  };
+  public static final Pose2d[] kHighBlueScoringPoses =
+      new Pose2d[] {
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX
+                    + kBlueHighTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                0.64),
+            Rotation2d.fromDegrees(-175)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 1.04),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 1.61),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 2.12),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 2.71),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 3.24),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 3.82),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 4.35),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX
+                    + kBlueHighTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                4.79),
+            Rotation2d.fromDegrees(173))
+      };
 
   // Path finding constraints
   public static final double INF_TIME = Double.MAX_VALUE / 10;

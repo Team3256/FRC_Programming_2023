@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
@@ -31,6 +30,7 @@ import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.DynamicPathGenErrorPattern;
 import frc.robot.led.patterns.DynamicPathGenSuccessPattern;
 import frc.robot.swerve.SwerveDrive;
+import java.util.function.Supplier;
 
 public class DynamicPathFollower {
   public enum GoalType {
@@ -42,11 +42,15 @@ public class DynamicPathFollower {
   }
 
   public static Command run(SwerveDrive swerveDrive, GoalType goalType, LED ledSubsystem) {
-    return run(swerveDrive, goalType, ledSubsystem, new InstantCommand());
+    return run(swerveDrive, goalType, ledSubsystem, false, () -> new InstantCommand());
   }
 
-  public static Command run(SwerveDrive swerveDrive, GoalType goalType, LED ledSubsystem,
-      Command inBetweenTrajectoryCommand) {
+  public static Command run(
+      SwerveDrive swerveDrive,
+      GoalType goalType,
+      LED ledSubsystem,
+      boolean useInBetweenCommand,
+      Supplier<Command> inBetweenTrajectoryCommand) {
     long ms0 = System.currentTimeMillis();
     // get src, sink
     Pose2d src = swerveDrive.getPose();
@@ -63,7 +67,7 @@ public class DynamicPathFollower {
 
     if (goalType != GoalType.DOUBLE_STATION_TOP && goalType != GoalType.DOUBLE_STATION_BOTTOM) {
       // TODO CHANGE TO -1
-      int locationId = (int) SmartDashboard.getNumber("guiColumn", 1);
+      int locationId = (int) SmartDashboard.getNumber("guiColumn", 7);
       if (locationId == -1) {
         System.out.println("locationId was invalid");
         if (ledSubsystem != null) {
@@ -108,20 +112,22 @@ public class DynamicPathFollower {
     }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command dynamicPathGenTrajectoryCommand = autoBuilder.createPathPlannerCommand(dynamicPathGenTrajectory, false,
-        false);
+    Command dynamicPathGenTrajectoryCommand =
+        autoBuilder.createPathPlannerCommand(dynamicPathGenTrajectory, false, false);
 
     Command scoringLocationTrajectoryCommand;
     if (goalType != GoalType.HIGH_GRID) {
-      PathPoint dynamicPathGenEnd = new PathPoint(
-          dynamicPathGenSink.getTranslation(),
-          new Rotation2d(),
-          dynamicPathGenSink.getRotation());
-      PathPoint scoringLocation = new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(),
-          2);
-      PathPlannerTrajectory trajectoryToFinalSink = PathPlanner.generatePath(kPathToScoreConstraints, dynamicPathGenEnd,
-          scoringLocation);
-      scoringLocationTrajectoryCommand = autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false, false);
+      PathPoint dynamicPathGenEnd =
+          new PathPoint(
+              dynamicPathGenSink.getTranslation(),
+              new Rotation2d(),
+              dynamicPathGenSink.getRotation());
+      PathPoint scoringLocation =
+          new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(), 2);
+      PathPlannerTrajectory trajectoryToFinalSink =
+          PathPlanner.generatePath(kPathToScoreConstraints, dynamicPathGenEnd, scoringLocation);
+      scoringLocationTrajectoryCommand =
+          autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false, false);
     } else {
       scoringLocationTrajectoryCommand = new InstantCommand();
     }
@@ -129,11 +135,17 @@ public class DynamicPathFollower {
     // run command
     System.out.println("Time to run command: " + (System.currentTimeMillis() - ms0));
 
+    Command finalTrajectory = scoringLocationTrajectoryCommand;
+    if (useInBetweenCommand) {
+      finalTrajectory =
+          new ParallelDeadlineGroup(
+              new WaitCommand(1.5).andThen(scoringLocationTrajectoryCommand),
+              inBetweenTrajectoryCommand.get().asProxy());
+    }
+
     return Commands.sequence(
         dynamicPathGenTrajectoryCommand,
-        new ParallelDeadlineGroup(
-            new WaitCommand(1.5).andThen(scoringLocationTrajectoryCommand),
-            inBetweenTrajectoryCommand),
+        finalTrajectory,
         new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenSuccessPattern()));
   }
 }
