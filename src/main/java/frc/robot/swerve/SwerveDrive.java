@@ -77,7 +77,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               backLeftModule.getPosition(),
               backRightModule.getPosition()
             },
-            new Pose2d(new Translation2d(7.09, 4.59), Rotation2d.fromDegrees(180))); // 3.91
+            new Pose2d(new Translation2d(4.15, 4.67), Rotation2d.fromDegrees(180))); // 3.91
 
     SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
     SmartDashboard.putData("Field", field);

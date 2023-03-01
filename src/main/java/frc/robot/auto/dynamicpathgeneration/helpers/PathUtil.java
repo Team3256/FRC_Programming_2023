@@ -55,7 +55,7 @@ public class PathUtil {
     return new Pose2d(
         Constants.FieldConstants.kFieldLength - orig.getX(),
         orig.getY(),
-        orig.getRotation().plus(new Rotation2d(Math.PI)));
+        orig.getRotation().unaryMinus().plus(new Rotation2d(Math.PI)));
   }
 
   public static Translation2d flip(Translation2d orig) {

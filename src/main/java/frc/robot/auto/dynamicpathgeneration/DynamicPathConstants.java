@@ -25,9 +25,9 @@ public final class DynamicPathConstants {
   public static final boolean kDynamicPathGenerationDebug = true && Constants.kDebugEnabled;
 
   // Bezier
-  public static final double kRegularControlPointScalar = 0.50;
-  public static final double kBetweenPreSinkPointScalar = 0.1;
-  public static final double kBetweenPassageControlPointScalar = 0.99;
+  public static final double kRegularControlPointScalar = 0.03;
+  public static final double kBetweenPreSinkPointScalar = 0.03;
+  public static final double kBetweenPassageControlPointScalar = 0.30;
 
   // Obstacles
   public static final Obstacle kBarrierAboveGrid =
@@ -48,7 +48,7 @@ public final class DynamicPathConstants {
   // Universal path nodes
   public static final ArrayList<PathNode> blueDynamicPathWayNodes = new ArrayList<>();
   public static final ArrayList<PathNode> redDynamicPathWayNodes = new ArrayList<>();
-  public static final double preSinkX = 2.1;
+  public static final double preSinkX = 2.10;
   public static final double preSinkEndpointsOffset = 0.3;
   public static final double passagePoints = 8;
 
@@ -59,12 +59,14 @@ public final class DynamicPathConstants {
   }
 
   // Trajectory constraints
-  public static final PathConstraints dynamicPathConstraints = new PathConstraints(4, 4);
-  public static final double kBlueGridTapeX = 1.38;
+  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(4, 4);
+  public static final PathConstraints kPathToScoreConstraints = new PathConstraints(2, 1);
+  public static final double kGridBuffer = Units.inchesToMeters(4);
+  public static final double kBlueGridTapeX = 1.38 + kGridBuffer;
   public static final double kBlueLowTapeOffset = Units.inchesToMeters(22);
   public static final double kBlueMidTapeOffset = Units.inchesToMeters(12);
   public static final double kBlueHighTapeOffset = Units.inchesToMeters(0);
-  public static final double kOuterNodeRotationBuffer = Units.inchesToMeters(2);
+  public static final double kOuterNodeRotationBuffer = Units.inchesToMeters(3);
 
   // (lowest y location to highest y location)
   // TODO: LOW PRIORITY - Use robust center pivot radius vector method instead of
@@ -79,7 +81,7 @@ public final class DynamicPathConstants {
                     + kBlueLowTapeOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
-                0.64),
+                0.69),
             Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
@@ -115,7 +117,7 @@ public final class DynamicPathConstants {
                     + kBlueLowTapeOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
-                4.79),
+                4.72),
             Rotation2d.fromDegrees(173))
       };
 
@@ -127,7 +129,7 @@ public final class DynamicPathConstants {
                     + kBlueMidTapeOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
-                0.64),
+                0.67),
             Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
@@ -163,7 +165,7 @@ public final class DynamicPathConstants {
                     + kBlueMidTapeOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
-                4.79),
+                4.75),
             Rotation2d.fromDegrees(173))
       };
 

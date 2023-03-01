@@ -11,12 +11,15 @@ import static frc.robot.Constants.trajectoryViewer;
 import static frc.robot.Constants.waypointViewer;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
@@ -32,15 +35,16 @@ public class DynamicPathFollower {
   public static void run(SwerveDrive swerveDrive, GoalType type) {
     long ms0 = System.currentTimeMillis();
     // get src, sink
-    // HUGE TODO CHANGE
     // Pose2d src = swerveDrive.getPose();
-    Pose2d src =
-        new Pose2d(
-            Math.random() * 8, Math.random() * 8, Rotation2d.fromDegrees(Math.random() * 180));
-    Pose2d sink = kBlueStationPose;
+    Pose2d src = new Pose2d(
+        Math.random() * 8, Math.random() * 8, Rotation2d.fromDegrees(Math.random() *
+            180));
+    Pose2d finalSink = kBlueStationPose;
+    Pose2d dynamicPathGenSink = kBlueStationPose;
     if (type != GoalType.STATION) {
       // TODO: change random to -1 when not testing
       int rand = (int) (Math.random() * 9);
+      System.out.println("Random number: " + rand);
       int locationId = (int) SmartDashboard.getNumber("locationId", rand);
       // handle invalid location
       if (locationId == -1) {
@@ -48,21 +52,32 @@ public class DynamicPathFollower {
         return;
       }
       if (type == GoalType.LOW_GRID) {
-        sink = kBottomBlueScoringPoses[locationId];
+        finalSink = kBottomBlueScoringPoses[locationId];
       } else if (type == GoalType.MID_GRID) {
-        sink = kMidBlueScoringPoses[locationId];
+        finalSink = kMidBlueScoringPoses[locationId];
       } else if (type == GoalType.HIGH_GRID) {
-        sink = kHighBlueScoringPoses[locationId];
+        finalSink = kHighBlueScoringPoses[locationId];
       }
+      dynamicPathGenSink = kHighBlueScoringPoses[locationId];
     }
+    System.out.println("Sink: " + finalSink);
     if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
-      sink = PathUtil.flip(sink);
+      finalSink = PathUtil.flip(finalSink);
+      dynamicPathGenSink = PathUtil.flip(dynamicPathGenSink);
     }
     // get trajectory
-    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
-    PathPlannerTrajectory trajectory = generator.getTrajectory();
+    DynamicPathGenerator generator = new DynamicPathGenerator(src, dynamicPathGenSink);
+    PathPlannerTrajectory dynamicPathGenTrajectory = generator.getTrajectory();
+
+    PathPoint dynamicPathGenEnd = new PathPoint(
+        dynamicPathGenSink.getTranslation(),
+        new Rotation2d(),
+        dynamicPathGenSink.getRotation());
+    PathPoint scoringLocation = new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(), 2);
+    PathPlannerTrajectory trajectoryToFinalSink = PathPlanner.generatePath(kPathToScoreConstraints, dynamicPathGenEnd,
+        scoringLocation);
     // handle invalid trajectory
-    if (trajectory == null) {
+    if (dynamicPathGenTrajectory == null) {
       System.out.println("No trajectory was found.");
       return;
     } else {
@@ -72,16 +87,19 @@ public class DynamicPathFollower {
     System.out.println("Time to find trajectory: " + (System.currentTimeMillis() - ms0));
     // send trajectory to networktables for logging
     if (kDynamicPathGenerationDebug) {
-      trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
-      waypointViewer.getObject("Src").setPose(trajectory.getInitialHolonomicPose());
-      waypointViewer.getObject("Sink").setPose(trajectory.getEndState().poseMeters);
+      trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(dynamicPathGenTrajectory);
+      waypointViewer.getObject("Src").setPose(dynamicPathGenTrajectory.getInitialHolonomicPose());
+      waypointViewer.getObject("Sink").setPose(dynamicPathGenTrajectory.getEndState().poseMeters);
     }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command pathPlannerCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
+    Command dynamicPathGenTrajectoryCommand = autoBuilder.createPathPlannerCommand(dynamicPathGenTrajectory, false,
+        false);
+    Command scoringLocationTrajectoryCommand = autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false,
+        false);
     // run command
     System.out.println("Time to run command: " + (System.currentTimeMillis() - ms0));
     System.out.println();
-    pathPlannerCommand.schedule();
+    Commands.sequence(dynamicPathGenTrajectoryCommand, scoringLocationTrajectoryCommand).schedule();
   }
 }
