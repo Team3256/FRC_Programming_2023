@@ -51,13 +51,13 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   private final Field2d field = new Field2d();
   private final Field2d limelightLocalizationField = new Field2d();
 
-  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
-      new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
-  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
-      new AdaptiveSlewRateLimiter(kYAccelRateLimit, kYDecelRateLimit);
+  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter = new AdaptiveSlewRateLimiter(kXAccelRateLimit,
+      kXDecelRateLimit);
+  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter = new AdaptiveSlewRateLimiter(kYAccelRateLimit,
+      kYDecelRateLimit);
 
   private final SwerveModule[] swerveModules = {
-    frontLeftModule, frontRightModule, backLeftModule, backRightModule
+      frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
   public Pigeon2 gyro;
@@ -68,17 +68,16 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     zeroGyro();
 
     // TODO MAKE POSITION 0,0
-    poseEstimator =
-        new SwerveDrivePoseEstimator(
-            kSwerveKinematics,
-            getYaw(),
-            new SwerveModulePosition[] {
-              frontLeftModule.getPosition(),
-              frontRightModule.getPosition(),
-              backLeftModule.getPosition(),
-              backRightModule.getPosition()
-            },
-            new Pose2d(new Translation2d(2.15, 4.58), Rotation2d.fromDegrees(180))); // 3.91
+    poseEstimator = new SwerveDrivePoseEstimator(
+        kSwerveKinematics,
+        getYaw(),
+        new SwerveModulePosition[] {
+            frontLeftModule.getPosition(),
+            frontRightModule.getPosition(),
+            backLeftModule.getPosition(),
+            backRightModule.getPosition()
+        },
+        new Pose2d(new Translation2d(2.15, 4.58), Rotation2d.fromDegrees(180))); // 3.91
 
     SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
     SmartDashboard.putData("Field", field);
@@ -132,11 +131,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    ChassisSpeeds swerveChassisSpeed =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getPose().getRotation())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds swerveChassisSpeed = fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            translation.getX(), translation.getY(), rotation, getPose().getRotation())
+        : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
   }
@@ -147,11 +145,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       boolean fieldRelative,
       boolean isOpenLoop,
       double elevatorHeight) {
-    ChassisSpeeds swerveChassisSpeed =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getPose().getRotation())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds swerveChassisSpeed = fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            translation.getX(), translation.getY(), rotation, getPose().getRotation())
+        : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop, elevatorHeight);
   }
