@@ -27,11 +27,12 @@ public final class CTREConfigs {
     swerveCanCoderConfig = new CANCoderConfiguration();
 
     /* Swerve Angle Motor Configurations */
-    SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
-        kAngleEnableCurrentLimit,
-        kAngleContinuousCurrentLimit,
-        kAnglePeakCurrentLimit,
-        kAnglePeakCurrentDuration);
+    SupplyCurrentLimitConfiguration angleSupplyLimit =
+        new SupplyCurrentLimitConfiguration(
+            kAngleEnableCurrentLimit,
+            kAngleContinuousCurrentLimit,
+            kAnglePeakCurrentLimit,
+            kAnglePeakCurrentDuration);
 
     swerveAngleFXConfig.slot0.kP = kAngleKP;
     swerveAngleFXConfig.slot0.kI = kAngleKI;
@@ -40,11 +41,12 @@ public final class CTREConfigs {
     swerveAngleFXConfig.supplyCurrLimit = angleSupplyLimit;
 
     /* Swerve Drive Motor Configuration */
-    SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
-        kDriveEnableCurrentLimit,
-        kDriveContinuousCurrentLimit,
-        kDrivePeakCurrentLimit,
-        kDrivePeakCurrentDuration);
+    SupplyCurrentLimitConfiguration driveSupplyLimit =
+        new SupplyCurrentLimitConfiguration(
+            kDriveEnableCurrentLimit,
+            kDriveContinuousCurrentLimit,
+            kDrivePeakCurrentLimit,
+            kDrivePeakCurrentDuration);
 
     swerveDriveFXConfig.slot0.kP = kDriveKP;
     swerveDriveFXConfig.slot0.kI = kDriveKI;
@@ -57,7 +59,8 @@ public final class CTREConfigs {
     /* Swerve CANCoder Configuration */
     swerveCanCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
     swerveCanCoderConfig.sensorDirection = kCanCoderInvert;
-    swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+    swerveCanCoderConfig.initializationStrategy =
+        SensorInitializationStrategy.BootToAbsolutePosition;
     swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
   }
 }
