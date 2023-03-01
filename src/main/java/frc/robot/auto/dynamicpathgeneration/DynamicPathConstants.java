@@ -25,9 +25,9 @@ public final class DynamicPathConstants {
   public static final boolean kDynamicPathGenerationDebug = true && Constants.kDebugEnabled;
 
   // Bezier
-  public static final double kRegularControlPointScalar = 0.03;
-  public static final double kBetweenPreSinkPointScalar = 0.03;
-  public static final double kBetweenPassageControlPointScalar = 0.30;
+  public static final double kRegularControlPointScalar = 0.5;
+  public static final double kBetweenPreSinkPointScalar = 0.1;
+  public static final double kBetweenPassageControlPointScalar = 0.90;
 
   // Obstacles
   public static final Obstacle kBarrierAboveGrid =
@@ -72,7 +72,10 @@ public final class DynamicPathConstants {
   // TODO: LOW PRIORITY - Use robust center pivot radius vector method instead of
   // mass setting (only
   // set angle for each and not this monstrous equation)
-  public static final Pose2d kBlueStationPose = new Pose2d(15.33, 7.35, Rotation2d.fromDegrees(0));
+  public static final Pose2d kBlueTopDoubleSubstationPose =
+      new Pose2d(15.40, 7.35, Rotation2d.fromDegrees(0));
+  public static final Pose2d kBlueBottomDoubleSubstationPose =
+      new Pose2d(15.40, 6.20, Rotation2d.fromDegrees(0));
   public static final Pose2d[] kBottomBlueScoringPoses =
       new Pose2d[] {
         new Pose2d(

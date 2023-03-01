@@ -23,6 +23,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.helpers.AutoBuilder;
+import frc.robot.led.LED;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.patterns.DynamicPathGenErrorPattern;
 import frc.robot.swerve.SwerveDrive;
 
 public class DynamicPathFollower {
@@ -30,30 +33,40 @@ public class DynamicPathFollower {
     LOW_GRID,
     MID_GRID,
     HIGH_GRID,
-    STATION;
+    DOUBLE_STATION_TOP,
+    DOUBLE_STATION_BOTTOM;
   }
 
-  public static Command run(SwerveDrive swerveDrive, GoalType type) {
+  public static Command run(SwerveDrive swerveDrive, GoalType goalType, LED ledSubsystem) {
     long ms0 = System.currentTimeMillis();
     // get src, sink
     Pose2d src = swerveDrive.getPose();
-    Pose2d finalSink = kBlueStationPose;
-    Pose2d dynamicPathGenSink = kBlueStationPose;
-    if (type != GoalType.STATION) {
-      int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
-      System.out.println("Location id: " + locationId);
-      // handle invalid location
+    Pose2d finalSink = new Pose2d();
+    Pose2d dynamicPathGenSink = new Pose2d();
+
+    if (goalType == GoalType.DOUBLE_STATION_BOTTOM) {
+      finalSink = kBlueBottomDoubleSubstationPose;
+      dynamicPathGenSink = kBlueBottomDoubleSubstationPose;
+    } else if (goalType == GoalType.DOUBLE_STATION_TOP) {
+      finalSink = kBlueTopDoubleSubstationPose;
+      dynamicPathGenSink = kBlueTopDoubleSubstationPose;
+    }
+    if (goalType != GoalType.DOUBLE_STATION_TOP && goalType != GoalType.DOUBLE_STATION_BOTTOM) {
+      // TODO CHANGE TO -1
+      int locationId = (int) SmartDashboard.getNumber("guiColumn", 1);
       if (locationId == -1) {
-        System.out.println("LocationId entered was invalid.");
-        return new InstantCommand();
-        // Show error LEDs
-        // return new LEDSetAllSectionsPattern(ledSubsystem, ledPattern);
+        System.out.println("locationId was invalid");
+        if (ledSubsystem != null) {
+          return new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenErrorPattern());
+        } else {
+          return new InstantCommand();
+        }
       }
-      if (type == GoalType.LOW_GRID) {
+      if (goalType == GoalType.LOW_GRID) {
         finalSink = kBottomBlueScoringPoses[locationId];
-      } else if (type == GoalType.MID_GRID) {
+      } else if (goalType == GoalType.MID_GRID) {
         finalSink = kMidBlueScoringPoses[locationId];
-      } else if (type == GoalType.HIGH_GRID) {
+      } else if (goalType == GoalType.HIGH_GRID) {
         finalSink = kHighBlueScoringPoses[locationId];
       }
       dynamicPathGenSink = kHighBlueScoringPoses[locationId];
@@ -67,19 +80,10 @@ public class DynamicPathFollower {
     DynamicPathGenerator generator = new DynamicPathGenerator(src, dynamicPathGenSink);
     PathPlannerTrajectory dynamicPathGenTrajectory = generator.getTrajectory();
 
-    PathPoint dynamicPathGenEnd =
-        new PathPoint(
-            dynamicPathGenSink.getTranslation(),
-            new Rotation2d(),
-            dynamicPathGenSink.getRotation());
-    PathPoint scoringLocation =
-        new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(), 2);
-    PathPlannerTrajectory trajectoryToFinalSink =
-        PathPlanner.generatePath(kPathToScoreConstraints, dynamicPathGenEnd, scoringLocation);
     // handle invalid trajectory
     if (dynamicPathGenTrajectory == null) {
       System.out.println("No trajectory was found.");
-      return new InstantCommand();
+      return new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenErrorPattern());
     } else {
       System.out.println("Trajectory was found.");
     }
@@ -95,8 +99,24 @@ public class DynamicPathFollower {
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command dynamicPathGenTrajectoryCommand =
         autoBuilder.createPathPlannerCommand(dynamicPathGenTrajectory, false, false);
-    Command scoringLocationTrajectoryCommand =
-        autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false, false);
+
+    Command scoringLocationTrajectoryCommand;
+    if (goalType != GoalType.HIGH_GRID) {
+      PathPoint dynamicPathGenEnd =
+          new PathPoint(
+              dynamicPathGenSink.getTranslation(),
+              new Rotation2d(),
+              dynamicPathGenSink.getRotation());
+      PathPoint scoringLocation =
+          new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(), 2);
+      PathPlannerTrajectory trajectoryToFinalSink =
+          PathPlanner.generatePath(kPathToScoreConstraints, dynamicPathGenEnd, scoringLocation);
+      scoringLocationTrajectoryCommand =
+          autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false, false);
+    } else {
+      scoringLocationTrajectoryCommand = new InstantCommand();
+    }
+
     // run command
     System.out.println("Time to run command: " + (System.currentTimeMillis() - ms0));
 
