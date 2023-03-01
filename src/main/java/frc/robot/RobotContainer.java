@@ -41,11 +41,15 @@ import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -177,29 +181,67 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    driver
-        .y()
-        .onTrue(
-            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.HIGH_GRID)));
-    driver
-        .rightBumper()
-        .onTrue(
-            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.MID_GRID)));
-    driver
-        .b()
-        .onTrue(
-            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.LOW_GRID)));
-    driver
-        .x()
-        .onTrue(
-            new InstantCommand(() -> DynamicPathFollower.run(swerveSubsystem, GoalType.STATION)));
+    Supplier<Command> scoreHighGrid = () -> DynamicPathFollower.run(swerveSubsystem, GoalType.HIGH_GRID)
+        .andThen(getScoreCommand(GoalType.HIGH_GRID));
+    Supplier<Command> scoreMidGrid = () -> DynamicPathFollower.run(swerveSubsystem, GoalType.MID_GRID)
+        .andThen(getScoreCommand(GoalType.MID_GRID));
+    Supplier<Command> scoreLowGrid = () -> DynamicPathFollower.run(swerveSubsystem, GoalType.LOW_GRID)
+        .andThen(getScoreCommand(GoalType.LOW_GRID));
+    Supplier<Command> goToStation = () -> DynamicPathFollower.run(swerveSubsystem, GoalType.STATION);
+
+    driver.leftStick().onTrue(new InstantCommand(() -> scoreHighGrid.get().schedule()));
+    driver.rightBumper().onTrue(new InstantCommand(() -> scoreMidGrid.get().schedule()));
+    driver.b().onTrue(new InstantCommand(() -> scoreLowGrid.get().schedule()));
+    driver.a().onTrue(new InstantCommand(() -> goToStation.get().schedule()));
+  }
+
+  private Command getScoreCommand(GoalType goalType) {
+    switch (goalType) {
+      case HIGH_GRID:
+        return new ParallelCommandGroup(
+            new ConditionalCommand(
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                this::isCurrentPieceCone),
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                this::isCurrentPieceCone),
+            new WaitCommand(2).andThen(
+                new ConditionalCommand(
+                    new IntakeCube(intakeSubsystem),
+                    new IntakeCube(intakeSubsystem),
+                    this::isCurrentPieceCone)));
+      case MID_GRID:
+        return new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                this::isCurrentPieceCone),
+            new WaitCommand(2).andThen(
+                new ConditionalCommand(
+                    new IntakeCube(intakeSubsystem),
+                    new IntakeCube(intakeSubsystem),
+                    this::isCurrentPieceCone)));
+      case LOW_GRID:
+        return new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
+            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW),
+            new WaitCommand(2).andThen(
+                new ConditionalCommand(
+                    new IntakeCube(intakeSubsystem),
+                    new IntakeCube(intakeSubsystem),
+                    this::isCurrentPieceCone)));
+      default:
+        return new InstantCommand();
+    }
   }
 
   private void configureIntake() {
     intakeSubsystem = new Intake();
 
     operator.leftTrigger().whileTrue(new IntakeCube(intakeSubsystem));
-    operator.leftTrigger().onTrue(new InstantCommand(this::setPieceToCube));
     operator.rightTrigger().whileTrue(new IntakeCone(intakeSubsystem));
     operator.rightTrigger().onTrue(new InstantCommand(this::setPieceToCone));
   }
@@ -279,22 +321,23 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledStrip = new LED(0, new int[] {100});
+    ledStrip = new LED(0, new int[] { 100 });
     ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
     operator
         .leftBumper()
-        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()));
+        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()))
+        .toggleOnTrue(new InstantCommand(this::setPieceToCube));
     operator
         .rightBumper()
-        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingCubePattern()));
+        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingCubePattern()))
+        .toggleOnTrue(new InstantCommand(this::setPieceToCube));
   }
 
   public Command getAutonomousCommand() {
     Command setArmElevatorOnRightSide;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide =
-          new ParallelRaceGroup(
-              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+      setArmElevatorOnRightSide = new ParallelRaceGroup(
+          new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
     } else {
       setArmElevatorOnRightSide = new InstantCommand();
     }
@@ -308,7 +351,8 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("waypointViewer", waypointViewer);
     SmartDashboard.putData("swerveViewer", swerveViewer);
 
-    for (Loggable device : loggables) device.logInit();
+    for (Loggable device : loggables)
+      device.logInit();
     Shuffleboard.getTab(kDriverTabName)
         .add(
             "Joystick",
@@ -329,7 +373,8 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : testables) result &= subsystem.CANTest();
+    for (CANTestable subsystem : testables)
+      result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }

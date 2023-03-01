@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
@@ -32,24 +33,21 @@ public class DynamicPathFollower {
     STATION;
   }
 
-  public static void run(SwerveDrive swerveDrive, GoalType type) {
+  public static Command run(SwerveDrive swerveDrive, GoalType type) {
     long ms0 = System.currentTimeMillis();
     // get src, sink
-    // Pose2d src = swerveDrive.getPose();
-    Pose2d src = new Pose2d(
-        Math.random() * 8, Math.random() * 8, Rotation2d.fromDegrees(Math.random() *
-            180));
+    Pose2d src = swerveDrive.getPose();
     Pose2d finalSink = kBlueStationPose;
     Pose2d dynamicPathGenSink = kBlueStationPose;
     if (type != GoalType.STATION) {
-      // TODO: change random to -1 when not testing
-      int rand = (int) (Math.random() * 9);
-      System.out.println("Random number: " + rand);
-      int locationId = (int) SmartDashboard.getNumber("locationId", rand);
+      int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
+      System.out.println("Location id: " + locationId);
       // handle invalid location
       if (locationId == -1) {
         System.out.println("LocationId entered was invalid.");
-        return;
+        return new InstantCommand();
+        // Show error LEDs
+        // return new LEDSetAllSectionsPattern(ledSubsystem, ledPattern);
       }
       if (type == GoalType.LOW_GRID) {
         finalSink = kBottomBlueScoringPoses[locationId];
@@ -69,17 +67,19 @@ public class DynamicPathFollower {
     DynamicPathGenerator generator = new DynamicPathGenerator(src, dynamicPathGenSink);
     PathPlannerTrajectory dynamicPathGenTrajectory = generator.getTrajectory();
 
-    PathPoint dynamicPathGenEnd = new PathPoint(
-        dynamicPathGenSink.getTranslation(),
-        new Rotation2d(),
-        dynamicPathGenSink.getRotation());
-    PathPoint scoringLocation = new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(), 2);
-    PathPlannerTrajectory trajectoryToFinalSink = PathPlanner.generatePath(kPathToScoreConstraints, dynamicPathGenEnd,
-        scoringLocation);
+    PathPoint dynamicPathGenEnd =
+        new PathPoint(
+            dynamicPathGenSink.getTranslation(),
+            new Rotation2d(),
+            dynamicPathGenSink.getRotation());
+    PathPoint scoringLocation =
+        new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(), 2);
+    PathPlannerTrajectory trajectoryToFinalSink =
+        PathPlanner.generatePath(kPathToScoreConstraints, dynamicPathGenEnd, scoringLocation);
     // handle invalid trajectory
     if (dynamicPathGenTrajectory == null) {
       System.out.println("No trajectory was found.");
-      return;
+      return new InstantCommand();
     } else {
       System.out.println("Trajectory was found.");
     }
@@ -93,13 +93,13 @@ public class DynamicPathFollower {
     }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command dynamicPathGenTrajectoryCommand = autoBuilder.createPathPlannerCommand(dynamicPathGenTrajectory, false,
-        false);
-    Command scoringLocationTrajectoryCommand = autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false,
-        false);
+    Command dynamicPathGenTrajectoryCommand =
+        autoBuilder.createPathPlannerCommand(dynamicPathGenTrajectory, false, false);
+    Command scoringLocationTrajectoryCommand =
+        autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false, false);
     // run command
     System.out.println("Time to run command: " + (System.currentTimeMillis() - ms0));
-    System.out.println();
-    Commands.sequence(dynamicPathGenTrajectoryCommand, scoringLocationTrajectoryCommand).schedule();
+
+    return Commands.sequence(dynamicPathGenTrajectoryCommand, scoringLocationTrajectoryCommand);
   }
 }

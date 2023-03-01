@@ -140,7 +140,6 @@ public class AutoBuilder {
     for (int i = startIndex; i < stopEvent.names.size(); i++) {
       String name = stopEvent.names.get(i);
       if (eventMap.containsKey(name)) {
-        System.out.println(name);
         commands.add(eventMap.get(name).get());
       }
     }
