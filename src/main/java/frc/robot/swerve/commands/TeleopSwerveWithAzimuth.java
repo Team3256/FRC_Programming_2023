@@ -14,7 +14,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 // import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 // import edu.wpi.first.wpilibj2.command.button.Trigger;
 // import frc.robot.helpers.DPadButton;
@@ -104,14 +103,16 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     // PID controller takes current robot position (getYaw) and compares to the
     // azimuth angle to
     // calculate error
-    double rotationPIDOutput = azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
+    double rotationPIDOutput =
+        azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
 
     // SmartDashboard.putNumber("Setpoint Angle", azimuthAngle);
     // SmartDashboard.putNumber("Rotation Velocity", rotationPIDOutput);
     // SmartDashboard.putData("Azimuth PID Controller", azimuthController);
 
     translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
-    rotationPIDOutput = MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
+    rotationPIDOutput =
+        MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
     // Sets motors to the velocities defined here
     swerveSubsystem.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
   }
