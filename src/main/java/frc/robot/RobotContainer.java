@@ -124,57 +124,57 @@ public class RobotContainer implements CANTestable, Loggable {
             kFieldRelative,
             kOpenLoop));
 
-    // driver
-    // .povUp()
-    // .onTrue(
-    // new TeleopSwerveWithAzimuth(
-    // swerveSubsystem,
-    // driver::getLeftY,
-    // driver::getLeftX,
-    // () -> 0,
-    // () -> -1,
-    // () -> isRotating(driver),
-    // kFieldRelative,
-    // kOpenLoop));
+     driver
+     .povUp()
+     .onTrue(
+     new TeleopSwerveWithAzimuth(
+     swerveSubsystem,
+     driver::getLeftY,
+     driver::getLeftX,
+     () -> 0,
+     () -> -1,
+     () -> isRotating(driver),
+     kFieldRelative,
+     kOpenLoop));
 
-    // driver
-    // .povDown()
-    // .onTrue(
-    // new TeleopSwerveWithAzimuth(
-    // swerveSubsystem,
-    // driver::getLeftY,
-    // driver::getLeftX,
-    // () -> 0,
-    // () -> 1,
-    // () -> isRotating(driver),
-    // kFieldRelative,
-    // kOpenLoop));
+     driver
+     .povDown()
+     .onTrue(
+     new TeleopSwerveWithAzimuth(
+     swerveSubsystem,
+     driver::getLeftY,
+     driver::getLeftX,
+     () -> 0,
+     () -> 1,
+     () -> isRotating(driver),
+     kFieldRelative,
+     kOpenLoop));
 
-    // driver
-    // .povRight()
-    // .onTrue(
-    // new TeleopSwerveWithAzimuth(
-    // swerveSubsystem,
-    // driver::getLeftY,
-    // driver::getLeftX,
-    // () -> 1,
-    // () -> 0,
-    // () -> isRotating(driver),
-    // kFieldRelative,
-    // kOpenLoop));
+     driver
+     .povRight()
+     .onTrue(
+     new TeleopSwerveWithAzimuth(
+     swerveSubsystem,
+     driver::getLeftY,
+     driver::getLeftX,
+     () -> 1,
+     () -> 0,
+     () -> isRotating(driver),
+     kFieldRelative,
+     kOpenLoop));
 
-    // driver
-    // .povLeft()
-    // .onTrue(
-    // new TeleopSwerveWithAzimuth(
-    // swerveSubsystem,
-    // driver::getLeftY,
-    // driver::getLeftX,
-    // () -> -1,
-    // () -> 0,
-    // () -> isRotating(driver),
-    // kFieldRelative,
-    // kOpenLoop));
+     driver
+     .povLeft()
+     .onTrue(
+     new TeleopSwerveWithAzimuth(
+     swerveSubsystem,
+     driver::getLeftY,
+     driver::getLeftX,
+     () -> -1,
+     () -> 0,
+     () -> isRotating(driver),
+     kFieldRelative,
+     kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
@@ -296,15 +296,6 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("trajectoryViewer", trajectoryViewer);
     SmartDashboard.putData("waypointViewer", waypointViewer);
     SmartDashboard.putData("swerveViewer", swerveViewer);
-
-    for (Loggable device : loggables)
-      device.logInit();
-    // Shuffleboard.getTab(kDriverTabName)
-    // .add(
-    // "Joystick",
-    // new DoubleSendable(
-    // () -> Math.toDegrees(Math.atan2(driver.getRightX(),
-    // driver.getRightnnnnnnY())), "Gyro"));
   }
 
   public boolean isRotating(CommandXboxController controller) {
