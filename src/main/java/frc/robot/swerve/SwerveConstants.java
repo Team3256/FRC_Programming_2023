@@ -126,7 +126,7 @@ public final class SwerveConstants {
     Rotation2d.fromDegrees(268.4179), // Front Left - 0
     Rotation2d.fromDegrees(314.9121), // Front Right - 1
     Rotation2d.fromDegrees(77.6953), // Back Left - 2
-    Rotation2d.fromDegrees(310.3418) // Back Right - 3
+    Rotation2d.fromDegrees(280.7226) // Back Right - 3
   };
 
   public static final Rotation2d[] kZiptideOffsets = {
