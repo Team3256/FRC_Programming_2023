@@ -13,7 +13,6 @@ import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -35,7 +34,6 @@ import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
-import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
@@ -109,7 +107,6 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureSwerve() {
-
     swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
             swerveSubsystem,
@@ -198,36 +195,18 @@ public class RobotContainer implements CANTestable, Loggable {
             new ConditionalCommand(
                 new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
                 new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
-                this::isCurrentPieceCone),
-            new WaitCommand(2)
-                .andThen(
-                    new ConditionalCommand(
-                        new IntakeCube(intakeSubsystem),
-                        new IntakeCube(intakeSubsystem),
-                        this::isCurrentPieceCone)));
+                this::isCurrentPieceCone));
       case MID_GRID:
         return new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
             new ConditionalCommand(
                 new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
                 new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
-                this::isCurrentPieceCone),
-            new WaitCommand(2)
-                .andThen(
-                    new ConditionalCommand(
-                        new IntakeCube(intakeSubsystem),
-                        new IntakeCube(intakeSubsystem),
-                        this::isCurrentPieceCone)));
+                this::isCurrentPieceCone));
       case LOW_GRID:
         return new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
-            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW),
-            new WaitCommand(2)
-                .andThen(
-                    new ConditionalCommand(
-                        new IntakeCube(intakeSubsystem),
-                        new IntakeCube(intakeSubsystem),
-                        this::isCurrentPieceCone)));
+            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
       default:
         return new InstantCommand();
     }
@@ -245,9 +224,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureElevator() {
-
     if (kArmEnabled && kIntakeEnabled) {
-
       driver.rightTrigger().onTrue(getScoreCommand(GoalType.HIGH_GRID));
       driver.rightBumper().onTrue(getScoreCommand(GoalType.MID_GRID));
       driver.b().onTrue(getScoreCommand(GoalType.LOW_GRID));
@@ -314,11 +291,12 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("swerveViewer", swerveViewer);
 
     for (Loggable device : loggables) device.logInit();
-    Shuffleboard.getTab(kDriverTabName)
-        .add(
-            "Joystick",
-            new DoubleSendable(
-                () -> Math.toDegrees(Math.atan2(driver.getRightX(), driver.getRightY())), "Gyro"));
+    // Shuffleboard.getTab(kDriverTabName)
+    // .add(
+    // "Joystick",
+    // new DoubleSendable(
+    // () -> Math.toDegrees(Math.atan2(driver.getRightX(),
+    // driver.getRightnnnnnnY())), "Gyro"));
   }
 
   public boolean isRotating(CommandXboxController controller) {
