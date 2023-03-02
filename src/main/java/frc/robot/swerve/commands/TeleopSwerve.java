@@ -57,6 +57,17 @@ public class TeleopSwerve extends CommandBase {
     this.elevatorSubsystem = elevatorSubsystem;
   }
 
+  public double modifyAxis(double value) {
+    if (value == 0) {
+      return 0;
+    }
+    value =
+        Math.copySign(
+            Math.pow((((1 + Constants.kStickDeadband) * value) - Constants.kStickDeadband), 3),
+            value); // cubic
+    return value;
+  }
+
   @Override
   public void initialize() {
     System.out.println("TeleopSwerve started");
@@ -66,9 +77,9 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void execute() {
-    double yAxis = Math.pow(-translationAxis.getAsDouble(), 3);
-    double xAxis = Math.pow(-strafeAxis.getAsDouble(), 3);
-    double rAxis = Math.pow(-rotationAxis.getAsDouble(), 3);
+    double yAxis = modifyAxis(-translationAxis.getAsDouble());
+    double xAxis = modifyAxis(-strafeAxis.getAsDouble());
+    double rAxis = modifyAxis(-rotationAxis.getAsDouble());
 
     /* Deadbands */
     yAxis = (Math.abs(yAxis) < Constants.kStickDeadband) ? 0 : yAxis;
