@@ -56,5 +56,5 @@ public final class AutoConstants {
   public static final PathConstraints kFastPathConstraints =
       new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
   public static final PathConstraints kSafePathConstraints = new PathConstraints(4, 5);
-  public static final PathConstraints kEngagePathConstraints = new PathConstraints(3, 3);
+  public static final PathConstraints kEngagePathConstraints = new PathConstraints(2, 2);
 }

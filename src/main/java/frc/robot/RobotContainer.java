@@ -40,9 +40,12 @@ import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -67,11 +70,16 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    if (kArmEnabled) armSubsystem = new Arm();
-    if (kIntakeEnabled) intakeSubsystem = new Intake();
-    if (kElevatorEnabled) elevatorSubsystem = new Elevator();
-    if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
-    if (kLedStripEnabled) ledStrip = new LED(0, new int[] {100});
+    if (kArmEnabled)
+      armSubsystem = new Arm();
+    if (kIntakeEnabled)
+      intakeSubsystem = new Intake();
+    if (kElevatorEnabled)
+      elevatorSubsystem = new Elevator();
+    if (kSwerveEnabled)
+      swerveSubsystem = new SwerveDrive();
+    if (kLedStripEnabled)
+      ledStrip = new LED(0, new int[] { 100 });
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -116,57 +124,57 @@ public class RobotContainer implements CANTestable, Loggable {
             kFieldRelative,
             kOpenLoop));
 
-    driver
-        .povUp()
-        .onTrue(
-            new TeleopSwerveWithAzimuth(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                () -> 0,
-                () -> -1,
-                () -> isRotating(driver),
-                kFieldRelative,
-                kOpenLoop));
+    // driver
+    // .povUp()
+    // .onTrue(
+    // new TeleopSwerveWithAzimuth(
+    // swerveSubsystem,
+    // driver::getLeftY,
+    // driver::getLeftX,
+    // () -> 0,
+    // () -> -1,
+    // () -> isRotating(driver),
+    // kFieldRelative,
+    // kOpenLoop));
 
-    driver
-        .povDown()
-        .onTrue(
-            new TeleopSwerveWithAzimuth(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                () -> 0,
-                () -> 1,
-                () -> isRotating(driver),
-                kFieldRelative,
-                kOpenLoop));
+    // driver
+    // .povDown()
+    // .onTrue(
+    // new TeleopSwerveWithAzimuth(
+    // swerveSubsystem,
+    // driver::getLeftY,
+    // driver::getLeftX,
+    // () -> 0,
+    // () -> 1,
+    // () -> isRotating(driver),
+    // kFieldRelative,
+    // kOpenLoop));
 
-    driver
-        .povRight()
-        .onTrue(
-            new TeleopSwerveWithAzimuth(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                () -> 1,
-                () -> 0,
-                () -> isRotating(driver),
-                kFieldRelative,
-                kOpenLoop));
+    // driver
+    // .povRight()
+    // .onTrue(
+    // new TeleopSwerveWithAzimuth(
+    // swerveSubsystem,
+    // driver::getLeftY,
+    // driver::getLeftX,
+    // () -> 1,
+    // () -> 0,
+    // () -> isRotating(driver),
+    // kFieldRelative,
+    // kOpenLoop));
 
-    driver
-        .povLeft()
-        .onTrue(
-            new TeleopSwerveWithAzimuth(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                () -> -1,
-                () -> 0,
-                () -> isRotating(driver),
-                kFieldRelative,
-                kOpenLoop));
+    // driver
+    // .povLeft()
+    // .onTrue(
+    // new TeleopSwerveWithAzimuth(
+    // swerveSubsystem,
+    // driver::getLeftY,
+    // driver::getLeftX,
+    // () -> -1,
+    // () -> 0,
+    // () -> isRotating(driver),
+    // kFieldRelative,
+    // kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
@@ -215,8 +223,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private void configureIntake() {
     // outtake command
     (operator.rightTrigger())
-        .or(operator.y())
-        .onTrue(
+        .whileTrue(
             new ConditionalCommand(
                 new IntakeCube(intakeSubsystem),
                 new IntakeCone(intakeSubsystem),
@@ -230,7 +237,7 @@ public class RobotContainer implements CANTestable, Loggable {
       driver.b().onTrue(getScoreCommand(GoalType.LOW_GRID));
 
       driver
-          .x()
+          .x().or(operator.a())
           .toggleOnTrue(
               new ParallelCommandGroup(
                   new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
@@ -257,7 +264,8 @@ public class RobotContainer implements CANTestable, Loggable {
     }
   }
 
-  private void configureArm() {}
+  private void configureArm() {
+  }
 
   public void configureLEDStrip() {
     ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
@@ -274,9 +282,8 @@ public class RobotContainer implements CANTestable, Loggable {
   public Command getAutonomousCommand() {
     Command setArmElevatorOnRightSide;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide =
-          new ParallelRaceGroup(
-              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+      setArmElevatorOnRightSide = new ParallelRaceGroup(
+          new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
     } else {
       setArmElevatorOnRightSide = new InstantCommand();
     }
@@ -290,7 +297,8 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("waypointViewer", waypointViewer);
     SmartDashboard.putData("swerveViewer", swerveViewer);
 
-    for (Loggable device : loggables) device.logInit();
+    for (Loggable device : loggables)
+      device.logInit();
     // Shuffleboard.getTab(kDriverTabName)
     // .add(
     // "Joystick",
@@ -312,7 +320,8 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : canBusTestables) result &= subsystem.CANTest();
+    for (CANTestable subsystem : canBusTestables)
+      result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }

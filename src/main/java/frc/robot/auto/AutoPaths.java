@@ -16,16 +16,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.commands.SetArmAngle;
-import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
-import frc.robot.intake.commands.IntakeOff;
 import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,101 +56,104 @@ public class AutoPaths {
       return;
     }
 
-    autoEventMap.put(
-        "defaultPosition",
-        () ->
-            new ParallelCommandGroup(
-                    new StowArmElevator(elevatorSubsystem, armSubsystem),
-                    new IntakeOff(intakeSubsystem))
-                .withTimeout(1.5)
-                .asProxy()
-                .withName("defaultPosition"));
-    autoEventMap.put(
-        "intakeCone",
-        () ->
-            new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
-                    new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE),
-                    new IntakeCone(intakeSubsystem))
-                .withTimeout(1.5)
-                .asProxy()
-                .withName("intakeCone"));
-    autoEventMap.put(
-        "intakeCube",
-        () ->
-            new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
-                    new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE),
-                    new IntakeCube(intakeSubsystem))
-                .withTimeout(1.5)
-                .asProxy()
-                .withName("intakeCube"));
-    autoEventMap.put(
-        "cubeHigh",
-        () ->
-            new ParallelCommandGroup(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CUBE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
-                    new WaitCommand(2).andThen(new IntakeCone(intakeSubsystem)))
-                .withTimeout(3)
-                .asProxy()
-                .withName("cubeHigh"));
-    autoEventMap.put(
-        "coneHigh",
-        () ->
-            new ParallelCommandGroup(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CONE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
-                    new WaitCommand(2).andThen(new IntakeCube(intakeSubsystem)))
-                .withTimeout(3)
-                .asProxy()
-                .withName("coneHigh"));
-    autoEventMap.put(
-        "cubeMid",
-        () ->
-            new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
-                    new WaitCommand(2).andThen(new IntakeCone(intakeSubsystem)))
-                .withTimeout(3)
-                .asProxy()
-                .withName("cubeMid"));
-    autoEventMap.put(
-        "coneMid",
-        () ->
-            new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID),
-                    new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
-                    new WaitCommand(2).andThen(new IntakeCube(intakeSubsystem)))
-                .withTimeout(3)
-                .asProxy()
-                .withName("coneMid"));
-    autoEventMap.put(
-        "cubeLow",
-        () ->
-            new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
-                    new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW),
-                    new WaitCommand(2).andThen(new IntakeCone(intakeSubsystem)))
-                .withTimeout(3)
-                .asProxy()
-                .withName("cubeLow"));
-    autoEventMap.put(
-        "coneLow",
-        () ->
-            new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
-                    new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW),
-                    new WaitCommand(2).andThen(new IntakeCube(intakeSubsystem)))
-                .withTimeout(3)
-                .asProxy()
-                .withName("coneLow"));
+    // TODO add back
+    // autoEventMap.put(
+    // "defaultPosition",
+    // () ->
+    // new ParallelCommandGroup(
+    // new StowArmElevator(elevatorSubsystem, armSubsystem),
+    // new IntakeOff(intakeSubsystem))
+    // .withTimeout(1.5)
+    // .asProxy()
+    // .withName("defaultPosition"));
+    // autoEventMap.put(
+    // "intakeCone",
+    // () ->
+    // new ParallelCommandGroup(
+    // new SetElevatorHeight(
+    // elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
+    // new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE),
+    // new IntakeCone(intakeSubsystem))
+    // .withTimeout(1.5)
+    // .asProxy()
+    // .withName("intakeCone"));
+    // autoEventMap.put(
+    // "intakeCube",
+    // () ->
+    // new ParallelCommandGroup(
+    // new SetElevatorHeight(
+    // elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
+    // new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE),
+    // new IntakeCube(intakeSubsystem))
+    // .withTimeout(1.5)
+    // .asProxy()
+    // .withName("intakeCube"));
+    // autoEventMap.put(
+    // "cubeHigh",
+    // () ->
+    // new ParallelCommandGroup(
+    // new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.CUBE_HIGH),
+    // new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+    // new WaitCommand(2).andThen(new IntakeCone(intakeSubsystem)))
+    // .withTimeout(3)
+    // .asProxy()
+    // .withName("cubeHigh"));
+    // autoEventMap.put(
+    // "coneHigh",
+    // () ->
+    // new ParallelCommandGroup(
+    // new SetElevatorHeight(elevatorSubsystem,
+    // Elevator.ElevatorPosition.CONE_HIGH),
+    // new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+    // new WaitCommand(2).andThen(new IntakeCube(intakeSubsystem)))
+    // .withTimeout(3)
+    // .asProxy()
+    // .withName("coneHigh"));
+    // autoEventMap.put(
+    // "cubeMid",
+    // () ->
+    // new ParallelCommandGroup(
+    // new SetElevatorHeight(
+    // elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID),
+    // new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+    // new WaitCommand(2).andThen(new IntakeCone(intakeSubsystem)))
+    // .withTimeout(3)
+    // .asProxy()
+    // .withName("cubeMid"));
+    // autoEventMap.put(
+    // "coneMid",
+    // () ->
+    // new ParallelCommandGroup(
+    // new SetElevatorHeight(
+    // elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID),
+    // new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+    // new WaitCommand(2).andThen(new IntakeCube(intakeSubsystem)))
+    // .withTimeout(3)
+    // .asProxy()
+    // .withName("coneMid"));
+    // autoEventMap.put(
+    // "cubeLow",
+    // () ->
+    // new ParallelCommandGroup(
+    // new SetElevatorHeight(
+    // elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
+    // new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW),
+    // new WaitCommand(2).andThen(new IntakeCone(intakeSubsystem)))
+    // .withTimeout(3)
+    // .asProxy()
+    // .withName("cubeLow"));
+    // autoEventMap.put(
+    // "coneLow",
+    // () ->
+    // new ParallelCommandGroup(
+    // new SetElevatorHeight(
+    // elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
+    // new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW),
+    // new WaitCommand(2).andThen(new IntakeCube(intakeSubsystem)))
+    // .withTimeout(3)
+    // .asProxy()
+    // .withName("coneLow"));
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
     Supplier<Command> scorePreload =
@@ -166,6 +165,18 @@ public class AutoPaths {
                 .withTimeout(1.5)
                 .asProxy()
                 .withName("scorePreload");
+
+    Command node8Mobility =
+        autoBuilder
+            .createPath("Node8-Mobility", kEngagePathConstraints, true)
+            .beforeStarting(scorePreload.get());
+    AutoChooser.createSinglePath("Node8-Mobility", node8Mobility);
+
+    Command node2Mobility =
+        autoBuilder
+            .createPath("Node2-Mobility", kEngagePathConstraints, true)
+            .beforeStarting(scorePreload.get());
+    AutoChooser.createSinglePath("Node2-Mobility", node2Mobility);
 
     // Node5-Engage
     Command node5Engage =
