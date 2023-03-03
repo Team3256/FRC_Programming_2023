@@ -26,8 +26,18 @@ public class SetArmVoltage extends CommandBase {
   }
 
   @Override
+  public void execute() {
+    // substation = position + offset
+    // ArmConstants.kEncoderOffsetRadians =
+    // ArmConstants.kEncoderOffsetRadians
+    // + (ArmConstants.kDoubleSubstationRotation.getRadians()
+    // - armSubsystem.getArmPositionRads());
+  }
+
+  @Override
   public void end(boolean interrupted) {
     armSubsystem.off();
+    // System.out.println("New arm constant" + ArmConstants.kEncoderOffsetRadians);
   }
 
   @Override

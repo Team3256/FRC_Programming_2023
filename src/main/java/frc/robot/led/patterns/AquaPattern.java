@@ -12,7 +12,7 @@ import frc.robot.led.patternBases.TimeFunctionPattern;
 /** Blue Sin Wave Animation */
 public class AquaPattern extends TimeFunctionPattern {
   private final double start = 114;
-  private final double end = 210;
+  private final double end = 160;
 
   public AquaPattern() {
     super(false);
