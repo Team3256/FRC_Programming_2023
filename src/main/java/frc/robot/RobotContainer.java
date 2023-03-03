@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
+import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.*;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
@@ -40,12 +41,9 @@ import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -70,16 +68,11 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    if (kArmEnabled)
-      armSubsystem = new Arm();
-    if (kIntakeEnabled)
-      intakeSubsystem = new Intake();
-    if (kElevatorEnabled)
-      elevatorSubsystem = new Elevator();
-    if (kSwerveEnabled)
-      swerveSubsystem = new SwerveDrive();
-    if (kLedStripEnabled)
-      ledStrip = new LED(0, new int[] { 100 });
+    if (kArmEnabled) armSubsystem = new Arm();
+    if (kIntakeEnabled) intakeSubsystem = new Intake();
+    if (kElevatorEnabled) elevatorSubsystem = new Elevator();
+    if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
+    if (kLedStripEnabled) ledStrip = new LED(0, new int[] {100});
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -124,57 +117,57 @@ public class RobotContainer implements CANTestable, Loggable {
             kFieldRelative,
             kOpenLoop));
 
-     driver
-     .povUp()
-     .onTrue(
-     new TeleopSwerveWithAzimuth(
-     swerveSubsystem,
-     driver::getLeftY,
-     driver::getLeftX,
-     () -> 0,
-     () -> -1,
-     () -> isRotating(driver),
-     kFieldRelative,
-     kOpenLoop));
+    driver
+        .povUp()
+        .onTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> 0,
+                () -> -1,
+                () -> isRotating(driver),
+                kFieldRelative,
+                kOpenLoop));
 
-     driver
-     .povDown()
-     .onTrue(
-     new TeleopSwerveWithAzimuth(
-     swerveSubsystem,
-     driver::getLeftY,
-     driver::getLeftX,
-     () -> 0,
-     () -> 1,
-     () -> isRotating(driver),
-     kFieldRelative,
-     kOpenLoop));
+    driver
+        .povDown()
+        .onTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> 0,
+                () -> 1,
+                () -> isRotating(driver),
+                kFieldRelative,
+                kOpenLoop));
 
-     driver
-     .povRight()
-     .onTrue(
-     new TeleopSwerveWithAzimuth(
-     swerveSubsystem,
-     driver::getLeftY,
-     driver::getLeftX,
-     () -> 1,
-     () -> 0,
-     () -> isRotating(driver),
-     kFieldRelative,
-     kOpenLoop));
+    driver
+        .povRight()
+        .onTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> 1,
+                () -> 0,
+                () -> isRotating(driver),
+                kFieldRelative,
+                kOpenLoop));
 
-     driver
-     .povLeft()
-     .onTrue(
-     new TeleopSwerveWithAzimuth(
-     swerveSubsystem,
-     driver::getLeftY,
-     driver::getLeftX,
-     () -> -1,
-     () -> 0,
-     () -> isRotating(driver),
-     kFieldRelative,
-     kOpenLoop));
+    driver
+        .povLeft()
+        .onTrue(
+            new TeleopSwerveWithAzimuth(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                () -> -1,
+                () -> 0,
+                () -> isRotating(driver),
+                kFieldRelative,
+                kOpenLoop));
 
     driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
@@ -221,7 +214,9 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    // outtake command
+    // intakeSubsystem.setDefaultCommand(
+    // new ConditionalCommand(new InstantCommand(intakeSubsystem::keepCone),
+    // new InstantCommand(intakeSubsystem.keepCube, this::isCurrentPieceCone));
     (operator.rightTrigger())
         .whileTrue(
             new ConditionalCommand(
@@ -237,7 +232,8 @@ public class RobotContainer implements CANTestable, Loggable {
       driver.b().onTrue(getScoreCommand(GoalType.LOW_GRID));
 
       driver
-          .x().or(operator.a())
+          .x()
+          .or(operator.a())
           .toggleOnTrue(
               new ParallelCommandGroup(
                   new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
@@ -247,11 +243,13 @@ public class RobotContainer implements CANTestable, Loggable {
                       new IntakeCube(intakeSubsystem),
                       this::isCurrentPieceCone)));
 
-      (driver.leftTrigger())
+      driver
+          .leftTrigger()
           .or(operator.leftTrigger())
           .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
 
-      (operator.b())
+      operator
+          .b()
           .or(driver.y())
           .toggleOnTrue(
               new ParallelCommandGroup(
@@ -265,6 +263,20 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureArm() {
+    if (kIntakeEnabled) {
+      operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
+      operator
+          .povDown()
+          .whileTrue(new SetArmVoltage(armSubsystem, -ArmConstants.kManualArmVoltage));
+      operator
+          .povUp()
+          .or(operator.povDown())
+          .whileTrue(
+              new ConditionalCommand(
+                  new IntakeCone(intakeSubsystem),
+                  new IntakeCube(intakeSubsystem),
+                  this::isCurrentPieceCone));
+    }
   }
 
   public void configureLEDStrip() {
@@ -280,15 +292,20 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
+    Command autoPath = autoPaths.getSelectedPath();
     Command setArmElevatorOnRightSide;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide = new ParallelRaceGroup(
-          new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+      setArmElevatorOnRightSide =
+          new ParallelRaceGroup(
+              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+
+      return Commands.sequence(
+          setArmElevatorOnRightSide.asProxy(),
+          autoPath,
+          new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
     } else {
-      setArmElevatorOnRightSide = new InstantCommand();
+      return autoPath;
     }
-    Command autoPath = autoPaths.getSelectedPath();
-    return setArmElevatorOnRightSide.asProxy().andThen(autoPath);
   }
 
   @Override
@@ -311,8 +328,7 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : canBusTestables)
-      result &= subsystem.CANTest();
+    for (CANTestable subsystem : canBusTestables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }

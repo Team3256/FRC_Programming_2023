@@ -23,6 +23,7 @@ import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.swerve.SwerveDrive;
+import frc.robot.swerve.commands.LockSwerve;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -183,7 +184,8 @@ public class AutoPaths {
         autoBuilder
             .createPath("Node5-Engage", kEngagePathConstraints, true)
             .beforeStarting(scorePreload.get());
-    AutoChooser.createSinglePath("Node5-Engage", node5Engage);
+    AutoChooser.createSinglePath(
+        "Node5-Engage", node5Engage.andThen(new LockSwerve(swerveSubsystem)));
 
     // Node8-Preload-Ready
     Command node8PreloadReady =

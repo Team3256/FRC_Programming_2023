@@ -124,7 +124,7 @@ public final class SwerveConstants {
   public static final double kAzimuthD = 0.01;
   public static final Rotation2d[] kAlphaOffsets = {
     Rotation2d.fromDegrees(268.4179), // Front Left - 0
-    Rotation2d.fromDegrees(314.9121), // Front Right - 1
+    Rotation2d.fromDegrees(314.9192), // Front Right - 1
     Rotation2d.fromDegrees(77.6953), // Back Left - 2
     Rotation2d.fromDegrees(280.7226) // Back Right - 3
   };
@@ -177,5 +177,5 @@ public final class SwerveConstants {
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, angleOffset);
   }
 
-  public static final double kSensitivityScale = 0.35;
+  public static final double kSensitivityScale = 0.2;
 }

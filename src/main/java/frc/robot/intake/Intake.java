@@ -55,6 +55,14 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     return intakeMotor.getMotorOutputPercent();
   }
 
+  public void keepCone() {
+    intakeMotor.set(ControlMode.Current, kIntakeKeepingCurrent);
+  }
+
+  public void keepCube() {
+    intakeMotor.set(ControlMode.Current, -kIntakeKeepingCurrent);
+  }
+
   public void intakeCone() {
     System.out.println("Intake cone");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
