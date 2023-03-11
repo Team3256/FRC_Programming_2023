@@ -12,23 +12,31 @@ import static frc.robot.Constants.ShuffleboardConstants.kLEDLayoutName;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patternBases.LEDPattern;
-import frc.robot.led.patterns.BlinkingConePattern;
-import frc.robot.led.patterns.BlinkingCubePattern;
 import frc.robot.logging.Loggable;
+import frc.robot.led.LEDConstants;
 import java.util.Arrays;
 
 public class LED extends SubsystemBase implements Loggable {
   private final int length;
   private final int sections;
-  private final LEDSection[] LEDSections;
   private final AddressableLED addressableLED;
   private final AddressableLEDBuffer buffer;
+  private final AddressableLEDSim ledSim;
+
+  private long previousTimeFlash = 0;
+  private int rainbowFirstPixelHue = 30;
+  private int currentTrailIndex = 0;
+  private boolean isOn = false;
+  private boolean isCubePiece = false;
 
   /**
    * Addressable LED strip controller.
@@ -36,67 +44,115 @@ public class LED extends SubsystemBase implements Loggable {
    * @param port PWM port on the RoboRio
    * @param LEDSectionLengths An array of LED section lengths
    */
-  public LED(int port, int[] LEDSectionLengths) {
-    // initialize object
-    length = Arrays.stream(LEDSectionLengths).sum();
-    sections = LEDSectionLengths.length;
-    LEDSections = new LEDSection[sections];
-    addressableLED = new AddressableLED(port);
-    addressableLED.setLength(length);
-    buffer = new AddressableLEDBuffer(length);
+  public LED() {
+    this.addressableLED = new AddressableLED(LEDConstants.kLEDPWMPort);
+    this.buffer = new AddressableLEDBuffer(LEDConstants.kNumberOfLEDs);
 
-    // initialize LED sections
-    int cur = 0;
-    for (int i = 0; i < sections; i++) {
-      LEDSections[i] = new LEDSection(cur, cur + LEDSectionLengths[i] - 1);
-      cur += LEDSectionLengths[i];
+    this.addressableLED.setLength(this.buffer.getLength());
+    this.addressableLED.setData(this.buffer);
+    this.addressableLED.start();
+
+    this.ledSim = new AddressableLEDSim(this.addressableLED);
+    //SmartDashboard.putData("LED Simulator", this::getLedSim);
+  }
+
+    private byte[] getLedData(){
+      return this.ledSim.getData();
     }
 
-    // start the LEDs
-    addressableLED.start();
-    addressableLED.setData(buffer);
+    public void glow(int r, int g, int b){
+      for (int i = 0; i < this.buffer.getLength(); i++) {
+        this.buffer.setRGB(i, r, g, b);
+      }
+    }
+
+
+    public void glow(Color color) {
+      this.glow((int) color.red, (int) color.green, (int) color.blue);
+    }
+
+
+  public void rainbow() {
+    for (int i = 0; i < this.buffer.getLength(); i++) {
+      int hue =
+          (rainbowFirstPixelHue + (i * 180 / this.buffer.getLength())) % 180;
+      buffer.setHSV(i, hue, 255, 128);
+    }
+    rainbowFirstPixelHue += 2;
+    rainbowFirstPixelHue %= 180;
   }
 
-  // set a specific section's buffer to a LEDPattern
-  public void set(int sectionId, LEDPattern ledPattern) {
-    LEDSections[sectionId].setLEDPattern(ledPattern);
-  }
-
-  // set each section's buffer to the same LEDPattern
-  public void setAll(LEDPattern ledPattern) {
-    for (int i = 0; i < sections; i++) {
-      set(i, ledPattern);
+  public void flash(int r, int g, int b) {
+    long currentTime = System.currentTimeMillis();
+    if ((currentTime - previousTimeFlash) >= LEDConstants.kInterval) {
+      previousTimeFlash = currentTime;
+      isOn = !isOn;
+    }
+    if (!isOn) {
+      r = 0;
+      g = 0;
+      b = 0;
+    }
+    for (int i = 0; i < this.buffer.getLength(); i++) {
+      this.buffer.setRGB(i, r, g, b);
     }
   }
 
-  /** set each container's display to the pattern in it's buffer */
-  public void periodic() {
-    for (LEDSection section : LEDSections) {
-      section.writeToBuffer(buffer);
-    }
-    addressableLED.setData(buffer);
+  public void flash(Color color) {
+    flash((int) color.red, (int) color.green, (int) color.blue);
   }
 
-  private boolean isCubePiece = true;
-
-  /** Toggle whether a cone or cube pattern will be displayed */
-  public void toggleGamePiece() {
-    if (isCubePiece) {
-      setAll(new BlinkingCubePattern());
-    } else {
-      setAll(new BlinkingConePattern());
+  public void trail(Color bgColor, Color movingColor, int trailLength) {
+    glow(bgColor);
+    for (int i = currentTrailIndex; i < currentTrailIndex + trailLength; i++) {
+      this.buffer.setLED(i % this.buffer.getLength(), movingColor);
     }
-    isCubePiece = !isCubePiece;
+    currentTrailIndex++;
   }
 
+  public void toggleGamePiece(){
+    this.isCubePiece = !this.isCubePiece;
+  }
+  public boolean getCubePiece(){
+    return this.isCubePiece;
+  }
   @Override
-  public void logInit() {
-    getLayout(kDriverTabName).add(this);
-    getLayout(kDriverTabName).add(new LEDToggleGamePieceDisplay(this));
+  public void periodic() {
+
+    if(!DriverStation.isDSAttached()) {
+      rainbow();
+      this.addressableLED.setData(this.buffer);
+      return;
+    } else {
+      if(DriverStation.isDisabled()) {
+        glow(255,0,0);
+        this.addressableLED.setData(this.buffer);
+      } else if (DriverStation.isEnabled()) {
+        if (false) {
+          flash(0,255,0);
+          this.addressableLED.setData(this.buffer);
+          return;
+        } else if (this.isCubePiece) {
+          flash(255,0,0);
+          this.addressableLED.setData(this.buffer);
+          return;
+        } else {
+          flash(0,0,255);
+          this.addressableLED.setData(this.buffer);
+        }
+      }
+    }
   }
+    @Override
+    public void logInit() {
+      getLayout(kDriverTabName).add(this);
+      getLayout(kDriverTabName).add(new LEDToggleGamePieceDisplay(this));
+    }
 
   @Override
   public ShuffleboardLayout getLayout(String tab) {
     return Shuffleboard.getTab(tab).getLayout(kLEDLayoutName, BuiltInLayouts.kList).withSize(2, 2);
   }
+
+
 }
