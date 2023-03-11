@@ -120,7 +120,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     } else return elevatorSim.getPositionMeters();
   }
 
-  public void setElevatorFlaccid() {
+  public void setCoast() {
     elevatorMotor.setNeutralMode(NeutralMode.Coast);
   }
 

@@ -107,11 +107,11 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setSelectedSensorPosition(0);
   }
 
-  public void setArmFlaccid() {
+  public void setCoast() {
     armMotor.setNeutralMode(NeutralMode.Coast);
   }
 
-  public void setArmErect() {
+  public void setBrake() {
     armMotor.setNeutralMode(NeutralMode.Brake);
   }
 
