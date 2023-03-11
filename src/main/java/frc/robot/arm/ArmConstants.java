@@ -19,8 +19,7 @@ public final class ArmConstants {
   public static final int kArmSimulationID = 16;
   public static final int kArmEncoderDIOPort = 10;
   private static final double kArmCountsPerRevolution = 8192;
-  public static final double kArmEncoderConversionToRadians =
-      (1 / kArmCountsPerRevolution) * 2 * Math.PI;
+  public static final double kArmEncoderConversionToRadians = (1 / kArmCountsPerRevolution) * 2 * Math.PI;
 
   public static final double kArmGearing = 240;
   public static double kEncoderOffsetRadians = 4.2246340316;
@@ -38,12 +37,12 @@ public final class ArmConstants {
   public static final double kI = 0;
   public static final double kD = 0.29266;
 
-  public static final TrapezoidProfile.Constraints kArmProfileContraints =
-      new TrapezoidProfile.Constraints(8, 4);
+  public static final TrapezoidProfile.Constraints kArmProfileContraints = new TrapezoidProfile.Constraints(8, 4);
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
 
-  public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-20);
+  // TODO Tune later
+  public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-35);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(150);
 
   public static final Rotation2d kDoubleSubstationRotation = Rotation2d.fromDegrees(5.5);
