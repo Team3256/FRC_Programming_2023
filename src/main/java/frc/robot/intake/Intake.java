@@ -36,7 +36,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     } else {
       configureSimHardware();
     }
-
     off();
     System.out.println("Intake initialized");
   }
@@ -55,11 +54,11 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     return intakeMotor.getMotorOutputPercent();
   }
 
-  public void keepCone() {
+  public void latchCone() {
     intakeMotor.set(ControlMode.Current, kIntakeKeepingCurrent);
   }
 
-  public void keepCube() {
+  public void latchCube() {
     intakeMotor.set(ControlMode.Current, -kIntakeKeepingCurrent);
   }
 

@@ -32,6 +32,7 @@ import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
@@ -214,9 +215,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    // intakeSubsystem.setDefaultCommand(
-    // new ConditionalCommand(new InstantCommand(intakeSubsystem::keepCone),
-    // new InstantCommand(intakeSubsystem.keepCube, this::isCurrentPieceCone));
+    intakeSubsystem.setDefaultCommand(new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
     (operator.rightTrigger())
         .whileTrue(
             new ConditionalCommand(
