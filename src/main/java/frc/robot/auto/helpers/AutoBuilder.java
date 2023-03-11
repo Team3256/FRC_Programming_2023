@@ -17,8 +17,11 @@ import com.pathplanner.lib.PathPlannerTrajectory.StopEvent.ExecutionBehavior;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.commands.PPTrajectoryFollowCommand;
 import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
@@ -73,8 +76,28 @@ public class AutoBuilder {
       commands.add(stopEvent.andThen(createPathPlannerCommand(trajectory, false)));
     }
     PathPlannerTrajectory lastTrajectory = trajectories.get(trajectories.size() - 1);
+
+    Rotation2d endRotation = lastTrajectory.getEndState().holonomicRotation;
+
     commands.add(createCommandFromStopEvent(lastTrajectory.getEndStopEvent()));
 
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+      if (endRotation.getDegrees() == 0) {
+        Command zeroGyroForTeleop = new InstantCommand(() -> swerveSubsystem.setGyro(0));
+        commands.add(zeroGyroForTeleop);
+      } else if (endRotation.getDegrees() == 180) {
+        Command zeroGyroForTeleop = new InstantCommand(() -> swerveSubsystem.setGyro(180));
+        commands.add(zeroGyroForTeleop);
+      }
+    } else {
+      if (endRotation.getDegrees() == 0) {
+        Command zeroGyroForTeleop = new InstantCommand(() -> swerveSubsystem.setGyro(180));
+        commands.add(zeroGyroForTeleop);
+      } else if (endRotation.getDegrees() == 180) {
+        Command zeroGyroForTeleop = new InstantCommand(() -> swerveSubsystem.setGyro(0));
+        commands.add(zeroGyroForTeleop);
+      }
+    }
     return commands;
   }
 

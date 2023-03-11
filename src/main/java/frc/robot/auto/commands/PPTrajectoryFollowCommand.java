@@ -187,6 +187,10 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     return isTrajectoryFinished;
   }
 
+  public Alliance getAlliance() {
+    return alliance;
+  }
+
   @Override
   public void end(boolean interrupted) {
     swerveSubsystem.drive(new ChassisSpeeds(), false);
