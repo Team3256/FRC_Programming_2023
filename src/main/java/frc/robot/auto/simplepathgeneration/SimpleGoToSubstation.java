@@ -71,7 +71,6 @@ public class SimpleGoToSubstation {
             runIntake,
             wait,
             stopIntake,
-            stepBack,
             stowArmElevator,
             signalLED);
     return finalCommand;

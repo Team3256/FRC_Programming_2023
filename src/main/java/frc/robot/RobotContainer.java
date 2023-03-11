@@ -106,6 +106,8 @@ public class RobotContainer implements CANTestable, Loggable {
     if (AutoConstants.kAutoDebug) {
       PathPlannerServer.startServer(5811);
     }
+
+    logInit();
   }
 
   private void configureSwerve() {
