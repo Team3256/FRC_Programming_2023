@@ -19,6 +19,7 @@ import frc.robot.swerve.helpers.SwerveModuleConstants;
 
 public final class SwerveConstants {
   public static final int kPigeonID = 1;
+  public static final Rotation2d kChargeStationTiltThreshold = new Rotation2d(Units.degreesToRadians(2));
   public static final String kPigeonCanBus = "mani";
 
   public static final boolean kFieldRelative = true;
