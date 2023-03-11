@@ -10,7 +10,6 @@ package frc.robot.auto.simplepathgeneration;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueTopDoubleSubstationPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.*;
@@ -60,7 +59,7 @@ public class SimpleGoToSubstation {
             () -> isCurrentPieceCone);
     Command wait = new WaitCommand(1);
     Command stopIntake = new IntakeOff(intakeSubsystem);
-    Command stepBack = SimpleGoToRelative.run(swerveDrive, new Translation2d(0, -0.25));
+    // Command stepBack = SimpleGoToRelative.run(swerveDrive, new Translation2d(0, -0.25));
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
     LEDSetAllSectionsPattern signalLED =
         new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenSuccessPattern());
