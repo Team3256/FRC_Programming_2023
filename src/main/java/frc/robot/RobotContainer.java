@@ -25,6 +25,7 @@ import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
+import frc.robot.auto.simplepathgeneration.SimpleGoToSubstation;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPosition;
@@ -252,13 +253,15 @@ public class RobotContainer implements CANTestable, Loggable {
           .b()
           .or(driver.y())
           .toggleOnTrue(
-              new ParallelCommandGroup(
-                  new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION),
-                  new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
-                  new ConditionalCommand(
-                      new IntakeCone(intakeSubsystem),
-                      new IntakeCube(intakeSubsystem),
-                      this::isCurrentPieceCone)));
+              () ->
+                  SimpleGoToSubstation.run(
+                          swerveSubsystem,
+                          intakeSubsystem,
+                          elevatorSubsystem,
+                          armSubsystem,
+                          ledStrip,
+                          isCurrentPieceCone())
+                      .getRequirements());
     }
   }
 

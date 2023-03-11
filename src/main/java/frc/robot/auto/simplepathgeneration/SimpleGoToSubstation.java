@@ -30,7 +30,7 @@ import frc.robot.led.patterns.DynamicPathGenSuccessPattern;
 import frc.robot.swerve.SwerveDrive;
 
 public class SimpleGoToSubstation {
-  static Command run(
+  public static Command run(
       SwerveDrive swerveDrive,
       Intake intakeSubsystem,
       Elevator elevatorSubsystem,
@@ -65,7 +65,15 @@ public class SimpleGoToSubstation {
         new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenSuccessPattern());
 
     Command finalCommand =
-        new SequentialCommandGroup(moveToSubstation, moveArmElevatorToPreset, runIntake, wait, stopIntake, stepBack, stowArmElevator, signalLED);
+        new SequentialCommandGroup(
+            moveToSubstation,
+            moveArmElevatorToPreset,
+            runIntake,
+            wait,
+            stopIntake,
+            stepBack,
+            stowArmElevator,
+            signalLED);
     return finalCommand;
   }
 }
