@@ -13,11 +13,7 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-// import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-// import edu.wpi.first.wpilibj2.command.button.Trigger;
-// import frc.robot.helpers.DPadButton;
-// import frc.robot.helpers.DPadButton.Direction;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -83,12 +79,6 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     rAxisX = (Math.abs(rAxisX) < kAzimuthStickDeadband) ? 0 : rAxisX;
     rAxisY = (Math.abs(rAxisY) < kAzimuthStickDeadband) ? 0 : rAxisY;
 
-    // SmartDashboard.putNumber("rAxisX", rAxisX);
-    // SmartDashboard.putNumber("rAxisY", rAxisY);
-
-    // SmartDashboard.putNumber("Rotation Angle",
-    // swerveSubsystem.getYaw().getDegrees());
-
     translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
     if (rAxisX == 0 && rAxisY == 0) {
       swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
@@ -103,17 +93,11 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     // PID controller takes current robot position (getYaw) and compares to the
     // azimuth angle to
     // calculate error
-    double rotationPIDOutput =
-        azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
-
-    // SmartDashboard.putNumber("Setpoint Angle", azimuthAngle);
-    // SmartDashboard.putNumber("Rotation Velocity", rotationPIDOutput);
-    // SmartDashboard.putData("Azimuth PID Controller", azimuthController);
+    double rotationPIDOutput = azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
 
     translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
-    rotationPIDOutput =
-        MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
-    // Sets motors to the velocities defined here
+    rotationPIDOutput = MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
+
     swerveSubsystem.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
   }
 
