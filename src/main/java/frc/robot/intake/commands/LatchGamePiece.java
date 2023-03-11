@@ -7,10 +7,9 @@
 
 package frc.robot.intake.commands;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
+import java.util.function.BooleanSupplier;
 
 public class LatchGamePiece extends CommandBase {
   private Intake intakeSubsystem;
@@ -18,16 +17,15 @@ public class LatchGamePiece extends CommandBase {
 
   public LatchGamePiece(Intake intakeSubsystem, BooleanSupplier isCone) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentPieceCone=isCone;
+    this.isCurrentPieceCone = isCone;
     addRequirements(intakeSubsystem);
   }
 
   @Override
   public void initialize() {
-    if (isCurrentPieceCone.getAsBoolean()){
-    intakeSubsystem.latchCone();
-    }
-    else {
+    if (isCurrentPieceCone.getAsBoolean()) {
+      intakeSubsystem.latchCone();
+    } else {
       intakeSubsystem.latchCube();
     }
   }

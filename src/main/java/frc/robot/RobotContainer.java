@@ -215,7 +215,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    intakeSubsystem.setDefaultCommand(new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
+    intakeSubsystem.setDefaultCommand(
+        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
     (operator.rightTrigger())
         .whileTrue(
             new ConditionalCommand(
