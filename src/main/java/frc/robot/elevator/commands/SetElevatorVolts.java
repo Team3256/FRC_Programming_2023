@@ -12,7 +12,6 @@ import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
 
 public class SetElevatorVolts extends CommandBase {
-  // TODO: Make controller rumble when current spiking
   private Elevator elevatorSubsystem;
   private double volts = 0;
 

@@ -24,29 +24,27 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
-        new ProfiledPIDController(kP, kI, kD, kArmContraints),
+        new ProfiledPIDController(kP, kI, kD, kArmProfileContraints),
         armSubsystem::getArmPositionRads,
         angleRotation2d.getRadians(),
-        (output, setpoint) ->
-            armSubsystem.setInputVoltage(
-                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
+        (output, setpoint) -> armSubsystem.setInputVoltage(
+            output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
         armSubsystem);
 
     getController()
         .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
-    addRequirements(armSubsystem);
+
     this.angleRotation2d = angleRotation2d;
     this.armSubsystem = armSubsystem;
+    addRequirements(armSubsystem);
   }
 
   public SetArmAngle(Arm armSubsystem, DoubleSupplier rotationRads) {
     this(armSubsystem, new Rotation2d(rotationRads.getAsDouble()));
-    this.armPosition = armPosition;
   }
 
   public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
     this(armSubsystem, armPosition.rotation);
-    this.armPosition = armPosition;
   }
 
   @Override
@@ -76,5 +74,10 @@ public class SetArmAngle extends ProfiledPIDCommand {
               + angleRotation2d.getDegrees()
               + " deg)");
     }
+  }
+
+  @Override
+  public boolean isFinished() {
+    return getController().atGoal();
   }
 }

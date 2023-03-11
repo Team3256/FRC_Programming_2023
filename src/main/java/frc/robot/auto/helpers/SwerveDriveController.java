@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.auto.AutoConstants;
 
 public class SwerveDriveController {
   PIDController xPositionController;
@@ -62,15 +63,7 @@ public class SwerveDriveController {
 
     double currentRotation = currentPose.getRotation().getRadians();
 
-    // if (Math.abs(currentRotation - prevCurrentRotation) >= Math.PI) {
-    // if (prevCurrentRotation > 0) {
-    // currentRotation = prevCurrentRotation + Math.abs(-Math.PI - currentRotation);
-    // } else {
-    // currentRotation = prevCurrentRotation + Math.abs(Math.PI - currentRotation);
-    // }
-    // }
-
-    if (kDebugEnabled) {
+    if (AutoConstants.kAutoDebug) {
       SmartDashboard.putNumber("Current Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber("Current Pose Rotation", currentPose.getRotation().getDegrees());
       SmartDashboard.putNumber(

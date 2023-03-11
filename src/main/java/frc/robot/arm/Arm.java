@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
@@ -59,28 +60,25 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private WPI_TalonFX armMotor;
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
-  private static final SingleJointedArmSim armSim =
-      new SingleJointedArmSim(
-          DCMotor.getFalcon500(kNumArmMotors),
-          kArmGearing,
-          kArmInertia,
-          kArmLengthMeters,
-          kArmAngleMinConstraint.getRadians(),
-          kArmAngleMaxConstraint.getRadians(),
-          true);
+  private static final SingleJointedArmSim armSim = new SingleJointedArmSim(
+      DCMotor.getFalcon500(kNumArmMotors),
+      kArmGearing,
+      kArmInertia,
+      kArmLengthMeters,
+      kArmAngleMinConstraint.getRadians(),
+      kArmAngleMaxConstraint.getRadians(),
+      true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
   private final MechanismRoot2d armPivot = mechanism2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d armTower =
-      armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
-  private final MechanismLigament2d arm =
-      armPivot.append(
-          new MechanismLigament2d(
-              "Arm",
-              30,
-              Units.radiansToDegrees(armSim.getAngleRads()),
-              6,
-              new Color8Bit(Color.kYellow)));
+  private final MechanismLigament2d armTower = armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+  private final MechanismLigament2d arm = armPivot.append(
+      new MechanismLigament2d(
+          "Arm",
+          30,
+          Units.radiansToDegrees(armSim.getAngleRads()),
+          6,
+          new Color8Bit(Color.kYellow)));
 
   public Arm() {
     if (RobotBase.isReal()) {
@@ -126,11 +124,31 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setSelectedSensorPosition(0);
   }
 
+  /**
+   * Reset encoder offset. Use when you know where the arm actually is in space
+   * but the relative encoder is off. Useful when the gear skips and you need to
+   * change the offset
+   * 
+   * @param currentAbsolutePosition The actual position of the arm in space that
+   *                                you want the current relative encoder value to
+   *                                reflect. This will change all setpoint for the
+   *                                arm.
+   */
+
+  public void resetOffset(Rotation2d currentAbsolutePosition) {
+    ArmConstants.kEncoderOffsetRadians = ArmConstants.kEncoderOffsetRadians
+        + (currentAbsolutePosition.getRadians()
+            - this.getArmPositionRads());
+
+    System.out.println("New arm offset" + ArmConstants.kEncoderOffsetRadians);
+  }
+
   public double getArmPositionRads() {
     if (RobotBase.isReal())
       return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
           + kEncoderOffsetRadians;
-    else return armSim.getAngleRads();
+    else
+      return armSim.getAngleRads();
   }
 
   public void off() {
@@ -140,10 +158,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Arm Raw Encoder value", armMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
-    SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
-    SmartDashboard.putNumber("Arm motor percent output", armMotor.getMotorOutputPercent() * 12);
+    if (Constants.kDebugEnabled) {
+      SmartDashboard.putNumber("Arm Raw Encoder value", armMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
+      SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
+      SmartDashboard.putNumber("Arm motor percent output", armMotor.getMotorOutputPercent() * 12);
+    }
   }
 
   @Override
