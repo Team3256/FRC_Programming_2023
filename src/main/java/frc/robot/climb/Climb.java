@@ -20,7 +20,6 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
 
 public class Climb extends SubsystemBase implements CANTestable {
-
   private WPI_TalonFX climbMotor;
 
   public Climb() {

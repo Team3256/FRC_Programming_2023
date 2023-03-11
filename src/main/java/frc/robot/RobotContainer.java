@@ -232,18 +232,6 @@ public class RobotContainer implements CANTestable, Loggable {
       driver.b().onTrue(getScoreCommand(GoalType.LOW_GRID));
 
       driver
-          .x()
-          .or(operator.a())
-          .toggleOnTrue(
-              new ParallelCommandGroup(
-                  new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
-                  new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE),
-                  new ConditionalCommand(
-                      new IntakeCone(intakeSubsystem),
-                      new IntakeCube(intakeSubsystem),
-                      this::isCurrentPieceCone)));
-
-      driver
           .leftTrigger()
           .or(operator.leftTrigger())
           .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
@@ -256,14 +244,15 @@ public class RobotContainer implements CANTestable, Loggable {
                   new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION),
                   new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
                   new ConditionalCommand(
-                      new IntakeCone(intakeSubsystem),
-                      new IntakeCube(intakeSubsystem),
+                      new IntakeCone(intakeSubsystem, ledStrip),
+                      new IntakeCube(intakeSubsystem, ledStrip),
                       this::isCurrentPieceCone)));
     }
   }
 
   private void configureArm() {
-    if (kIntakeEnabled) {
+    armSubsystem.setDefaultCommand(new KeepArmAtPosition(armSubsystem));
+    if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
       operator
           .povDown()
@@ -280,9 +269,9 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
+    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
     // ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new
-    // FIREPattern())));
-    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new AquaPattern())));
+    // AquaPattern())));
     operator
         .rightBumper()
         .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()))

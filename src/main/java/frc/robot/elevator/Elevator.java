@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
+import frc.robot.drivers.TalonFXFactory;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
@@ -90,7 +91,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void configureRealHardware() {
-    elevatorMotor = new WPI_TalonFX(kElevatorID, kElevatorCANBus);
+    elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
     elevatorMotor.setInverted(kElevatorInverted);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }

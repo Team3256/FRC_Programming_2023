@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
+import java.util.function.DoubleSupplier;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
@@ -36,6 +37,11 @@ public class SetArmAngle extends ProfiledPIDCommand {
     addRequirements(armSubsystem);
     this.angleRotation2d = angleRotation2d;
     this.armSubsystem = armSubsystem;
+  }
+
+  public SetArmAngle(Arm armSubsystem, DoubleSupplier rotationRads) {
+    this(armSubsystem, new Rotation2d(rotationRads.getAsDouble()));
+    this.armPosition = armPosition;
   }
 
   public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {

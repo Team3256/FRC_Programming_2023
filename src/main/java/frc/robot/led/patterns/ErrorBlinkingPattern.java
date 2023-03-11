@@ -14,7 +14,7 @@ import frc.robot.led.patternBases.BlinkingPattern;
 import frc.robot.led.patternBases.LEDPattern;
 
 /** Blinking Red */
-public class DynamicPathGenErrorPattern extends BlinkingPattern {
+public class ErrorBlinkingPattern extends BlinkingPattern {
   private class ErrorPattern extends LEDPattern {
     public ErrorPattern() {
       super();
@@ -22,7 +22,7 @@ public class DynamicPathGenErrorPattern extends BlinkingPattern {
     }
   }
 
-  public DynamicPathGenErrorPattern() {
+  public ErrorBlinkingPattern() {
     super(10, 5);
     setMainLEDPattern(new ErrorPattern());
   }
