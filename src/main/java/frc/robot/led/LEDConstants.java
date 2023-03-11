@@ -14,6 +14,5 @@ public class LEDConstants {
   public static final int kLEDPWMPort = 9;
   public static final int kNumberOfLEDs = 55;
   public static final double kInterval = Units.secondsToMilliseconds(0.1);
-  public static final double kIntervalTrail =
-                Units.secondsToMilliseconds(0.1);
+  public static final double kIntervalTrail = Units.secondsToMilliseconds(0.1);
 }

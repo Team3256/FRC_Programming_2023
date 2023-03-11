@@ -33,8 +33,7 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
-import frc.robot.led.commands.*;
-import frc.robot.led.patterns.*;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
@@ -72,7 +71,7 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kIntakeEnabled) intakeSubsystem = new Intake();
     if (kElevatorEnabled) elevatorSubsystem = new Elevator();
     if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
-    if (kLedStripEnabled) ledStrip = new LED(0, new int[] {100});
+    if (kLedStripEnabled) ledStrip = new LED();
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -282,14 +281,13 @@ public class RobotContainer implements CANTestable, Loggable {
   public void configureLEDStrip() {
     // ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new
     // FIREPattern())));
-    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new AquaPattern())));
     operator
         .rightBumper()
-        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()))
+        .toggleOnTrue(new LEDToggleGamePieceDisplay(ledStrip))
         .toggleOnTrue(new InstantCommand(this::setPieceToCone));
     operator
         .leftBumper()
-        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingCubePattern()))
+        .toggleOnTrue(new LEDToggleGamePieceDisplay(ledStrip))
         .toggleOnTrue(new InstantCommand(this::setPieceToCube));
   }
 

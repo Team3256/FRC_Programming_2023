@@ -20,7 +20,7 @@ public class LEDToggleGamePieceDisplay extends CommandBase {
 
   @Override
   public void initialize() {
-    ledStrip.rainbow();
+    ledStrip.toggleGamePiece();
   }
 
   @Override

@@ -25,10 +25,6 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.helpers.AutoBuilder;
-import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.DynamicPathGenErrorPattern;
-import frc.robot.led.patterns.DynamicPathGenSuccessPattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.Supplier;
 
@@ -41,14 +37,13 @@ public class DynamicPathFollower {
     DOUBLE_STATION_BOTTOM;
   }
 
-  public static Command run(SwerveDrive swerveDrive, GoalType goalType, LED ledSubsystem) {
-    return run(swerveDrive, goalType, ledSubsystem, false, () -> new InstantCommand());
+  public static Command run(SwerveDrive swerveDrive, GoalType goalType) {
+    return run(swerveDrive, goalType, false, () -> new InstantCommand());
   }
 
   public static Command run(
       SwerveDrive swerveDrive,
       GoalType goalType,
-      LED ledSubsystem,
       boolean useInBetweenCommand,
       Supplier<Command> inBetweenTrajectoryCommand) {
     long ms0 = System.currentTimeMillis();
@@ -70,11 +65,6 @@ public class DynamicPathFollower {
       int locationId = (int) SmartDashboard.getNumber("guiColumn", 7);
       if (locationId == -1) {
         System.out.println("locationId was invalid");
-        if (ledSubsystem != null) {
-          return new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenErrorPattern());
-        } else {
-          return new InstantCommand();
-        }
       }
       if (goalType == GoalType.LOW_GRID) {
         finalSink = kBottomBlueScoringPoses[locationId];
@@ -98,7 +88,7 @@ public class DynamicPathFollower {
     // handle invalid trajectory
     if (dynamicPathGenTrajectory == null) {
       System.out.println("No trajectory was found.");
-      return new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenErrorPattern());
+      // return new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenErrorPattern());
     } else {
       System.out.println("Trajectory was found.");
     }
@@ -143,9 +133,6 @@ public class DynamicPathFollower {
               inBetweenTrajectoryCommand.get().asProxy());
     }
 
-    return Commands.sequence(
-        dynamicPathGenTrajectoryCommand,
-        finalTrajectory,
-        new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenSuccessPattern()));
+    return Commands.sequence(dynamicPathGenTrajectoryCommand, finalTrajectory);
   }
 }

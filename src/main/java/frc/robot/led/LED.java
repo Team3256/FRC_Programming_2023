@@ -17,17 +17,12 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.led.commands.LEDToggleGamePieceDisplay;
 import frc.robot.logging.Loggable;
-import frc.robot.led.LEDConstants;
-import java.util.Arrays;
 
 public class LED extends SubsystemBase implements Loggable {
-  private final int length;
-  private final int sections;
   private final AddressableLED addressableLED;
   private final AddressableLEDBuffer buffer;
   private final AddressableLEDSim ledSim;
@@ -53,29 +48,26 @@ public class LED extends SubsystemBase implements Loggable {
     this.addressableLED.start();
 
     this.ledSim = new AddressableLEDSim(this.addressableLED);
-    //SmartDashboard.putData("LED Simulator", this::getLedSim);
+    // SmartDashboard.putData("LED Simulator", this::getLedSim);
   }
 
-    private byte[] getLedData(){
-      return this.ledSim.getData();
+  private byte[] getLedData() {
+    return this.ledSim.getData();
+  }
+
+  public void glow(int r, int g, int b) {
+    for (int i = 0; i < this.buffer.getLength(); i++) {
+      this.buffer.setRGB(i, r, g, b);
     }
+  }
 
-    public void glow(int r, int g, int b){
-      for (int i = 0; i < this.buffer.getLength(); i++) {
-        this.buffer.setRGB(i, r, g, b);
-      }
-    }
-
-
-    public void glow(Color color) {
-      this.glow((int) color.red, (int) color.green, (int) color.blue);
-    }
-
+  public void glow(Color color) {
+    this.glow((int) color.red, (int) color.green, (int) color.blue);
+  }
 
   public void rainbow() {
     for (int i = 0; i < this.buffer.getLength(); i++) {
-      int hue =
-          (rainbowFirstPixelHue + (i * 180 / this.buffer.getLength())) % 180;
+      int hue = (rainbowFirstPixelHue + (i * 180 / this.buffer.getLength())) % 180;
       buffer.setHSV(i, hue, 255, 128);
     }
     rainbowFirstPixelHue += 2;
@@ -110,49 +102,50 @@ public class LED extends SubsystemBase implements Loggable {
     currentTrailIndex++;
   }
 
-  public void toggleGamePiece(){
+  public void toggleGamePiece() {
     this.isCubePiece = !this.isCubePiece;
   }
-  public boolean getCubePiece(){
+
+  public boolean getCubePiece() {
     return this.isCubePiece;
   }
+
   @Override
   public void periodic() {
 
-    if(!DriverStation.isDSAttached()) {
+    if (!DriverStation.isDSAttached()) {
       rainbow();
       this.addressableLED.setData(this.buffer);
       return;
     } else {
-      if(DriverStation.isDisabled()) {
-        glow(255,0,0);
+      if (DriverStation.isDisabled()) {
+        glow(255, 0, 0);
         this.addressableLED.setData(this.buffer);
       } else if (DriverStation.isEnabled()) {
         if (false) {
-          flash(0,255,0);
+          flash(0, 255, 0);
           this.addressableLED.setData(this.buffer);
           return;
         } else if (this.isCubePiece) {
-          flash(255,0,0);
+          flash(255, 0, 0);
           this.addressableLED.setData(this.buffer);
           return;
         } else {
-          flash(0,0,255);
+          flash(0, 0, 255);
           this.addressableLED.setData(this.buffer);
         }
       }
     }
   }
-    @Override
-    public void logInit() {
-      getLayout(kDriverTabName).add(this);
-      getLayout(kDriverTabName).add(new LEDToggleGamePieceDisplay(this));
-    }
+
+  @Override
+  public void logInit() {
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName).add(new LEDToggleGamePieceDisplay(this));
+  }
 
   @Override
   public ShuffleboardLayout getLayout(String tab) {
     return Shuffleboard.getTab(tab).getLayout(kLEDLayoutName, BuiltInLayouts.kList).withSize(2, 2);
   }
-
-
 }
