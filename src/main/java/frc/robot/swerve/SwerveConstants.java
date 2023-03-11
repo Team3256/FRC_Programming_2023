@@ -97,7 +97,9 @@ public final class SwerveConstants {
   public static final double kDriveKD = 0.0;
   public static final double kDriveKF = 0.0;
 
-  public static final double[] klockAngleOffsetsHorizontal = {Math.PI / 4, Math.PI / 4, Math.PI / 4, Math.PI / 4}; // All modules turn left to lock
+  public static final double[] klockAngleOffsetsHorizontal = {
+    Math.PI / 4, Math.PI / 4, Math.PI / 4, Math.PI / 4
+  }; // All modules turn left to lock
   public static final double[] kLockAngleOffsetsX = {0, 3 * Math.PI / 2, Math.PI / 2, Math.PI};
 
   /*
