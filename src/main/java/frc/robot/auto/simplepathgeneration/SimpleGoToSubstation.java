@@ -10,6 +10,8 @@ package frc.robot.auto.simplepathgeneration;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueTopDoubleSubstationPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.*;
@@ -36,12 +38,17 @@ public class SimpleGoToSubstation {
       Arm armSubsystem,
       LED ledSubsystem,
       boolean isCurrentPieceCone) {
+    //setup
     System.out.println("Running: Go to substation from " + swerveDrive.getPose());
     Pose2d sink =
         DriverStation.getAlliance() == Alliance.Blue
             ? kBlueTopDoubleSubstationPose
             : PathUtil.flip(kBlueTopDoubleSubstationPose);
-    Command moveToSubstation = SimpleGoToAbsolute.run(swerveDrive, sink);
+    double chargeDistance = 0.25;
+    Pose2d preSink = new Pose2d(sink.getX()-chargeDistance,sink.getY(),sink.getRotation());
+
+    //commands that will be run sequentially
+    Command moveToPreSink = SimpleGoToAbsolute.run(swerveDrive, preSink);
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new ConditionalCommand(
@@ -57,19 +64,23 @@ public class SimpleGoToSubstation {
             new IntakeCone(intakeSubsystem),
             new IntakeCube(intakeSubsystem),
             () -> isCurrentPieceCone);
-    Command wait = new WaitCommand(1);
+    Command moveToSubstation = SimpleGoToAbsolute.run(swerveDrive, sink);
+    Command wait = new WaitCommand(0.5);
     Command stopIntake = new IntakeOff(intakeSubsystem);
-    // Command stepBack = SimpleGoToRelative.run(swerveDrive, new Translation2d(0, -0.25));
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
     LEDSetAllSectionsPattern signalLED =
         new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenSuccessPattern());
+    
+    //return sequential of all above commands
     Command finalCommand =
         new SequentialCommandGroup(
-            moveToSubstation,
+            moveToPreSink,
             moveArmElevatorToPreset,
             runIntake,
+            moveToSubstation,
             wait,
             stopIntake,
+            moveToPreSink,
             stowArmElevator,
             signalLED);
     return finalCommand;
