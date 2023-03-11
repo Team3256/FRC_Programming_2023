@@ -13,9 +13,9 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.swerve.SwerveDrive;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class TeleopSwerveWithAzimuth extends CommandBase {
@@ -28,6 +28,7 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
   private DoubleSupplier strafeAxis;
   private DoubleSupplier rotationXAxis;
   private DoubleSupplier rotationYAxis;
+  private BooleanSupplier manualRotating;
   private PIDController azimuthController;
 
   /** Driver control */
@@ -37,6 +38,7 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
       DoubleSupplier strafeAxis,
       DoubleSupplier rotationXAxis,
       DoubleSupplier rotationYAxis,
+      BooleanSupplier manualRotating,
       boolean fieldRelative,
       boolean openLoop) {
     this.swerveSubsystem = swerveSubsystem;
@@ -46,10 +48,16 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     this.strafeAxis = strafeAxis;
     this.rotationXAxis = rotationXAxis;
     this.rotationYAxis = rotationYAxis;
+    this.manualRotating = manualRotating;
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
     this.azimuthController = new PIDController(kAzimuthP, kAzimuthI, kAzimuthD);
     azimuthController.enableContinuousInput(-180, 180);
+  }
+
+  @Override
+  public void initialize() {
+    System.out.println("TeleopSwerveWithAzimuth started");
   }
 
   @Override
@@ -71,11 +79,6 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     rAxisX = (Math.abs(rAxisX) < kAzimuthStickDeadband) ? 0 : rAxisX;
     rAxisY = (Math.abs(rAxisY) < kAzimuthStickDeadband) ? 0 : rAxisY;
 
-    SmartDashboard.putNumber("rAxisX", rAxisX);
-    SmartDashboard.putNumber("rAxisY", rAxisY);
-
-    SmartDashboard.putNumber("Rotation Angle", swerveSubsystem.getYaw().getDegrees());
-
     translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
     if (rAxisX == 0 && rAxisY == 0) {
       swerveSubsystem.drive(translation, 0, fieldRelative, openLoop);
@@ -93,14 +96,15 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     double rotationPIDOutput =
         azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
 
-    SmartDashboard.putNumber("Setpoint Angle", azimuthAngle);
-    SmartDashboard.putNumber("Rotation Velocity", rotationPIDOutput);
-    SmartDashboard.putData("Azimuth PID Controller", azimuthController);
-
     translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
     rotationPIDOutput =
         MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
-    // Sets motors to the velocities defined here
+
     swerveSubsystem.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
+  }
+
+  @Override
+  public boolean isFinished() {
+    return manualRotating.getAsBoolean();
   }
 }
