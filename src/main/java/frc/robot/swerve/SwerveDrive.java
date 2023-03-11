@@ -32,10 +32,12 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.limelight.Limelight;
-import frc.robot.logging.GyroSendable;
+import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
@@ -63,10 +65,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   public Pigeon2 gyro;
 
   public SwerveDrive() {
-    gyro = new Pigeon2(kPigeonID);
+    gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
     zeroGyro();
 
+    // TODO MAKE POSITION 0,0
     poseEstimator =
         new SwerveDrivePoseEstimator(
             kSwerveKinematics,
@@ -79,7 +82,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             },
             new Pose2d());
 
-    SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
+    if (Constants.kDebugEnabled) {
+      SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
+      SmartDashboard.putData("Field", field);
+    }
     /*
      * By pausing init for a second before setting module offsets, we avoid a bug
      * with inverting motors.
@@ -107,6 +113,14 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             twistVelocity.dx / kPeriodicDeltaTime,
             twistVelocity.dy / kPeriodicDeltaTime,
             twistVelocity.dtheta / kPeriodicDeltaTime);
+
+    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
+      chassisSpeeds.vxMetersPerSecond =
+          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+      chassisSpeeds.vyMetersPerSecond =
+          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+    }
+
     SwerveModuleState[] swerveModuleStates =
         kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
 
@@ -127,30 +141,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
-  }
-
-  public void drive(
-      Translation2d translation,
-      double rotation,
-      boolean fieldRelative,
-      boolean isOpenLoop,
-      double elevatorHeight) {
-    ChassisSpeeds swerveChassisSpeed =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getPose().getRotation())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
-
-    drive(swerveChassisSpeed, isOpenLoop, elevatorHeight);
-  }
-
-  public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop, double elevatorHeight) {
-    chassisSpeeds.vxMetersPerSecond =
-        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond, elevatorHeight);
-    chassisSpeeds.vyMetersPerSecond =
-        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond, elevatorHeight);
-
-    drive(chassisSpeeds, isOpenLoop);
   }
 
   public void setDesiredAngleState(SwerveModuleState[] swerveModuleStates) {
@@ -188,8 +178,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     gyro.setYaw(0);
   }
 
-  public void setGyro(double yaw) {
-    gyro.setYaw(yaw);
+  public void setGyro(double yawDegrees) {
+    gyro.setYaw(yawDegrees);
   }
 
   public Rotation2d getYaw() {
@@ -235,7 +225,13 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
         }
 
-        limelightLocalizationField.setRobotPose(limelightPose);
+        if (Constants.kDebugEnabled) {
+          limelightLocalizationField.setRobotPose(limelightPose);
+          SmartDashboard.putNumber("Lime Light pose x", limelightPose.getX());
+          SmartDashboard.putNumber("Lime Light pose y", limelightPose.getY());
+          SmartDashboard.putNumber(
+              "Lime Light pose theta", limelightPose.getRotation().getDegrees());
+        }
       }
     }
   }
@@ -244,7 +240,18 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   public void periodic() {
 
     poseEstimator.update(getYaw(), getModulePositions());
-    Logger.getInstance().recordOutput("Odometry", getPose());
+    SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
+    if (Constants.kDebugEnabled) {
+      field.setRobotPose(poseEstimator.getEstimatedPosition());
+      Logger.getInstance().recordOutput("Odometry", getPose());
+
+      for (SwerveModule mod : swerveModules) {
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+      }
+    }
 
     this.localize(
         FrontConstants.kLimelightNetworkTablesName,
@@ -264,13 +271,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
         BackConstants.kFieldTranslationOffsetY,
         BackConstants.kLimelightTranslationThresholdMeters,
         BackConstants.kLimelightTranslationThresholdMeters);
-
-    for (SwerveModule mod : swerveModules) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-    }
   }
 
   public void setTrajectory(Trajectory trajectory) {
@@ -280,7 +280,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   @Override
   public void logInit() {
     getLayout(kDriverTabName).add(this);
-    getLayout(kDriverTabName).add("gyro", new GyroSendable(gyro::getYaw));
+    getLayout(kDriverTabName).add("gyro", new DoubleSendable(gyro::getYaw, "Gyro"));
     for (int i = 0; i < swerveModules.length; i++) {
       getLayout(kDriverTabName).add("Encoder " + i, swerveModules[i].getAngleEncoder());
     }

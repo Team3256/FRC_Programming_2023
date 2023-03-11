@@ -55,6 +55,14 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     return intakeMotor.getMotorOutputPercent();
   }
 
+  public void keepCone() {
+    intakeMotor.set(ControlMode.Current, kIntakeKeepingCurrent);
+  }
+
+  public void keepCube() {
+    intakeMotor.set(ControlMode.Current, -kIntakeKeepingCurrent);
+  }
+
   public void intakeCone() {
     System.out.println("Intake cone");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
@@ -65,12 +73,20 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
+  public boolean isCurrentSpiking() {
+    return intakeMotor.getSupplyCurrent() >= kIntakeCurrentSpikingThreshold;
+  }
+
   public void off() {
     System.out.println("Intake off");
     intakeMotor.neutralOutput();
   }
 
   @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Intake current", intakeMotor.getSupplyCurrent());
+  }
+
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName).add(new IntakeCube(this));
