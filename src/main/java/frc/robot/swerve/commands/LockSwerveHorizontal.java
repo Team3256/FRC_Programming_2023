@@ -25,6 +25,7 @@ public class LockSwerveHorizontal extends CommandBase {
 
   @Override
   public void initialize() {
+    System.out.println("LockSwerveHorizontal started");
     double inwardAngle = Math.atan(kTrackWidth / kWheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
 

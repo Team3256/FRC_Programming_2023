@@ -25,7 +25,7 @@ public class LockSwerveX extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("LockSwerve started");
+    System.out.println("LockSwerveX started");
     double inwardAngle = Math.atan(kTrackWidth / kWheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
 
