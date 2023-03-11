@@ -23,6 +23,7 @@ import frc.robot.swerve.SwerveDrive;
 
 public class SimpleGoToAbsolute {
   static Command run(SwerveDrive swerveDrive, Pose2d sink) {
+    System.out.println("Running: Go to absolute " + sink);
     Pose2d src = swerveDrive.getPose();
     Rotation2d heading = sink.minus(src).getTranslation().getAngle();
     PathPlannerTrajectory traj =

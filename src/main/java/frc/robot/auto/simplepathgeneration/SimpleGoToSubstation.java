@@ -37,6 +37,7 @@ public class SimpleGoToSubstation {
       Arm armSubsystem,
       LED ledSubsystem,
       boolean isCurrentPieceCone) {
+    System.out.println("Running: Go to substation from " + swerveDrive.getPose());
     Pose2d sink =
         DriverStation.getAlliance() == Alliance.Blue
             ? kBlueTopDoubleSubstationPose
@@ -63,7 +64,6 @@ public class SimpleGoToSubstation {
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
     LEDSetAllSectionsPattern signalLED =
         new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenSuccessPattern());
-
     Command finalCommand =
         new SequentialCommandGroup(
             moveToSubstation,
