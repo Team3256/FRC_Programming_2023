@@ -81,22 +81,13 @@ public class AutoBuilder {
 
     commands.add(createCommandFromStopEvent(lastTrajectory.getEndStopEvent()));
 
-    if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
-      if (endRotation.getDegrees() == 0) {
-        Command zeroGyroForTeleop = new InstantCommand(() -> swerveSubsystem.setGyro(0));
-        commands.add(zeroGyroForTeleop);
-      } else if (endRotation.getDegrees() == 180) {
-        Command zeroGyroForTeleop = new InstantCommand(() -> swerveSubsystem.setGyro(180));
-        commands.add(zeroGyroForTeleop);
-      }
-    } else {
-      if (endRotation.getDegrees() == 0) {
-        Command zeroGyroForTeleop = new InstantCommand(() -> swerveSubsystem.setGyro(180));
-        commands.add(zeroGyroForTeleop);
-      } else if (endRotation.getDegrees() == 180) {
-        Command zeroGyroForTeleop = new InstantCommand(() -> swerveSubsystem.setGyro(0));
-        commands.add(zeroGyroForTeleop);
-      }
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+      Command zeroGyroTeleop =
+          new InstantCommand(
+              () ->
+                  swerveSubsystem.setGyro(
+                      (endRotation.times(-1).plus(Rotation2d.fromDegrees(180))).getDegrees()));
+      commands.add(zeroGyroTeleop);
     }
     return commands;
   }
