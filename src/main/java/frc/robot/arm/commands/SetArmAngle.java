@@ -15,14 +15,14 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
-import java.util.function.DoubleSupplier;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
   private Rotation2d angleRotation2d;
   private ArmPosition armPosition;
+  private boolean shouldEnd;
 
-  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
+  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d, boolean shouldEnd) {
     super(
         new ProfiledPIDController(kP, kI, kD, kArmProfileContraints),
         armSubsystem::getArmPositionRads,
@@ -40,11 +40,12 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
     this.angleRotation2d = angleRotation2d;
     this.armSubsystem = armSubsystem;
+    this.shouldEnd = shouldEnd;
     addRequirements(armSubsystem);
   }
 
-  public SetArmAngle(Arm armSubsystem, DoubleSupplier rotationRads) {
-    this(armSubsystem, new Rotation2d(rotationRads.getAsDouble()));
+  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
+    this(armSubsystem, angleRotation2d, true);
   }
 
   public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
@@ -82,6 +83,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
   @Override
   public boolean isFinished() {
-    return getController().atGoal();
+    return getController().atGoal() && shouldEnd;
   }
 }

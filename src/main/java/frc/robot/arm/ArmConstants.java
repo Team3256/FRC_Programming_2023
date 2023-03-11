@@ -16,7 +16,6 @@ public final class ArmConstants {
   public static final int kArmMotorID = 6;
   public static final String kArmCanBus = "mani";
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
-  public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(72);
   public static final int kArmSimulationID = 16;
   public static final int kArmEncoderDIOPort = 10;
   private static final double kArmCountsPerRevolution = 8192;
@@ -49,6 +48,8 @@ public final class ArmConstants {
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-35);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(150);
 
+  public static final Rotation2d kDefaultArmAngle =
+      Constants.kCompetitionModeEnabled ? Rotation2d.fromDegrees(72) : Rotation2d.fromDegrees(90);
   public static final Rotation2d kDoubleSubstationRotation = Rotation2d.fromDegrees(5.5);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-30.5);
   public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(12);
