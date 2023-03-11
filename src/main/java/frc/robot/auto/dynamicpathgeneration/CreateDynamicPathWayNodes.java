@@ -21,7 +21,6 @@ import org.json.simple.JSONObject;
 
 public class CreateDynamicPathWayNodes {
   public static void init() {
-    System.out.println("Dynamic Path Way Nodes created");
 
     // add preSink nodes
     ArrayList<PathNode> preSinks = preSink(blueDynamicPathWayNodes);
@@ -31,16 +30,14 @@ public class CreateDynamicPathWayNodes {
     // add passages
     PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
     PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
-    ArrayList<PathNode> topPassage =
-        passage(blueDynamicPathWayNodes, topPassageSrc, topPassageSink);
+    ArrayList<PathNode> topPassage = passage(blueDynamicPathWayNodes, topPassageSrc, topPassageSink);
     // link top passage with top 2 PreSink
     PathUtil.fullyConnect(topPreSink, topPassageSink);
     PathUtil.fullyConnect(preSinks.get(preSinks.size() - 2), topPassageSink);
 
     PathNode botPassageSink = new PathNode(2.8, 0 + 0.73, PathNode.NodeType.PASSAGE);
     PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73, PathNode.NodeType.PASSAGE);
-    ArrayList<PathNode> botPassage =
-        passage(blueDynamicPathWayNodes, botPassageSrc, botPassageSink);
+    ArrayList<PathNode> botPassage = passage(blueDynamicPathWayNodes, botPassageSrc, botPassageSink);
     // link bottom passage with bottom 2 preSink
     PathUtil.fullyConnect(botPreSink, botPassageSink);
     PathUtil.fullyConnect(preSinks.get(1), botPassageSink);
@@ -52,8 +49,7 @@ public class CreateDynamicPathWayNodes {
     PathUtil.fullyConnect(leftStation, topPassageSrc);
     PathUtil.fullyConnect(leftStation, botPassageSrc);
 
-    PathNode rightStation =
-        new PathNode(Constants.FieldConstants.kFieldLength - 6.28, 6.39, PathNode.NodeType.NORMAL);
+    PathNode rightStation = new PathNode(Constants.FieldConstants.kFieldLength - 6.28, 6.39, PathNode.NodeType.NORMAL);
     blueDynamicPathWayNodes.add(rightStation);
     // link right station node with top and bot passage src
     PathUtil.fullyConnect(rightStation, topPassageSrc);
@@ -63,6 +59,7 @@ public class CreateDynamicPathWayNodes {
     for (PathNode node : blueDynamicPathWayNodes) {
       redDynamicPathWayNodes.add(node.getRedVersion());
     }
+    System.out.println("Dynamic Path Way Nodes created");
 
     // display dynamic path way nodes in Path Planner
     displayWayNodes(blueDynamicPathWayNodes, true);
