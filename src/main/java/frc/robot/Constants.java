@@ -27,6 +27,7 @@ public final class Constants {
   public static final boolean kArmEnabled = true;
   public static final boolean kLedStripEnabled = true;
 
+  public static final boolean kCompetitionModeEnabled = false;
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.REAL;
   public static final double kStickDeadband = 0.05;
