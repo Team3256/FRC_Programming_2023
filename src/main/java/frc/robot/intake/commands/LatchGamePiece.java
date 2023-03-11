@@ -15,14 +15,14 @@ public class LatchGamePiece extends CommandBase {
   private Intake intakeSubsystem;
   private BooleanSupplier isCurrentPieceCone;
 
-  public LatchGamePiece(Intake intakeSubsystem, BooleanSupplier isCone) {
+  public LatchGamePiece(Intake intakeSubsystem, BooleanSupplier isCurrentPieceCone) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentPieceCone = isCone;
+    this.isCurrentPieceCone = isCurrentPieceCone;
     addRequirements(intakeSubsystem);
   }
 
   @Override
-  public void initialize() {
+  public void execute() {
     if (isCurrentPieceCone.getAsBoolean()) {
       intakeSubsystem.latchCone();
     } else {

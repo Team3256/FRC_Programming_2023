@@ -55,11 +55,13 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void latchCone() {
-    intakeMotor.set(ControlMode.Current, kIntakeKeepingCurrent);
+    intakeMotor.set(ControlMode.Current, 42);
+    // intakeMotor.set(ControlMode.PercentOutput, kIntakeKeepingPercent);
   }
 
   public void latchCube() {
-    intakeMotor.set(ControlMode.Current, -kIntakeKeepingCurrent);
+    intakeMotor.set(ControlMode.Current, 42);
+    // intakeMotor.set(ControlMode.PercentOutput, -kIntakeKeepingPercent);
   }
 
   public void intakeCone() {
