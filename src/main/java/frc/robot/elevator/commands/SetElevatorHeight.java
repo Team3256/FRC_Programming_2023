@@ -10,13 +10,18 @@ package frc.robot.elevator.commands;
 import static frc.robot.elevator.ElevatorConstants.*;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.elevator.Elevator;
 
 public class SetElevatorHeight extends ProfiledPIDCommand {
   public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
     super(
-        new ProfiledPIDController(kP, kI, kD, kElevatorContraints),
+        new ProfiledPIDController(
+            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kP),
+            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kI),
+            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kD),
+            kElevatorContraints),
         elevatorSubsystem::getElevatorPosition,
         setpointPositionMeters,
         (output, setpoint) ->
