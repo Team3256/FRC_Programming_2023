@@ -93,10 +93,12 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     // PID controller takes current robot position (getYaw) and compares to the
     // azimuth angle to
     // calculate error
-    double rotationPIDOutput = azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
+    double rotationPIDOutput =
+        azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
 
     translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
-    rotationPIDOutput = MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
+    rotationPIDOutput =
+        MathUtil.clamp(rotationPIDOutput, -kMaxAngularVelocity, kMaxAngularVelocity);
 
     swerveSubsystem.drive(translation, rotationPIDOutput, fieldRelative, openLoop);
   }
