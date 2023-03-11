@@ -19,10 +19,19 @@ public final class ElevatorConstants {
       new CanDeviceId(kElevatorID, kElevatorCANBus);
   public static final int kNumElevatorMotors = 1;
 
+  public static class ElevatorPreferencesKeys {
+    public static final String kElevatorHighPositionMetersKey = "kElevatorHighPositionMeters";
+    public static final String kElevatorMidPositionMetersKey = "kElevatorMidPositionMeters";
+    public static final String kElevatorLowPositionMetersKey = "kElevatorLowPositionMeters";
+    public static final String kPKey = "ElevatorkP";
+    public static final String kIKey = "ElevatorkI";
+    public static final String kDKey = "ElevatorkD";
+  }
+
   // TODO: Change to real values
-  public static final double kElevatorHighPositionMeters = Units.inchesToMeters(30);
-  public static final double kElevatorMidPositionMeters = Units.inchesToMeters(15);
-  public static final double kElevatorLowPositionMeters = Units.inchesToMeters(3);
+  public static final double kElevatorHighPositionMeters = 0.762;
+  public static final double kElevatorMidPositionMeters = 0.381;
+  public static final double kElevatorLowPositionMeters = 0.0762;
 
   // https://www.reca.lc/linear
   // gradle simulateJava working constants

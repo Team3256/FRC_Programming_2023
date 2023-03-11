@@ -18,14 +18,24 @@ import edu.wpi.first.math.util.Units;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebugEnabled = true;
 
+  public static class RobotPreferencesKeys {
+
+    public static final String kIntakeEnabledKey = "kIntakeEnabled";
+    public static final String kElevatorEnabledKey = "kElevatorEnabled";
+    public static final String kArmEnabledKey = "kArmEnabled";
+    public static final String kSwerveEnabledKey = "kSwerveEnabled";
+    public static final String kLedStripEnabledKey = "kLedStripEnabled";
+    public static final String kAdvantageKitReplayEnabledKey = "kAdvantageKitReplayEnabled";
+  }
+
+  public static final boolean kDebugEnabled = true;
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
   public static final boolean kArmEnabled = true;
   public static final boolean kSwerveEnabled = true;
   public static final boolean kLedStripEnabled = true;
-  public static final boolean kAdvatageKitReplayEnabled = false;
+  public static final boolean kAdvantageKitReplayEnabled = false;
 
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.SIM;

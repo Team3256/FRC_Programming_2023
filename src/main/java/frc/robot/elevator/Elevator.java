@@ -17,6 +17,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -35,13 +36,18 @@ import frc.robot.drivers.TalonFXFactory;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
-import java.util.function.*;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPosition {
-    HIGH(ElevatorConstants.kElevatorHighPositionMeters),
-    MID(ElevatorConstants.kElevatorMidPositionMeters),
-    LOW(ElevatorConstants.kElevatorLowPositionMeters);
+    HIGH(
+        Preferences.getDouble(
+            ElevatorPreferencesKeys.kElevatorHighPositionMetersKey, kElevatorHighPositionMeters)),
+    MID(
+        Preferences.getDouble(
+            ElevatorPreferencesKeys.kElevatorMidPositionMetersKey, kElevatorMidPositionMeters)),
+    LOW(
+        Preferences.getDouble(
+            ElevatorPreferencesKeys.kElevatorLowPositionMetersKey, kElevatorLowPositionMeters));
 
     public double position;
 

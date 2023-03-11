@@ -12,6 +12,13 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.drivers.CanDeviceId;
 
 public final class ArmConstants {
+
+  public static class ArmPreferencesKeys {
+    public static final String kPKey = "ArmkP";
+    public static final String kIKey = "ArmkI";
+    public static final String kDKey = "ArmkD";
+  }
+
   // TODO: Fix constants
   public static final int kArmMotorID = 6;
   public static final String kArmCanBus = "mani";

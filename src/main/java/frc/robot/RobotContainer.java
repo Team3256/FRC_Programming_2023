@@ -8,8 +8,10 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.swerve.SwerveConstants.*;
+import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
+import static frc.robot.Constants.ShuffleboardConstants.kElectricalTabName;
+import static frc.robot.swerve.SwerveConstants.kFieldRelative;
+import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -19,21 +21,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.*;
+import frc.robot.arm.commands.DefaultArmElevatorDriveConfig;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.*;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.*;
+import frc.robot.intake.commands.IntakeCone;
+import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
-import frc.robot.led.commands.*;
-import frc.robot.led.patterns.*;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.LEDToggleGamePieceDisplay;
+import frc.robot.led.patterns.ColorChaseBluePattern;
 import frc.robot.logging.GyroSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.*;
+import frc.robot.swerve.commands.TeleopSwerve;
+import frc.robot.swerve.commands.TeleopSwerveLimited;
+import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -74,13 +79,8 @@ public class RobotContainer implements CANTestable, Loggable {
       loggables.add(elevatorSubsystem);
     }
     if (kArmEnabled) {
-      configureArm();
       testables.add(armSubsystem);
       loggables.add(armSubsystem);
-    }
-    if (kElevatorEnabled) {
-      configureElevator();
-      testables.add(elevatorSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -157,11 +157,6 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kArmEnabled) {
       operator.y().onTrue(new DefaultArmElevatorDriveConfig(elevatorSubsystem, armSubsystem));
     }
-  }
-
-  private void configureArm() {
-    armSubsystem = new Arm();
-    // TODO: set button bindings for arm testing
   }
 
   public void configureLEDStrip() {
