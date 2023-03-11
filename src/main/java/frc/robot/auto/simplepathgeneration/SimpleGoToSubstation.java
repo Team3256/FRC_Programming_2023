@@ -12,6 +12,7 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueTop
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.*;
@@ -44,7 +45,7 @@ public class SimpleGoToSubstation {
         DriverStation.getAlliance() == Alliance.Blue
             ? kBlueTopDoubleSubstationPose
             : PathUtil.flip(kBlueTopDoubleSubstationPose);
-    double chargeDistance = 0.25;
+    double chargeDistance = Units.feetToMeters(4.9)/2;
     Pose2d preSink = new Pose2d(sink.getX()-chargeDistance,sink.getY(),sink.getRotation());
 
     //commands that will be run sequentially
