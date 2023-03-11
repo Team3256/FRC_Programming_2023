@@ -22,13 +22,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
-import frc.robot.drivers.TalonFXFactory;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.logging.Loggable;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private WPI_TalonFX intakeMotor;
+  private boolean intakeDebug = false;
 
   public Intake() {
     if (RobotBase.isReal()) {
@@ -41,8 +41,9 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   private void configureRealHardware() {
-    intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
-    intakeMotor.setNeutralMode(NeutralMode.Brake);
+    intakeMotor = new WPI_TalonFX(kIntakeCANDevice.getDeviceNumber(), kIntakeCANDevice.getBus());
+    // intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
+    // intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   private void configureSimHardware() {
@@ -55,12 +56,14 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void latchCone() {
-    intakeMotor.set(ControlMode.Current, 42);
+    if (intakeDebug) System.out.println("Latch cone");
+    intakeMotor.set(ControlMode.Current, 20);
     // intakeMotor.set(ControlMode.PercentOutput, kIntakeKeepingPercent);
   }
 
   public void latchCube() {
-    intakeMotor.set(ControlMode.Current, 42);
+    if (intakeDebug) System.out.println("Latch Cube");
+    intakeMotor.set(ControlMode.Current, -20);
     // intakeMotor.set(ControlMode.PercentOutput, -kIntakeKeepingPercent);
   }
 
