@@ -16,12 +16,14 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
+import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.IntakeOff;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.DynamicPathGenSuccessPattern;
@@ -39,8 +41,8 @@ public class SimpleGoToSubstation {
         DriverStation.getAlliance() == Alliance.Blue
             ? kBlueTopDoubleSubstationPose
             : PathUtil.flip(kBlueTopDoubleSubstationPose);
-    Command moveCommand = SimpleGoToAbsolute.run(swerveDrive, sink);
-    Command moveArmAndElevatorCommand =
+    Command moveToSubstation = SimpleGoToAbsolute.run(swerveDrive, sink);
+    Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new ConditionalCommand(
                 new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CONE_HIGH),
@@ -50,17 +52,20 @@ public class SimpleGoToSubstation {
                 new SetArmAngle(armSubsystem, Arm.ArmPosition.CONE_HIGH),
                 new SetArmAngle(armSubsystem, Arm.ArmPosition.CUBE_HIGH),
                 () -> isCurrentPieceCone));
-    Command intakeCommand =
+    Command runIntake =
         new ConditionalCommand(
             new IntakeCone(intakeSubsystem),
             new IntakeCube(intakeSubsystem),
             () -> isCurrentPieceCone);
-    Command moveBackCommand = SimpleGoToRelative.run(swerveDrive, new Translation2d(0, -0.25));
-    LEDSetAllSectionsPattern flashCommand =
+    Command wait = new WaitCommand(1);
+    Command stopIntake = new IntakeOff(intakeSubsystem);
+    Command stepBack = SimpleGoToRelative.run(swerveDrive, new Translation2d(0, -0.25));
+    Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
+    LEDSetAllSectionsPattern signalLED =
         new LEDSetAllSectionsPattern(ledSubsystem, new DynamicPathGenSuccessPattern());
 
     Command finalCommand =
-        new SequentialCommandGroup(moveCommand, intakeCommand, moveBackCommand, flashCommand);
+        new SequentialCommandGroup(moveToSubstation, moveArmElevatorToPreset, runIntake, wait, stopIntake, stepBack, stowArmElevator, signalLED);
     return finalCommand;
   }
 }
