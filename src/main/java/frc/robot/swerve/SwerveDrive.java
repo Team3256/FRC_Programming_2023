@@ -53,13 +53,13 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   private final Field2d field = new Field2d();
   private final Field2d limelightLocalizationField = new Field2d();
 
-  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter = new AdaptiveSlewRateLimiter(kXAccelRateLimit,
-      kXDecelRateLimit);
-  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter = new AdaptiveSlewRateLimiter(kYAccelRateLimit,
-      kYDecelRateLimit);
+  private final AdaptiveSlewRateLimiter adaptiveXRateLimiter =
+      new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
+  private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
+      new AdaptiveSlewRateLimiter(kYAccelRateLimit, kYDecelRateLimit);
 
   private final SwerveModule[] swerveModules = {
-      frontLeftModule, frontRightModule, backLeftModule, backRightModule
+    frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
   public Pigeon2 gyro;
@@ -70,16 +70,17 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     zeroGyro();
 
     // TODO MAKE POSITION 0,0
-    poseEstimator = new SwerveDrivePoseEstimator(
-        kSwerveKinematics,
-        getYaw(),
-        new SwerveModulePosition[] {
-            frontLeftModule.getPosition(),
-            frontRightModule.getPosition(),
-            backLeftModule.getPosition(),
-            backRightModule.getPosition()
-        },
-        new Pose2d());
+    poseEstimator =
+        new SwerveDrivePoseEstimator(
+            kSwerveKinematics,
+            getYaw(),
+            new SwerveModulePosition[] {
+              frontLeftModule.getPosition(),
+              frontRightModule.getPosition(),
+              backLeftModule.getPosition(),
+              backRightModule.getPosition()
+            },
+            new Pose2d());
 
     if (Constants.kDebugEnabled) {
       SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
@@ -101,22 +102,27 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
-    Pose2d robotPoseVelocity = new Pose2d(
-        chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
-        chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
-        Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
+    Pose2d robotPoseVelocity =
+        new Pose2d(
+            chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
+            chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
+            Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
     Twist2d twistVelocity = (new Pose2d()).log(robotPoseVelocity);
-    ChassisSpeeds updatedChassisSpeeds = new ChassisSpeeds(
-        twistVelocity.dx / kPeriodicDeltaTime,
-        twistVelocity.dy / kPeriodicDeltaTime,
-        twistVelocity.dtheta / kPeriodicDeltaTime);
+    ChassisSpeeds updatedChassisSpeeds =
+        new ChassisSpeeds(
+            twistVelocity.dx / kPeriodicDeltaTime,
+            twistVelocity.dy / kPeriodicDeltaTime,
+            twistVelocity.dtheta / kPeriodicDeltaTime);
 
     if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
-      chassisSpeeds.vxMetersPerSecond = adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
-      chassisSpeeds.vyMetersPerSecond = adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+      chassisSpeeds.vxMetersPerSecond =
+          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+      chassisSpeeds.vyMetersPerSecond =
+          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
     }
 
-    SwerveModuleState[] swerveModuleStates = kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
+    SwerveModuleState[] swerveModuleStates =
+        kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
@@ -128,10 +134,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    ChassisSpeeds swerveChassisSpeed = fieldRelative
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(
-            translation.getX(), translation.getY(), rotation, getPose().getRotation())
-        : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds swerveChassisSpeed =
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, getPose().getRotation())
+            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
   }

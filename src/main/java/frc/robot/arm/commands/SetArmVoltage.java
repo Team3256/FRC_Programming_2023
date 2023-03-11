@@ -9,7 +9,6 @@ package frc.robot.arm.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.arm.Arm;
-import frc.robot.arm.ArmConstants;
 
 public class SetArmVoltage extends CommandBase {
   private Arm armSubsystem;
@@ -27,8 +26,7 @@ public class SetArmVoltage extends CommandBase {
   }
 
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   @Override
   public void end(boolean interrupted) {
