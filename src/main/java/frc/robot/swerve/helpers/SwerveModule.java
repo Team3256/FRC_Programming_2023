@@ -53,16 +53,6 @@ public class SwerveModule implements Loggable {
     /* Drive Motor Config */
     mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
     configDriveMotor();
-    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID);
-    configAngleEncoder();
-
-    /* Angle Motor Config */
-    mAngleMotor = new WPI_TalonFX(moduleConstants.angleMotorID);
-    configAngleMotor();
-
-    /* Drive Motor Config */
-    mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
-    configDriveMotor();
 
     lastAngle = getState().angle;
   }
@@ -203,7 +193,7 @@ public class SwerveModule implements Loggable {
   public ShuffleboardLayout getLayout(String tabName) {
     return Shuffleboard.getTab(tabName)
         .getLayout("Mod " + moduleNumber, BuiltInLayouts.kList)
-        .withSize(2, 2);
+        .withSize(2, 1);
   }
 
   public boolean test() {

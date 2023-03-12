@@ -7,11 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.*;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.Constants.RobotMode;
 import frc.robot.arm.ArmConstants;
 import frc.robot.elevator.Elevator;
@@ -60,6 +62,7 @@ public class Robot extends LoggedRobot {
         logger.addDataReceiver(new NT4Publisher());
         break;
       case SIM:
+        DriverStation.silenceJoystickConnectionWarning(true);
         logger.addDataReceiver(new WPILOGWriter(""));
         logger.addDataReceiver(new NT4Publisher());
         break;
@@ -75,11 +78,12 @@ public class Robot extends LoggedRobot {
         break;
     }
 
+    // logger.start(); // Start advkit logger
     loadPreferences();
 
     logger.start(); // Start advkit logger
     robotContainer = new RobotContainer();
-    robotContainer.logInit();
+    // robotContainer.logInit();
   }
 
   @Override
@@ -130,8 +134,9 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     // Run tests
-    robotContainer.CANTest();
-    robotContainer.startPitRoutine();
+    if (FeatureFlags.kCanTestEnabled) robotContainer.CANTest();
+
+    if (FeatureFlags.kPitRoutineEnabled) robotContainer.startPitRoutine();
   }
 
   /** This function is called periodically during test mode. */
