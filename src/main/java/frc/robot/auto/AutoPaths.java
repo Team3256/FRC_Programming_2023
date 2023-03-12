@@ -9,6 +9,9 @@ package frc.robot.auto;
 
 import static frc.robot.auto.AutoConstants.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -276,6 +279,16 @@ public class AutoPaths {
   }
 
   public Command getSelectedPath() {
-    return AutoChooser.getCommand();
+    Command zeroGyroTeleop = new InstantCommand();
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      zeroGyroTeleop =
+          new InstantCommand(
+              () ->
+                  swerveSubsystem.setGyro(
+                      (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
+                          .getDegrees()));
+    }
+
+    return AutoChooser.getCommand().andThen(zeroGyroTeleop);
   }
 }
