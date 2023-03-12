@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.ShuffleboardConstants.*;
+// import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -183,7 +183,8 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    operator.x().onTrue(new LockSwerve(swerveSubsystem));
+
+    operator.x().onTrue(new LockSwerveX(swerveSubsystem));
     operator
         .b()
         .onTrue(

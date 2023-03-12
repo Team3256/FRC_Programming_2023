@@ -15,22 +15,22 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.swerve.SwerveDrive;
 
-public class LockSwerve extends CommandBase {
+public class LockSwerveX extends CommandBase {
   private final SwerveDrive swerveSubsystem;
 
-  public LockSwerve(SwerveDrive swerveSubsystem) {
+  public LockSwerveX(SwerveDrive swerveSubsystem) {
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
   }
 
   @Override
   public void initialize() {
-    System.out.println("LockSwerve started");
+    System.out.println("LockSwerveX started");
     double inwardAngle = Math.atan(kTrackWidth / kWheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
 
     for (int mod = 0; mod < 4; mod++) {
-      states[mod] = new SwerveModuleState(1, new Rotation2d(inwardAngle + kLockAngleOffsets[mod]));
+      states[mod] = new SwerveModuleState(1, new Rotation2d(inwardAngle + kLockAngleOffsetsX[mod]));
     }
 
     swerveSubsystem.setDesiredAngleState(states);
