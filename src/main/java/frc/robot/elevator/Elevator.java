@@ -39,21 +39,9 @@ import frc.robot.logging.Loggable;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPosition {
-    HIGH(
-        Preferences.getDouble(
-            ElevatorPreferencesKeys.kElevatorHighPositionMetersKey, kElevatorHighPositionMeters)),
-    MID(
-        Preferences.getDouble(
-            ElevatorPreferencesKeys.kElevatorMidPositionMetersKey, kElevatorMidPositionMeters)),
-    LOW(
-        Preferences.getDouble(
-            ElevatorPreferencesKeys.kElevatorLowPositionMetersKey, kElevatorLowPositionMeters));
-
-    public double position;
-
-    private ElevatorPosition(double position) {
-      this.position = position;
-    }
+    HIGH,
+    MID,
+    LOW
   }
 
   private WPI_TalonFX elevatorMotor;
@@ -172,5 +160,11 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     System.out.println("Elevator CAN connected: " + result);
     getLayout(kElectricalTabName).add("Elevator CAN connected", result);
     return result;
+  }
+
+  public double getPreferencesSetpoint(Elevator.ElevatorPosition setpoint) {
+    return Preferences.getDouble(
+        ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
+        ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));
   }
 }

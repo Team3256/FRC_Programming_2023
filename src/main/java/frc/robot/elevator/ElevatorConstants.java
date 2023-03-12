@@ -10,6 +10,7 @@ package frc.robot.elevator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.drivers.CanDeviceId;
+import java.util.Map;
 
 public final class ElevatorConstants {
   public static final int kElevatorID = 5;
@@ -20,9 +21,18 @@ public final class ElevatorConstants {
   public static final int kNumElevatorMotors = 1;
 
   public static class ElevatorPreferencesKeys {
-    public static final String kElevatorHighPositionMetersKey = "kElevatorHighPositionMeters";
-    public static final String kElevatorMidPositionMetersKey = "kElevatorMidPositionMeters";
-    public static final String kElevatorLowPositionMetersKey = "kElevatorLowPositionMeters";
+    public static final Map<Elevator.ElevatorPosition, String> kElevatorPositionKeys =
+        Map.of(
+            Elevator.ElevatorPosition.LOW, "kElevatorLowPositionMeters",
+            Elevator.ElevatorPosition.MID, "kElevatorMidPositionMeters",
+            Elevator.ElevatorPosition.HIGH, "kElevatorHighPositionMeters");
+
+    public static final Map<Elevator.ElevatorPosition, Double> kElevatorPositionDefaults =
+        Map.of(
+            Elevator.ElevatorPosition.LOW, kElevatorLowPositionMeters,
+            Elevator.ElevatorPosition.MID, kElevatorMidPositionMeters,
+            Elevator.ElevatorPosition.HIGH, kElevatorHighPositionMeters);
+
     public static final String kPKey = "ElevatorkP";
     public static final String kIKey = "ElevatorkI";
     public static final String kDKey = "ElevatorkD";

@@ -7,13 +7,14 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.*;
+import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.*;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotMode;
 import frc.robot.arm.ArmConstants;
+import frc.robot.elevator.Elevator;
 import frc.robot.elevator.ElevatorConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -74,7 +75,7 @@ public class Robot extends LoggedRobot {
         break;
     }
 
-    configurePreferences();
+    loadPreferences();
 
     logger.start(); // Start advkit logger
     robotContainer = new RobotContainer();
@@ -138,7 +139,7 @@ public class Robot extends LoggedRobot {
   public void testPeriodic() {}
 
   /** Populating preferences on network tables */
-  public void configurePreferences() {
+  public void loadPreferences() {
 
     // Arm PID Preferences
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kP);
@@ -150,13 +151,13 @@ public class Robot extends LoggedRobot {
     Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kDKey, ElevatorConstants.kD);
     // Elevator Preset Preferences
     Preferences.initDouble(
-        ElevatorConstants.ElevatorPreferencesKeys.kElevatorHighPositionMetersKey,
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.HIGH),
         ElevatorConstants.kElevatorHighPositionMeters);
     Preferences.initDouble(
-        ElevatorConstants.ElevatorPreferencesKeys.kElevatorMidPositionMetersKey,
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.MID),
         ElevatorConstants.kElevatorMidPositionMeters);
     Preferences.initDouble(
-        ElevatorConstants.ElevatorPreferencesKeys.kElevatorLowPositionMetersKey,
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.LOW),
         ElevatorConstants.kElevatorLowPositionMeters);
   }
 }

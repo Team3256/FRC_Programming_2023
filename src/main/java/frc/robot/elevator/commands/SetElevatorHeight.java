@@ -15,6 +15,38 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.elevator.Elevator;
 
 public class SetElevatorHeight extends ProfiledPIDCommand {
+
+  /**
+   * Constructor for setting elevator height for the Low, Mid, High levels
+   *
+   * @param elevatorSubsystem
+   * @param setpointPositionMeters
+   */
+  public SetElevatorHeight(
+      Elevator elevatorSubsystem, Elevator.ElevatorPosition setpointPositionMeters) {
+    super(
+        new ProfiledPIDController(
+            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kP),
+            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kI),
+            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kD),
+            kElevatorContraints),
+        elevatorSubsystem::getElevatorPosition,
+        elevatorSubsystem.getPreferencesSetpoint(setpointPositionMeters),
+        (output, setpoint) ->
+            elevatorSubsystem.setInputVoltage(
+                output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
+        elevatorSubsystem);
+
+    getController().setTolerance(kTolerancePosition, kToleranceVelocity);
+    addRequirements(elevatorSubsystem);
+  }
+
+  /**
+   * Constructor for setting the elevator to a setpoint in the parameters
+   *
+   * @param elevatorSubsystem
+   * @param setpointPositionMeters
+   */
   public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
     super(
         new ProfiledPIDController(
@@ -31,9 +63,5 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
 
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);
-  }
-
-  public SetElevatorHeight(Elevator elevatorSubsystem, Elevator.ElevatorPosition elevatorPosition) {
-    this(elevatorSubsystem, elevatorPosition.position);
   }
 }
