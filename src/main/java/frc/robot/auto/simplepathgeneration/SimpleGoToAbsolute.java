@@ -22,9 +22,8 @@ import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
 public class SimpleGoToAbsolute {
-  static Command run(SwerveDrive swerveDrive, Pose2d sink) {
+  static Command run(Pose2d src, Pose2d sink, SwerveDrive swerveDrive) {
     System.out.println("Running: Go to absolute " + sink);
-    Pose2d src = swerveDrive.getPose();
     Rotation2d heading = sink.minus(src).getTranslation().getAngle();
     PathPlannerTrajectory traj =
         PathPlanner.generatePath(
@@ -41,7 +40,7 @@ public class SimpleGoToAbsolute {
 
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command trajCommand = autoBuilder.createPathPlannerCommand(traj, false, false);
+    Command trajCommand = autoBuilder.createTrajectoryFollowCommand(traj, false, false);
     return trajCommand;
   }
 }

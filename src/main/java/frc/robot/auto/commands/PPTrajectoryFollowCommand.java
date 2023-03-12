@@ -167,6 +167,8 @@ public class PPTrajectoryFollowCommand extends CommandBase {
         PathPlannerServer.sendPathFollowingData(
             new Pose2d(desiredPose.getTranslation(), desiredRotation),
             new Pose2d(desiredPose.getTranslation(), desiredRotation));
+      } else {
+        PathPlannerServer.sendPathFollowingData(desiredPose, currentPose);
       }
     }
 

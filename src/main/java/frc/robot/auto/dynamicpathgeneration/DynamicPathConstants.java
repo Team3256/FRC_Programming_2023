@@ -60,8 +60,8 @@ public final class DynamicPathConstants {
   }
 
   // Trajectory constraints
-  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(1, 1);
-  public static final PathConstraints kPathToScoreConstraints = new PathConstraints(1, 1);
+  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(3, 3);
+  public static final PathConstraints kPathToScoreConstraints = new PathConstraints(3, 3);
   public static final double kGridBuffer = Units.inchesToMeters(4);
   public static final double kBlueGridTapeX = 1.38 + kGridBuffer;
   public static final double kBlueLowTapeOffset = Units.inchesToMeters(22);
@@ -76,7 +76,7 @@ public final class DynamicPathConstants {
   public static final Transform2d kSubstationPreSink =
       new Transform2d(new Translation2d(-1.22, 0), new Rotation2d());
   public static final Pose2d kBlueTopDoubleSubstationPose =
-      new Pose2d(15.40, 7.35, Rotation2d.fromDegrees(0));
+      new Pose2d(14.30, 7.35, Rotation2d.fromDegrees(0));
   public static final Pose2d kBlueBottomDoubleSubstationPose =
       new Pose2d(15.40, 6.20, Rotation2d.fromDegrees(0));
   public static final Pose2d[] kBottomBlueScoringPoses =

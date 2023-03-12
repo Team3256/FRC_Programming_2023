@@ -16,6 +16,8 @@ import frc.robot.swerve.SwerveDrive;
 public class SimpleGoToRelative {
   static Command run(SwerveDrive swerveDrive, Translation2d translation2d) {
     return SimpleGoToAbsolute.run(
-        swerveDrive, swerveDrive.getPose().plus(new Transform2d(translation2d, new Rotation2d(0))));
+        swerveDrive.getPose(),
+        swerveDrive.getPose().plus(new Transform2d(translation2d, new Rotation2d(0))),
+        swerveDrive);
   }
 }

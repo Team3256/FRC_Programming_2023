@@ -40,42 +40,47 @@ public class SimpleGoToSubstation {
       BooleanSupplier isCurrentPieceCone) {
     // setup
     System.out.println("Running: Go to substation from " + swerveDrive.getPose());
-    Pose2d sink = DriverStation.getAlliance() == Alliance.Blue
-        ? kBlueTopDoubleSubstationPose
-        : PathUtil.flip(kBlueTopDoubleSubstationPose);
-    double preSinkDistance = Units.feetToMeters(5);
+
+    Pose2d sink = kBlueTopDoubleSubstationPose;
+    double preSinkDistance = Units.feetToMeters(8);
     Pose2d preSink = new Pose2d(sink.getX() - preSinkDistance, sink.getY(), sink.getRotation());
 
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      sink = PathUtil.flip(sink);
+      preSink = PathUtil.flip(preSink);
+    }
+
     // commands that will be run sequentially
-    Command moveToPreSink = SimpleGoToAbsolute.run(swerveDrive, preSink);
-    Command moveArmElevatorToPreset = new ParallelCommandGroup(
+    Command moveToPreSink = SimpleGoToAbsolute.run(swerveDrive.getPose(), preSink, swerveDrive);
+    Command moveArmElevatorToPreset =
+        new ParallelCommandGroup(
+            new ConditionalCommand(
+                new SetElevatorHeight(
+                    elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
+                new SetElevatorHeight(
+                    elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
+                isCurrentPieceCone),
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION),
+                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION),
+                isCurrentPieceCone));
+    Command runIntake =
         new ConditionalCommand(
-            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CONE_HIGH),
-            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CUBE_HIGH),
-            isCurrentPieceCone),
-        new ConditionalCommand(
-            new SetArmAngle(armSubsystem, Arm.ArmPosition.CONE_HIGH),
-            new SetArmAngle(armSubsystem, Arm.ArmPosition.CUBE_HIGH),
-            isCurrentPieceCone));
-    Command runIntake = new ConditionalCommand(
-        new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
-    Command moveToSubstation = SimpleGoToAbsolute.run(swerveDrive, sink);
-    Command wait = new WaitCommand(0.5);
+            new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
+    Command moveToSubstation = SimpleGoToAbsolute.run(preSink, sink, swerveDrive);
     Command stopIntake = new IntakeOff(intakeSubsystem);
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
-    LEDSetAllSectionsPattern signalLED = new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
+    LEDSetAllSectionsPattern signalLED =
+        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
 
     // return sequential of all above commands
-    Command finalCommand = Commands.sequence(
-        moveToPreSink,
-        moveArmElevatorToPreset,
-        runIntake,
-        moveToSubstation,
-        wait,
-        stopIntake,
-        moveToPreSink,
-        stowArmElevator,
-        signalLED);
+    Command finalCommand =
+        Commands.sequence(
+            moveToPreSink,
+            Commands.deadline(moveArmElevatorToPreset, runIntake, moveToSubstation),
+            stopIntake,
+            stowArmElevator,
+            signalLED);
     return finalCommand;
   }
 }
