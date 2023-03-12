@@ -18,10 +18,8 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.commands.PPTrajectoryFollowCommand;
 import frc.robot.swerve.SwerveDrive;
 import java.util.ArrayList;
@@ -81,14 +79,6 @@ public class AutoBuilder {
 
     commands.add(createCommandFromStopEvent(lastTrajectory.getEndStopEvent()));
 
-    if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
-      Command zeroGyroTeleop =
-          new InstantCommand(
-              () ->
-                  swerveSubsystem.setGyro(
-                      (endRotation.times(-1).plus(Rotation2d.fromDegrees(180))).getDegrees()));
-      commands.add(zeroGyroTeleop);
-    }
     return commands;
   }
 
