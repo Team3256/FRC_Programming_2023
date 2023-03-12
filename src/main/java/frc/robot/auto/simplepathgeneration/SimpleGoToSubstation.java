@@ -54,16 +54,12 @@ public class SimpleGoToSubstation {
     Command moveToPreSink = SimpleGoToAbsolute.run(swerveDrive.getPose(), preSink, swerveDrive);
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
             new ConditionalCommand(
-                new SetElevatorHeight(
-                    elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
-                new SetElevatorHeight(
-                    elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
-                isCurrentPieceCone),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION),
-                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION),
+                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CONE),
+                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CUBE),
                 isCurrentPieceCone));
+
     Command runIntake =
         new ConditionalCommand(
             new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
@@ -72,15 +68,14 @@ public class SimpleGoToSubstation {
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
     LEDSetAllSectionsPattern signalLED =
         new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
+    Command moveAwayFromSubstation = SimpleGoToAbsolute.run(sink, preSink, swerveDrive);
 
     // return sequential of all above commands
     Command finalCommand =
         Commands.sequence(
             moveToPreSink,
-            Commands.deadline(moveArmElevatorToPreset, runIntake, moveToSubstation),
-            stopIntake,
-            stowArmElevator,
-            signalLED);
+            Commands.deadline(runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
+            Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake, signalLED));
     return finalCommand;
   }
 }
