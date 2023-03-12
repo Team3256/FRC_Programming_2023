@@ -60,8 +60,8 @@ public final class DynamicPathConstants {
   }
 
   // Trajectory constraints
-  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(4, 4);
-  public static final PathConstraints kPathToScoreConstraints = new PathConstraints(2, 1);
+  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(1, 1);
+  public static final PathConstraints kPathToScoreConstraints = new PathConstraints(1, 1);
   public static final double kGridBuffer = Units.inchesToMeters(4);
   public static final double kBlueGridTapeX = 1.38 + kGridBuffer;
   public static final double kBlueLowTapeOffset = Units.inchesToMeters(22);

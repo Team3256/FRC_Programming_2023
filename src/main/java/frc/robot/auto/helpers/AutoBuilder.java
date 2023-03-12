@@ -59,8 +59,8 @@ public class AutoBuilder {
 
   public ArrayList<Command> createPaths(
       String pathGroup, PathConstraints constraint, PathConstraints... constraints) {
-    ArrayList<PathPlannerTrajectory> trajectories =
-        new ArrayList<>(PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
+    ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<>(
+        PathPlanner.loadPathGroup(pathGroup, constraint, constraints));
     ArrayList<Command> commands = new ArrayList<>();
 
     PathPlannerTrajectory firstTrajectory = trajectories.get(0);
@@ -85,28 +85,26 @@ public class AutoBuilder {
 
   public Command createPathPlannerCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment, boolean useAllianceColor) {
-    PIDController xTranslationController =
-        new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
-    PIDController yTranslationController =
-        new PIDController(kAutoYTranslationP, kAutoYTranslationI, kAutoYTranslationD);
-    ProfiledPIDController thetaController =
-        new ProfiledPIDController(
-            kAutoThetaControllerP,
-            kAutoThetaControllerI,
-            kAutoThetaControllerD,
-            kAutoThetaControllerConstraints);
+    PIDController xTranslationController = new PIDController(kAutoXTranslationP, kAutoXTranslationI,
+        kAutoXTranslationD);
+    PIDController yTranslationController = new PIDController(kAutoYTranslationP, kAutoYTranslationI,
+        kAutoYTranslationD);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+        kAutoThetaControllerP,
+        kAutoThetaControllerI,
+        kAutoThetaControllerD,
+        kAutoThetaControllerConstraints);
 
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    PPTrajectoryFollowCommand pathCommand =
-        new PPTrajectoryFollowCommand(
-            trajectory,
-            xTranslationController,
-            yTranslationController,
-            thetaController,
-            useAllianceColor,
-            isFirstSegment,
-            this.swerveSubsystem);
+    PPTrajectoryFollowCommand pathCommand = new PPTrajectoryFollowCommand(
+        trajectory,
+        xTranslationController,
+        yTranslationController,
+        thetaController,
+        useAllianceColor,
+        isFirstSegment,
+        this.swerveSubsystem);
 
     return new FollowPathWithEvents(pathCommand, trajectory.getMarkers(), suppliedEventMap);
   }
@@ -150,10 +148,9 @@ public class AutoBuilder {
       case PARALLEL:
         return Commands.parallel(commands.toArray(Command[]::new));
       case PARALLEL_DEADLINE:
-        Command deadline =
-            eventMap.containsKey(stopEvent.names.get(0))
-                ? eventMap.get(stopEvent.names.get(0)).get()
-                : Commands.none();
+        Command deadline = eventMap.containsKey(stopEvent.names.get(0))
+            ? eventMap.get(stopEvent.names.get(0)).get()
+            : Commands.none();
         return Commands.deadline(deadline, commands.toArray(Command[]::new));
       default:
         throw new IllegalArgumentException(
