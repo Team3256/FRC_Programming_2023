@@ -26,7 +26,7 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.LockSwerve;
+import frc.robot.swerve.commands.LockSwerveX;
 import frc.robot.swerve.commands.TeleopSwerve;
 
 public class PitTestRoutine {
@@ -121,7 +121,7 @@ public class PitTestRoutine {
   }
 
   public Command swerveCommands() {
-    Command lockSwerve = new LockSwerve(swerveSubsystem).until(driver.b());
+    Command lockSwerve = new LockSwerveX(swerveSubsystem).until(driver.b());
     Command teleopSwerveForward = // move forward
         new TeleopSwerve(
                 swerveSubsystem,
