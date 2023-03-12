@@ -32,26 +32,46 @@ public class AutoCommandRunner {
     List<AutoCommandMarker> convertedMarkers = new ArrayList<>();
     for (PathPlannerTrajectory.EventMarker eventMarker : eventMarkers) {
       for (String name : eventMarker.names) {
-        if (!eventMap.containsKey(name)) continue;
-
+        if (!eventMap.containsKey(name)) {
+          System.out.println("Key now found for name: " + name);
+          continue;
+        }
         Command command = eventMap.get(name);
         AutoCommandMarker commandMarker =
-            new AutoCommandMarker(eventMarker.positionMeters, command);
+            new AutoCommandMarker(eventMarker.positionMeters, eventMarker.timeSeconds, command);
         convertedMarkers.add(commandMarker);
       }
     }
     return convertedMarkers;
   }
 
-  public void execute(Pose2d currentPose) {
+  public void execute(Pose2d currentPose, double currentTime) {
     for (int i = 0; i < commandMarkers.size(); i++) {
       AutoCommandMarker marker = commandMarkers.get(i);
       boolean atMarker =
           lastPose == null
-              ? isAtMarker(marker.getPos(), currentPose)
-              : isAtMarker(marker.getPos(), currentPose, lastPose);
+              ? isAtMarker(marker.getStartingPosition(), currentPose)
+              : isAtMarker(marker.getStartingPosition(), currentPose, lastPose);
 
-      if (atMarker) {
+      boolean markerHappeningNow = currentTime - marker.getTime() >= -kAutoMarkerTimeThreshold;
+      boolean markerTimeout = marker.getTime() + kAutoMarkerTimeout > currentTime;
+
+      if ((atMarker && markerHappeningNow) || markerTimeout) {
+        if (kAutoDebug) {
+          System.out.println(
+              "Starting "
+                  + marker.getCommand().getName()
+                  + " at pose "
+                  + currentPose
+                  + ". Marker pose: "
+                  + marker.getStartingPosition()
+                  + "; atMarker: "
+                  + atMarker
+                  + ", markerHappeningNow: "
+                  + markerHappeningNow
+                  + ", markerTimeout: "
+                  + markerTimeout);
+        }
         marker.getCommand().schedule();
         startedCommandMarkers.add(marker);
         commandMarkers.remove(i);
@@ -63,13 +83,12 @@ public class AutoCommandRunner {
       AutoCommandMarker marker = startedCommandMarkers.get(i);
       boolean atMarker =
           lastPose == null
-              ? isAtMarker(marker.getPos(), currentPose)
-              : isAtMarker(marker.getPos(), currentPose, lastPose);
+              ? isAtMarker(marker.getStartingPosition(), currentPose)
+              : isAtMarker(marker.getStartingPosition(), currentPose, lastPose);
 
       if (atMarker) {
         marker.getCommand().cancel();
-        startedCommandMarkers.add(marker);
-        commandMarkers.remove(i);
+        startedCommandMarkers.remove(i);
         i--;
       }
     }

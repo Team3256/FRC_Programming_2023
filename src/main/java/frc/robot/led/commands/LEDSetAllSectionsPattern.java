@@ -16,9 +16,9 @@ public class LEDSetAllSectionsPattern extends CommandBase {
   private final LEDPattern ledPattern;
 
   public LEDSetAllSectionsPattern(LED led, LEDPattern ledPattern) {
-    addRequirements(led);
     this.led = led;
     this.ledPattern = ledPattern;
+    addRequirements(led);
   }
 
   @Override
@@ -28,6 +28,11 @@ public class LEDSetAllSectionsPattern extends CommandBase {
 
   @Override
   public boolean isFinished() {
+    return false;
+  }
+
+  @Override
+  public boolean runsWhenDisabled() {
     return true;
   }
 }

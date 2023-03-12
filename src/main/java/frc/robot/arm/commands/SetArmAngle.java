@@ -13,14 +13,19 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import frc.robot.Constants;
 import frc.robot.arm.Arm;
+import frc.robot.arm.Arm.ArmPosition;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
+  private Rotation2d angleRotation2d;
+  private ArmPosition armPosition;
+  private boolean shouldEnd;
 
-  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
+  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d, boolean shouldEnd) {
     super(
-        new ProfiledPIDController(kP, kI, kD, kArmContraints),
+        new ProfiledPIDController(kP, kI, kD, kArmProfileContraints),
         armSubsystem::getArmPositionRads,
         MathUtil.clamp(
             angleRotation2d.getRadians(),
@@ -33,13 +38,52 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
     getController()
         .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
+
+    this.angleRotation2d = angleRotation2d;
     this.armSubsystem = armSubsystem;
+    this.shouldEnd = shouldEnd;
     addRequirements(armSubsystem);
+  }
+
+  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
+    this(armSubsystem, angleRotation2d, true);
+  }
+
+  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
+    this(armSubsystem, armPosition.rotation);
+  }
+
+  @Override
+  public void initialize() {
+    super.initialize();
+    if (Constants.kDebugEnabled) {
+      System.out.println(
+          this.getName()
+              + " started (position: "
+              + this.armPosition
+              + ", rotation: "
+              + angleRotation2d.getDegrees()
+              + " deg)");
+    }
   }
 
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
     armSubsystem.off();
+    if (Constants.kDebugEnabled) {
+      System.out.println(
+          this.getName()
+              + " finished (position: "
+              + this.armPosition
+              + ", rotation: "
+              + angleRotation2d.getDegrees()
+              + " deg)");
+    }
+  }
+
+  @Override
+  public boolean isFinished() {
+    return getController().atGoal() && shouldEnd;
   }
 }

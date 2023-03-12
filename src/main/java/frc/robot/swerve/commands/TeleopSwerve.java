@@ -12,7 +12,6 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.elevator.Elevator;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
@@ -23,7 +22,6 @@ public class TeleopSwerve extends CommandBase {
   private boolean openLoop;
 
   private SwerveDrive swerveSubsystem;
-  private Elevator elevatorSubsystem;
   private DoubleSupplier translationAxis;
   private DoubleSupplier strafeAxis;
   private DoubleSupplier rotationAxis;
@@ -45,41 +43,27 @@ public class TeleopSwerve extends CommandBase {
     this.openLoop = openLoop;
   }
 
-  public TeleopSwerve(
-      SwerveDrive swerveSubsystem,
-      Elevator elevatorSubsystem,
-      DoubleSupplier translationAxis,
-      DoubleSupplier strafeAxis,
-      DoubleSupplier rotationAxis,
-      boolean fieldRelative,
-      boolean openLoop) {
-    this(swerveSubsystem, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop);
-    this.elevatorSubsystem = elevatorSubsystem;
-  }
-
   @Override
   public void initialize() {
+    System.out.println("TeleopSwerve started");
     swerveSubsystem.setAngleMotorsNeutralMode(kAngleNeutralMode);
     swerveSubsystem.setDriveMotorsNeutralMode(kDriveNeutralMode);
   }
 
   @Override
   public void execute() {
-    double yAxis = -translationAxis.getAsDouble();
-    double xAxis = -strafeAxis.getAsDouble();
-    double rAxis = -rotationAxis.getAsDouble();
+    double yAxis = Math.pow(-translationAxis.getAsDouble(), 3);
+    double xAxis = Math.pow(-strafeAxis.getAsDouble(), 3);
+    double rAxis = Math.pow(-rotationAxis.getAsDouble(), 3);
 
     /* Deadbands */
     yAxis = (Math.abs(yAxis) < Constants.kStickDeadband) ? 0 : yAxis;
     xAxis = (Math.abs(xAxis) < Constants.kStickDeadband) ? 0 : xAxis;
     rAxis = (Math.abs(rAxis) < Constants.kStickDeadband) ? 0 : rAxis;
 
-    translation = new Translation2d(Math.pow(yAxis, 3), Math.pow(xAxis, 3)).times(kMaxSpeed);
+    translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
     rotation = rAxis * kMaxAngularVelocity;
 
-    if (elevatorSubsystem != null)
-      swerveSubsystem.drive(
-          translation, rotation, fieldRelative, openLoop, elevatorSubsystem.getElevatorPosition());
-    else swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
+    swerveSubsystem.drive(translation, rotation, fieldRelative, openLoop);
   }
 }

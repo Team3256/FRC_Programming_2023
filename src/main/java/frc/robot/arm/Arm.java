@@ -14,9 +14,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -31,15 +31,33 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
-import frc.robot.logging.GyroSendable;
+import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
+import frc.robot.swerve.helpers.Conversions;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
+  public enum ArmPosition {
+    DEFAULT(ArmConstants.kDefaultArmAngle),
+    ANY_PIECE_LOW(ArmConstants.kAnyPieceLowRotation),
+    CUBE_MID(ArmConstants.kCubeMidRotation),
+    CONE_MID(ArmConstants.kConeMidRotation),
+    CUBE_HIGH(ArmConstants.kCubeHighRotation),
+    CONE_HIGH(ArmConstants.kConeHighRotation),
+    GROUND_INTAKE(ArmConstants.kGroundIntakeRotation),
+    DOUBLE_SUBSTATION(ArmConstants.kDoubleSubstationRotation);
+
+    public Rotation2d rotation;
+
+    private ArmPosition(Rotation2d rotation) {
+      this.rotation = rotation;
+    }
+  }
+
   private WPI_TalonFX armMotor;
-  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
   private static final SingleJointedArmSim armSim =
@@ -50,7 +68,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           kArmLengthMeters,
           kArmAngleMinConstraint.getRadians(),
           kArmAngleMaxConstraint.getRadians(),
-          kArmMassKg,
           true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
@@ -85,26 +102,50 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   private void configureRealHardware() {
     armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
-    armMotor.enableVoltageCompensation(true);
+    armMotor.setInverted(true);
+    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.setSelectedSensorPosition(0);
+  }
+
+  public void setCoast() {
+    armMotor.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public void setBrake() {
     armMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public double calculateFeedForward(double angleRadians, double velocity) {
-    double clampedPosition =
-        MathUtil.clamp(
-            angleRadians, kArmAngleMinConstraint.getRadians(), kArmAngleMaxConstraint.getRadians());
-
-    SmartDashboard.putNumber("Position setpoint", Units.radiansToDegrees(clampedPosition));
-    return armFeedforward.calculate(clampedPosition, velocity);
+    return armFeedforward.calculate(angleRadians, velocity);
   }
 
   public void setInputVoltage(double voltage) {
     armMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
+  public void zeroEncoder() {
+    armMotor.setSelectedSensorPosition(0);
+  }
+
+  /**
+   * Reset encoder offset. Use when you know where the arm actually is in space but the relative
+   * encoder is off. Useful when the gear skips and you need to change the offset
+   *
+   * @param currentAbsolutePosition The actual position of the arm in space that you want the
+   *     current relative encoder value to reflect. This will change all setpoint for the arm.
+   */
+  public void resetOffset(Rotation2d currentAbsolutePosition) {
+    ArmConstants.kEncoderOffsetRadians =
+        ArmConstants.kEncoderOffsetRadians
+            + (currentAbsolutePosition.getRadians() - this.getArmPositionRads());
+
+    System.out.println("New arm offset" + ArmConstants.kEncoderOffsetRadians);
+  }
+
   public double getArmPositionRads() {
     if (RobotBase.isReal())
-      return armEncoder.getAbsolutePosition() * kArmEncoderConversionToRadians;
+      return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
+          + kEncoderOffsetRadians;
     else return armSim.getAngleRads();
   }
 
@@ -114,7 +155,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    if (Constants.kDebugEnabled) {
+      SmartDashboard.putNumber("Arm Raw Encoder value", armMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
+      SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
+      SmartDashboard.putNumber("Arm motor percent output", armMotor.getMotorOutputPercent() * 12);
+    }
+  }
 
   @Override
   public void simulationPeriodic() {
@@ -129,7 +177,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(armSim.getAngleRads()));
+    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }
@@ -147,7 +195,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName)
-        .add("Angle", new GyroSendable(() -> Math.toDegrees(getArmPositionRads())));
+        .add("Angle", new DoubleSendable(() -> Math.toDegrees(getArmPositionRads()), "Gyro"));
     getLayout(kDriverTabName).add(armMotor);
   }
 

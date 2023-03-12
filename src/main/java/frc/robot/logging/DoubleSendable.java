@@ -13,14 +13,20 @@ import java.util.function.DoubleSupplier;
 
 public class DoubleSendable implements Sendable {
   DoubleSupplier doubleSupplier;
+  String dashboardType = "TextView";
 
   public DoubleSendable(DoubleSupplier doubleSupplier) {
     this.doubleSupplier = doubleSupplier;
   }
 
+  public DoubleSendable(DoubleSupplier doubleSupplier, String dashboardType) {
+    this(doubleSupplier);
+    this.dashboardType = dashboardType;
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("TextView");
+    builder.setSmartDashboardType(dashboardType);
     builder.addDoubleProperty("Value", doubleSupplier, null);
   }
 }
