@@ -24,7 +24,7 @@ public final class SwerveConstants {
   public static final boolean kFieldRelative = true;
   public static final double kPeriodicDeltaTime = 0.02;
   public static final boolean kOpenLoop = true;
-
+  public static final Rotation2d kChargeStationTiltThreshold = new Rotation2d(Units.degreesToRadians(2));
   public static final double kSwervePitTestSpeed = 0.3;
 
   /* Meters per second squared */
