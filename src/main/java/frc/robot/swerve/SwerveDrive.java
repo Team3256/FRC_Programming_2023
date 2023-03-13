@@ -57,6 +57,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
   private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
       new AdaptiveSlewRateLimiter(kYAccelRateLimit, kYDecelRateLimit);
+  private final AdaptiveSlewRateLimiter autoSlewRateLimiter =
+      new AdaptiveSlewRateLimiter(kAutoEngageLimitAccel, kAutoEngageLimitVelocity);
 
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
@@ -131,6 +133,36 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     }
     Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
   }
+  public void driveAutoEngage(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    Pose2d robotPoseVelocity =
+            new Pose2d(
+                    chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
+                    chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
+                    Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
+    Twist2d twistVelocity = (new Pose2d()).log(robotPoseVelocity);
+    ChassisSpeeds updatedChassisSpeeds =
+            new ChassisSpeeds(
+                    twistVelocity.dx / kPeriodicDeltaTime,
+                    twistVelocity.dy / kPeriodicDeltaTime,
+                    twistVelocity.dtheta / kPeriodicDeltaTime);
+
+    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
+      chassisSpeeds.vxMetersPerSecond =
+              autoSlewRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+      chassisSpeeds.vyMetersPerSecond =
+              autoSlewRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+    }
+
+    SwerveModuleState[] swerveModuleStates =
+            kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+
+    for (SwerveModule mod : swerveModules) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+    }
+    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
+  }
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -141,6 +173,16 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
+  }
+  public void autoTranslationToChassis(
+          Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+    ChassisSpeeds swerveChassisSpeed =
+            fieldRelative
+                    ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                    translation.getX(), translation.getY(), rotation, getPose().getRotation())
+                    : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+
+    driveAutoEngage(swerveChassisSpeed, isOpenLoop);
   }
 
   public void setDesiredAngleState(SwerveModuleState[] swerveModuleStates) {
@@ -318,9 +360,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       swerveModule.setAngleMotorNeutralMode(neutralMode);
     }
   }
+
   public boolean isTiltedForward() {
     return gyro.getPitch() > kChargeStationTiltThreshold.getDegrees();
   }
+
   public boolean isTiltedBackward() {
     return gyro.getPitch() < -kChargeStationTiltThreshold.getDegrees();
   }
