@@ -97,6 +97,7 @@ public final class Constants {
     // Dimensions for grids and nodes
     public static final class Grids {
       // X layout
+      // X layout
       public static final double kOuterX = Units.inchesToMeters(54.25);
       public static final double kLowX =
           kOuterX - (Units.inchesToMeters(14.25) / 2.0); // Centered when under cube
