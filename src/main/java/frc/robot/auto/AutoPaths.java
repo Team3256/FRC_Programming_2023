@@ -9,6 +9,9 @@ package frc.robot.auto;
 
 import static frc.robot.auto.AutoConstants.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -27,7 +30,7 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.LockSwerve;
+import frc.robot.swerve.commands.LockSwerveX;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -187,7 +190,7 @@ public class AutoPaths {
     ArrayList<Command> node5Engage =
         autoBuilder.createPaths("Node5-Engage", kEngagePathConstraints);
     AutoChooser.addPathGroup(
-        scorePreload.get(), "Node5-Engage", node5Engage, new LockSwerve(swerveSubsystem));
+        scorePreload.get(), "Node5-Engage", node5Engage, new LockSwerveX(swerveSubsystem));
 
     // Node8-Preload-Ready
     Command node8PreloadReady =
@@ -214,7 +217,7 @@ public class AutoPaths {
     ArrayList<Command> node2x2Engage =
         autoBuilder.createPaths("Node2x2-Engage", kSafePathConstraints, kEngagePathConstraints);
     AutoChooser.addPathGroup(
-        scorePreload.get(), "Node2x2-Engage", node2x2Engage, new LockSwerve(swerveSubsystem));
+        scorePreload.get(), "Node2x2-Engage", node2x2Engage, new LockSwerveX(swerveSubsystem));
 
     // Node2-Preload-Ready
     Command node2PreloadReady =
@@ -276,6 +279,16 @@ public class AutoPaths {
   }
 
   public Command getSelectedPath() {
-    return AutoChooser.getCommand();
+    Command zeroGyroTeleop = new InstantCommand();
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      zeroGyroTeleop =
+          new InstantCommand(
+              () ->
+                  swerveSubsystem.setGyro(
+                      (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
+                          .getDegrees()));
+    }
+
+    return AutoChooser.getCommand().andThen(zeroGyroTeleop);
   }
 }
