@@ -12,8 +12,8 @@ import frc.robot.intake.Intake;
 import java.util.function.BooleanSupplier;
 
 public class LatchGamePiece extends CommandBase {
-  private final Intake intakeSubsystem;
-  private final BooleanSupplier isCurrentPieceCone;
+  private Intake intakeSubsystem;
+  private BooleanSupplier isCurrentPieceCone;
 
   public LatchGamePiece(Intake intakeSubsystem, BooleanSupplier isCurrentPieceCone) {
     this.intakeSubsystem = intakeSubsystem;
