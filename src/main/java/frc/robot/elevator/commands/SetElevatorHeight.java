@@ -11,8 +11,8 @@ import static frc.robot.elevator.ElevatorConstants.*;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
@@ -21,7 +21,8 @@ import frc.robot.elevator.Elevator.ElevatorPosition;
 public class SetElevatorHeight extends ProfiledPIDCommand {
 
   /**
-   * Constructor for setting elevator height for the Low, Mid, High levels
+   * Constructor for setting elevator height for the levels specified in the elevator preferences
+   * hash map
    *
    * @param elevatorSubsystem
    * @param setpointPositionMeters
@@ -52,6 +53,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
    * @param setpointPositionMeters
    */
   private double setpointPositionMeters;
+
   private ElevatorPosition elevatorPosition;
 
   public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
@@ -71,11 +73,6 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
     this.setpointPositionMeters = setpointPositionMeters;
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);
-  }
-
-  public SetElevatorHeight(Elevator elevatorSubsystem, Elevator.ElevatorPosition elevatorPosition) {
-    this(elevatorSubsystem, elevatorPosition.position);
-    this.elevatorPosition = elevatorPosition;
   }
 
   @Override

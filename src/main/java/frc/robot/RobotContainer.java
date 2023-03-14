@@ -8,11 +8,6 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.swerve.SwerveConstants.kFieldRelative;
-import static frc.robot.swerve.SwerveConstants.kOpenLoop;
-import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
-import static frc.robot.Constants.ShuffleboardConstants.kElectricalTabName;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -24,29 +19,29 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.ArmConstants;
-import frc.robot.arm.commands.*;
+import frc.robot.arm.commands.KeepArmAtPosition;
+import frc.robot.arm.commands.SetArmAngle;
+import frc.robot.arm.commands.SetArmVoltage;
+import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
-import frc.robot.arm.commands.DefaultArmElevatorDriveConfig;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.elevator.Elevator.ElevatorPosition;
-import frc.robot.elevator.commands.*;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
-import frc.robot.led.commands.*;
-import frc.robot.led.patterns.*;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patterns.ColorChaseBluePattern;
-import frc.robot.logging.GyroSendable;
+import frc.robot.led.patterns.BlinkingConePattern;
+import frc.robot.led.patterns.BlinkingCubePattern;
+import frc.robot.led.patterns.FIREPattern;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
+import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
@@ -94,7 +89,6 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kArmEnabled) {
       configureArm();
       canBusTestables.add(armSubsystem);
-      testables.add(armSubsystem);
       loggables.add(armSubsystem);
     }
     if (kElevatorEnabled) {
@@ -207,20 +201,20 @@ public class RobotContainer implements CANTestable, Loggable {
                 new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
                 this::isCurrentPieceCone),
             new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH, false),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH, false),
                 this::isCurrentPieceCone));
       case MID_GRID:
         return new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
             new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID, false),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID, false),
                 this::isCurrentPieceCone));
       case LOW_GRID:
         return new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
-            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
+            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW, false));
       default:
         return new InstantCommand();
     }
@@ -256,7 +250,7 @@ public class RobotContainer implements CANTestable, Loggable {
               new ParallelCommandGroup(
                   // TODO need 5.5 deg for cone, lower (4.5?) for cube
                   new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION),
-                  new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
+                  new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION, false),
                   new ConditionalCommand(
                       new IntakeCone(intakeSubsystem, ledStrip),
                       new IntakeCube(intakeSubsystem, ledStrip),

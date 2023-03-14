@@ -7,14 +7,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.*;
+import static frc.robot.arm.ArmConstants.*;
+import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.kArmPositionKeys;
+import static frc.robot.elevator.ElevatorConstants.*;
+import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.Constants.RobotMode;
+import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.ElevatorConstants;
@@ -145,7 +149,6 @@ public class Robot extends LoggedRobot {
 
   /** Populating preferences on network tables */
   public void loadPreferences() {
-
     // Arm PID Preferences
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kP);
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kIKey, ArmConstants.kI);
@@ -156,13 +159,38 @@ public class Robot extends LoggedRobot {
     Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kDKey, ElevatorConstants.kD);
     // Elevator Preset Preferences
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.HIGH),
-        ElevatorConstants.kElevatorHighPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.CUBE_HIGH), kCubeHighPositionMeters);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.MID),
-        ElevatorConstants.kElevatorMidPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.CONE_HIGH), kConeHighPositionMeters);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.LOW),
-        ElevatorConstants.kElevatorLowPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.ANY_PIECE_LOW),
+        kAnyPieceLowPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.ANY_PIECE_MID),
+        kAnyPieceMidPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.GROUND_INTAKE),
+        kGroundIntakePositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
+        kDoubleSubstationPositionMeters);
+    // Arm Preset Preferences
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.DEFAULT), kDefaultArmAngle.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.CUBE_MID), kCubeMidRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.CONE_MID), kConeMidRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.CUBE_HIGH), kCubeHighRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.CONE_HIGH), kConeHighRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.GROUND_INTAKE), kGroundIntakeRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.DOUBLE_SUBSTATION),
+        kDoubleSubstationRotation.getRadians());
   }
 }

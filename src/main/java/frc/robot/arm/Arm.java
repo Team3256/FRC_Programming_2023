@@ -17,6 +17,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -202,5 +203,11 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   @Override
   public ShuffleboardLayout getLayout(String tab) {
     return Shuffleboard.getTab(tab).getLayout(kArmLayoutName, BuiltInLayouts.kList).withSize(2, 4);
+  }
+
+  public double getPreferencesSetpoint(Arm.ArmPosition setpoint) {
+    return Preferences.getDouble(
+        ArmPreferencesKeys.kArmPositionKeys.get(setpoint),
+        ArmPreferencesKeys.kArmPositionDefaults.get(setpoint).getRadians());
   }
 }

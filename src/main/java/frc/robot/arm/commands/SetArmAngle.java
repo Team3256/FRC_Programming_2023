@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
-import frc.robot.arm.ArmConstants;
 import frc.robot.arm.Arm.ArmPosition;
+import frc.robot.arm.ArmConstants;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
@@ -25,13 +25,53 @@ public class SetArmAngle extends ProfiledPIDCommand {
   private ArmPosition armPosition;
   private boolean shouldEnd;
 
+  /**
+   * Constructor for setting the arm to a Rotation2d specified in the preferences hash map
+   *
+   * @param armSubsystem
+   * @param armPosition
+   * @param shouldEnd
+   */
+  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition, boolean shouldEnd) {
+    super(
+        new ProfiledPIDController(
+            Preferences.getDouble(ArmPreferencesKeys.kPKey, kP),
+            Preferences.getDouble(ArmPreferencesKeys.kIKey, kI),
+            Preferences.getDouble(ArmPreferencesKeys.kDKey, kD),
+            kArmProfileContraints),
+        armSubsystem::getArmPositionRads,
+        MathUtil.clamp(
+            armSubsystem.getPreferencesSetpoint(armPosition),
+            kArmAngleMinConstraint.getRadians(),
+            kArmAngleMaxConstraint.getRadians()),
+        (output, setpoint) ->
+            armSubsystem.setInputVoltage(
+                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
+        armSubsystem);
+
+    getController()
+        .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
+
+    this.angleRotation2d = angleRotation2d;
+    this.armSubsystem = armSubsystem;
+    this.shouldEnd = shouldEnd;
+    addRequirements(armSubsystem);
+  }
+
+  /**
+   * Constructor for setting arm to arbitrary angle in radians
+   *
+   * @param armSubsystem
+   * @param angleRotation2d
+   * @param shouldEnd
+   */
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d, boolean shouldEnd) {
     super(
         new ProfiledPIDController(
             Preferences.getDouble(ArmPreferencesKeys.kPKey, ArmConstants.kP),
             Preferences.getDouble(ArmPreferencesKeys.kIKey, ArmConstants.kI),
             Preferences.getDouble(ArmPreferencesKeys.kDKey, ArmConstants.kD),
-            kArmContraints),
+            kArmProfileContraints),
         armSubsystem::getArmPositionRads,
         MathUtil.clamp(
             angleRotation2d.getRadians(),
@@ -49,14 +89,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
     this.armSubsystem = armSubsystem;
     this.shouldEnd = shouldEnd;
     addRequirements(armSubsystem);
-  }
-
-  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
-    this(armSubsystem, angleRotation2d, true);
-  }
-
-  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
-    this(armSubsystem, armPosition.rotation);
   }
 
   @Override

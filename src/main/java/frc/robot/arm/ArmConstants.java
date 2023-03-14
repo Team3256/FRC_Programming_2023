@@ -11,10 +11,33 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants;
 import frc.robot.drivers.CanDeviceId;
+import java.util.Map;
 
 public final class ArmConstants {
 
   public static class ArmPreferencesKeys {
+    public static final Map<Arm.ArmPosition, String> kArmPositionKeys =
+        Map.of(
+            Arm.ArmPosition.DEFAULT, "kDefaultArmAngle",
+            Arm.ArmPosition.ANY_PIECE_LOW, "kAnyPieceLowRotation",
+            Arm.ArmPosition.CUBE_MID, "kCubeMidRotation",
+            Arm.ArmPosition.CONE_MID, "kConeMidRotation",
+            Arm.ArmPosition.CUBE_HIGH, "kCubeHighRotation",
+            Arm.ArmPosition.CONE_HIGH, "kConeHighRotation",
+            Arm.ArmPosition.GROUND_INTAKE, "kGroundIntakeRotation",
+            Arm.ArmPosition.DOUBLE_SUBSTATION, "kDoubleSubstationRotation");
+
+    public static final Map<Arm.ArmPosition, Rotation2d> kArmPositionDefaults =
+        Map.of(
+            Arm.ArmPosition.DEFAULT, kDefaultArmAngle,
+            Arm.ArmPosition.ANY_PIECE_LOW, kAnyPieceLowRotation,
+            Arm.ArmPosition.CUBE_MID, kCubeMidRotation,
+            Arm.ArmPosition.CONE_MID, kConeMidRotation,
+            Arm.ArmPosition.CUBE_HIGH, kCubeHighRotation,
+            Arm.ArmPosition.CONE_HIGH, kConeHighRotation,
+            Arm.ArmPosition.GROUND_INTAKE, kGroundIntakeRotation,
+            Arm.ArmPosition.DOUBLE_SUBSTATION, kDoubleSubstationRotation);
+
     public static final String kPKey = "ArmkP";
     public static final String kIKey = "ArmkI";
     public static final String kDKey = "ArmkD";
