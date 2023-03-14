@@ -183,7 +183,6 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
     operator
         .b()
