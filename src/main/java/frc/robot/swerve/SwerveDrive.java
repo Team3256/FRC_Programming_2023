@@ -133,28 +133,29 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     }
     Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
   }
+
   public void driveAutoEngage(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
     Pose2d robotPoseVelocity =
-            new Pose2d(
-                    chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
-                    chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
-                    Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
+        new Pose2d(
+            chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
+            chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
+            Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
     Twist2d twistVelocity = (new Pose2d()).log(robotPoseVelocity);
     ChassisSpeeds updatedChassisSpeeds =
-            new ChassisSpeeds(
-                    twistVelocity.dx / kPeriodicDeltaTime,
-                    twistVelocity.dy / kPeriodicDeltaTime,
-                    twistVelocity.dtheta / kPeriodicDeltaTime);
+        new ChassisSpeeds(
+            twistVelocity.dx / kPeriodicDeltaTime,
+            twistVelocity.dy / kPeriodicDeltaTime,
+            twistVelocity.dtheta / kPeriodicDeltaTime);
 
     if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
       chassisSpeeds.vxMetersPerSecond =
-              autoSlewRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+          autoSlewRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
       chassisSpeeds.vyMetersPerSecond =
-              autoSlewRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+          autoSlewRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
     }
 
     SwerveModuleState[] swerveModuleStates =
-            kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
+        kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
@@ -174,13 +175,14 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
     drive(swerveChassisSpeed, isOpenLoop);
   }
+
   public void autoTranslationToChassis(
-          Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+      Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
     ChassisSpeeds swerveChassisSpeed =
-            fieldRelative
-                    ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getPose().getRotation())
-                    : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, getPose().getRotation())
+            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     driveAutoEngage(swerveChassisSpeed, isOpenLoop);
   }
@@ -283,6 +285,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
+    SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
     if (Constants.kDebugEnabled) {
       field.setRobotPose(poseEstimator.getEstimatedPosition());
       Logger.getInstance().recordOutput("Odometry", getPose());

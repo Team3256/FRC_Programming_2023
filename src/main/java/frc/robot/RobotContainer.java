@@ -183,6 +183,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 kOpenLoop));
 
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
+    driver.x().whileTrue(new AutoBalance(swerveSubsystem));
   }
 
   private Command getScoreCommand(GoalType goalType) {

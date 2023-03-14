@@ -25,7 +25,7 @@ public final class SwerveConstants {
   public static final double kPeriodicDeltaTime = 0.02;
   public static final boolean kOpenLoop = true;
   public static final Rotation2d kChargeStationTiltThreshold =
-      new Rotation2d(Units.degreesToRadians(2));
+      new Rotation2d(Units.degreesToRadians(7));
   public static final double kSwervePitTestSpeed = 0.3;
 
   /* Meters per second squared */
@@ -36,8 +36,8 @@ public final class SwerveConstants {
   public static int kYDecelRateLimit = 7;
 
   public static double kAutoEngageLimitAccel = 5;
-  public static double kAutoEngageLimitVelocity = 20;
-  public static double kXAutoBalanceVelocity = 20;
+  public static double kAutoEngageLimitVelocity = 1;
+  public static double kXAutoBalanceVelocity = 1;
   public static final COTSFalconSwerveConstants kChosenModule =
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
