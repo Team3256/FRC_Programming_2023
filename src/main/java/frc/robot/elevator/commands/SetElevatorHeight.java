@@ -7,8 +7,6 @@
 
 package frc.robot.elevator.commands;
 
-import static frc.robot.elevator.ElevatorConstants.*;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
@@ -18,7 +16,11 @@ import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPosition;
 
+import static frc.robot.elevator.ElevatorConstants.*;
+
 public class SetElevatorHeight extends ProfiledPIDCommand {
+  private double setpointPositionMeters;
+  private ElevatorPosition elevatorPosition;
 
   /**
    * Constructor for setting elevator height for the levels specified in the elevator preferences
@@ -52,9 +54,6 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
    * @param elevatorSubsystem
    * @param setpointPositionMeters
    */
-  private double setpointPositionMeters;
-
-  private ElevatorPosition elevatorPosition;
 
   public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
     super(

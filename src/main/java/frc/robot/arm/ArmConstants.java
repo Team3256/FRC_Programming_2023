@@ -14,7 +14,6 @@ import frc.robot.drivers.CanDeviceId;
 import java.util.Map;
 
 public final class ArmConstants {
-
   public static class ArmPreferencesKeys {
     public static final Map<Arm.ArmPosition, String> kArmPositionKeys =
         Map.of(

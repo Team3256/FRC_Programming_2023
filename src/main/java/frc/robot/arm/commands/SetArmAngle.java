@@ -7,8 +7,6 @@
 
 package frc.robot.arm.commands;
 
-import static frc.robot.arm.ArmConstants.*;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +16,8 @@ import frc.robot.Constants;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.ArmConstants;
+
+import static frc.robot.arm.ArmConstants.*;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
