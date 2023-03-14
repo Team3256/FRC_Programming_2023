@@ -58,17 +58,21 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   public void currentLimitCube() {
     if (intakeDebug) System.out.println("Current limit cube");
-    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, kCubeMaxCurrent, kCubeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
+    intakeMotor.configStatorCurrentLimit(
+        new StatorCurrentLimitConfiguration(
+            true, kCubeMaxCurrent, kCubeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
   }
 
   public void currentLimitCone() {
     if (intakeDebug) System.out.println("Current limit cone");
-    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, kConeMaxCurrent, kConeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
+    intakeMotor.configStatorCurrentLimit(
+        new StatorCurrentLimitConfiguration(
+            true, kConeMaxCurrent, kConeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
   }
 
-  public void turnOffStatorCurrentLimit(){
+  public void turnOffStatorCurrentLimit() {
     if (intakeDebug) System.out.println("Turn off stator current limit");
-    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false,0,0,0));
+    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, 0, 0, 0));
   }
 
   public void latchCone() {
@@ -78,8 +82,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void latchCube() {
-    currentLimitCube();
     if (intakeDebug) System.out.println("Latch Cube");
+    currentLimitCube();
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
 

@@ -12,18 +12,13 @@ import frc.robot.intake.Intake;
 import java.util.function.BooleanSupplier;
 
 public class LatchGamePiece extends CommandBase {
-  private Intake intakeSubsystem;
-  private BooleanSupplier isCurrentPieceCone;
+  private final Intake intakeSubsystem;
+  private final BooleanSupplier isCurrentPieceCone;
 
   public LatchGamePiece(Intake intakeSubsystem, BooleanSupplier isCurrentPieceCone) {
     this.intakeSubsystem = intakeSubsystem;
     this.isCurrentPieceCone = isCurrentPieceCone;
     addRequirements(intakeSubsystem);
-  }
-
-  @Override
-  public void initialize() {
-    intakeSubsystem.currentLimit();
   }
 
   @Override

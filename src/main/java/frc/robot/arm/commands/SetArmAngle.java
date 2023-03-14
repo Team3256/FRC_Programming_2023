@@ -28,9 +28,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
         new ProfiledPIDController(kP, kI, kD, kArmProfileContraints),
         armSubsystem::getArmPositionRads,
         MathUtil.clamp(
-        angleRotation2d.getRadians(),
-        kArmAngleMinConstraint.getRadians(),
-        kArmAngleMaxConstraint.getRadians()),
+            angleRotation2d.getRadians(),
+            kArmAngleMinConstraint.getRadians(),
+            kArmAngleMaxConstraint.getRadians()),
         (output, setpoint) ->
             armSubsystem.setInputVoltage(
                 output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
