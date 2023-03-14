@@ -7,6 +7,11 @@
 
 package frc.robot;
 
+import static frc.robot.arm.ArmConstants.*;
+import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.kArmPositionKeys;
+import static frc.robot.elevator.ElevatorConstants.*;
+import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,11 +28,6 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
-import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.kArmPositionKeys;
-import static frc.robot.arm.ArmConstants.*;
-import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
-import static frc.robot.elevator.ElevatorConstants.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

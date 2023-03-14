@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.*;
+import static frc.robot.swerve.SwerveConstants.kFieldRelative;
+import static frc.robot.swerve.SwerveConstants.kOpenLoop;
+
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,12 +45,7 @@ import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
-
 import java.util.ArrayList;
-
-import static frc.robot.Constants.*;
-import static frc.robot.swerve.SwerveConstants.kFieldRelative;
-import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -276,7 +275,6 @@ public class RobotContainer implements CANTestable, Loggable {
                   this::isCurrentPieceCone));
     }
   }
-
 
   public void configureLEDStrip() {
     ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
