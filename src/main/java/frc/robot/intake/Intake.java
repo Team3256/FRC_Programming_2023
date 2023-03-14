@@ -70,9 +70,11 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
             true, kConeMaxCurrent, kConeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
   }
 
-  public void turnOffStatorCurrentLimit() {
-    if (kDebugEnabled) System.out.println("Turn off stator current limit");
-    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, 0, 0, 0));
+  public void currentLimitIntake() {
+    if (kDebugEnabled) System.out.println("Current limit intake");
+    intakeMotor.configStatorCurrentLimit(
+            new StatorCurrentLimitConfiguration(
+                    true, kIntakeMaxCurrent, kIntakeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
   }
 
   public void latchCone() {
@@ -89,19 +91,18 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   public void intakeCone() {
     System.out.println("Intake cone");
-    turnOffStatorCurrentLimit();
+    currentLimitIntake();
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
   }
 
   public void intakeCube() {
     System.out.println("Intake cube");
-    turnOffStatorCurrentLimit();
+    currentLimitIntake();
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
-  public boolean isCurrentSpiking() {
-    System.out.println("Intake current spike");
-    return intakeMotor.getSupplyCurrent() >= kIntakeCurrentSpikingThreshold;
+  public boolean intakeIsFinished() {
+    return Math.abs(intakeMotor.getSupplyCurrent()-kIntakeMaxCurrent)<kIntakeFinishedMaxError;
   }
 
   public void off() {
