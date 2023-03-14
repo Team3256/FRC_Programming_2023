@@ -73,8 +73,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   public void currentLimitIntake() {
     if (kDebugEnabled) System.out.println("Current limit intake");
     intakeMotor.configStatorCurrentLimit(
-            new StatorCurrentLimitConfiguration(
-                    true, kIntakeMaxCurrent, kIntakeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
+        new StatorCurrentLimitConfiguration(
+            true, kIntakeMaxCurrent, kIntakeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
   }
 
   public void latchCone() {
@@ -102,7 +102,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public boolean intakeIsFinished() {
-    return Math.abs(intakeMotor.getSupplyCurrent()-kIntakeMaxCurrent)<kIntakeFinishedMaxError;
+    return Math.abs(intakeMotor.getSupplyCurrent() - kIntakeMaxCurrent) < kIntakeFinishedMaxError;
   }
 
   public void off() {

@@ -25,5 +25,4 @@ public final class IntakeConstants {
 
   public static final double kIntakeFinishedMaxError = 0.1;
   public static final double kIntakeCurrentTriggerThresholdTime = 0.2;
-
 }
