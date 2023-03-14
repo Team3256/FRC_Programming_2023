@@ -9,6 +9,7 @@ package frc.robot.intake;
 
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kIntakeLayoutName;
+import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -30,7 +31,6 @@ import frc.robot.logging.Loggable;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private WPI_TalonFX intakeMotor;
-  private final boolean intakeDebug = false;
 
   public Intake() {
     if (RobotBase.isReal()) {
@@ -57,32 +57,32 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void currentLimitCube() {
-    if (intakeDebug) System.out.println("Current limit cube");
+    if (kDebugEnabled) System.out.println("Current limit cube");
     intakeMotor.configStatorCurrentLimit(
         new StatorCurrentLimitConfiguration(
             true, kCubeMaxCurrent, kCubeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
   }
 
   public void currentLimitCone() {
-    if (intakeDebug) System.out.println("Current limit cone");
+    if (kDebugEnabled) System.out.println("Current limit cone");
     intakeMotor.configStatorCurrentLimit(
         new StatorCurrentLimitConfiguration(
             true, kConeMaxCurrent, kConeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
   }
 
   public void turnOffStatorCurrentLimit() {
-    if (intakeDebug) System.out.println("Turn off stator current limit");
+    if (kDebugEnabled) System.out.println("Turn off stator current limit");
     intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, 0, 0, 0));
   }
 
   public void latchCone() {
-    if (intakeDebug) System.out.println("Latch cone");
+    if (kDebugEnabled) System.out.println("Latch cone");
     currentLimitCone();
     intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
 
   public void latchCube() {
-    if (intakeDebug) System.out.println("Latch Cube");
+    if (kDebugEnabled) System.out.println("Latch Cube");
     currentLimitCube();
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
