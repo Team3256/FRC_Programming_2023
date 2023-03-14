@@ -252,7 +252,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureArm() {
-    // armSubsystem.setDefaultCommand(new KeepArmAtPosition(armSubsystem));
+    armSubsystem.setDefaultCommand(new KeepArmAtPosition(armSubsystem));
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
       operator

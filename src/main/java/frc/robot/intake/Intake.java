@@ -23,13 +23,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
+import frc.robot.drivers.TalonFXFactory;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.logging.Loggable;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private WPI_TalonFX intakeMotor;
-  private boolean intakeDebug = false;
+  private final boolean intakeDebug = false;
 
   public Intake() {
     if (RobotBase.isReal()) {
@@ -42,9 +43,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   private void configureRealHardware() {
-    intakeMotor = new WPI_TalonFX(kIntakeCANDevice.getDeviceNumber(), kIntakeCANDevice.getBus());
-    // intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
-    // intakeMotor.setNeutralMode(NeutralMode.Brake);
+    intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   private void configureSimHardware() {
@@ -56,33 +56,47 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     return intakeMotor.getMotorOutputPercent();
   }
 
-  public void currentLimit() {
-    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 10, 0.2));
+  public void currentLimitCube() {
+    if (intakeDebug) System.out.println("Current limit cube");
+    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, kCubeMaxCurrent, kCubeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
+  }
+
+  public void currentLimitCone() {
+    if (intakeDebug) System.out.println("Current limit cone");
+    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, kConeMaxCurrent, kConeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
+  }
+
+  public void turnOffStatorCurrentLimit(){
+    if (intakeDebug) System.out.println("Turn off stator current limit");
+    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false,0,0,0));
   }
 
   public void latchCone() {
     if (intakeDebug) System.out.println("Latch cone");
-    // intakeMotor.set(ControlMode.Current, 20);
-    intakeMotor.set(ControlMode.PercentOutput, kIntakeKeepingPercent);
+    currentLimitCone();
+    intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
 
   public void latchCube() {
+    currentLimitCube();
     if (intakeDebug) System.out.println("Latch Cube");
-    // intakeMotor.set(ControlMode.Current, -20);
-    intakeMotor.set(ControlMode.PercentOutput, -kIntakeKeepingPercent);
+    intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
 
   public void intakeCone() {
     System.out.println("Intake cone");
+    turnOffStatorCurrentLimit();
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
   }
 
   public void intakeCube() {
     System.out.println("Intake cube");
+    turnOffStatorCurrentLimit();
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
   public boolean isCurrentSpiking() {
+    System.out.println("Intake current spike");
     return intakeMotor.getSupplyCurrent() >= kIntakeCurrentSpikingThreshold;
   }
 
