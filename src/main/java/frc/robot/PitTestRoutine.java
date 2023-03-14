@@ -110,11 +110,11 @@ public class PitTestRoutine {
 
   public Command armCommands() {
     Command setArmAngleHorizontal =
-        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)).until(driver.b());
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0), false).until(driver.b());
     Command setArmAngleHalfway =
-        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)).until(driver.b());
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45), false).until(driver.b());
     Command setArmAngleVertical =
-        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)).until(driver.b());
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90), false).until(driver.b());
 
     return new SequentialCommandGroup(
         setArmAngleHorizontal, setArmAngleHalfway, setArmAngleVertical);

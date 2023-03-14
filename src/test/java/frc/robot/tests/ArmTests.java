@@ -48,7 +48,7 @@ public class ArmTests extends UnitTestBase {
   // }
 
   public void testArmAngle(Rotation2d angle) {
-    Command setAngleCommand = new SetArmAngle(armSubsystem, angle);
+    Command setAngleCommand = new SetArmAngle(armSubsystem, angle, false);
     runScheduler(3, setAngleCommand, armSubsystem);
     assertEquals(
         angle.getRadians(),
