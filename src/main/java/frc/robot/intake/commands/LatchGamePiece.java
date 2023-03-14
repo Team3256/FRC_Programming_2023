@@ -22,6 +22,11 @@ public class LatchGamePiece extends CommandBase {
   }
 
   @Override
+  public void initialize() {
+    intakeSubsystem.currentLimit();
+  }
+
+  @Override
   public void execute() {
     if (isCurrentPieceCone.getAsBoolean()) {
       intakeSubsystem.latchCone();

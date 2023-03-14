@@ -17,6 +17,7 @@ public final class IntakeConstants {
   public static final double kIntakeConeSpeed = 0.9;
   public static final double kIntakeCubeSpeed = -0.9;
 
-  public static final double kIntakeKeepingPercent = 0.1;
+  public static final double kIntakeKeepingPercent = 0.15;
+  public static final double kIntakeKeepingMaxCurrent = 10;
   public static final double kIntakeCurrentSpikingThreshold = 40;
 }

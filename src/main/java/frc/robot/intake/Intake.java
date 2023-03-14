@@ -13,6 +13,7 @@ import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -55,16 +56,20 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     return intakeMotor.getMotorOutputPercent();
   }
 
+  public void currentLimit() {
+    intakeMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 10, 0.2));
+  }
+
   public void latchCone() {
     if (intakeDebug) System.out.println("Latch cone");
-    intakeMotor.set(ControlMode.Current, 20);
-    // intakeMotor.set(ControlMode.PercentOutput, kIntakeKeepingPercent);
+    // intakeMotor.set(ControlMode.Current, 20);
+    intakeMotor.set(ControlMode.PercentOutput, kIntakeKeepingPercent);
   }
 
   public void latchCube() {
     if (intakeDebug) System.out.println("Latch Cube");
-    intakeMotor.set(ControlMode.Current, -20);
-    // intakeMotor.set(ControlMode.PercentOutput, -kIntakeKeepingPercent);
+    // intakeMotor.set(ControlMode.Current, -20);
+    intakeMotor.set(ControlMode.PercentOutput, -kIntakeKeepingPercent);
   }
 
   public void intakeCone() {
