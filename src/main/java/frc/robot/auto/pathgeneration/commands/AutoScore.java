@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.commands.SetArmAngle;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathConstants;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
@@ -94,8 +93,7 @@ public class AutoScore extends CommandBase {
         sink = kBottomBlueScoringPoses[locationId];
     }
     preSink = kHighBlueScoringPoses[locationId];
-    System.out.println(
-        "Running: Go to grid (id: " + locationId + ") from " + src);
+    System.out.println("Running: Go to grid (id: " + locationId + ") from " + src);
 
     if (DriverStation.getAlliance() == Alliance.Red) {
       sink = PathUtil.flip(sink);
@@ -103,46 +101,52 @@ public class AutoScore extends CommandBase {
     }
 
     // commands that will be run sequentially
-    Command moveToPreSink = PathGeneration.createDynamicAbsolutePath(
-        src, preSink, swerveSubsystem);
+    Command moveToPreSink = PathGeneration.createDynamicAbsolutePath(src, preSink, swerveSubsystem);
     Command moveArmElevatorToPreset = new InstantCommand();
 
     switch (gridScoreHeight) {
       case HIGH:
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new ConditionalCommand(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
-                isCurrentPieceCone),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
-                isCurrentPieceCone));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new ConditionalCommand(
+                    new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
+                    new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                    isCurrentPieceCone),
+                new ConditionalCommand(
+                    new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                    isCurrentPieceCone));
       case MID:
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
-                isCurrentPieceCone));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+                new ConditionalCommand(
+                    new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                    isCurrentPieceCone));
       case LOW:
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
-            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+                new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
     }
 
     // TODO FINISHE command
-    Command runIntake = new ConditionalCommand(
-        new IntakeCube(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
-    Command moveToScoringLocation = PathGeneration.createDynamicAbsolutePath(preSink, sink, swerveSubsystem);
-    LEDSetAllSectionsPattern signalLED = new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
+    Command runIntake =
+        new ConditionalCommand(
+            new IntakeCube(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
+    Command moveToScoringLocation =
+        PathGeneration.createDynamicAbsolutePath(preSink, sink, swerveSubsystem);
+    LEDSetAllSectionsPattern signalLED =
+        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
 
     // return sequential of all above commands
-    Command finalCommand = Commands.sequence(
-        moveToPreSink,
-        Commands.deadline(
-            runIntake.withTimeout(8), moveArmElevatorToPreset, moveToScoringLocation),
-        signalLED);
+    Command finalCommand =
+        Commands.sequence(
+            moveToPreSink,
+            Commands.deadline(
+                runIntake.withTimeout(8), moveArmElevatorToPreset, moveToScoringLocation),
+            signalLED);
 
     finalCommand.schedule();
   }
