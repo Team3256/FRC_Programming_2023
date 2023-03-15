@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.simplepathgeneration;
+package frc.robot.auto.pathgeneration;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kBlueTopDoubleSubstationPose;
 
@@ -51,31 +51,27 @@ public class SimpleGoToSubstation {
     }
 
     // commands that will be run sequentially
-    Command moveToPreSink = SimpleGoToAbsolute.run(swerveDrive.getPose(), preSink, swerveDrive);
-    Command moveArmElevatorToPreset =
-        new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CONE),
-                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CUBE),
-                isCurrentPieceCone));
-
-    Command runIntake =
+    Command moveToPreSink = PathGeneration.run(swerveDrive.getPose(), preSink, swerveDrive);
+    Command moveArmElevatorToPreset = new ParallelCommandGroup(
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
         new ConditionalCommand(
-            new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
-    Command moveToSubstation = SimpleGoToAbsolute.run(preSink, sink, swerveDrive);
+            new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CONE),
+            new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CUBE),
+            isCurrentPieceCone));
+
+    Command runIntake = new ConditionalCommand(
+        new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
+    Command moveToSubstation = PathGeneration.run(preSink, sink, swerveDrive);
     Command stopIntake = new IntakeOff(intakeSubsystem);
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
-    LEDSetAllSectionsPattern signalLED =
-        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
-    Command moveAwayFromSubstation = SimpleGoToAbsolute.run(sink, preSink, swerveDrive);
+    LEDSetAllSectionsPattern signalLED = new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
+    Command moveAwayFromSubstation = PathGeneration.run(sink, preSink, swerveDrive);
 
     // return sequential of all above commands
-    Command finalCommand =
-        Commands.sequence(
-            moveToPreSink,
-            Commands.deadline(runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
-            Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake, signalLED));
+    Command finalCommand = Commands.sequence(
+        moveToPreSink,
+        Commands.deadline(runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
+        Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake, signalLED));
     return finalCommand;
   }
 }

@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.simplepathgeneration;
+package frc.robot.auto.pathgeneration;
 
 import static frc.robot.Constants.trajectoryViewer;
 import static frc.robot.Constants.waypointViewer;
@@ -21,15 +21,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
-public class SimpleGoToAbsolute {
-  static Command run(Pose2d src, Pose2d sink, SwerveDrive swerveDrive) {
+public class PathGeneration {
+  public static Command createDynamicPath(Pose2d src, Pose2d sink, SwerveDrive swerveDrive) {
     System.out.println("Running: Go to absolute " + sink);
     Rotation2d heading = sink.minus(src).getTranslation().getAngle();
-    PathPlannerTrajectory traj =
-        PathPlanner.generatePath(
-            kDynamicPathConstraints,
-            new PathPoint(src.getTranslation(), heading, src.getRotation()),
-            new PathPoint(sink.getTranslation(), heading, sink.getRotation()));
+    PathPlannerTrajectory traj = PathPlanner.generatePath(
+        kDynamicPathConstraints,
+        new PathPoint(src.getTranslation(), heading, src.getRotation()),
+        new PathPoint(sink.getTranslation(), heading, sink.getRotation()));
 
     // send trajectory to networktables for logging
     if (kDynamicPathGenerationDebug) {
