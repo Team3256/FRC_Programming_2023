@@ -17,18 +17,21 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
 public class PathGeneration {
-  public static Command createDynamicPath(Pose2d src, Pose2d sink, SwerveDrive swerveDrive) {
+  public static Command createDynamicAbsolutePath(
+      Pose2d src, Pose2d sink, SwerveDrive swerveDrive) {
     System.out.println("Running: Go to absolute " + sink);
     Rotation2d heading = sink.minus(src).getTranslation().getAngle();
-    PathPlannerTrajectory traj = PathPlanner.generatePath(
-        kDynamicPathConstraints,
-        new PathPoint(src.getTranslation(), heading, src.getRotation()),
-        new PathPoint(sink.getTranslation(), heading, sink.getRotation()));
+    PathPlannerTrajectory traj =
+        PathPlanner.generatePath(
+            kDynamicPathConstraints,
+            new PathPoint(src.getTranslation(), heading, src.getRotation()),
+            new PathPoint(sink.getTranslation(), heading, sink.getRotation()));
 
     // send trajectory to networktables for logging
     if (kDynamicPathGenerationDebug) {
@@ -41,5 +44,11 @@ public class PathGeneration {
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command trajCommand = autoBuilder.createTrajectoryFollowCommand(traj, false, false);
     return trajCommand;
+  }
+
+  public static Command createDynamicRelativePath(
+      SwerveDrive swerveDrive, Transform2d poseTransformation) {
+    return PathGeneration.createDynamicAbsolutePath(
+        swerveDrive.getPose(), swerveDrive.getPose().transformBy(poseTransformation), swerveDrive);
   }
 }

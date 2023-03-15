@@ -1,6 +1,11 @@
-package frc.robot.auto.pathgeneration.commands;
+// Copyright (c) 2023 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
-import java.util.function.BooleanSupplier;
+package frc.robot.auto.pathgeneration.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
@@ -11,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
@@ -28,6 +32,7 @@ import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessBlinkingPattern;
 import frc.robot.swerve.SwerveDrive;
+import java.util.function.BooleanSupplier;
 
 public class AutoIntakeAtSubstation extends CommandBase {
   private SwerveDrive swerveSubsystem;
@@ -67,27 +72,35 @@ public class AutoIntakeAtSubstation extends CommandBase {
     }
 
     // commands that will be run sequentially
-    Command moveToPreSink = PathGeneration.createDynamicPath(swerveSubsystem.getPose(), preSink, swerveSubsystem);
-    Command moveArmElevatorToPreset = new ParallelCommandGroup(
-        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
-        new ConditionalCommand(
-            new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CONE),
-            new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CUBE),
-            isCurrentPieceCone));
+    Command moveToPreSink =
+        PathGeneration.createDynamicAbsolutePath(
+            swerveSubsystem.getPose(), preSink, swerveSubsystem);
+    Command moveArmElevatorToPreset =
+        new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CONE),
+                new SetArmAngle(armSubsystem, Arm.ArmPosition.DOUBLE_SUBSTATION_CUBE),
+                isCurrentPieceCone));
 
-    Command runIntake = new ConditionalCommand(
-        new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
-    Command moveToSubstation = PathGeneration.createDynamicPath(preSink, sink, swerveSubsystem);
+    Command runIntake =
+        new ConditionalCommand(
+            new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
+    Command moveToSubstation =
+        PathGeneration.createDynamicAbsolutePath(preSink, sink, swerveSubsystem);
     Command stopIntake = new IntakeOff(intakeSubsystem);
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
-    LEDSetAllSectionsPattern signalLED = new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
-    Command moveAwayFromSubstation = PathGeneration.createDynamicPath(sink, preSink, swerveSubsystem);
+    LEDSetAllSectionsPattern signalLED =
+        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
+    Command moveAwayFromSubstation =
+        PathGeneration.createDynamicAbsolutePath(sink, preSink, swerveSubsystem);
 
     // return sequential of all above commands
-    Command finalCommand = Commands.sequence(
-        moveToPreSink,
-        Commands.deadline(runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
-        Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake, signalLED));
+    Command finalCommand =
+        Commands.sequence(
+            moveToPreSink,
+            Commands.deadline(runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
+            Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake, signalLED));
 
     finalCommand.schedule();
   }
