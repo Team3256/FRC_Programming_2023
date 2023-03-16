@@ -61,7 +61,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.configStatorCurrentLimit(
         new StatorCurrentLimitConfiguration(
             true, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
-    intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
 
   public void latchCone() {
@@ -84,6 +83,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
+  // TODO: Change to stator current and tune max current
   public boolean isCurrentSpiking() {
     return intakeMotor.getSupplyCurrent() > kIntakeMaxCurrent;
   }
@@ -95,7 +95,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Intake current", intakeMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Intake supply current", intakeMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Intake stator current", intakeMotor.getStatorCurrent());
   }
 
   public void logInit() {
