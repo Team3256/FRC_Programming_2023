@@ -45,6 +45,6 @@ public class IntakeCube extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return intakeSubsystem.intakeIsFinished();
+    return intakeSubsystem.isCurrentSpiking();
   }
 }

@@ -20,10 +20,8 @@ import frc.robot.arm.Arm.ArmPosition;
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
   private Rotation2d angleRotation2d;
-  private ArmPosition armPosition;
-  private boolean shouldEnd;
 
-  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d, boolean shouldEnd) {
+  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
         new ProfiledPIDController(kP, kI, kD, kArmProfileContraints),
         armSubsystem::getArmPositionRads,
@@ -41,12 +39,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
     this.angleRotation2d = angleRotation2d;
     this.armSubsystem = armSubsystem;
-    this.shouldEnd = shouldEnd;
     addRequirements(armSubsystem);
-  }
-
-  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
-    this(armSubsystem, angleRotation2d, true);
   }
 
   public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
@@ -60,7 +53,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
       System.out.println(
           this.getName()
               + " started (position: "
-              + this.armPosition
+              + armSubsystem.getArmPositionRads()
               + ", rotation: "
               + angleRotation2d.getDegrees()
               + " deg)");
@@ -75,7 +68,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
       System.out.println(
           this.getName()
               + " finished (position: "
-              + this.armPosition
+              + armSubsystem.getArmPositionRads()
               + ", rotation: "
               + angleRotation2d.getDegrees()
               + " deg)");
@@ -84,6 +77,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
   @Override
   public boolean isFinished() {
-    return getController().atGoal() && shouldEnd;
+    return getController().atGoal();
   }
 }

@@ -23,7 +23,6 @@ import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.*;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
-import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
@@ -284,20 +283,23 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorOnRightSide;
-    if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide =
-          new ParallelRaceGroup(
-              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+    //    Command autoPath = autoPaths.getSelectedPath();
+    //    Command setArmElevatorOnRightSide;
+    //    if (kElevatorEnabled && kArmEnabled) {
+    //      setArmElevatorOnRightSide =
+    //          new ParallelRaceGroup(
+    //              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+    //
+    //      return Commands.sequence(
+    //          setArmElevatorOnRightSide.asProxy(),
+    //          autoPath,
+    //          new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
+    //    } else {
+    //      return autoPath;
+    //    }
 
-      return Commands.sequence(
-          setArmElevatorOnRightSide.asProxy(),
-          autoPath,
-          new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
-    } else {
-      return autoPath;
-    }
+    return new SequentialCommandGroup(
+        new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID), new KeepArmAtPosition(armSubsystem));
   }
 
   @Override

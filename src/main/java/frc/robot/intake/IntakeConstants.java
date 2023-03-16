@@ -18,11 +18,8 @@ public final class IntakeConstants {
   public static final double kIntakeCubeSpeed = -0.9;
   public static final double kLatchConeSpeed = 0.2;
   public static final double kLatchCubeSpeed = -0.2;
-
-  public static final double kConeMaxCurrent = 12;
-  public static final double kCubeMaxCurrent = 10;
+  // TODO:Tune kGamePieceMaxCurrent
+  public static final double kGamePieceMaxCurrent = 10;
   public static final double kIntakeMaxCurrent = 40;
-
-  public static final double kIntakeFinishedMaxError = 0.1;
-  public static final double kIntakeCurrentTriggerThresholdTime = 0.2;
+  public static final double kTriggerThresholdTime = 0.2;
 }

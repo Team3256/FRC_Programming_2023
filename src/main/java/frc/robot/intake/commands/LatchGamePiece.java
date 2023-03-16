@@ -22,7 +22,7 @@ public class LatchGamePiece extends CommandBase {
   }
 
   @Override
-  public void execute() {
+  public void initialize() {
     if (isCurrentPieceCone.getAsBoolean()) {
       intakeSubsystem.latchCone();
     } else {
