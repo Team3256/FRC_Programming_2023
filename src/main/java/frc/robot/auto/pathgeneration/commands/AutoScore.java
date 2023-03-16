@@ -29,6 +29,7 @@ import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.patterns.AutoMoveBlinkingPattern;
 import frc.robot.led.patterns.ErrorBlinkingPattern;
 import frc.robot.led.patterns.SuccessBlinkingPattern;
 import frc.robot.swerve.SwerveDrive;
@@ -136,12 +137,15 @@ public class AutoScore extends CommandBase {
         new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
     Command errorLEDs =
         new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
+    Command runningLEDs =
+        new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern()).withTimeout(5);
 
     Command autoScore =
         Commands.sequence(
                 moveToScoringWaypoint,
                 Commands.deadline(moveToScoringLocation, moveArmElevatorToPreset),
                 successLEDs.asProxy())
+            .deadlineWith(runningLEDs)
             .handleInterrupt(() -> errorLEDs.schedule());
 
     autoScore.schedule();
