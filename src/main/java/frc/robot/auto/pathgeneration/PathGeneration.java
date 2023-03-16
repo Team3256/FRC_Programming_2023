@@ -28,12 +28,13 @@ public class PathGeneration {
     System.out.println("Running: Go to absolute " + end);
 
     // Small control lengths make the path a straight line
-    PathPlannerTrajectory trajectory = PathPlanner.generatePath(
-        kDynamicPathConstraints,
-        new PathPoint(start.getTranslation(), Rotation2d.fromDegrees(180), start.getRotation())
-            .withControlLengths(0.01, 0.01),
-        new PathPoint(end.getTranslation(), Rotation2d.fromDegrees(0), end.getRotation())
-            .withControlLengths(0.01, 0.01));
+    PathPlannerTrajectory trajectory =
+        PathPlanner.generatePath(
+            kDynamicPathConstraints,
+            new PathPoint(start.getTranslation(), Rotation2d.fromDegrees(180), start.getRotation())
+                .withControlLengths(0.01, 0.01),
+            new PathPoint(end.getTranslation(), Rotation2d.fromDegrees(0), end.getRotation())
+                .withControlLengths(0.01, 0.01));
 
     // send trajectory to networktables for logging
     if (kDynamicPathGenerationDebug) {

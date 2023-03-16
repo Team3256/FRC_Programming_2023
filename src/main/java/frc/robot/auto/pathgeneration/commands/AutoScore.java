@@ -10,7 +10,6 @@ package frc.robot.auto.pathgeneration.commands;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -92,29 +91,32 @@ public class AutoScore extends CommandBase {
     switch (gridScoreHeight) {
       case HIGH:
         end = kHighBlueScoringPoses[locationId];
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new ConditionalCommand(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
-                isCurrentPieceCone),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
-                isCurrentPieceCone));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new ConditionalCommand(
+                    new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
+                    new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                    isCurrentPieceCone),
+                new ConditionalCommand(
+                    new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                    isCurrentPieceCone));
       case MID:
         end = kMidBlueScoringPoses[locationId];
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
-                isCurrentPieceCone));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+                new ConditionalCommand(
+                    new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                    isCurrentPieceCone));
       case LOW:
       default:
         end = kBottomBlueScoringPoses[locationId];
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
-            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+                new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
     }
 
     scoringWaypoint = kBlueScoreWaypointPoses[locationId];
@@ -125,17 +127,22 @@ public class AutoScore extends CommandBase {
       scoringWaypoint = PathUtil.flip(scoringWaypoint);
     }
 
-    Command moveToScoringWaypoint = PathGeneration.createDynamicAbsolutePath(start, scoringWaypoint, swerveSubsystem);
-    Command moveToScoringLocation = PathGeneration.createDynamicAbsolutePath(scoringWaypoint, end, swerveSubsystem);
+    Command moveToScoringWaypoint =
+        PathGeneration.createDynamicAbsolutePath(start, scoringWaypoint, swerveSubsystem);
+    Command moveToScoringLocation =
+        PathGeneration.createDynamicAbsolutePath(scoringWaypoint, end, swerveSubsystem);
 
-    Command successLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
-    Command errorLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
+    Command successLEDs =
+        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
+    Command errorLEDs =
+        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
 
-    Command autoScore = Commands.sequence(
-        moveToScoringWaypoint,
-        Commands.deadline(moveToScoringLocation, moveArmElevatorToPreset),
-        successLEDs.asProxy())
-        .handleInterrupt(() -> errorLEDs.schedule());
+    Command autoScore =
+        Commands.sequence(
+                moveToScoringWaypoint,
+                Commands.deadline(moveToScoringLocation, moveArmElevatorToPreset),
+                successLEDs.asProxy())
+            .handleInterrupt(() -> errorLEDs.schedule());
 
     autoScore.schedule();
   }
