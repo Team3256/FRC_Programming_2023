@@ -24,25 +24,27 @@ import frc.robot.swerve.SwerveDrive;
 
 public class PathGeneration {
   public static Command createDynamicAbsolutePath(
-      Pose2d src, Pose2d sink, SwerveDrive swerveDrive) {
-    System.out.println("Running: Go to absolute " + sink);
-    Rotation2d heading = sink.minus(src).getTranslation().getAngle();
-    PathPlannerTrajectory traj =
-        PathPlanner.generatePath(
-            kDynamicPathConstraints,
-            new PathPoint(src.getTranslation(), heading, src.getRotation()),
-            new PathPoint(sink.getTranslation(), heading, sink.getRotation()));
+      Pose2d start, Pose2d end, SwerveDrive swerveDrive) {
+    System.out.println("Running: Go to absolute " + end);
+
+    // Small control lengths make the path a straight line
+    PathPlannerTrajectory trajectory = PathPlanner.generatePath(
+        kDynamicPathConstraints,
+        new PathPoint(start.getTranslation(), Rotation2d.fromDegrees(180), start.getRotation())
+            .withControlLengths(0.01, 0.01),
+        new PathPoint(end.getTranslation(), Rotation2d.fromDegrees(0), end.getRotation())
+            .withControlLengths(0.01, 0.01));
 
     // send trajectory to networktables for logging
     if (kDynamicPathGenerationDebug) {
-      trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(traj);
-      waypointViewer.getObject("Src").setPose(traj.getInitialHolonomicPose());
-      waypointViewer.getObject("Sink").setPose(traj.getEndState().poseMeters);
+      trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
+      waypointViewer.getObject("Src").setPose(trajectory.getInitialHolonomicPose());
+      waypointViewer.getObject("Sink").setPose(trajectory.getEndState().poseMeters);
     }
 
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command trajCommand = autoBuilder.createTrajectoryFollowCommand(traj, false, false);
+    Command trajCommand = autoBuilder.createTrajectoryFollowCommand(trajectory, false, false);
     return trajCommand;
   }
 

@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public final class DynamicPathConstants {
   // TODO: Find a way for this to not be called during first command press (takes
   // 45 ms gen)
   static {
-    CreateDynamicPathWayNodes.init();
+    if (FeatureFlags.kDynamicPathGenEnabled) CreateDynamicPathWayNodes.init();
   }
 
   // Trajectory constraints
@@ -67,6 +68,7 @@ public final class DynamicPathConstants {
   public static final double kBlueLowTapeOffset = Units.inchesToMeters(22);
   public static final double kBlueMidTapeOffset = Units.inchesToMeters(12);
   public static final double kBlueHighTapeOffset = Units.inchesToMeters(0);
+  public static final double kBlueScoreWaypointTapeOffset = Units.inchesToMeters(14);
   public static final double kOuterNodeRotationBuffer = Units.inchesToMeters(3);
 
   // (lowest y location to highest y location)
@@ -79,6 +81,55 @@ public final class DynamicPathConstants {
       new Pose2d(14.30, 7.35, Rotation2d.fromDegrees(0));
   public static final Pose2d kBlueBottomDoubleSubstationPose =
       new Pose2d(15.40, 6.20, Rotation2d.fromDegrees(0));
+
+  public static final Pose2d[] kBlueScoreWaypointPoses =
+      new Pose2d[] {
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX
+                    + kBlueScoreWaypointTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                0.67),
+            Rotation2d.fromDegrees(-175)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 1.04),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 1.61),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 2.12),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 2.71),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 3.24),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 3.82),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 4.35),
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            new Translation2d(
+                kBlueGridTapeX
+                    + kBlueScoreWaypointTapeOffset
+                    + kOuterNodeRotationBuffer
+                    + Constants.kRobotLength / 2,
+                4.75),
+            Rotation2d.fromDegrees(173))
+      };
+
   public static final Pose2d[] kBottomBlueScoringPoses =
       new Pose2d[] {
         new Pose2d(

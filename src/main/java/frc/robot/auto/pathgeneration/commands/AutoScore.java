@@ -10,6 +10,7 @@ package frc.robot.auto.pathgeneration.commands;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
@@ -28,7 +28,6 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPosition;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.ErrorBlinkingPattern;
@@ -71,84 +70,74 @@ public class AutoScore extends CommandBase {
 
   @Override
   public void initialize() {
-    Pose2d src = swerveSubsystem.getPose();
-    Pose2d sink = new Pose2d();
-    Pose2d preSink = new Pose2d();
+    Pose2d start = swerveSubsystem.getPose();
+    // Pose2d start = new Pose2d(
+    // Math.random() * 0.5 + 1.9,
+    // Math.random() * 4.4 + 0.54,
+    // Rotation2d.fromDegrees(Math.random() * 180));
 
     int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
-    if (locationId == -1) {
-      System.out.println("locationId was invalid");
-      if (ledSubsystem != null) {
-        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).schedule();
-        return;
-      }
+    if (0 > locationId || locationId > 8) {
+      System.out.println("locationId was invalid (" + locationId + ")");
+      new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern())
+          .withTimeout(6)
+          .schedule();
+      return;
     }
+
+    Command moveArmElevatorToPreset;
+    Pose2d end;
+    Pose2d scoringWaypoint;
 
     switch (gridScoreHeight) {
       case HIGH:
-        sink = kHighBlueScoringPoses[locationId];
+        end = kHighBlueScoringPoses[locationId];
+        moveArmElevatorToPreset = new ParallelCommandGroup(
+            new ConditionalCommand(
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                isCurrentPieceCone),
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                isCurrentPieceCone));
       case MID:
-        sink = kMidBlueScoringPoses[locationId];
+        end = kMidBlueScoringPoses[locationId];
+        moveArmElevatorToPreset = new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                isCurrentPieceCone));
       case LOW:
-        sink = kBottomBlueScoringPoses[locationId];
+      default:
+        end = kBottomBlueScoringPoses[locationId];
+        moveArmElevatorToPreset = new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
     }
-    preSink = kHighBlueScoringPoses[locationId];
-    System.out.println("Running: Go to grid (id: " + locationId + ") from " + src);
+
+    scoringWaypoint = kBlueScoreWaypointPoses[locationId];
+    System.out.println("Running: Go to grid (id: " + locationId + ") from " + start);
 
     if (DriverStation.getAlliance() == Alliance.Red) {
-      sink = PathUtil.flip(sink);
-      preSink = PathUtil.flip(preSink);
+      end = PathUtil.flip(end);
+      scoringWaypoint = PathUtil.flip(scoringWaypoint);
     }
 
-    // commands that will be run sequentially
-    Command moveToPreSink = PathGeneration.createDynamicAbsolutePath(src, preSink, swerveSubsystem);
-    Command moveArmElevatorToPreset = new InstantCommand();
+    Command moveToScoringWaypoint = PathGeneration.createDynamicAbsolutePath(start, scoringWaypoint, swerveSubsystem);
+    Command moveToScoringLocation = PathGeneration.createDynamicAbsolutePath(scoringWaypoint, end, swerveSubsystem);
 
-    switch (gridScoreHeight) {
-      case HIGH:
-        moveArmElevatorToPreset =
-            new ParallelCommandGroup(
-                new ConditionalCommand(
-                    new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
-                    new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
-                    isCurrentPieceCone),
-                new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
-                    isCurrentPieceCone));
-      case MID:
-        moveArmElevatorToPreset =
-            new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
-                new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
-                    isCurrentPieceCone));
-      case LOW:
-        moveArmElevatorToPreset =
-            new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
-                new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
-    }
+    Command successLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
+    Command errorLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
 
-    // TODO FINISHE command
-    Command runIntake =
-        new ConditionalCommand(
-            new IntakeCube(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
-    Command moveToScoringLocation =
-        PathGeneration.createDynamicAbsolutePath(preSink, sink, swerveSubsystem);
-    LEDSetAllSectionsPattern signalLED =
-        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern());
+    Command autoScore = Commands.sequence(
+        moveToScoringWaypoint,
+        Commands.deadline(moveToScoringLocation, moveArmElevatorToPreset),
+        successLEDs.asProxy())
+        .handleInterrupt(() -> errorLEDs.schedule());
 
-    // return sequential of all above commands
-    Command finalCommand =
-        Commands.sequence(
-            moveToPreSink,
-            Commands.deadline(
-                runIntake.withTimeout(8), moveArmElevatorToPreset, moveToScoringLocation),
-            signalLED);
-
-    finalCommand.schedule();
+    autoScore.schedule();
   }
 
   @Override
