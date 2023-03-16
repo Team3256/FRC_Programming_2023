@@ -181,6 +181,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 kOpenLoop));
 
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
+    // TODO add commands for both locations
     operator
         .b()
         .onTrue(
@@ -190,6 +191,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 elevatorSubsystem,
                 armSubsystem,
                 ledStrip,
+                AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE,
                 this::isCurrentPieceCone));
   }
 
