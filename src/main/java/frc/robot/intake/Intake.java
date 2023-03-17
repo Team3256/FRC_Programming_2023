@@ -44,6 +44,9 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   private void configureRealHardware() {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
+    intakeMotor.configStatorCurrentLimit(
+        new StatorCurrentLimitConfiguration(
+            true, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
     intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
@@ -56,53 +59,29 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     return intakeMotor.getMotorOutputPercent();
   }
 
-  public void currentLimitCube() {
-    if (kDebugEnabled) System.out.println("Current limit cube");
-    intakeMotor.configStatorCurrentLimit(
-        new StatorCurrentLimitConfiguration(
-            true, kCubeMaxCurrent, kCubeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
-  }
-
-  public void currentLimitCone() {
-    if (kDebugEnabled) System.out.println("Current limit cone");
-    intakeMotor.configStatorCurrentLimit(
-        new StatorCurrentLimitConfiguration(
-            true, kConeMaxCurrent, kConeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
-  }
-
-  public void currentLimitIntake() {
-    if (kDebugEnabled) System.out.println("Current limit intake");
-    intakeMotor.configStatorCurrentLimit(
-        new StatorCurrentLimitConfiguration(
-            true, kIntakeMaxCurrent, kIntakeMaxCurrent, kIntakeCurrentTriggerThresholdTime));
-  }
-
   public void latchCone() {
     if (kDebugEnabled) System.out.println("Latch cone");
-    currentLimitCone();
     intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
 
   public void latchCube() {
     if (kDebugEnabled) System.out.println("Latch Cube");
-    currentLimitCube();
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
 
   public void intakeCone() {
     System.out.println("Intake cone");
-    currentLimitIntake();
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
   }
 
   public void intakeCube() {
     System.out.println("Intake cube");
-    currentLimitIntake();
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
-  public boolean intakeIsFinished() {
-    return Math.abs(intakeMotor.getSupplyCurrent() - kIntakeMaxCurrent) < kIntakeFinishedMaxError;
+  // TODO: Change to stator current and tune max current
+  public boolean isCurrentSpiking() {
+    return intakeMotor.getSupplyCurrent() > kIntakeMaxCurrent;
   }
 
   public void off() {
@@ -112,7 +91,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Intake current", intakeMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Intake supply current", intakeMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Intake stator current", intakeMotor.getStatorCurrent());
   }
 
   public void logInit() {
