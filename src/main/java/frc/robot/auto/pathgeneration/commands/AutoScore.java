@@ -116,7 +116,7 @@ public class AutoScore extends CommandBase {
         end = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
                 new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
     }
 
