@@ -23,32 +23,6 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
   private ElevatorPosition elevatorPosition;
 
   /**
-   * Constructor for setting elevator height for the levels specified in the elevator preferences
-   * hash map
-   *
-   * @param elevatorSubsystem
-   * @param setpointPositionMeters
-   */
-  public SetElevatorHeight(
-      Elevator elevatorSubsystem, Elevator.ElevatorPosition setpointPositionMeters) {
-    super(
-        new ProfiledPIDController(
-            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kP),
-            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kI),
-            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kD),
-            kElevatorContraints),
-        elevatorSubsystem::getElevatorPosition,
-        elevatorSubsystem.getPreferencesSetpoint(setpointPositionMeters),
-        (output, setpoint) ->
-            elevatorSubsystem.setInputVoltage(
-                output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
-        elevatorSubsystem);
-
-    getController().setTolerance(kTolerancePosition, kToleranceVelocity);
-    addRequirements(elevatorSubsystem);
-  }
-
-  /**
    * Constructor for setting the elevator to a setpoint in the parameters
    *
    * @param elevatorSubsystem
@@ -71,6 +45,18 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
     this.setpointPositionMeters = setpointPositionMeters;
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);
+  }
+
+  /**
+   * Constructor for setting elevator height for the levels specified in the elevator preferences
+   * hash map
+   *
+   * @param elevatorSubsystem
+   * @param setpointPositionMeters
+   */
+  public SetElevatorHeight(
+      Elevator elevatorSubsystem, Elevator.ElevatorPosition setpointPositionMeters) {
+    this(elevatorSubsystem, elevatorSubsystem.getPreferencesSetpoint(setpointPositionMeters));
   }
 
   @Override

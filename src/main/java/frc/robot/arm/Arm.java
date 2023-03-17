@@ -9,6 +9,7 @@ package frc.robot.arm;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
+import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.kArmPositionKeys;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -146,7 +147,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public double getArmPositionRads() {
     if (RobotBase.isReal())
       return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
-          + kEncoderOffsetRadians;
+          + Preferences.getDouble(ArmPreferencesKeys.kEncoderOffsetKey, kEncoderOffsetRadians);
     else return armSim.getAngleRads();
   }
 
@@ -205,9 +206,38 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     return Shuffleboard.getTab(tab).getLayout(kArmLayoutName, BuiltInLayouts.kList).withSize(2, 4);
   }
 
-  public double getPreferencesSetpoint(Arm.ArmPosition setpoint) {
-    return Preferences.getDouble(
-        ArmPreferencesKeys.kArmPositionKeys.get(setpoint),
-        ArmPreferencesKeys.kArmPositionDefaults.get(setpoint).getRadians());
+  public Rotation2d getPreferencesSetpoint(Arm.ArmPosition setpoint) {
+    return new Rotation2d(
+        Preferences.getDouble(
+            ArmPreferencesKeys.kArmPositionKeys.get(setpoint),
+            ArmPreferencesKeys.kArmPositionDefaults.get(setpoint).getRadians()));
+  }
+
+  /** Populating arm preferences on network tables */
+  public static void loadArmPreferences() {
+    // Arm PID Preferences
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kP);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kIKey, ArmConstants.kI);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kD);
+    // Arm Preset Preferences
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.DEFAULT), kDefaultArmAngle.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.CUBE_MID), kCubeMidRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.CONE_MID), kConeMidRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.CUBE_HIGH), kCubeHighRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.CONE_HIGH), kConeHighRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.GROUND_INTAKE), kGroundIntakeRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPosition.DOUBLE_SUBSTATION),
+        kDoubleSubstationRotation.getRadians());
+    // Arm Encoder Offset
+    Preferences.initDouble(ArmPreferencesKeys.kEncoderOffsetKey, kEncoderOffsetRadians);
   }
 }

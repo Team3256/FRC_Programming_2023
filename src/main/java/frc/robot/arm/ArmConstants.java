@@ -40,6 +40,7 @@ public final class ArmConstants {
     public static final String kPKey = "ArmkP";
     public static final String kIKey = "ArmkI";
     public static final String kDKey = "ArmkD";
+    public static final String kEncoderOffsetKey = "EncoderOffset";
   }
 
   // TODO: Fix constants

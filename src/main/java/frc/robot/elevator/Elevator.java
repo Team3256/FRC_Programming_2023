@@ -9,6 +9,7 @@ package frc.robot.elevator;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.elevator.ElevatorConstants.*;
+import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -186,5 +187,30 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     return Preferences.getDouble(
         ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
         ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));
+  }
+
+  /** Populating elevator preferences on network tables */
+  public static void loadElevatorPreferences() {
+    // Elevator PID Preferences
+    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kPKey, ElevatorConstants.kP);
+    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kIKey, ElevatorConstants.kI);
+    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kDKey, ElevatorConstants.kD);
+    // Elevator Preset Preferences
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.CUBE_HIGH), kCubeHighPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.CONE_HIGH), kConeHighPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.ANY_PIECE_LOW),
+        kAnyPieceLowPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.ANY_PIECE_MID),
+        kAnyPieceMidPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.GROUND_INTAKE),
+        kGroundIntakePositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
+        kDoubleSubstationPositionMeters);
   }
 }

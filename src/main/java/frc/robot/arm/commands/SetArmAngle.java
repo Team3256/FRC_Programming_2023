@@ -7,8 +7,6 @@
 
 package frc.robot.arm.commands;
 
-import static frc.robot.arm.ArmConstants.*;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,44 +17,13 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.ArmConstants;
 
+import static frc.robot.arm.ArmConstants.*;
+
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
   private Rotation2d angleRotation2d;
   private ArmPosition armPosition;
   private boolean shouldEnd;
-
-  /**
-   * Constructor for setting the arm to a Rotation2d specified in the preferences hash map
-   *
-   * @param armSubsystem
-   * @param armPosition
-   * @param shouldEnd
-   */
-  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition, boolean shouldEnd) {
-    super(
-        new ProfiledPIDController(
-            Preferences.getDouble(ArmPreferencesKeys.kPKey, kP),
-            Preferences.getDouble(ArmPreferencesKeys.kIKey, kI),
-            Preferences.getDouble(ArmPreferencesKeys.kDKey, kD),
-            kArmProfileContraints),
-        armSubsystem::getArmPositionRads,
-        MathUtil.clamp(
-            armSubsystem.getPreferencesSetpoint(armPosition),
-            kArmAngleMinConstraint.getRadians(),
-            kArmAngleMaxConstraint.getRadians()),
-        (output, setpoint) ->
-            armSubsystem.setInputVoltage(
-                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
-        armSubsystem);
-
-    getController()
-        .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
-
-    this.angleRotation2d = angleRotation2d;
-    this.armSubsystem = armSubsystem;
-    this.shouldEnd = shouldEnd;
-    addRequirements(armSubsystem);
-  }
 
   /**
    * Constructor for setting arm to arbitrary angle in radians
@@ -89,6 +56,17 @@ public class SetArmAngle extends ProfiledPIDCommand {
     this.armSubsystem = armSubsystem;
     this.shouldEnd = shouldEnd;
     addRequirements(armSubsystem);
+  }
+
+  /**
+   * Constructor for setting the arm to a Rotation2d specified in the preferences hash map
+   *
+   * @param armSubsystem
+   * @param armPosition
+   * @param shouldEnd
+   */
+  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition, boolean shouldEnd) {
+    this(armSubsystem, armSubsystem.getPreferencesSetpoint(armPosition), shouldEnd);
   }
 
   @Override

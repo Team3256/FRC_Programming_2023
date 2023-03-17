@@ -19,14 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
-  public static class RobotPreferencesKeys {
-    public static final String kIntakeEnabledKey = "kIntakeEnabled";
-    public static final String kElevatorEnabledKey = "kElevatorEnabled";
-    public static final String kArmEnabledKey = "kArmEnabled";
-    public static final String kSwerveEnabledKey = "kSwerveEnabled";
-    public static final String kLedStripEnabledKey = "kLedStripEnabled";
-    public static final String kAdvantageKitReplayEnabledKey = "kAdvantageKitReplayEnabled";
-  }
 
   public static final boolean kDebugEnabled = true;
   public static final boolean kSwerveEnabled = true;
