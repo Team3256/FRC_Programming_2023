@@ -220,8 +220,8 @@ public class RobotContainer implements CANTestable, Loggable {
     (operator.rightTrigger())
         .whileTrue(
             new ConditionalCommand(
-                new IntakeCube(intakeSubsystem),
                 new IntakeCone(intakeSubsystem),
+                new IntakeCube(intakeSubsystem),
                 this::isCurrentPieceCone));
   }
 
