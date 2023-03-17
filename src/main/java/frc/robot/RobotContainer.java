@@ -27,7 +27,7 @@ import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPosition;
+import frc.robot.elevator.Elevator.ElevatorPreset;
 import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
@@ -191,8 +191,8 @@ public class RobotContainer implements CANTestable, Loggable {
       case HIGH_GRID:
         return new ParallelCommandGroup(
             new ConditionalCommand(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
                 this::isCurrentPieceCone),
             new ConditionalCommand(
                 new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
@@ -200,14 +200,14 @@ public class RobotContainer implements CANTestable, Loggable {
                 this::isCurrentPieceCone));
       case MID_GRID:
         return new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
             new ConditionalCommand(
                 new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
                 new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
                 this::isCurrentPieceCone));
       case LOW_GRID:
         return new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
             new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW));
       default:
         return new InstantCommand();
@@ -242,7 +242,7 @@ public class RobotContainer implements CANTestable, Loggable {
           .toggleOnTrue(
               new ParallelCommandGroup(
                   // TODO need 5.5 deg for cone, lower (4.5?) for cube
-                  new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION),
+                  new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.DOUBLE_SUBSTATION),
                   new SetArmAngle(armSubsystem, ArmPreset.DOUBLE_SUBSTATION),
                   new ConditionalCommand(
                       new IntakeCone(intakeSubsystem, ledStrip),

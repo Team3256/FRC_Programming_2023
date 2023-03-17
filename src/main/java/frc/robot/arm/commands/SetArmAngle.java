@@ -55,7 +55,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " started (position: "
+              + " started (preset: "
               + armPreset
               + ", rotation: "
               + angleRotation2d.getDegrees()
@@ -70,7 +70,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " ended (position: "
+              + " ended (preset: "
               + armPreset
               + ", rotation: "
               + angleRotation2d.getDegrees()

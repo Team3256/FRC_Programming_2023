@@ -80,7 +80,7 @@ public class AutoPaths {
             runParallelWithPath(
                 new ParallelCommandGroup(
                         new SetElevatorHeight(
-                            elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
+                            elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
                         new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE),
                         new IntakeCone(intakeSubsystem))
                     .withTimeout(1.75)
@@ -92,7 +92,7 @@ public class AutoPaths {
             runParallelWithPath(
                     new ParallelCommandGroup(
                         new SetElevatorHeight(
-                            elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
+                            elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
                         new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE),
                         new IntakeCube(intakeSubsystem)))
                 .withTimeout(1.75)
@@ -102,7 +102,7 @@ public class AutoPaths {
         "cubeHigh",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CUBE_HIGH),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
                     new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
                 .withTimeout(1.5)
@@ -112,7 +112,7 @@ public class AutoPaths {
         "coneHigh",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CONE_HIGH),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
                     new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
                 .withTimeout(1.5)
@@ -122,8 +122,7 @@ public class AutoPaths {
         "cubeMid",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
                     new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
                 .withTimeout(1.5)
@@ -133,8 +132,7 @@ public class AutoPaths {
         "coneMid",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
                     new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
                 .withTimeout(1.5)
@@ -144,8 +142,7 @@ public class AutoPaths {
         "cubeLow",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
                     new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW),
                     new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
                 .withTimeout(1.5)
@@ -155,8 +152,7 @@ public class AutoPaths {
         "coneLow",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
                     new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW),
                     new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
                 .withTimeout(1.5)
