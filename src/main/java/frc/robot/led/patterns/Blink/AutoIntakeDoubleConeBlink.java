@@ -13,7 +13,7 @@ import frc.robot.led.patterns.ConePattern;
 public class AutoIntakeDoubleConeBlink extends BlinkingPattern {
 
   public AutoIntakeDoubleConeBlink() {
-    super(46, 46);
+    super(46, 20);
     setMainLEDPattern(new ConePattern());
   }
 }

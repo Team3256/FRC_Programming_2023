@@ -13,7 +13,7 @@ import frc.robot.led.patterns.CubePattern;
 public class AutoIntakeDoubleCubeBlink extends BlinkingPattern {
 
   public AutoIntakeDoubleCubeBlink() {
-    super(46, 46);
+    super(46, 20);
     setMainLEDPattern(new CubePattern());
   }
 }

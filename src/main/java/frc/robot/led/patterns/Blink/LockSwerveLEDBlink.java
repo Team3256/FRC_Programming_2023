@@ -13,7 +13,7 @@ import frc.robot.led.patterns.LockSwervePattern;
 public class LockSwerveLEDBlink extends BlinkingPattern {
 
   public LockSwerveLEDBlink() {
-    super(20, 1);
+    super(20, 4);
     setMainLEDPattern(new LockSwervePattern());
   }
 }
