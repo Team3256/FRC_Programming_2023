@@ -5,14 +5,15 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.led.patterns.Blink;
 
 import frc.robot.led.patternBases.BlinkingPattern;
+import frc.robot.led.patterns.ConePattern;
 
 public class AutoIntakeDoubleConeBlink extends BlinkingPattern {
 
   public AutoIntakeDoubleConeBlink() {
-    super(35, 5);
+    super(46, 46);
     setMainLEDPattern(new ConePattern());
   }
 }

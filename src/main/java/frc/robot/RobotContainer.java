@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.*;
@@ -24,7 +23,7 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
-import frc.robot.led.patterns.*;
+import frc.robot.led.patterns.Blink.*;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
@@ -145,8 +144,15 @@ public class RobotContainer {
 
   public void configureLEDStrip() {
     ledStrip = new LED(0, new int[] {100});
-    driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
-    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
+    // ledStrip.setDefaultCommand(new LEDSetAllSectionsPattern(ledStrip, new LockSwerveLEDBlink()));
+
+    // driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+    // driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
+
+    driver.a().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoScoreConeBlink()));
+    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoScoreCubeBlink()));
+    driver.x().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoIntakeDoubleConeBlink()));
+    driver.y().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoIntakeDoubleCubeBlink()));
   }
 
   public Command getAutonomousCommand() {

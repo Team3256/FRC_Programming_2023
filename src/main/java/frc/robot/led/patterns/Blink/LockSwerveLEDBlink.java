@@ -5,14 +5,15 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.led.patterns.Blink;
 
 import frc.robot.led.patternBases.BlinkingPattern;
+import frc.robot.led.patterns.LockSwervePattern;
 
-public class AutoScoreCubeBlink extends BlinkingPattern {
+public class LockSwerveLEDBlink extends BlinkingPattern {
 
-  public AutoScoreCubeBlink() {
-    super(10, 1);
-    setMainLEDPattern(new CubePattern());
+  public LockSwerveLEDBlink() {
+    super(20, 1);
+    setMainLEDPattern(new LockSwervePattern());
   }
 }

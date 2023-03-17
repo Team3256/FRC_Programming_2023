@@ -5,14 +5,15 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.led.patterns.Blink;
 
 import frc.robot.led.patternBases.BlinkingPattern;
+import frc.robot.led.patterns.LimitedSwervePattern;
 
 public class LimitedSwerveLEDBlink extends BlinkingPattern {
 
   public LimitedSwerveLEDBlink() {
-    super(30, 5);
+    super(20, 20);
     setMainLEDPattern(new LimitedSwervePattern());
   }
 }

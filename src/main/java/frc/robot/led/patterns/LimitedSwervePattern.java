@@ -16,6 +16,6 @@ import frc.robot.led.patternBases.LEDPattern;
 public class LimitedSwervePattern extends LEDPattern {
   public LimitedSwervePattern() {
     super();
-    setPixelRange(1, kResolution, Color.kGold);
+    setPixelRange(1, kResolution, Color.kDarkOrange);
   }
 }
