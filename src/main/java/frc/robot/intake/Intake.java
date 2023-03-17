@@ -35,7 +35,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   public Intake() {
     if (RobotBase.isReal()) {
       configureRealHardware();
-      configLatchCurrent();
     } else {
       configureSimHardware();
     }
@@ -45,6 +44,9 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   private void configureRealHardware() {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
+    intakeMotor.configStatorCurrentLimit(
+        new StatorCurrentLimitConfiguration(
+            true, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
     intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
@@ -55,12 +57,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   public double getIntakeSpeed() {
     return intakeMotor.getMotorOutputPercent();
-  }
-
-  public void configLatchCurrent() {
-    intakeMotor.configStatorCurrentLimit(
-        new StatorCurrentLimitConfiguration(
-            true, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
   }
 
   public void latchCone() {
