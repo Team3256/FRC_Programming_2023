@@ -99,12 +99,13 @@ public class AutoIntakeAtSubstation extends CommandBase {
 
     // commands that will be run sequentially
     Command moveToWaypoint;
-    boolean dynamicPathGenerationEnabled = true;
-    if (dynamicPathGenerationEnabled) moveToWaypoint = null;
-    else PathGeneration.createDynamicAbsolutePath(
+    boolean dynamicPathGenerationEnabled = false;
+    // if (dynamicPathGenerationEnabled) moveToWaypoint = null;
+    // else
+    moveToWaypoint =
+        PathGeneration.createDynamicAbsolutePath(
             swerveSubsystem.getPose(), substationWaypoint, swerveSubsystem);
 
-    
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.DOUBLE_SUBSTATION),

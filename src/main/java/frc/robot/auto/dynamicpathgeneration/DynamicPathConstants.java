@@ -65,18 +65,19 @@ public final class DynamicPathConstants {
   public static final PathConstraints kDynamicPathConstraints = new PathConstraints(3, 3);
   public static final PathConstraints kPathToScoreConstraints = new PathConstraints(2, 2);
 
-  public static final double kGridBuffer = Units.inchesToMeters(4);
-  public static final double kBlueGridTapeX = 1.38 + kGridBuffer;
-  public static final double kBlueLowTapeOffset = Units.inchesToMeters(22);
-  public static final double kBlueMidTapeOffset = Units.inchesToMeters(12);
-  public static final double kBlueHighTapeOffset = Units.inchesToMeters(0);
-  public static final double kBlueScoreWaypointTapeOffset = Units.inchesToMeters(14);
+  // x value for the blue tape in front of the blue scoring grid
+  public static final double kBlueGridTapeX = 1.38;
+  // x value offsets for the distance between the robots bumper and the blue tape
+  // depending on the scoring height
+  public static final double kBlueLowOffset = Units.inchesToMeters(22);
+  public static final double kBlueMidOffset = Units.inchesToMeters(12);
+  public static final double kBlueHighOffset = Units.inchesToMeters(0);
+  // x value offset for distance between the robots bumper and the blue tape
+  // to determine the scoring waypoint of the robot given the scoring location
+  public static final double kBlueScoringWaypointOffset = Units.inchesToMeters(14);
   public static final double kOuterNodeRotationBuffer = Units.inchesToMeters(3);
 
   // (lowest y location to highest y location)
-  // TODO: LOW PRIORITY - Use robust center pivot radius vector method instead of
-  // mass setting (only
-  // set angle for each and not this monstrous equation)
   public static final double kSubstationWaypointOffset = Units.feetToMeters(8);
   public static final Pose2d kBlueTopDoubleSubstationPose =
       new Pose2d(14.30, 7.35, Rotation2d.fromDegrees(0));
@@ -84,49 +85,48 @@ public final class DynamicPathConstants {
       new Pose2d(15.40, 6.20, Rotation2d.fromDegrees(0));
   public static final Transform2d kSubstationPreSink =
       new Transform2d(new Translation2d(-kSubstationWaypointOffset, 0), new Rotation2d());
-
-  public static final Pose2d[] kBlueScoreWaypointPoses =
-      new Pose2d[] {
+  
+  public static final Pose2d[] kBlueScoreWaypointPoses = new Pose2d[] {
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX
-                    + kBlueScoreWaypointTapeOffset
+                    + kBlueScoringWaypointOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
                 0.67),
             Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 1.04),
+                kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2, 1.04),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 1.61),
+                kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2, 1.61),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 2.12),
+                kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2, 2.12),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 2.71),
+                kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2, 2.71),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 3.24),
+                kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2, 3.24),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 3.82),
+                kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2, 3.82),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueScoreWaypointTapeOffset + Constants.kRobotLength / 2, 4.35),
+                kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2, 4.35),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX
-                    + kBlueScoreWaypointTapeOffset
+                    + kBlueScoringWaypointOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
                 4.75),
@@ -138,43 +138,43 @@ public final class DynamicPathConstants {
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX
-                    + kBlueLowTapeOffset
+                    + kBlueLowOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
                 0.69),
             Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 1.04),
+                kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, 1.04),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 1.61),
+                kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, 1.61),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 2.12),
+                kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, 2.12),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 2.71),
+                kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, 2.71),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 3.24),
+                kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, 3.24),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 3.82),
+                kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, 3.82),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueLowTapeOffset + Constants.kRobotLength / 2, 4.35),
+                kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, 4.35),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX
-                    + kBlueLowTapeOffset
+                    + kBlueLowOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
                 4.72),
@@ -186,43 +186,43 @@ public final class DynamicPathConstants {
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX
-                    + kBlueMidTapeOffset
+                    + kBlueMidOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
                 0.67),
             Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 1.04),
+                kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, 1.04),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 1.61),
+                kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, 1.61),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 2.12),
+                kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, 2.12),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 2.71),
+                kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, 2.71),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 3.24),
+                kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, 3.24),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 3.82),
+                kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, 3.82),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueMidTapeOffset + Constants.kRobotLength / 2, 4.35),
+                kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, 4.35),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX
-                    + kBlueMidTapeOffset
+                    + kBlueMidOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
                 4.75),
@@ -234,43 +234,43 @@ public final class DynamicPathConstants {
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX
-                    + kBlueHighTapeOffset
+                    + kBlueHighOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
                 0.64),
             Rotation2d.fromDegrees(-175)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 1.04),
+                kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, 1.04),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 1.61),
+                kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, 1.61),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 2.12),
+                kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, 2.12),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 2.71),
+                kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, 2.71),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 3.24),
+                kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, 3.24),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 3.82),
+                kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, 3.82),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
-                kBlueGridTapeX + kBlueHighTapeOffset + Constants.kRobotLength / 2, 4.35),
+                kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, 4.35),
             Rotation2d.fromDegrees(180)),
         new Pose2d(
             new Translation2d(
                 kBlueGridTapeX
-                    + kBlueHighTapeOffset
+                    + kBlueHighOffset
                     + kOuterNodeRotationBuffer
                     + Constants.kRobotLength / 2,
                 4.79),

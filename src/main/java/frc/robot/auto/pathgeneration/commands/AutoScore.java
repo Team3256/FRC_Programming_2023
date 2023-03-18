@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
@@ -34,8 +33,6 @@ import frc.robot.led.patterns.ErrorBlinkingPattern;
 import frc.robot.led.patterns.SuccessBlinkingPattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
-
-import static frc.robot.Constants.kDebugEnabled;
 
 public class AutoScore extends CommandBase {
   public enum GridScoreHeight {
@@ -114,7 +111,7 @@ public class AutoScore extends CommandBase {
                     new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
                     new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
                     isCurrentPieceCone));
-          break;
+        break;
       case MID:
         scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
@@ -124,7 +121,7 @@ public class AutoScore extends CommandBase {
                     new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
                     new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
                     isCurrentPieceCone));
-          break;
+        break;
       case LOW:
       default:
         scoringLocation = kBottomBlueScoringPoses[locationId];
@@ -150,15 +147,16 @@ public class AutoScore extends CommandBase {
         new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern()).withTimeout(5);
 
     // schedule final composed command
-    Command autoScore =
-        Commands.sequence(
-                moveToScoringWaypoint,
-                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset),
-                successLEDs.asProxy())
-            .deadlineWith(runningLEDs)
-            .handleInterrupt(() -> errorLEDs.schedule());
+    // Command autoScore =
+    //     Commands.sequence(
+    //             moveToScoringWaypoint,
+    //             Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset),
+    //             successLEDs.asProxy())
+    //         .deadlineWith(runningLEDs)
+    //         .handleInterrupt(() -> errorLEDs.schedule());
 
-    autoScore.schedule();
+    // autoScore.schedule();
+    moveArmElevatorToPreset.schedule();
   }
 
   @Override

@@ -252,26 +252,26 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
       }
     }
-    
-    if (kLocalizationEnabled){
-    this.localize(
-        FrontConstants.kLimelightNetworkTablesName,
-        FrontConstants.kFieldTranslationOffsetX,
-        FrontConstants.kFieldTranslationOffsetY,
-        FrontConstants.kLimelightTranslationThresholdMeters,
-        FrontConstants.kLimelightRotationThreshold);
-    this.localize(
-        SideConstants.kLimelightNetworkTablesName,
-        SideConstants.kFieldTranslationOffsetX,
-        SideConstants.kFieldTranslationOffsetY,
-        SideConstants.kLimelightTranslationThresholdMeters,
-        SideConstants.kLimelightRotationThreshold);
-    this.localize(
-        BackConstants.kLimelightNetworkTablesName,
-        BackConstants.kFieldTranslationOffsetX,
-        BackConstants.kFieldTranslationOffsetY,
-        BackConstants.kLimelightTranslationThresholdMeters,
-        BackConstants.kLimelightTranslationThresholdMeters);
+
+    if (kLocalizationEnabled) {
+      this.localize(
+          FrontConstants.kLimelightNetworkTablesName,
+          FrontConstants.kFieldTranslationOffsetX,
+          FrontConstants.kFieldTranslationOffsetY,
+          FrontConstants.kLimelightTranslationThresholdMeters,
+          FrontConstants.kLimelightRotationThreshold);
+      this.localize(
+          SideConstants.kLimelightNetworkTablesName,
+          SideConstants.kFieldTranslationOffsetX,
+          SideConstants.kFieldTranslationOffsetY,
+          SideConstants.kLimelightTranslationThresholdMeters,
+          SideConstants.kLimelightRotationThreshold);
+      this.localize(
+          BackConstants.kLimelightNetworkTablesName,
+          BackConstants.kFieldTranslationOffsetX,
+          BackConstants.kFieldTranslationOffsetY,
+          BackConstants.kLimelightTranslationThresholdMeters,
+          BackConstants.kLimelightTranslationThresholdMeters);
     }
   }
 
