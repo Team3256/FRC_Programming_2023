@@ -170,7 +170,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
+    driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyroYaw));
 
     driver
         .leftBumper()
@@ -184,6 +184,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 kOpenLoop));
 
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
+    driver.x().whileTrue(new AutoBalance(swerveSubsystem));
   }
 
   private Command getScoreCommand(GoalType goalType) {

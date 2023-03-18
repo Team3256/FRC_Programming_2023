@@ -24,7 +24,6 @@ public final class SwerveConstants {
   public static final boolean kFieldRelative = true;
   public static final double kPeriodicDeltaTime = 0.02;
   public static final boolean kOpenLoop = true;
-
   public static final double kSwervePitTestSpeed = 0.3;
 
   /* Meters per second squared */
@@ -33,6 +32,8 @@ public final class SwerveConstants {
 
   public static int kYAccelRateLimit = 10;
   public static int kYDecelRateLimit = 7;
+
+  public static double kAutoEngageLimitVelocity = 1;
 
   public static final COTSFalconSwerveConstants kChosenModule =
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
@@ -119,7 +120,7 @@ public final class SwerveConstants {
   /* Neutral Modes */
   public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
   public static final NeutralMode kDriveNeutralMode = NeutralMode.Brake;
-  public static final boolean kInvertGyro = false; // Always ensure Gyro is CCW+ CW-
+  public static final boolean kInvertGyroYaw = false; // Always ensure Gyro is CCW+ CW-
 
   /* PID Constants Trapezoid Profile for the Azimuth Control */
   public static final double kAzimuthP = 0.15;
@@ -181,4 +182,8 @@ public final class SwerveConstants {
   }
 
   public static final double kSensitivityScale = 0.3;
+
+  /* AutoBalance */
+  public static double kXAutoBalanceVelocityMeters = 1;
+  public static final Rotation2d kAutoBalanceMaxError = new Rotation2d(Units.degreesToRadians(5));
 }
