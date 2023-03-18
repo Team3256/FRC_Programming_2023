@@ -1,0 +1,33 @@
+package frc.robot.mole;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.drivers.CanDeviceId;
+
+public final class MoleConstants {
+
+
+    public static final int kMoleMotorID = 31;
+    public static final int kMolePivotMotorID = 32;
+
+    public static final String kMoleCANBus = "mani";
+    public static final String kMolePivotCANBus = "mani";
+
+    public static final CanDeviceId kMoleCANDevice = new CanDeviceId(kMoleMotorID, kMoleCANBus);
+    public static final CanDeviceId kMolePivotCANDevice = new CanDeviceId(kMolePivotMotorID, kMolePivotCANBus);
+
+    public static final double kMoleCubeSpeed = 0.9;
+    public static final double kMolePivotSpeed = 0.9;
+
+    public static final double kMoleKeepingCurrent = 2;
+    public static final double kMolePivotKeepingCurrent = 2;
+
+    public static final double kMoleCurrentSpikingThreshold = 40;
+    public static final double kMolePivotCurrentSpikingThreshold = 40;
+
+    public static final double kMolePivotGearing = 60;
+
+    static Rotation2d kDefaultMoleAngle = Rotation2d.fromDegrees(0);
+    static Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(0);
+    static Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(0);
+
+}

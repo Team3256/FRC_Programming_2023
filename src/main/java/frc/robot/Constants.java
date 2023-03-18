@@ -55,6 +55,8 @@ public final class Constants {
     public static final String kArmLayoutName = "Arm";
     public static final String kElevatorLayoutName = "Elevator";
     public static final String kLEDLayoutName = "LED";
+
+    public static final String kMoleLayoutName = "Ground Intake";
   }
 
   public enum RobotMode {
