@@ -196,6 +196,17 @@ public class SwerveModule implements Loggable {
         .withSize(2, 1);
   }
 
+  public double getModuleVelocity() {
+    double velocity =
+        Conversions.falconToMPS(
+            mDriveMotor.getSelectedSensorPosition(), kWheelCircumference, kDriveGearRatio);
+    return velocity;
+  }
+
+  public double getModuleAngle() {
+    return Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), kAngleGearRatio);
+  }
+
   public boolean test() {
     System.out.println("Testing swerve module CAN:");
     boolean result =

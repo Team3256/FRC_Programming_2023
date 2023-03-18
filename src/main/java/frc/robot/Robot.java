@@ -72,9 +72,9 @@ public class Robot extends LoggedRobot {
         break;
     }
 
-    // logger.start(); // Start advkit logger
+    logger.start(); // Start advkit logger
     robotContainer = new RobotContainer();
-    // robotContainer.logInit();
+    robotContainer.logInit();
   }
 
   @Override
