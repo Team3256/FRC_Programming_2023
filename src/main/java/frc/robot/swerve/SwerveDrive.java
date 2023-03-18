@@ -64,12 +64,12 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
-  public Pigeon2 gyro;
+  private final Pigeon2 gyro;
 
   public SwerveDrive() {
     gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
-    zeroGyro();
+    zeroGyroYaw();
 
     // TODO MAKE POSITION 0,0
     poseEstimator =
@@ -134,37 +134,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
   }
 
-  public void driveAutoEngage(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
-    Pose2d robotPoseVelocity =
-        new Pose2d(
-            chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
-            chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
-            Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
-    Twist2d twistVelocity = (new Pose2d()).log(robotPoseVelocity);
-    ChassisSpeeds updatedChassisSpeeds =
-        new ChassisSpeeds(
-            twistVelocity.dx / kPeriodicDeltaTime,
-            twistVelocity.dy / kPeriodicDeltaTime,
-            twistVelocity.dtheta / kPeriodicDeltaTime);
-
-    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
-      chassisSpeeds.vxMetersPerSecond =
-          autoSlewRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
-      chassisSpeeds.vyMetersPerSecond =
-          autoSlewRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
-    }
-
-    SwerveModuleState[] swerveModuleStates =
-        kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
-
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
-
-    for (SwerveModule mod : swerveModules) {
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-    }
-    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
-  }
-
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
     ChassisSpeeds swerveChassisSpeed =
@@ -174,17 +143,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
-  }
-
-  public void autoTranslationToChassis(
-      Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    ChassisSpeeds swerveChassisSpeed =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getPose().getRotation())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
-
-    driveAutoEngage(swerveChassisSpeed, isOpenLoop);
   }
 
   public void setDesiredAngleState(SwerveModuleState[] swerveModuleStates) {
@@ -218,18 +176,30 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     return states;
   }
 
-  public void zeroGyro() {
+  public void zeroGyroYaw() {
     gyro.setYaw(0);
   }
 
-  public void setGyro(double yawDegrees) {
+  public void setGyroYaw(double yawDegrees) {
     gyro.setYaw(yawDegrees);
   }
 
   public Rotation2d getYaw() {
     double[] ypr = new double[3];
     gyro.getYawPitchRoll(ypr);
-    return (kInvertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+    return (kInvertGyroYaw) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+  }
+
+  public Rotation2d getPitch() {
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return Rotation2d.fromDegrees(ypr[1]);
+  }
+
+  public Rotation2d getRoll() {
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return Rotation2d.fromDegrees(ypr[2]);
   }
 
   public boolean shouldAddVisionMeasurement(
@@ -365,10 +335,14 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   }
 
   public boolean isTiltedForward() {
-    return gyro.getPitch() > kChargeStationTiltThreshold.getDegrees();
+    return getPitch().getDegrees() > kAutoBalanceMaxError.getDegrees();
   }
 
   public boolean isTiltedBackward() {
-    return gyro.getPitch() < -kChargeStationTiltThreshold.getDegrees();
+    return getPitch().getDegrees() < -kAutoBalanceMaxError.getDegrees();
+  }
+
+  public boolean isNotTilted() {
+    return Math.abs(getPitch().getDegrees()) < kAutoBalanceMaxError.getDegrees();
   }
 }

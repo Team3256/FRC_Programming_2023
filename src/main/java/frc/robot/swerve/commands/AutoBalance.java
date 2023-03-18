@@ -9,13 +9,13 @@ package frc.robot.swerve.commands;
 
 import static frc.robot.swerve.SwerveConstants.kXAutoBalanceVelocity;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.swerve.SwerveDrive;
 
 public class AutoBalance extends CommandBase {
-  SwerveDrive swerveDrive;
+  private final SwerveDrive swerveDrive;
 
   public AutoBalance(SwerveDrive swerveDrive) {
     this.swerveDrive = swerveDrive;
@@ -24,28 +24,24 @@ public class AutoBalance extends CommandBase {
   }
 
   @Override
+  public void initialize() {}
+
+  @Override
   public void execute() {
     if (swerveDrive.isTiltedForward()) {
-      swerveDrive.autoTranslationToChassis(
-          new Translation2d(-kXAutoBalanceVelocity, 0), 0, true, true);
-    } else if (swerveDrive.isTiltedBackward()) {
-      swerveDrive.autoTranslationToChassis(
-          new Translation2d(kXAutoBalanceVelocity, 0), 0, true, true);
+      swerveDrive.drive(new Translation2d(-kXAutoBalanceVelocity, 0), 0, true, true);
     } else {
-      swerveDrive.autoTranslationToChassis(new Translation2d(0, 0), 0, true, true);
+      swerveDrive.drive(new Translation2d(kXAutoBalanceVelocity, 0), 0, true, true);
     }
   }
 
   @Override
-  public void initialize() {}
-
-  @Override
   public void end(boolean interrupted) {
-    swerveDrive.setAngleMotorsNeutralMode(NeutralMode.Brake);
+    CommandScheduler.getInstance().schedule(new LockSwerveX(swerveDrive));
   }
 
   @Override
   public boolean isFinished() {
-    return false;
+    return swerveDrive.isNotTilted();
   }
 }

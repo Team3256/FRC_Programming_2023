@@ -284,7 +284,7 @@ public class AutoPaths {
       zeroGyroTeleop =
           new InstantCommand(
               () ->
-                  swerveSubsystem.setGyro(
+                  swerveSubsystem.setGyroYaw(
                       (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
                           .getDegrees()));
     }

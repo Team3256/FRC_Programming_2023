@@ -169,7 +169,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
+    driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyroYaw));
 
     driver
         .leftBumper()
