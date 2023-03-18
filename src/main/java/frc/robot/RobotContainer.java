@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPosition;
+import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.*;
 import frc.robot.auto.AutoConstants;
@@ -27,11 +27,12 @@ import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPosition;
+import frc.robot.elevator.Elevator.ElevatorPreset;
 import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
@@ -191,38 +192,37 @@ public class RobotContainer implements CANTestable, Loggable {
       case HIGH_GRID:
         return new ParallelCommandGroup(
             new ConditionalCommand(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
                 this::isCurrentPieceCone),
             new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
+                new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
                 this::isCurrentPieceCone));
       case MID_GRID:
         return new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
             new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
+                new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
                 this::isCurrentPieceCone));
       case LOW_GRID:
         return new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
-            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
+            new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
+            new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW));
       default:
         return new InstantCommand();
     }
   }
 
   private void configureIntake() {
-    // intakeSubsystem.setDefaultCommand(
-    // new ConditionalCommand(new InstantCommand(intakeSubsystem::keepCone),
-    // new InstantCommand(intakeSubsystem.keepCube, this::isCurrentPieceCone));
+    intakeSubsystem.setDefaultCommand(
+        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
     (operator.rightTrigger())
         .whileTrue(
             new ConditionalCommand(
-                new IntakeCube(intakeSubsystem),
                 new IntakeCone(intakeSubsystem),
+                new IntakeCube(intakeSubsystem),
                 this::isCurrentPieceCone));
   }
 
@@ -243,8 +243,8 @@ public class RobotContainer implements CANTestable, Loggable {
           .toggleOnTrue(
               new ParallelCommandGroup(
                   // TODO need 5.5 deg for cone, lower (4.5?) for cube
-                  new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION),
-                  new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
+                  new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.DOUBLE_SUBSTATION),
+                  new SetArmAngle(armSubsystem, ArmPreset.DOUBLE_SUBSTATION),
                   new ConditionalCommand(
                       new IntakeCone(intakeSubsystem, ledStrip),
                       new IntakeCube(intakeSubsystem, ledStrip),
@@ -272,8 +272,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void configureLEDStrip() {
     ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
-    // ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new
-    // AquaPattern())));
+
     operator
         .rightBumper()
         .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()))
