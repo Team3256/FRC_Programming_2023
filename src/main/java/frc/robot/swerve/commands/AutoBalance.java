@@ -17,28 +17,30 @@ import frc.robot.swerve.SwerveDrive;
 
 public class AutoBalance extends CommandBase {
   private final SwerveDrive swerveDrive;
-  private Timer timer;
+  private Timer balancedTimer;
 
   public AutoBalance(SwerveDrive swerveDrive) {
     this.swerveDrive = swerveDrive;
-    this.timer = new Timer();
+    this.balancedTimer = new Timer();
 
     addRequirements(swerveDrive);
   }
 
   @Override
   public void initialize() {
-    timer.start();
+    balancedTimer.start();
   }
 
   @Override
   public void execute() {
     if (swerveDrive.isTiltedForward()) {
-      timer.reset();
+      balancedTimer.reset();
       swerveDrive.drive(new Translation2d(-kXAutoBalanceVelocityMeters, 0), 0, true, true);
-    } else {
-      timer.reset();
+    } else if (swerveDrive.isTiltedBackward()){
+      balancedTimer.reset();
       swerveDrive.drive(new Translation2d(kXAutoBalanceVelocityMeters, 0), 0, true, true);
+    } else {
+      swerveDrive.drive(new Translation2d(0,0),0,true,true);
     }
   }
 
@@ -49,6 +51,6 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return swerveDrive.isNotTilted() && timer.get() >= 2;
+    return swerveDrive.isNotTilted() && balancedTimer.get() >= 2;
   }
 }
