@@ -40,7 +40,7 @@ import frc.robot.logging.Loggable;
 import frc.robot.swerve.helpers.Conversions;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
-  public enum ArmPosition {
+  public enum ArmPreset {
     DEFAULT(ArmConstants.kDefaultArmAngle),
     ANY_PIECE_LOW(ArmConstants.kAnyPieceLowRotation),
     CUBE_MID(ArmConstants.kCubeMidRotation),
@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
     public Rotation2d rotation;
 
-    private ArmPosition(Rotation2d rotation) {
+    private ArmPreset(Rotation2d rotation) {
       this.rotation = rotation;
     }
   }
