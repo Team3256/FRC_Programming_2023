@@ -58,6 +58,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   private final SwerveIO swerveIO;
 
   public SwerveDrive(SwerveIO swerveIO) {
+    this.swerveIO = swerveIO;
     gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
     zeroGyro();
@@ -86,7 +87,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
      */
     Timer.delay(1.0);
     resetModulesToAbsolute();
-    this.swerveIO = swerveIO;
   }
 
   public void resetModulesToAbsolute() {

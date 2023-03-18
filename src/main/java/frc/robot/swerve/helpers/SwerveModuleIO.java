@@ -9,7 +9,7 @@ package frc.robot.swerve.helpers;
 
 import static frc.robot.swerve.SwerveConstants.*;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -26,7 +26,7 @@ public class SwerveModuleIO implements SwerveIO {
 
   private final SwerveModule[] swerveModules;
 
-  private final PigeonIMU gyro;
+  public Pigeon2 gyro;
 
   private double[] ypr = new double[3];
 
@@ -35,7 +35,7 @@ public class SwerveModuleIO implements SwerveIO {
     frontRightModule = new SwerveModule(1, FrontRight.constants);
     backLeftModule = new SwerveModule(2, BackLeft.constants);
     backRightModule = new SwerveModule(3, BackRight.constants);
-    gyro = new PigeonIMU(kPigeonID);
+    gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
     swerveModules =
         new SwerveModule[] {frontLeftModule, frontRightModule, backLeftModule, backRightModule};
@@ -58,7 +58,7 @@ public class SwerveModuleIO implements SwerveIO {
 
   @Override
   public void zeroGyro() {
-    gyro.setYaw(-90);
+    gyro.setYaw(0);
   }
 
   @Override

@@ -76,7 +76,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
     if (kSwerveEnabled) {
       // @suppress-warnings
-      switch (Constants.currentMode) {
+      switch (kCurrentMode) {
         case REAL:
           swerveSubsystem = new SwerveDrive(new SwerveModuleIO());
           break;
