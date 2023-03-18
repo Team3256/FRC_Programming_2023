@@ -5,8 +5,10 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.limeLight;
+package frc.robot.limelight;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -25,7 +27,7 @@ public class Limelight {
   static boolean profileJSON = false;
 
   static final String sanitizeName(String name) {
-    if (name == "" || name == null) {
+    if (name.equals("") || name == null) {
       return "limelight";
     }
     return name;
@@ -232,6 +234,31 @@ public class Limelight {
   }
 
   /** Parses Limelight's JSON results dump into a LimelightResults Object */
+  public static LimelightResults getLatestResults(String limelightName) {
+
+    long start = System.nanoTime();
+    LimelightResults results = new LimelightResults();
+    if (mapper == null) {
+      mapper =
+          new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    try {
+      results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
+    } catch (JsonProcessingException e) {
+      System.err.println("lljson error: " + e.getMessage());
+    }
+
+    long end = System.nanoTime();
+    double millis = (end - start) * .000001;
+    results.targetingResults.latency_jsonParse = millis;
+    if (profileJSON) {
+      System.out.printf("lljson: %.2f\r\n", millis);
+    }
+
+    return results;
+  }
+
   public static boolean hasValidTargets(String limelightName) {
     return getLimelightNTTableEntry(limelightName, "tv").getDouble(0) == 1;
   }

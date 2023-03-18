@@ -146,11 +146,10 @@ public class RobotContainer {
     ledStrip = new LED(0, new int[] {100});
     // ledStrip.setDefaultCommand(new LEDSetAllSectionsPattern(ledStrip, new LockSwerveLEDBlink()));
 
-    // driver.a().onTrue(new LEDToggleGamePieceDisplay(ledStrip));
+    // driver.a().onTrue(new LEDSetAllSectionsPattern(ledStrip, new LimitedSwerveLEDBlink()));
     // driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new ColorChaseBluePattern()));
-
-    driver.a().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoScoreConeBlink()));
-    driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoScoreCubeBlink()));
+    // driver.a().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoScoreConeBlink()));
+    // driver.b().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoScoreCubeBlink()));
     driver.x().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoIntakeDoubleConeBlink()));
     driver.y().onTrue(new LEDSetAllSectionsPattern(ledStrip, new AutoIntakeDoubleCubeBlink()));
   }
