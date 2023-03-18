@@ -43,7 +43,6 @@ public class AutoScore extends CommandBase {
   }
 
   private SwerveDrive swerveSubsystem;
-  private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledSubsystem;
@@ -60,7 +59,6 @@ public class AutoScore extends CommandBase {
       BooleanSupplier isCurrentPieceCone) {
 
     this.swerveSubsystem = swerveDrive;
-    this.intakeSubsystem = intakeSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.armSubsystem = armSubsystem;
     this.ledSubsystem = ledSubsystem;
@@ -71,11 +69,14 @@ public class AutoScore extends CommandBase {
   @Override
   public void initialize() {
     Pose2d start = swerveSubsystem.getPose();
+
+    // Uncomment if testing random start pose:
     // Pose2d start = new Pose2d(
     // Math.random() * 0.5 + 1.9,
     // Math.random() * 4.4 + 0.54,
     // Rotation2d.fromDegrees(Math.random() * 180));
 
+    // Get scoring location id from SD
     int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
     if (0 > locationId || locationId > 8) {
       System.out.println("locationId was invalid (" + locationId + ")");
@@ -85,13 +86,22 @@ public class AutoScore extends CommandBase {
       return;
     }
 
+    // Move to scoring waypoint
+    Pose2d scoringWaypoint = kBlueScoreWaypointPoses[locationId];
+    System.out.println("Running: Go to grid (id: " + locationId + ") from " + start);
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      scoringWaypoint = PathUtil.flip(scoringWaypoint);
+    }
+    Command moveToScoringWaypoint =
+        PathGeneration.createDynamicAbsolutePath(start, scoringWaypoint, swerveSubsystem);
+
+    // Set arm and elevator command and end pose based on node type and height
+    Pose2d scoringLocation;
     Command moveArmElevatorToPreset;
-    Pose2d end;
-    Pose2d scoringWaypoint;
 
     switch (gridScoreHeight) {
       case HIGH:
-        end = kHighBlueScoringPoses[locationId];
+        scoringLocation = kHighBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
                 new ConditionalCommand(
@@ -103,7 +113,7 @@ public class AutoScore extends CommandBase {
                     new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
                     isCurrentPieceCone));
       case MID:
-        end = kMidBlueScoringPoses[locationId];
+        scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
                 new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
@@ -113,26 +123,21 @@ public class AutoScore extends CommandBase {
                     isCurrentPieceCone));
       case LOW:
       default:
-        end = kBottomBlueScoringPoses[locationId];
+        scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
                 new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
                 new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
     }
-
-    scoringWaypoint = kBlueScoreWaypointPoses[locationId];
-    System.out.println("Running: Go to grid (id: " + locationId + ") from " + start);
-
     if (DriverStation.getAlliance() == Alliance.Red) {
-      end = PathUtil.flip(end);
-      scoringWaypoint = PathUtil.flip(scoringWaypoint);
+      scoringLocation = PathUtil.flip(scoringLocation);
     }
 
-    Command moveToScoringWaypoint =
-        PathGeneration.createDynamicAbsolutePath(start, scoringWaypoint, swerveSubsystem);
+    // Move to scoring location
     Command moveToScoringLocation =
-        PathGeneration.createDynamicAbsolutePath(scoringWaypoint, end, swerveSubsystem);
+        PathGeneration.createDynamicAbsolutePath(scoringWaypoint, scoringLocation, swerveSubsystem);
 
+    // LED verbose
     Command successLEDs =
         new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
     Command errorLEDs =
@@ -140,6 +145,7 @@ public class AutoScore extends CommandBase {
     Command runningLEDs =
         new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern()).withTimeout(5);
 
+    // schedule final composed command
     Command autoScore =
         Commands.sequence(
                 moveToScoringWaypoint,
