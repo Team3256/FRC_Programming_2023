@@ -36,11 +36,11 @@ public class AutoBalance extends CommandBase {
     if (swerveDrive.isTiltedForward()) {
       balancedTimer.reset();
       swerveDrive.drive(new Translation2d(-kXAutoBalanceVelocityMeters, 0), 0, true, true);
-    } else if (swerveDrive.isTiltedBackward()){
+    } else if (swerveDrive.isTiltedBackward()) {
       balancedTimer.reset();
       swerveDrive.drive(new Translation2d(kXAutoBalanceVelocityMeters, 0), 0, true, true);
     } else {
-      swerveDrive.drive(new Translation2d(0,0),0,true,true);
+      swerveDrive.drive(new Translation2d(0, 0), 0, true, true);
     }
   }
 
