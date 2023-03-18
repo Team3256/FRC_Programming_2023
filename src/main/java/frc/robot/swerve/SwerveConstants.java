@@ -181,4 +181,7 @@ public final class SwerveConstants {
   }
 
   public static final double kSensitivityScale = 0.3;
+
+  /* Localization Constants */
+  public static final boolean kLocalizationEnabled = false;
 }

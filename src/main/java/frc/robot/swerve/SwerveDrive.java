@@ -252,7 +252,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
       }
     }
-    boolean kLocalizationEnabled = false;
+    
     if (kLocalizationEnabled){
     this.localize(
         FrontConstants.kLimelightNetworkTablesName,
