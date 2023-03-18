@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
+  /* Subsystems/debugging/competition mode enabled flags */
   public static final boolean kDebugEnabled = true;
 
   public static final boolean kSwerveEnabled = true;
@@ -35,6 +36,7 @@ public final class Constants {
   public static final double kStickRotationThreshold = 0.3;
   public static final double kAzimuthStickDeadband = 0.3;
 
+  /* Swerve Logging */
   public static final Field2d trajectoryViewer = new Field2d();
   public static final Field2d waypointViewer = new Field2d();
   public static final Field2d swerveViewer = new Field2d();

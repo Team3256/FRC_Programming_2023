@@ -35,6 +35,8 @@ import frc.robot.led.patterns.SuccessBlinkingPattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 
+import static frc.robot.Constants.kDebugEnabled;
+
 public class AutoScore extends CommandBase {
   public enum GridScoreHeight {
     HIGH,
@@ -112,6 +114,7 @@ public class AutoScore extends CommandBase {
                     new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
                     new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
                     isCurrentPieceCone));
+          break;
       case MID:
         scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
@@ -121,6 +124,7 @@ public class AutoScore extends CommandBase {
                     new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
                     new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
                     isCurrentPieceCone));
+          break;
       case LOW:
       default:
         scoringLocation = kBottomBlueScoringPoses[locationId];

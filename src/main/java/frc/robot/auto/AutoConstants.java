@@ -51,7 +51,7 @@ public final class AutoConstants {
   public static final double kAutoMarkerTimeThreshold = 0.1; // seconds
   public static final double kAutoMarkerTimeout = 0.5; // seconds
   public static final double kRotationTolerance = Units.degreesToRadians(5);
-  public static final double kAutoTrajectoryTimeoutSeconds = 1;
+  public static final double kAutoTrajectoryTimeoutSeconds = 0.1;
 
   public static final PathConstraints kFastPathConstraints =
       new PathConstraints(7, kMaxAccelerationMetersPerSecondSquared);

@@ -62,8 +62,8 @@ public final class DynamicPathConstants {
 
   // Trajectory constraints
   // TODO Make faster
-  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(1, 1);
-  public static final PathConstraints kPathToScoreConstraints = new PathConstraints(1, 1);
+  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(3, 3);
+  public static final PathConstraints kPathToScoreConstraints = new PathConstraints(2, 2);
 
   public static final double kGridBuffer = Units.inchesToMeters(4);
   public static final double kBlueGridTapeX = 1.38 + kGridBuffer;
