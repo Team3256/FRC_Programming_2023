@@ -57,8 +57,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       new AdaptiveSlewRateLimiter(kXAccelRateLimit, kXDecelRateLimit);
   private final AdaptiveSlewRateLimiter adaptiveYRateLimiter =
       new AdaptiveSlewRateLimiter(kYAccelRateLimit, kYDecelRateLimit);
-  private final AdaptiveSlewRateLimiter autoSlewRateLimiter =
-      new AdaptiveSlewRateLimiter(kAutoEngageLimitAccel, kAutoEngageLimitVelocity);
 
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule

@@ -33,7 +33,6 @@ public final class SwerveConstants {
   public static int kYAccelRateLimit = 10;
   public static int kYDecelRateLimit = 7;
 
-  public static double kAutoEngageLimitAccel = 5;
   public static double kAutoEngageLimitVelocity = 1;
 
   public static final COTSFalconSwerveConstants kChosenModule =
@@ -185,6 +184,6 @@ public final class SwerveConstants {
   public static final double kSensitivityScale = 0.3;
 
   /* AutoBalance */
-  public static double kXAutoBalanceVelocity = 1;
-  public static final Rotation2d kAutoBalanceMaxError = new Rotation2d(Units.degreesToRadians(2));
+  public static double kXAutoBalanceVelocityMeters = 1;
+  public static final Rotation2d kAutoBalanceMaxError = new Rotation2d(Units.degreesToRadians(5));
 }
