@@ -64,6 +64,8 @@ public final class Constants {
     REPLAY
   }
 
+  public static final RobotMode currentMode = RobotMode.REAL;
+
   public static final double kRobotLength = 0.9271;
   public static final double kRobotWidth = 0.9271;
 

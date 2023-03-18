@@ -38,6 +38,8 @@ import frc.robot.led.patterns.*;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
+import frc.robot.swerve.helpers.SwerveIO;
+import frc.robot.swerve.helpers.SwerveModuleIO;
 import java.util.ArrayList;
 
 /**
@@ -71,7 +73,19 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kArmEnabled) armSubsystem = new Arm();
     if (kIntakeEnabled) intakeSubsystem = new Intake();
     if (kElevatorEnabled) elevatorSubsystem = new Elevator();
-    if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
+
+    if (kSwerveEnabled) {
+      // @suppress-warnings
+      switch (Constants.currentMode) {
+        case REAL:
+          swerveSubsystem = new SwerveDrive(new SwerveModuleIO());
+          break;
+
+        default: // Replay robot - disable IO impl.
+          swerveSubsystem = new SwerveDrive(new SwerveIO() {});
+      }
+    }
+
     if (kLedStripEnabled) ledStrip = new LED(0, new int[] {100});
 
     if (kIntakeEnabled) {
