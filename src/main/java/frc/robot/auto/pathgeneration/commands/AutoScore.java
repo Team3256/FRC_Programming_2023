@@ -149,7 +149,7 @@ public class AutoScore extends CommandBase {
     Command autoScore =
         Commands.sequence(
                 moveToScoringWaypoint,
-                Commands.deadline(moveToScoringLocation, moveArmElevatorToPreset),
+                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset),
                 successLEDs.asProxy())
             .deadlineWith(runningLEDs)
             .handleInterrupt(() -> errorLEDs.schedule());
