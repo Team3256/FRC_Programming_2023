@@ -44,6 +44,7 @@ public final class Constants {
   public static final class FeatureFlags {
     public static final boolean kOperatorManualArmControlEnabled = true;
 
+    public static final boolean kLocalizationEnabled = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = false;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;

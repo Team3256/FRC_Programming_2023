@@ -238,7 +238,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   @Override
   public void periodic() {
-
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     if (Constants.kDebugEnabled) {
@@ -253,7 +252,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       }
     }
 
-    if (kLocalizationEnabled) {
+    if (FeatureFlags.kLocalizationEnabled) {
       this.localize(
           FrontConstants.kLimelightNetworkTablesName,
           FrontConstants.kFieldTranslationOffsetX,

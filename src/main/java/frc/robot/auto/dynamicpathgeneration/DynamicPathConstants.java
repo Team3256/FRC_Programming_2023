@@ -63,7 +63,7 @@ public final class DynamicPathConstants {
 
   // Trajectory constraints
   // TODO Make faster
-  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(3, 3);
+  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(4, 3);
   public static final PathConstraints kPathToScoreConstraints = new PathConstraints(2, 2);
 
   // x value for the blue tape in front of the blue scoring grid
