@@ -15,7 +15,6 @@ import frc.robot.elevator.commands.ZeroElevator;
 public class StowArmElevator extends ParallelCommandGroup {
   public StowArmElevator(Elevator elevatorSubsystem, Arm armSubsystem) {
     addCommands(
-        new ZeroElevator(elevatorSubsystem),
-        new SetArmAngle(armSubsystem, Arm.ArmPosition.DEFAULT));
+        new ZeroElevator(elevatorSubsystem), new SetArmAngle(armSubsystem, Arm.ArmPreset.DEFAULT));
   }
 }
