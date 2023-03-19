@@ -7,9 +7,6 @@
 
 package frc.robot.arm;
 
-import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.arm.ArmConstants.*;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
@@ -39,6 +36,9 @@ import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.helpers.Conversions;
 
+import static frc.robot.Constants.ShuffleboardConstants.*;
+import static frc.robot.arm.ArmConstants.*;
+
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public enum ArmPreset {
     DEFAULT(ArmConstants.kDefaultArmAngle),
@@ -61,27 +61,27 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
   private static final SingleJointedArmSim armSim =
-      new SingleJointedArmSim(
-          DCMotor.getFalcon500(kNumArmMotors),
-          kArmGearing,
-          kArmInertia,
-          kArmLengthMeters,
-          kArmAngleMinConstraint.getRadians(),
-          kArmAngleMaxConstraint.getRadians(),
-          true);
+          new SingleJointedArmSim(
+                  DCMotor.getFalcon500(kNumArmMotors),
+                  kArmGearing,
+                  kArmInertia,
+                  kArmLengthMeters,
+                  kArmAngleMinConstraint.getRadians(),
+                  kArmAngleMaxConstraint.getRadians(),
+                  true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
   private final MechanismRoot2d armPivot = mechanism2d.getRoot("ArmPivot", 30, 30);
   private final MechanismLigament2d armTower =
-      armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+          armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
   private final MechanismLigament2d arm =
-      armPivot.append(
-          new MechanismLigament2d(
-              "Arm",
-              30,
-              Units.radiansToDegrees(armSim.getAngleRads()),
-              6,
-              new Color8Bit(Color.kYellow)));
+          armPivot.append(
+                  new MechanismLigament2d(
+                          "Arm",
+                          30,
+                          Units.radiansToDegrees(armSim.getAngleRads()),
+                          6,
+                          new Color8Bit(Color.kYellow)));
 
   public Arm() {
     if (RobotBase.isReal()) {
@@ -136,8 +136,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
    */
   public void resetOffset(Rotation2d currentAbsolutePosition) {
     ArmConstants.kEncoderOffsetRadians =
-        ArmConstants.kEncoderOffsetRadians
-            + (currentAbsolutePosition.getRadians() - this.getArmPositionRads());
+            ArmConstants.kEncoderOffsetRadians
+                    + (currentAbsolutePosition.getRadians() - this.getArmPositionRads());
 
     System.out.println("New arm offset" + ArmConstants.kEncoderOffsetRadians);
   }
@@ -145,7 +145,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public double getArmPositionRads() {
     if (RobotBase.isReal())
       return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
-          + kEncoderOffsetRadians;
+              + kEncoderOffsetRadians;
     else return armSim.getAngleRads();
   }
 
@@ -170,7 +170,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armSim.update(0.020);
 
     RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+            BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
     arm.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
 
     simulationOutputToDashboard();
@@ -195,7 +195,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName)
-        .add("Angle", new DoubleSendable(() -> Math.toDegrees(getArmPositionRads()), "Gyro"));
+            .add("Angle", new DoubleSendable(() -> Math.toDegrees(getArmPositionRads()), "Gyro"));
     getLayout(kDriverTabName).add(armMotor);
   }
 
