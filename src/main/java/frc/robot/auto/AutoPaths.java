@@ -9,12 +9,15 @@ package frc.robot.auto;
 
 import static frc.robot.auto.AutoConstants.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPosition;
+import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.helpers.AutoBuilder;
@@ -27,7 +30,7 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.LockSwerve;
+import frc.robot.swerve.commands.LockSwerveX;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -77,8 +80,8 @@ public class AutoPaths {
             runParallelWithPath(
                 new ParallelCommandGroup(
                         new SetElevatorHeight(
-                            elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
-                        new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE),
+                            elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
+                        new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE),
                         new IntakeCone(intakeSubsystem))
                     .withTimeout(1.75)
                     .asProxy()
@@ -89,8 +92,8 @@ public class AutoPaths {
             runParallelWithPath(
                     new ParallelCommandGroup(
                         new SetElevatorHeight(
-                            elevatorSubsystem, Elevator.ElevatorPosition.GROUND_INTAKE),
-                        new SetArmAngle(armSubsystem, ArmPosition.GROUND_INTAKE),
+                            elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
+                        new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE),
                         new IntakeCube(intakeSubsystem)))
                 .withTimeout(1.75)
                 .asProxy()
@@ -99,8 +102,8 @@ public class AutoPaths {
         "cubeHigh",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CUBE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
                     new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
                 .withTimeout(1.5)
                 .asProxy()
@@ -109,8 +112,8 @@ public class AutoPaths {
         "coneHigh",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CONE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
                     new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
                 .withTimeout(1.5)
                 .asProxy()
@@ -119,9 +122,8 @@ public class AutoPaths {
         "cubeMid",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
                     new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
                 .withTimeout(1.5)
                 .asProxy()
@@ -130,9 +132,8 @@ public class AutoPaths {
         "coneMid",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID),
-                    new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
                     new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
                 .withTimeout(1.5)
                 .asProxy()
@@ -141,9 +142,8 @@ public class AutoPaths {
         "cubeLow",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
-                    new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
+                    new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW),
                     new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
                 .withTimeout(1.5)
                 .asProxy()
@@ -152,9 +152,8 @@ public class AutoPaths {
         "coneLow",
         () ->
             new ParallelCommandGroup(
-                    new SetElevatorHeight(
-                        elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW),
-                    new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW),
+                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
+                    new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW),
                     new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
                 .withTimeout(1.5)
                 .asProxy()
@@ -165,7 +164,7 @@ public class AutoPaths {
         () ->
             new ParallelCommandGroup(
                     new ZeroElevator(elevatorSubsystem),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
                     new WaitCommand(1.35).andThen(new IntakeCone(intakeSubsystem)))
                 .withTimeout(1.5)
                 .asProxy()
@@ -187,7 +186,7 @@ public class AutoPaths {
     ArrayList<Command> node5Engage =
         autoBuilder.createPaths("Node5-Engage", kEngagePathConstraints);
     AutoChooser.addPathGroup(
-        scorePreload.get(), "Node5-Engage", node5Engage, new LockSwerve(swerveSubsystem));
+        scorePreload.get(), "Node5-Engage", node5Engage, new LockSwerveX(swerveSubsystem));
 
     // Node8-Preload-Ready
     Command node8PreloadReady =
@@ -214,7 +213,7 @@ public class AutoPaths {
     ArrayList<Command> node2x2Engage =
         autoBuilder.createPaths("Node2x2-Engage", kSafePathConstraints, kEngagePathConstraints);
     AutoChooser.addPathGroup(
-        scorePreload.get(), "Node2x2-Engage", node2x2Engage, new LockSwerve(swerveSubsystem));
+        scorePreload.get(), "Node2x2-Engage", node2x2Engage, new LockSwerveX(swerveSubsystem));
 
     // Node2-Preload-Ready
     Command node2PreloadReady =
@@ -276,6 +275,16 @@ public class AutoPaths {
   }
 
   public Command getSelectedPath() {
-    return AutoChooser.getCommand();
+    Command zeroGyroTeleop = new InstantCommand();
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      zeroGyroTeleop =
+          new InstantCommand(
+              () ->
+                  swerveSubsystem.setGyroYaw(
+                      (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
+                          .getDegrees()));
+    }
+
+    return AutoChooser.getCommand().andThen(zeroGyroTeleop);
   }
 }

@@ -37,7 +37,7 @@ import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
-  public enum ElevatorPosition {
+  public enum ElevatorPreset {
     CUBE_HIGH(ElevatorConstants.kCubeHighPositionMeters),
     CONE_HIGH(ElevatorConstants.kConeHighPositionMeters),
     ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
@@ -47,7 +47,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
     public double position;
 
-    private ElevatorPosition(double position) {
+    private ElevatorPreset(double position) {
       this.position = position;
     }
   }

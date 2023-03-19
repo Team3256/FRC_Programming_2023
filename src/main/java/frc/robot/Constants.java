@@ -22,11 +22,12 @@ public final class Constants {
   public static final boolean kDebugEnabled = false;
 
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kIntakeEnabled = true;
-  public static final boolean kElevatorEnabled = true;
-  public static final boolean kArmEnabled = true;
+  public static final boolean kIntakeEnabled = false;
+  public static final boolean kElevatorEnabled = false;
+  public static final boolean kArmEnabled = false;
   public static final boolean kLedStripEnabled = true;
 
+  public static final boolean kCompetitionModeEnabled = false;
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.REAL;
   public static final double kStickDeadband = 0.05;
@@ -40,7 +41,7 @@ public final class Constants {
   public static final class FeatureFlags {
     public static final boolean kOperatorManualArmControlEnabled = true;
 
-    public static final boolean kSwerveAccelerationLimitingEnabled = false;
+    public static final boolean kSwerveAccelerationLimitingEnabled = true;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;
@@ -55,8 +56,6 @@ public final class Constants {
     public static final String kArmLayoutName = "Arm";
     public static final String kElevatorLayoutName = "Elevator";
     public static final String kLEDLayoutName = "LED";
-
-    public static final String kMoleLayoutName = "Ground Intake";
   }
 
   public enum RobotMode {

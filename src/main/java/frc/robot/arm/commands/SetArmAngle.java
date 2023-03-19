@@ -15,13 +15,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPosition;
-import java.util.function.DoubleSupplier;
+import frc.robot.arm.Arm.ArmPreset;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
   private Rotation2d angleRotation2d;
-  private ArmPosition armPosition;
+
+  private ArmPreset armPreset;
 
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
@@ -44,12 +44,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
     addRequirements(armSubsystem);
   }
 
-  public SetArmAngle(Arm armSubsystem, DoubleSupplier rotationRads) {
-    this(armSubsystem, new Rotation2d(rotationRads.getAsDouble()));
-  }
-
-  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
-    this(armSubsystem, armPosition.rotation);
+  public SetArmAngle(Arm armSubsystem, ArmPreset armPreset) {
+    this(armSubsystem, armPreset.rotation);
+    this.armPreset = armPreset;
   }
 
   @Override
@@ -58,8 +55,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " started (position: "
-              + this.armPosition
+              + " started (preset: "
+              + armPreset
               + ", rotation: "
               + angleRotation2d.getDegrees()
               + " deg)");
@@ -73,8 +70,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " finished (position: "
-              + this.armPosition
+              + " ended (preset: "
+              + armPreset
               + ", rotation: "
               + angleRotation2d.getDegrees()
               + " deg)");

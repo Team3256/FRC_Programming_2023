@@ -62,12 +62,12 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
-  public Pigeon2 gyro;
+  private final Pigeon2 gyro;
 
   public SwerveDrive() {
     gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
-    zeroGyro();
+    zeroGyroYaw();
 
     // TODO MAKE POSITION 0,0
     poseEstimator =
@@ -174,18 +174,30 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     return states;
   }
 
-  public void zeroGyro() {
+  public void zeroGyroYaw() {
     gyro.setYaw(0);
   }
 
-  public void setGyro(double yawDegrees) {
+  public void setGyroYaw(double yawDegrees) {
     gyro.setYaw(yawDegrees);
   }
 
   public Rotation2d getYaw() {
     double[] ypr = new double[3];
     gyro.getYawPitchRoll(ypr);
-    return (kInvertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+    return (kInvertGyroYaw) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+  }
+
+  public Rotation2d getPitch() {
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return Rotation2d.fromDegrees(ypr[1]);
+  }
+
+  public Rotation2d getRoll() {
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return Rotation2d.fromDegrees(ypr[2]);
   }
 
   public boolean shouldAddVisionMeasurement(
@@ -241,6 +253,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
+    SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
     if (Constants.kDebugEnabled) {
       field.setRobotPose(poseEstimator.getEstimatedPosition());
       Logger.getInstance().recordOutput("Odometry", getPose());
@@ -317,5 +330,17 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     for (SwerveModule swerveModule : swerveModules) {
       swerveModule.setAngleMotorNeutralMode(neutralMode);
     }
+  }
+
+  public boolean isTiltedForward() {
+    return getPitch().getDegrees() > kAutoBalanceMaxError.getDegrees();
+  }
+
+  public boolean isTiltedBackward() {
+    return getPitch().getDegrees() < -kAutoBalanceMaxError.getDegrees();
+  }
+
+  public boolean isNotTilted() {
+    return Math.abs(getPitch().getDegrees()) < kAutoBalanceMaxError.getDegrees();
   }
 }
