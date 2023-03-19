@@ -150,6 +150,7 @@ public final class Constants {
       public static final double kNodeFirstY = Units.inchesToMeters(20.19);
       public static final double kNodeSeparationY = Units.inchesToMeters(22.0);
       public static final double[] kBlueNodeY = new double[9];
+
       static {
         for (int i = 0; i < kNodeRowCount; i++) {
           kBlueNodeY[i] = (kNodeFirstY + kNodeSeparationY * i);

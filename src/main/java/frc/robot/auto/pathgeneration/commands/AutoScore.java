@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
@@ -147,16 +148,16 @@ public class AutoScore extends CommandBase {
         new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern()).withTimeout(5);
 
     // schedule final composed command
-    // Command autoScore =
-    //     Commands.sequence(
-    //             moveToScoringWaypoint,
-    //             Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset),
-    //             successLEDs.asProxy())
-    //         .deadlineWith(runningLEDs)
-    //         .handleInterrupt(() -> errorLEDs.schedule());
+    Command autoScore =
+        Commands.sequence(
+                moveToScoringWaypoint,
+                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset),
+                successLEDs.asProxy())
+            .deadlineWith(runningLEDs)
+            .handleInterrupt(() -> errorLEDs.schedule());
 
-    // autoScore.schedule();
-    moveArmElevatorToPreset.schedule();
+    autoScore.schedule();
+    // moveArmElevatorToPreset.schedule();
   }
 
   @Override
