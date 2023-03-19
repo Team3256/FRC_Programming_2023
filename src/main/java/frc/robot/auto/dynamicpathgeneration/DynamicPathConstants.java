@@ -26,6 +26,7 @@ import java.util.ArrayList;
 public final class DynamicPathConstants {
   // Flags
   public static final boolean kDynamicPathGenerationDebug = true && Constants.kDebugEnabled;
+  public static final boolean kDynamicPathGenerationEnabled = false;
 
   // Bezier
   public static final double kRegularControlPointScalar = 0.5;
@@ -70,7 +71,7 @@ public final class DynamicPathConstants {
   public static final double kBlueGridTapeX = 1.38;
   // x value offsets for the distance between the robots bumper and the blue tape
   // depending on the scoring height
-  public static final double kBlueLowOffset = Units.inchesToMeters(22);
+  public static final double kBlueLowOffset = Units.inchesToMeters(23);
   public static final double kBlueMidOffset = Units.inchesToMeters(12);
   public static final double kBlueHighOffset = Units.inchesToMeters(0);
   // x value offset for distance between the robots bumper and the blue tape
