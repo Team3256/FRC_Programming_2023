@@ -15,7 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPosition;
+import frc.robot.arm.Arm.ArmPreset;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
@@ -23,7 +23,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
   private ArmPosition armPreset;
   private boolean shouldEnd;
 
-  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d, boolean shouldEnd) {
+  private ArmPreset armPreset;
+
+  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
         new ProfiledPIDController(kP, kI, kD, kArmProfileContraints),
         armSubsystem::getArmPositionRads,
@@ -41,17 +43,12 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
     this.angleRotation2d = angleRotation2d;
     this.armSubsystem = armSubsystem;
-    this.shouldEnd = shouldEnd;
     addRequirements(armSubsystem);
   }
 
-  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
-    this(armSubsystem, angleRotation2d, true);
-  }
-
-  public SetArmAngle(Arm armSubsystem, ArmPosition armPosition) {
-    this(armSubsystem, armPosition.rotation);
-    this.armPreset = armPosition;
+  public SetArmAngle(Arm armSubsystem, ArmPreset armPreset) {
+    this(armSubsystem, armPreset.rotation);
+    this.armPreset = armPreset;
   }
 
   @Override
@@ -60,8 +57,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " started (position: "
-              + this.armPreset
+              + " started (preset: "
+              + armPreset
               + ", rotation: "
               + angleRotation2d.getDegrees()
               + " deg)");
@@ -75,8 +72,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " finished (position: "
-              + this.armPreset
+              + " ended (preset: "
+              + armPreset
               + ", rotation: "
               + angleRotation2d.getDegrees()
               + " deg)");
@@ -85,6 +82,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
   @Override
   public boolean isFinished() {
-    return getController().atGoal() && shouldEnd;
+    return getController().atGoal();
   }
 }
