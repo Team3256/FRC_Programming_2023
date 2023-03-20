@@ -31,23 +31,23 @@ public final class ElevatorConstants {
   public static final double kGroundIntakePositionMeters = Units.inchesToMeters(0);
 
   public static class ElevatorPreferencesKeys {
-    public static final Map<Elevator.ElevatorPosition, String> kElevatorPositionKeys =
+    public static final Map<Elevator.ElevatorPreset, String> kElevatorPositionKeys =
         Map.of(
-            Elevator.ElevatorPosition.CUBE_HIGH, "kCubeHighPositionMeters",
-            Elevator.ElevatorPosition.CONE_HIGH, "kConeHighPositionMeters",
-            Elevator.ElevatorPosition.ANY_PIECE_LOW, "kAnyPieceLowPositionMeters",
-            Elevator.ElevatorPosition.ANY_PIECE_MID, "kAnyPieceMidPositionMeters",
-            Elevator.ElevatorPosition.GROUND_INTAKE, "kGroundIntakePositionMeters",
-            Elevator.ElevatorPosition.DOUBLE_SUBSTATION, "kDoubleSubstationPositionMeters");
+            Elevator.ElevatorPreset.CUBE_HIGH, "kCubeHighPositionMeters",
+            Elevator.ElevatorPreset.CONE_HIGH, "kConeHighPositionMeters",
+            Elevator.ElevatorPreset.ANY_PIECE_LOW, "kAnyPieceLowPositionMeters",
+            Elevator.ElevatorPreset.ANY_PIECE_MID, "kAnyPieceMidPositionMeters",
+            Elevator.ElevatorPreset.GROUND_INTAKE, "kGroundIntakePositionMeters",
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION, "kDoubleSubstationPositionMeters");
 
-    public static final Map<Elevator.ElevatorPosition, Double> kElevatorPositionDefaults =
+    public static final Map<Elevator.ElevatorPreset, Double> kElevatorPositionDefaults =
         Map.of(
-            Elevator.ElevatorPosition.CUBE_HIGH, kCubeHighPositionMeters,
-            Elevator.ElevatorPosition.CONE_HIGH, kConeHighPositionMeters,
-            Elevator.ElevatorPosition.ANY_PIECE_LOW, kAnyPieceLowPositionMeters,
-            Elevator.ElevatorPosition.ANY_PIECE_MID, kAnyPieceMidPositionMeters,
-            Elevator.ElevatorPosition.GROUND_INTAKE, kGroundIntakePositionMeters,
-            Elevator.ElevatorPosition.DOUBLE_SUBSTATION, kDoubleSubstationPositionMeters);
+            Elevator.ElevatorPreset.CUBE_HIGH, kCubeHighPositionMeters,
+            Elevator.ElevatorPreset.CONE_HIGH, kConeHighPositionMeters,
+            Elevator.ElevatorPreset.ANY_PIECE_LOW, kAnyPieceLowPositionMeters,
+            Elevator.ElevatorPreset.ANY_PIECE_MID, kAnyPieceMidPositionMeters,
+            Elevator.ElevatorPreset.GROUND_INTAKE, kGroundIntakePositionMeters,
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION, kDoubleSubstationPositionMeters);
 
     public static final String kPKey = "ElevatorkP";
     public static final String kIKey = "ElevatorkI";

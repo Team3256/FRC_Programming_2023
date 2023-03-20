@@ -206,7 +206,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     return Shuffleboard.getTab(tab).getLayout(kArmLayoutName, BuiltInLayouts.kList).withSize(2, 4);
   }
 
-  public Rotation2d getPreferencesSetpoint(Arm.ArmPosition setpoint) {
+  public Rotation2d getPreferencesSetpoint(Arm.ArmPreset setpoint) {
     return new Rotation2d(
         Preferences.getDouble(
             ArmPreferencesKeys.kArmPositionKeys.get(setpoint),
@@ -221,21 +221,21 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kD);
     // Arm Preset Preferences
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPosition.DEFAULT), kDefaultArmAngle.getRadians());
+        kArmPositionKeys.get(Arm.ArmPreset.DEFAULT), kDefaultArmAngle.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPosition.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
+        kArmPositionKeys.get(Arm.ArmPreset.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPosition.CUBE_MID), kCubeMidRotation.getRadians());
+        kArmPositionKeys.get(Arm.ArmPreset.CUBE_MID), kCubeMidRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPosition.CONE_MID), kConeMidRotation.getRadians());
+        kArmPositionKeys.get(Arm.ArmPreset.CONE_MID), kConeMidRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPosition.CUBE_HIGH), kCubeHighRotation.getRadians());
+        kArmPositionKeys.get(Arm.ArmPreset.CUBE_HIGH), kCubeHighRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPosition.CONE_HIGH), kConeHighRotation.getRadians());
+        kArmPositionKeys.get(Arm.ArmPreset.CONE_HIGH), kConeHighRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPosition.GROUND_INTAKE), kGroundIntakeRotation.getRadians());
+        kArmPositionKeys.get(Arm.ArmPreset.GROUND_INTAKE), kGroundIntakeRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPosition.DOUBLE_SUBSTATION),
+        kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION),
         kDoubleSubstationRotation.getRadians());
     // Arm Encoder Offset
     Preferences.initDouble(ArmPreferencesKeys.kEncoderOffsetKey, kEncoderOffsetRadians);

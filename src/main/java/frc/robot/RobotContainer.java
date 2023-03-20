@@ -42,7 +42,7 @@ import frc.robot.led.patterns.BlinkingCubePattern;
 import frc.robot.led.patterns.FIREPattern;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.LockSwerve;
+import frc.robot.swerve.commands.LockSwerveX;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
@@ -191,7 +191,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 kOpenLoop));
 
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
-    driver.x().whileTrue(new AutoBalance(swerveSubsystem));
+    // driver.x().whileTrue(new AutoBalance(swerveSubsystem));
   }
 
   private Command getScoreCommand(GoalType goalType) {

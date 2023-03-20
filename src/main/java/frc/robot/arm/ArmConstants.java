@@ -15,27 +15,27 @@ import java.util.Map;
 
 public final class ArmConstants {
   public static class ArmPreferencesKeys {
-    public static final Map<Arm.ArmPosition, String> kArmPositionKeys =
+    public static final Map<Arm.ArmPreset, String> kArmPositionKeys =
         Map.of(
-            Arm.ArmPosition.DEFAULT, "kDefaultArmAngle",
-            Arm.ArmPosition.ANY_PIECE_LOW, "kAnyPieceLowRotation",
-            Arm.ArmPosition.CUBE_MID, "kCubeMidRotation",
-            Arm.ArmPosition.CONE_MID, "kConeMidRotation",
-            Arm.ArmPosition.CUBE_HIGH, "kCubeHighRotation",
-            Arm.ArmPosition.CONE_HIGH, "kConeHighRotation",
-            Arm.ArmPosition.GROUND_INTAKE, "kGroundIntakeRotation",
-            Arm.ArmPosition.DOUBLE_SUBSTATION, "kDoubleSubstationRotation");
+            Arm.ArmPreset.DEFAULT, "kDefaultArmAngle",
+            Arm.ArmPreset.ANY_PIECE_LOW, "kAnyPieceLowRotation",
+            Arm.ArmPreset.CUBE_MID, "kCubeMidRotation",
+            Arm.ArmPreset.CONE_MID, "kConeMidRotation",
+            Arm.ArmPreset.CUBE_HIGH, "kCubeHighRotation",
+            Arm.ArmPreset.CONE_HIGH, "kConeHighRotation",
+            Arm.ArmPreset.GROUND_INTAKE, "kGroundIntakeRotation",
+            Arm.ArmPreset.DOUBLE_SUBSTATION, "kDoubleSubstationRotation");
 
-    public static final Map<Arm.ArmPosition, Rotation2d> kArmPositionDefaults =
+    public static final Map<Arm.ArmPreset, Rotation2d> kArmPositionDefaults =
         Map.of(
-            Arm.ArmPosition.DEFAULT, kDefaultArmAngle,
-            Arm.ArmPosition.ANY_PIECE_LOW, kAnyPieceLowRotation,
-            Arm.ArmPosition.CUBE_MID, kCubeMidRotation,
-            Arm.ArmPosition.CONE_MID, kConeMidRotation,
-            Arm.ArmPosition.CUBE_HIGH, kCubeHighRotation,
-            Arm.ArmPosition.CONE_HIGH, kConeHighRotation,
-            Arm.ArmPosition.GROUND_INTAKE, kGroundIntakeRotation,
-            Arm.ArmPosition.DOUBLE_SUBSTATION, kDoubleSubstationRotation);
+            Arm.ArmPreset.DEFAULT, kDefaultArmAngle,
+            Arm.ArmPreset.ANY_PIECE_LOW, kAnyPieceLowRotation,
+            Arm.ArmPreset.CUBE_MID, kCubeMidRotation,
+            Arm.ArmPreset.CONE_MID, kConeMidRotation,
+            Arm.ArmPreset.CUBE_HIGH, kCubeHighRotation,
+            Arm.ArmPreset.CONE_HIGH, kConeHighRotation,
+            Arm.ArmPreset.GROUND_INTAKE, kGroundIntakeRotation,
+            Arm.ArmPreset.DOUBLE_SUBSTATION, kDoubleSubstationRotation);
 
     public static final String kPKey = "ArmkP";
     public static final String kIKey = "ArmkI";

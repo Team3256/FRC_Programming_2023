@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
-import frc.robot.arm.ArmConstants;
 import frc.robot.arm.Arm.ArmPreset;
+import frc.robot.arm.ArmConstants;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
   private Rotation2d angleRotation2d;
-  private ArmPosition armPreset;
+  private ArmPreset armPreset;
 
   /**
    * Constructor for setting arm to arbitrary angle in radians
@@ -63,7 +63,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
    * @param armPreset
    * @param shouldEnd
    */
-  public SetArmAngle(Arm armSubsystem, ArmPosition armPreset) {
+  public SetArmAngle(Arm armSubsystem, ArmPreset armPreset) {
     this(armSubsystem, armSubsystem.getPreferencesSetpoint(armPreset));
     this.armPreset = armPreset;
   }

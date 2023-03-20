@@ -183,7 +183,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     return result;
   }
 
-  public double getPreferencesSetpoint(Elevator.ElevatorPosition setpoint) {
+  public double getPreferencesSetpoint(Elevator.ElevatorPreset setpoint) {
     return Preferences.getDouble(
         ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
         ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));
@@ -197,20 +197,20 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kDKey, ElevatorConstants.kD);
     // Elevator Preset Preferences
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.CUBE_HIGH), kCubeHighPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CUBE_HIGH), kCubeHighPositionMeters);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.CONE_HIGH), kConeHighPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CONE_HIGH), kConeHighPositionMeters);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.ANY_PIECE_LOW),
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW),
         kAnyPieceLowPositionMeters);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.ANY_PIECE_MID),
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_MID),
         kAnyPieceMidPositionMeters);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.GROUND_INTAKE),
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.GROUND_INTAKE),
         kGroundIntakePositionMeters);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPosition.DOUBLE_SUBSTATION),
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION),
         kDoubleSubstationPositionMeters);
   }
 }
