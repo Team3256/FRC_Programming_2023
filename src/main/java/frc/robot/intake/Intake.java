@@ -14,7 +14,6 @@ import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -44,9 +43,9 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   private void configureRealHardware() {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
-    intakeMotor.configStatorCurrentLimit(
-        new StatorCurrentLimitConfiguration(
-            true, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
+    // intakeMotor.configStatorCurrentLimit(
+    // new StatorCurrentLimitConfiguration(
+    // true, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
     intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
@@ -62,11 +61,13 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   public void latchCone() {
     if (kDebugEnabled) System.out.println("Latch cone");
     intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
+    // intakeMotor.set(ControlMode.Current, 10);
   }
 
   public void latchCube() {
     if (kDebugEnabled) System.out.println("Latch Cube");
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
+    // intakeMotor.set(ControlMode.Current, -10);
   }
 
   public void intakeCone() {

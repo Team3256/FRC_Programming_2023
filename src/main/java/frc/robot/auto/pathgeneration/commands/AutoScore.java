@@ -15,15 +15,16 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPosition;
+import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPosition;
+import frc.robot.elevator.Elevator.ElevatorPreset;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
@@ -104,22 +105,22 @@ public class AutoScore extends CommandBase {
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
                 new ConditionalCommand(
-                    new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CONE_HIGH),
-                    new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
+                    new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                    new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
                     isCurrentPieceCone),
                 new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
                     isCurrentPieceCone));
         break;
       case MID:
         scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
                 new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
-                    new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
                     isCurrentPieceCone));
         break;
       case LOW:
@@ -127,8 +128,8 @@ public class AutoScore extends CommandBase {
         scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
-                new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
+                new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
+                new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW));
     }
     if (DriverStation.getAlliance() == Alliance.Red) {
       scoringLocation = PathUtil.flip(scoringLocation);
@@ -147,16 +148,16 @@ public class AutoScore extends CommandBase {
         new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern()).withTimeout(5);
 
     // schedule final composed command
-    // Command autoScore =
-    // Commands.sequence(
-    // moveToScoringWaypoint,
-    // Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset),
-    // successLEDs.asProxy())
-    // .deadlineWith(runningLEDs)
-    // .handleInterrupt(() -> errorLEDs.schedule());
+    Command autoScore =
+        Commands.sequence(
+                moveToScoringWaypoint,
+                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset.withTimeout(4)),
+                successLEDs.asProxy())
+            .deadlineWith(runningLEDs)
+            .handleInterrupt(() -> errorLEDs.schedule());
 
-    // autoScore.schedule();
-    moveArmElevatorToPreset.schedule();
+    autoScore.schedule();
+    // moveArmElevatorToPreset.schedule();
   }
 
   @Override

@@ -35,7 +35,7 @@ public final class ArmConstants {
   public static final double kArmG = 0.60843;
   public static final double kArmV = 4.19;
   public static final double kArmA = 0.029772;
-  public static final double kP = 4.4118;
+  public static final double kP = 4.6118;
   public static final double kI = 0;
   public static final double kD = 0.29266;
 
@@ -53,11 +53,11 @@ public final class ArmConstants {
   public static final Rotation2d kDoubleSubstationRotationCube = Rotation2d.fromDegrees(6);
   public static final Rotation2d kDoubleSubstationRotationCone = Rotation2d.fromDegrees(8);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-30.5);
-  public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(12);
-  public static final Rotation2d kConeMidRotation = Rotation2d.fromDegrees(17.5);
-  public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(21);
-  public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(40);
+  public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(25);
+  public static final Rotation2d kConeMidRotation = Rotation2d.fromDegrees(28);
+  public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(43);
+  public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(43);
   public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-10);
 
-  public static final double kManualArmVoltage = 3.5;
+  public static final double kManualArmVoltage = 2;
 }

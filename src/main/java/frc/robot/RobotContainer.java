@@ -32,7 +32,6 @@ import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
-import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
@@ -199,13 +198,13 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    intakeSubsystem.setDefaultCommand(
-        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
+    // intakeSubsystem.setDefaultCommand(
+    // new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
     (operator.rightTrigger())
         .whileTrue(
             new ConditionalCommand(
-                new IntakeCone(intakeSubsystem),
                 new IntakeCube(intakeSubsystem),
+                new IntakeCone(intakeSubsystem),
                 this::isCurrentPieceCone));
   }
 
@@ -234,24 +233,13 @@ public class RobotContainer implements CANTestable, Loggable {
                     ledStrip,
                     AutoScore.GridScoreHeight.MID,
                     this::isCurrentPieceCone));
-        driver
-            .b()
-            .onTrue(
-                new AutoScore(
-                    swerveSubsystem,
-                    intakeSubsystem,
-                    elevatorSubsystem,
-                    armSubsystem,
-                    ledStrip,
-                    AutoScore.GridScoreHeight.LOW,
-                    this::isCurrentPieceCone));
       }
 
       driver
           .leftTrigger()
           .or(operator.leftTrigger())
           .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
-          
+
       operator
           .b()
           .or(driver.y())

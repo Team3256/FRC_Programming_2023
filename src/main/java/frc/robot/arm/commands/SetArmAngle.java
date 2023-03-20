@@ -20,9 +20,6 @@ import frc.robot.arm.Arm.ArmPreset;
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
   private Rotation2d angleRotation2d;
-  private ArmPosition armPreset;
-  private boolean shouldEnd;
-
   private ArmPreset armPreset;
 
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
