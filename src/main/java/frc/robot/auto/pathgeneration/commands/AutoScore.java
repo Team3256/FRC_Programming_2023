@@ -149,13 +149,12 @@ public class AutoScore extends CommandBase {
     // schedule final composed command
     Command autoScore = Commands.sequence(
         moveToScoringWaypoint,
-        Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset.withTimeout(4)),
-        successLEDs.asProxy())
+        Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset))
         .deadlineWith(runningLEDs)
+        .finallyDo((interrupted) -> successLEDs.schedule())
         .handleInterrupt(() -> errorLEDs.schedule());
 
     autoScore.schedule();
-    // moveArmElevatorToPreset.schedule();
   }
 
   @Override

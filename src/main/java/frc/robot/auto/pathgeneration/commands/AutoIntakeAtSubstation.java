@@ -33,6 +33,7 @@ import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.AutoMoveBlinkingPattern;
 import frc.robot.led.patterns.ErrorBlinkingPattern;
+import frc.robot.led.patterns.SuccessBlinkingPattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 
@@ -115,15 +116,16 @@ public class AutoIntakeAtSubstation extends CommandBase {
     Command moveAwayFromSubstation = PathGeneration.createDynamicAbsolutePath(end, substationWaypoint, swerveSubsystem);
 
     Command runningLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern());
+    Command successLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
     Command errorLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
 
-    // return sequential of all above commands
     Command autoIntakeCommand = Commands.sequence(
         moveToWaypoint,
         Commands.deadline(
             runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
         Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
         .deadlineWith(runningLEDs)
+        .finallyDo((interrupted) -> successLEDs.schedule())
         .handleInterrupt(() -> errorLEDs.schedule());
 
     autoIntakeCommand.schedule();
