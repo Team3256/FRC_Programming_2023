@@ -92,7 +92,7 @@ public class DynamicPathFollower {
     }
 
     // get trajectory
-    DynamicPathGenerator generator = new DynamicPathGenerator(src, dynamicPathGenSink);
+    DynamicPathGenerator generator = new DynamicPathGenerator(src, dynamicPathGenSink, swerveDrive);
     PathPlannerTrajectory dynamicPathGenTrajectory = generator.getTrajectory();
 
     // handle invalid trajectory
