@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
@@ -92,8 +93,13 @@ public class AutoScore extends CommandBase {
     if (DriverStation.getAlliance() == Alliance.Red) {
       scoringWaypoint = PathUtil.flip(scoringWaypoint);
     }
-    Command moveToScoringWaypoint =
-        PathGeneration.createDynamicAbsolutePath(start, scoringWaypoint, swerveSubsystem);
+    Command moveToScoringWaypoint;
+    if (kDynamicPathGenerationEnabled) {
+      DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint, swerveSubsystem);
+      moveToScoringWaypoint = gen.getCommand();
+    } else
+      moveToScoringWaypoint =
+          PathGeneration.createDynamicAbsolutePath(start, scoringWaypoint, swerveSubsystem);
 
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
