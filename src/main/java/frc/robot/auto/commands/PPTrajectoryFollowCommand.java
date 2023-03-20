@@ -58,8 +58,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller =
-        new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
+    this.controller = new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
 
     this.swerveSubsystem = swerveSubsystem;
 
@@ -122,9 +121,8 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       // No mirroring on blue alliance
     }
 
-    PathPlannerTrajectory.PathPlannerState start =
-        TrajectoryMirrorer.mirrorState(
-            (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0), alliance);
+    PathPlannerTrajectory.PathPlannerState start = TrajectoryMirrorer.mirrorState(
+        (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0), alliance);
     Rotation2d rotation = start.holonomicRotation;
     Translation2d translation = start.poseMeters.getTranslation();
     this.startPose = new Pose2d(translation, rotation);
@@ -147,11 +145,10 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   public void execute() {
     double now = timer.get();
 
-    PathPlannerTrajectory.PathPlannerState nonMirroredDesired =
-        (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
+    PathPlannerTrajectory.PathPlannerState nonMirroredDesired = (PathPlannerTrajectory.PathPlannerState) trajectory
+        .sample(now);
 
-    PathPlannerTrajectory.PathPlannerState desired =
-        TrajectoryMirrorer.mirrorState(nonMirroredDesired, alliance);
+    PathPlannerTrajectory.PathPlannerState desired = TrajectoryMirrorer.mirrorState(nonMirroredDesired, alliance);
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d desiredPose = desired.poseMeters;
     double desiredLinearVelocity = desired.velocityMetersPerSecond;
@@ -217,10 +214,8 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
 
-    boolean reachedEndTolerance =
-        relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
-            && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
-            && now >= trajectoryDuration;
+    boolean reachedEndTolerance = relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
+        && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance;
 
     return reachedEndTolerance && now >= trajectoryDuration;
   }
