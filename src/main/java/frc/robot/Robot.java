@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.kDebugEnabled;
+import static frc.robot.arm.Arm.loadArmPreferences;
+import static frc.robot.elevator.Elevator.loadElevatorPreferences;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -72,7 +76,12 @@ public class Robot extends LoggedRobot {
         break;
     }
 
-    // logger.start(); // Start advkit logger
+    logger.start(); // Start advkit logger
+
+    if (kDebugEnabled) {
+      loadArmPreferences();
+      loadElevatorPreferences();
+    }
     robotContainer = new RobotContainer();
     // robotContainer.logInit();
   }
