@@ -22,9 +22,9 @@ public final class Constants {
   public static final boolean kDebugEnabled = true;
 
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kIntakeEnabled = true;
-  public static final boolean kElevatorEnabled = true;
-  public static final boolean kArmEnabled = true;
+  public static final boolean kIntakeEnabled = false;
+  public static final boolean kElevatorEnabled = false;
+  public static final boolean kArmEnabled = false;
   public static final boolean kLedStripEnabled = true;
 
   public static final boolean kAdvantageKitReplayEnabled = false;
@@ -43,7 +43,7 @@ public final class Constants {
   public static final class FeatureFlags {
     public static final boolean kOperatorManualArmControlEnabled = true;
 
-    public static final boolean kSwerveAccelerationLimitingEnabled = false;
+    public static final boolean kSwerveAccelerationLimitingEnabled = true;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;

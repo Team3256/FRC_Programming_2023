@@ -16,12 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPosition;
+import frc.robot.elevator.Elevator.ElevatorPreset;
 
 public class SetElevatorHeight extends ProfiledPIDCommand {
   private double setpointPositionMeters;
-  private ElevatorPosition elevatorPreset;
   private Elevator elevatorSubsystem;
+  private ElevatorPreset elevatorPreset;
 
   /**
    * Constructor for setting the elevator to a setpoint in the parameters
@@ -57,7 +57,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
    * @param elevatorSubsystem
    * @param elevatorPreset
    */
-  public SetElevatorHeight(Elevator elevatorSubsystem, Elevator.ElevatorPosition elevatorPreset) {
+  public SetElevatorHeight(Elevator elevatorSubsystem, ElevatorPreset elevatorPreset) {
     this(elevatorSubsystem, elevatorSubsystem.getPreferencesSetpoint(elevatorPreset));
     this.elevatorPreset = elevatorPreset;
   }

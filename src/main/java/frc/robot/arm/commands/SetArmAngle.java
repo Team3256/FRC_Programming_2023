@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPosition;
 import frc.robot.arm.ArmConstants;
+import frc.robot.arm.Arm.ArmPreset;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
@@ -82,7 +82,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
       System.out.println(
           this.getName()
               + " started (preset: "
-              + this.armPreset
+              + armPreset
               + ", rotation: "
               + angleRotation2d.getDegrees()
               + " deg)");
@@ -96,8 +96,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " finished (preset: "
-              + this.armPreset
+              + " ended (preset: "
+              + armPreset
               + ", rotation: "
               + angleRotation2d.getDegrees()
               + " deg)");
