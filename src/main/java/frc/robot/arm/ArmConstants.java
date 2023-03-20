@@ -11,8 +11,39 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants;
 import frc.robot.drivers.CanDeviceId;
+import java.util.Map;
 
 public final class ArmConstants {
+  public static class ArmPreferencesKeys {
+    public static final Map<Arm.ArmPreset, String> kArmPositionKeys =
+        Map.of(
+            Arm.ArmPreset.DEFAULT, "kDefaultArmAngle",
+            Arm.ArmPreset.ANY_PIECE_LOW, "kAnyPieceLowRotation",
+            Arm.ArmPreset.CUBE_MID, "kCubeMidRotation",
+            Arm.ArmPreset.CONE_MID, "kConeMidRotation",
+            Arm.ArmPreset.CUBE_HIGH, "kCubeHighRotation",
+            Arm.ArmPreset.CONE_HIGH, "kConeHighRotation",
+            Arm.ArmPreset.GROUND_INTAKE, "kGroundIntakeRotation",
+            Arm.ArmPreset.DOUBLE_SUBSTATION, "kDoubleSubstationRotation");
+
+    public static final Map<Arm.ArmPreset, Rotation2d> kArmPositionDefaults =
+        Map.of(
+            Arm.ArmPreset.DEFAULT, kDefaultArmAngle,
+            Arm.ArmPreset.ANY_PIECE_LOW, kAnyPieceLowRotation,
+            Arm.ArmPreset.CUBE_MID, kCubeMidRotation,
+            Arm.ArmPreset.CONE_MID, kConeMidRotation,
+            Arm.ArmPreset.CUBE_HIGH, kCubeHighRotation,
+            Arm.ArmPreset.CONE_HIGH, kConeHighRotation,
+            Arm.ArmPreset.GROUND_INTAKE, kGroundIntakeRotation,
+            Arm.ArmPreset.DOUBLE_SUBSTATION, kDoubleSubstationRotation);
+
+    public static final String kPKey = "ArmkP";
+    public static final String kIKey = "ArmkI";
+    public static final String kDKey = "ArmkD";
+    public static final String kEncoderOffsetKey = "EncoderOffset";
+  }
+
+  // TODO: Fix constants
   public static final int kArmMotorID = 6;
   public static final String kArmCanBus = "mani";
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);

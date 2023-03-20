@@ -8,7 +8,6 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-// import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -20,7 +19,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
-import frc.robot.arm.commands.*;
+import frc.robot.arm.commands.KeepArmAtPosition;
+import frc.robot.arm.commands.SetArmAngle;
+import frc.robot.arm.commands.SetArmVoltage;
+import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
@@ -33,11 +35,16 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
-import frc.robot.led.commands.*;
-import frc.robot.led.patterns.*;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.patterns.BlinkingConePattern;
+import frc.robot.led.patterns.BlinkingCubePattern;
+import frc.robot.led.patterns.FIREPattern;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.*;
+import frc.robot.swerve.commands.LockSwerveX;
+import frc.robot.swerve.commands.TeleopSwerve;
+import frc.robot.swerve.commands.TeleopSwerveLimited;
+import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
 
 /**
@@ -183,6 +190,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 kOpenLoop));
 
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
+
     // TODO add commands for both locations
     operator
         .b()
