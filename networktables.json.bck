@@ -162,7 +162,7 @@
   {
     "name": "/Preferences/kDoubleSubstationPositionMeters",
     "type": "double",
-    "value": 0.5,
+    "value": 0.0,
     "properties": {
       "persistent": true
     }

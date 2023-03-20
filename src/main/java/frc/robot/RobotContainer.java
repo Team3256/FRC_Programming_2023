@@ -201,20 +201,20 @@ public class RobotContainer implements CANTestable, Loggable {
                 new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.CUBE_HIGH),
                 this::isCurrentPieceCone),
             new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH, false),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH, false),
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_HIGH),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_HIGH),
                 this::isCurrentPieceCone));
       case MID_GRID:
         return new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_MID),
             new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID, false),
-                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID, false),
+                new SetArmAngle(armSubsystem, ArmPosition.CONE_MID),
+                new SetArmAngle(armSubsystem, ArmPosition.CUBE_MID),
                 this::isCurrentPieceCone));
       case LOW_GRID:
         return new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.ANY_PIECE_LOW),
-            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW, false));
+            new SetArmAngle(armSubsystem, ArmPosition.ANY_PIECE_LOW));
       default:
         return new InstantCommand();
     }
@@ -250,7 +250,7 @@ public class RobotContainer implements CANTestable, Loggable {
               new ParallelCommandGroup(
                   // TODO need 5.5 deg for cone, lower (4.5?) for cube
                   new SetElevatorHeight(elevatorSubsystem, ElevatorPosition.DOUBLE_SUBSTATION),
-                  new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION, false),
+                  new SetArmAngle(armSubsystem, ArmPosition.DOUBLE_SUBSTATION),
                   new ConditionalCommand(
                       new IntakeCone(intakeSubsystem, ledStrip),
                       new IntakeCube(intakeSubsystem, ledStrip),

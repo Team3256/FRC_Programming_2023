@@ -20,7 +20,8 @@ import frc.robot.elevator.Elevator.ElevatorPosition;
 
 public class SetElevatorHeight extends ProfiledPIDCommand {
   private double setpointPositionMeters;
-  private ElevatorPosition elevatorPosition;
+  private ElevatorPosition elevatorPreset;
+  private Elevator elevatorSubsystem;
 
   /**
    * Constructor for setting the elevator to a setpoint in the parameters
@@ -43,6 +44,8 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
         elevatorSubsystem);
 
     this.setpointPositionMeters = setpointPositionMeters;
+    this.elevatorSubsystem = elevatorSubsystem;
+
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);
   }
@@ -52,21 +55,28 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
    * hash map
    *
    * @param elevatorSubsystem
-   * @param setpointPositionMeters
+   * @param elevatorPreset
    */
-  public SetElevatorHeight(
-      Elevator elevatorSubsystem, Elevator.ElevatorPosition setpointPositionMeters) {
-    this(elevatorSubsystem, elevatorSubsystem.getPreferencesSetpoint(setpointPositionMeters));
+  public SetElevatorHeight(Elevator elevatorSubsystem, Elevator.ElevatorPosition elevatorPreset) {
+    this(elevatorSubsystem, elevatorSubsystem.getPreferencesSetpoint(elevatorPreset));
+    this.elevatorPreset = elevatorPreset;
   }
 
   @Override
   public void initialize() {
     super.initialize();
+
+    // update at runtime in case robot prefs changed
+    if (elevatorPreset != null) {
+      setpointPositionMeters = elevatorSubsystem.getPreferencesSetpoint(elevatorPreset);
+      getController().setGoal(setpointPositionMeters);
+    }
+
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " started (position: "
-              + this.elevatorPosition
+              + " started (preset: "
+              + this.elevatorPreset
               + ", height: "
               + setpointPositionMeters
               + " meters)");
@@ -79,8 +89,8 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " finished (position: "
-              + this.elevatorPosition
+              + " finished (preset: "
+              + this.elevatorPreset
               + ", height: "
               + setpointPositionMeters
               + " meters)");
