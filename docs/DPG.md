@@ -1,11 +1,17 @@
 # Dynamic Path Generation
 
 ### Quick start:
-* Use the method DynamicPathFollower.run() to make the robot travel to any wanted pose on SmartDashboard
+* Use the method DynamicPathFollower.run(sink) to make the robot travel to any desired pose.
+
+### Jargon:
+* Src refers to the robot's current pose
+* Sink refers to the robot's final pose
+* Bezier is the type of curve we use to interpolate between way points: https://en.wikipedia.org/wiki/Bézier_curve
 
 ### How it works:
 * Visibility graph:
-
+<img width="1137" alt="Screen Shot 2023-03-20 at 5 26 20 PM" src="https://user-images.githubusercontent.com/72239682/226493704-668a83c7-6823-4f55-9748-c0a251e3bd3e.png">
+** These are the possible way points to use to travel between src and sink
 * DynamicPathFinder gets a list of points and finds the best path from start node to end node
 * DynamicPathGenerator uses Finder to create a trajectory for the robot to travel from a given start pose to end pose
 * DynamicPathFollower uses Generator to create a trajectory from current robot pose to the wanted node from GUI. Then it schedules a command to make the robot run the route.
