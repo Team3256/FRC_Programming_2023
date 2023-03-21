@@ -328,8 +328,8 @@ public final class Constants {
   public static class VisionConstants {
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
-      public static final double kLimelightTranslationThresholdMeters = 1;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
+      public static final double kLimelightTranslationThresholdMeters = 2;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
       Matrix<N3, N1> visionMeasurementStdDevs;
@@ -337,8 +337,8 @@ public final class Constants {
 
     public static class BackConstants {
       public static final String kLimelightNetworkTablesName = "limelight-back";
-      public static final double kLimelightTranslationThresholdMeters = 1;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
+      public static final double kLimelightTranslationThresholdMeters = 2;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
       Matrix<N3, N1> visionMeasurementStdDevs;
@@ -346,8 +346,8 @@ public final class Constants {
 
     public static class SideConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
-      public static final double kLimelightTranslationThresholdMeters = 1;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
+      public static final double kLimelightTranslationThresholdMeters = 2;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
       Matrix<N3, N1> visionMeasurementStdDevs;

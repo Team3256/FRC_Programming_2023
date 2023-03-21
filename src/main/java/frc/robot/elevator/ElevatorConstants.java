@@ -24,8 +24,8 @@ public final class ElevatorConstants {
   public static final double kDoubleSubstationPositionMeters = Units.inchesToMeters(26);
   public static final double kZeroThreshold = 0.02;
 
-  public static final double kCubeHighPositionMeters = Units.inchesToMeters(0);
-  public static final double kConeHighPositionMeters = Units.inchesToMeters(0);
+  public static final double kCubeHighPositionMeters = 0.2;
+  public static final double kConeHighPositionMeters = 0.51;
   public static final double kAnyPieceMidPositionMeters = Units.inchesToMeters(0);
   public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(31);
   public static final double kGroundIntakePositionMeters = Units.inchesToMeters(0);

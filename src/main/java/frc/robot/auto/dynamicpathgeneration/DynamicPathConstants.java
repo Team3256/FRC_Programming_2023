@@ -64,8 +64,8 @@ public final class DynamicPathConstants {
 
   // Trajectory constraints
   // TODO Make faster
-  public static final PathConstraints kDynamicPathConstraints = new PathConstraints(4, 3);
-  public static final PathConstraints kPathToScoreConstraints = new PathConstraints(2, 2);
+  public static final PathConstraints kWaypointPathConstraints = new PathConstraints(3, 3);
+  public static final PathConstraints kPathToDestinationConstraints = new PathConstraints(0.5, 0.5);
 
   // x value for the blue tape in front of the blue scoring grid
   public static final double kBlueGridTapeX = 1.36;
@@ -75,7 +75,7 @@ public final class DynamicPathConstants {
   public static final double kBlueMidOffset = Units.inchesToMeters(19.5);
   public static final double kBlueHighOffset = Units.inchesToMeters(0);
   // Our arm is bent :)
-  public static final Rotation2d kArmFckConstant = Rotation2d.fromDegrees(2);
+  public static final Rotation2d kArmFckConstant = Rotation2d.fromDegrees(-1);
   // x value offset for distance between the robots bumper and the blue tape
   // to determine the scoring waypoint of the robot given the scoring location
   public static final double kBlueScoringWaypointOffset = Units.inchesToMeters(14);
@@ -84,11 +84,11 @@ public final class DynamicPathConstants {
   public static final double kOuterNodeRotationBuffer = Units.inchesToMeters(0);
 
   // (lowest y location to highest y location)
-  public static final double kSubstationWaypointOffset = Units.feetToMeters(8);
+  public static final double kSubstationWaypointOffset = Units.feetToMeters(5);
   public static final Pose2d kBlueTopDoubleSubstationPose =
-      new Pose2d(14.30, 7.35, Rotation2d.fromDegrees(0));
+      new Pose2d(15.70, 7.35, Rotation2d.fromDegrees(0));
   public static final Pose2d kBlueBottomDoubleSubstationPose =
-      new Pose2d(15.40, 6.20, Rotation2d.fromDegrees(0));
+      new Pose2d(15.70, 6.10, Rotation2d.fromDegrees(0));
   public static final Transform2d kSubstationPreSink =
       new Transform2d(new Translation2d(-kSubstationWaypointOffset, 0), new Rotation2d());
 

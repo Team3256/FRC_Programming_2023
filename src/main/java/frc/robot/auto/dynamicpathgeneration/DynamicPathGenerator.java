@@ -103,7 +103,7 @@ public class DynamicPathGenerator {
     // if no path points were found then there should be no trajectory
     if (pathPoints.size() == 0) return null;
     // convert pathPoints into Trajectory we return
-    return PathPlanner.generatePath(kDynamicPathConstraints, pathPoints);
+    return PathPlanner.generatePath(kWaypointPathConstraints, pathPoints);
   }
 
   public Command getCommand() {

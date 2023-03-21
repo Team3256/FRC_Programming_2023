@@ -17,10 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
@@ -29,7 +27,6 @@ import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPreset;
 import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
@@ -201,7 +198,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 elevatorSubsystem,
                 armSubsystem,
                 ledStrip,
-                AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE,
+                AutoIntakeAtSubstation.SubstationLocation.LEFT_SIDE,
                 this::isCurrentPieceCone));
   }
 
@@ -247,19 +244,6 @@ public class RobotContainer implements CANTestable, Loggable {
           .leftTrigger()
           .or(operator.leftTrigger())
           .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
-
-      operator
-          .b()
-          .or(driver.y())
-          .toggleOnTrue(
-              new ParallelCommandGroup(
-                  // TODO need 5.5 deg for cone, lower (4.5?) for cube
-                  new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.DOUBLE_SUBSTATION),
-                  new SetArmAngle(armSubsystem, ArmPreset.DOUBLE_SUBSTATION),
-                  new ConditionalCommand(
-                      new IntakeCone(intakeSubsystem, ledStrip),
-                      new IntakeCube(intakeSubsystem, ledStrip),
-                      this::isCurrentPieceCone)));
     }
   }
 

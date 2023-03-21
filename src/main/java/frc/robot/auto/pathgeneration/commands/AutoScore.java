@@ -99,7 +99,8 @@ public class AutoScore extends CommandBase {
       moveToScoringWaypoint = gen.getCommand();
     } else
       moveToScoringWaypoint =
-          PathGeneration.createDynamicAbsolutePath(start, scoringWaypoint, swerveSubsystem);
+          PathGeneration.createDynamicAbsolutePath(
+              start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
 
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
@@ -143,7 +144,8 @@ public class AutoScore extends CommandBase {
 
     // Move to scoring location
     Command moveToScoringLocation =
-        PathGeneration.createDynamicAbsolutePath(scoringWaypoint, scoringLocation, swerveSubsystem);
+        PathGeneration.createDynamicAbsolutePath(
+            scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
 
     // LED verbose
     Command successLEDs =

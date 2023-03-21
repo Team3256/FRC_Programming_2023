@@ -9,9 +9,9 @@ package frc.robot.auto.pathgeneration;
 
 import static frc.robot.Constants.trajectoryViewer;
 import static frc.robot.Constants.waypointViewer;
-import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kDynamicPathConstraints;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.kDynamicPathGenerationDebug;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
@@ -24,13 +24,13 @@ import frc.robot.swerve.SwerveDrive;
 
 public class PathGeneration {
   public static Command createDynamicAbsolutePath(
-      Pose2d start, Pose2d end, SwerveDrive swerveDrive) {
+      Pose2d start, Pose2d end, SwerveDrive swerveDrive, PathConstraints pathConstraints) {
     System.out.println("Running: Go to absolute " + end);
 
     // Small control lengths make the path a straight line
     PathPlannerTrajectory trajectory =
         PathPlanner.generatePath(
-            kDynamicPathConstraints,
+            pathConstraints,
             new PathPoint(start.getTranslation(), Rotation2d.fromDegrees(180), start.getRotation())
                 .withControlLengths(0.01, 0.01),
             new PathPoint(end.getTranslation(), Rotation2d.fromDegrees(0), end.getRotation())
@@ -50,8 +50,11 @@ public class PathGeneration {
   }
 
   public static Command createDynamicRelativePath(
-      SwerveDrive swerveDrive, Transform2d poseTransformation) {
+      SwerveDrive swerveDrive, Transform2d poseTransformation, PathConstraints pathConstraints) {
     return PathGeneration.createDynamicAbsolutePath(
-        swerveDrive.getPose(), swerveDrive.getPose().transformBy(poseTransformation), swerveDrive);
+        swerveDrive.getPose(),
+        swerveDrive.getPose().transformBy(poseTransformation),
+        swerveDrive,
+        pathConstraints);
   }
 }

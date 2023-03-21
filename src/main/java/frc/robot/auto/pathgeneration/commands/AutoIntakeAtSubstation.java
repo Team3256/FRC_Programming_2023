@@ -101,12 +101,18 @@ public class AutoIntakeAtSubstation extends CommandBase {
     // commands that will be run sequentially
     Command moveToWaypoint =
         PathGeneration.createDynamicAbsolutePath(
-            swerveSubsystem.getPose(), substationWaypoint, swerveSubsystem);
+            swerveSubsystem.getPose(),
+            substationWaypoint,
+            swerveSubsystem,
+            kWaypointPathConstraints);
 
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION),
-            new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION));
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+                new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+                isCurrentPieceCone));
 
     Command runIntake =
         new ConditionalCommand(
@@ -114,11 +120,13 @@ public class AutoIntakeAtSubstation extends CommandBase {
             new IntakeCube(intakeSubsystem, ledSubsystem),
             isCurrentPieceCone);
     Command moveToSubstation =
-        PathGeneration.createDynamicAbsolutePath(substationWaypoint, end, swerveSubsystem);
+        PathGeneration.createDynamicAbsolutePath(
+            substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
     Command stopIntake = new IntakeOff(intakeSubsystem);
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
     Command moveAwayFromSubstation =
-        PathGeneration.createDynamicAbsolutePath(end, substationWaypoint, swerveSubsystem);
+        PathGeneration.createDynamicAbsolutePath(
+            end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
 
     Command runningLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern());
     Command successLEDs =

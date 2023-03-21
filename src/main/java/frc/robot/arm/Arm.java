@@ -50,10 +50,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     CUBE_HIGH(ArmConstants.kCubeHighRotation),
     CONE_HIGH(ArmConstants.kConeHighRotation),
     GROUND_INTAKE(ArmConstants.kGroundIntakeRotation),
-    // TODO check
-    DOUBLE_SUBSTATION(ArmConstants.kDoubleSubstationRotation);
-    // DOUBLE_SUBSTATION_CUBE(ArmConstants.kDoubleSubstationRotationCube),
-    // DOUBLE_SUBSTATION_CONE(ArmConstants.kDoubleSubstationRotationCone);
+    DOUBLE_SUBSTATION_CUBE(ArmConstants.kDoubleSubstationRotationCube),
+    DOUBLE_SUBSTATION_CONE(ArmConstants.kDoubleSubstationRotationCone);
 
     public Rotation2d rotation;
 
@@ -238,8 +236,11 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.GROUND_INTAKE), kGroundIntakeRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION),
-        kDoubleSubstationRotation.getRadians());
+        kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+        kDoubleSubstationRotationCone.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+        kDoubleSubstationRotationCube.getRadians());
     // Arm Encoder Offset
     Preferences.initDouble(ArmPreferencesKeys.kEncoderOffsetKey, kEncoderOffsetRadians);
   }
