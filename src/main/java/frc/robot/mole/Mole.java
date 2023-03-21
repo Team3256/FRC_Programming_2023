@@ -97,7 +97,7 @@ public class Mole extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void outtakeCube() {
-    moleScoreMotor.set(ControlMode.PercentOutput, kMoleCubeSpeed);
+    moleScoreMotor.set(ControlMode.PercentOutput, -kMoleCubeSpeed);
   }
 
   public boolean isCurrentSpiking() {

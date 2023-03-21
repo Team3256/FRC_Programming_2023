@@ -8,6 +8,7 @@
 package frc.robot.mole.commands;
 
 import static frc.robot.mole.MoleConstants.kMolePivotAngleTolerance;
+import static frc.robot.mole.MoleConstants.kShootCubeAngle;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -36,8 +37,10 @@ public class MoleShootCube extends CommandBase {
   @Override
   public void execute() {
     if (Math.abs(moleSubsytem.getMolePivotPositionRadians() - desiredMoleAngle.getRadians())
-        < kMolePivotAngleTolerance.getRadians())
+        < kMolePivotAngleTolerance.getRadians()) {
+      moleSubsytem.setPivotPosition(kShootCubeAngle.getDegrees());
       moleSubsytem.outtakeCube();
+    }
   }
 
   @Override
