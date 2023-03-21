@@ -4,14 +4,16 @@
 * Use the method DynamicPathFollower.run(sink) to make the robot travel to any desired pose.
 
 ### Jargon:
-* Src refers to the robot's current pose
-* Sink refers to the robot's final pose
-* Bezier is the type of curve we use to interpolate between way points: https://en.wikipedia.org/wiki/Bézier_curve
+* Src refers to the first node in a path. For example the src of the DPG program is the robot's current pose.
+* Presink refers to the node right before the sink in a path. For example the presink of the auto score program is the pose right before the robot goes to intake the game piece.
+* Sink refers to the last node in a path. For example the sink of the DPG program is the robot's final pose.
+* Bezier is the type of curve we use to interpolate between way points. Here is a link to learn more on how they work: https://en.wikipedia.org/wiki/Bézier_curve.
+* Passage refers to the narrow space above the charge station and below the charge station in which our robot travels through. 
 
 ### How it works:
 * Visibility graph:
 <img width="1137" alt="Screen Shot 2023-03-20 at 5 26 20 PM" src="https://user-images.githubusercontent.com/72239682/226493704-668a83c7-6823-4f55-9748-c0a251e3bd3e.png">
-** These are the possible way points to use to travel between src and sink
+* These are the possible way points to use to travel between src and sink. They are linked in such a way that travelling between nodes does not crash into any obstacles.
 * DynamicPathFinder gets a list of points and finds the best path from start node to end node
 * DynamicPathGenerator uses Finder to create a trajectory for the robot to travel from a given start pose to end pose
 * DynamicPathFollower uses Generator to create a trajectory from current robot pose to the wanted node from GUI. Then it schedules a command to make the robot run the route.
