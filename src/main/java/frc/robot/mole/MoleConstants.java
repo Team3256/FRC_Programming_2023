@@ -34,8 +34,9 @@ public final class MoleConstants {
   public static final double kMolePivotGearing = 60;
 
   public static Rotation2d kDefaultMoleAngle = Rotation2d.fromDegrees(0);
-  public static Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(0);
-  public static Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(0);
+  public static Rotation2d kShootCubeAngle = Rotation2d.fromDegrees(25); // change with testing
+  public static Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(45);
+  public static Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(70);
 
   public static Rotation2d kMolePivotAngleTolerance = Rotation2d.fromDegrees(5);
 }

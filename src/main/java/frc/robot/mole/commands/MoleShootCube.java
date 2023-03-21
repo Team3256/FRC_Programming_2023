@@ -36,7 +36,8 @@ public class MoleShootCube extends CommandBase {
   @Override
   public void execute() {
     if (Math.abs(moleSubsytem.getMolePivotPositionRadians() - desiredMoleAngle.getRadians())
-        < kMolePivotAngleTolerance.getRadians()) moleSubsytem.outtakeCube();
+        < kMolePivotAngleTolerance.getRadians())
+      moleSubsytem.outtakeCube();
   }
 
   @Override
