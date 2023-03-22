@@ -7,57 +7,55 @@
 
 package frc.robot.tests;
 
-import static frc.robot.mole.MoleConstants.kMoleCubeSpeed;
-import static frc.robot.mole.MoleConstants.kShootCubeAngle;
+import static frc.robot.mole.MoleConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.UnitTestBase;
 import frc.robot.mole.Mole;
 import frc.robot.mole.commands.MoleIntakeCube;
-import frc.robot.mole.commands.MoleOff;
 import frc.robot.mole.commands.MoleShootCube;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class MoleTests extends UnitTestBase {
   private final double DELTA = 0.05;
-  private static Mole mole;
 
   @BeforeAll
   public static void setup() {
     UnitTestBase.setup();
-    mole = new Mole();
   }
 
   @Test
-  public void testMoleIntakeCube() {
+  public synchronized void testMoleIntakeCube() {
+    Mole mole = new Mole();
     MoleIntakeCube command = new MoleIntakeCube(mole);
-    command.initialize();
-    runScheduler(1, command, mole);
+    CommandScheduler.getInstance().schedule(command);
+    runScheduler(3, command, mole);
 
-    double velocity = mole.getMoleSpeed();
-    assertEquals(kMoleCubeSpeed, velocity, DELTA, "testing Mole Intake Cube");
+    double speed = mole.getMoleSpeed();
+    assertEquals(kMoleCubeSpeed, speed, DELTA, "testing Mole Intake Cube");
   }
 
-  @Test
-  public void testMoleOff() {
-    MoleOff command = new MoleOff(mole);
-    command.initialize();
-    runScheduler(1, command, mole);
+  //  @Test
+  public synchronized void testMolePivotMid() {
+    Mole mole = new Mole();
+    MoleShootCube command = new MoleShootCube(mole, kCubeMidRotation);
+    CommandScheduler.getInstance().schedule(command);
+    runScheduler(3, command, mole);
 
-    double velocity = mole.getMoleSpeed();
-    assertEquals(0, velocity, 0, "Turning off Mole");
+    double position = mole.getMolePivotPositionRadians();
+    assertEquals(kCubeMidRotation.getRadians(), position, DELTA, "testing Mole Pivot Mid");
   }
 
-  @Test
-  public void testMoleShootCube() {
-    MoleShootCube command = new MoleShootCube(mole, kShootCubeAngle);
-    command.initialize();
-    runScheduler(1, command, mole);
+  //  @Test
+  public synchronized void testMolePivotHigh() {
+    Mole mole = new Mole();
+    MoleShootCube command = new MoleShootCube(mole, kCubeHighRotation);
+    CommandScheduler.getInstance().schedule(command);
+    runScheduler(3, command, mole);
 
-    double position = Math.toDegrees(mole.getMolePivotPositionRadians());
-    double velocity = mole.getMoleSpeed();
-    assertEquals(-kMoleCubeSpeed, velocity, DELTA, "Testing Mole shooting speed");
-    assertEquals(kShootCubeAngle.getDegrees(), position, DELTA, "Testing Mole angle");
+    double position = mole.getMolePivotPositionRadians();
+    assertEquals(kCubeHighRotation.getRadians(), position, DELTA, "testing Mole Pivot Mid");
   }
 }

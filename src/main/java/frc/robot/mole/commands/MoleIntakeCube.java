@@ -37,7 +37,7 @@ public class MoleIntakeCube extends CommandBase {
 
   @Override
   public void initialize() {
-    moleSubsystem.setPivotPosition(CUBE_GROUND.rotation.getDegrees());
+    moleSubsystem.setPivotPosition(CUBE_GROUND.rotation);
   }
 
   @Override

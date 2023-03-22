@@ -9,7 +9,6 @@ package frc.robot.mole;
 
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kMoleLayoutName;
-import static frc.robot.arm.ArmConstants.kArmGearing;
 import static frc.robot.mole.MoleConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -91,9 +90,10 @@ public class Mole extends SubsystemBase implements Loggable, CANTestable {
     moleScoreMotor.set(ControlMode.PercentOutput, kMoleCubeSpeed);
   }
 
-  public void setPivotPosition(double desiredAngle) {
+  public void setPivotPosition(Rotation2d desiredAngle) {
     molePivotMotor.set(
-        ControlMode.Position, Conversions.degreesToFalcon(desiredAngle, kArmGearing));
+        ControlMode.Position,
+        Conversions.degreesToFalcon(desiredAngle.getDegrees(), kMolePivotGearing));
   }
 
   public void outtakeCube() {
