@@ -9,6 +9,7 @@ package frc.robot.elevator;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.elevator.ElevatorConstants.*;
+import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,7 +39,7 @@ import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
-  public enum ElevatorPosition {
+  public enum ElevatorPreset {
     CUBE_HIGH(ElevatorConstants.kCubeHighPositionMeters),
     CONE_HIGH(ElevatorConstants.kConeHighPositionMeters),
     ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
@@ -47,7 +49,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
     public double position;
 
-    private ElevatorPosition(double position) {
+    private ElevatorPreset(double position) {
       this.position = position;
     }
   }
@@ -179,5 +181,36 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     System.out.println("Elevator CAN connected: " + result);
     getLayout(kElectricalTabName).add("Elevator CAN connected", result);
     return result;
+  }
+
+  public double getPreferencesSetpoint(Elevator.ElevatorPreset setpoint) {
+    return Preferences.getDouble(
+        ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
+        ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));
+  }
+
+  /** Populating elevator preferences on network tables */
+  public static void loadElevatorPreferences() {
+    // Elevator PID Preferences
+    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kPKey, ElevatorConstants.kP);
+    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kIKey, ElevatorConstants.kI);
+    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kDKey, ElevatorConstants.kD);
+    // Elevator Preset Preferences
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CUBE_HIGH), kCubeHighPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CONE_HIGH), kConeHighPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW),
+        kAnyPieceLowPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_MID),
+        kAnyPieceMidPositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.GROUND_INTAKE),
+        kGroundIntakePositionMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION),
+        kDoubleSubstationPositionMeters);
   }
 }

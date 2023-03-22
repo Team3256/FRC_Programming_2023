@@ -11,19 +11,31 @@ import static frc.robot.elevator.ElevatorConstants.*;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPosition;
+import frc.robot.elevator.Elevator.ElevatorPreset;
 
 public class SetElevatorHeight extends ProfiledPIDCommand {
   private double setpointPositionMeters;
-  private ElevatorPosition elevatorPosition;
+  private Elevator elevatorSubsystem;
+  private ElevatorPreset elevatorPreset;
 
+  /**
+   * Constructor for setting the elevator to a setpoint in the parameters
+   *
+   * @param elevatorSubsystem
+   * @param setpointPositionMeters
+   */
   public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
     super(
-        new ProfiledPIDController(kP, kI, kD, kElevatorContraints),
+        new ProfiledPIDController(
+            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kP),
+            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kI),
+            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kD),
+            kElevatorContraints),
         elevatorSubsystem::getElevatorPosition,
         setpointPositionMeters,
         (output, setpoint) ->
@@ -32,23 +44,39 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
         elevatorSubsystem);
 
     this.setpointPositionMeters = setpointPositionMeters;
+    this.elevatorSubsystem = elevatorSubsystem;
+
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);
   }
 
-  public SetElevatorHeight(Elevator elevatorSubsystem, Elevator.ElevatorPosition elevatorPosition) {
-    this(elevatorSubsystem, elevatorPosition.position);
-    this.elevatorPosition = elevatorPosition;
+  /**
+   * Constructor for setting elevator height for the levels specified in the elevator preferences
+   * hash map
+   *
+   * @param elevatorSubsystem
+   * @param elevatorPreset
+   */
+  public SetElevatorHeight(Elevator elevatorSubsystem, ElevatorPreset elevatorPreset) {
+    this(elevatorSubsystem, elevatorSubsystem.getPreferencesSetpoint(elevatorPreset));
+    this.elevatorPreset = elevatorPreset;
   }
 
   @Override
   public void initialize() {
     super.initialize();
+
+    // update at runtime in case robot prefs changed
+    if (elevatorPreset != null) {
+      setpointPositionMeters = elevatorSubsystem.getPreferencesSetpoint(elevatorPreset);
+      getController().setGoal(setpointPositionMeters);
+    }
+
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " started (position: "
-              + this.elevatorPosition
+              + " started (preset: "
+              + this.elevatorPreset
               + ", height: "
               + setpointPositionMeters
               + " meters)");
@@ -61,8 +89,8 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
-              + " finished (position: "
-              + this.elevatorPosition
+              + " finished (preset: "
+              + this.elevatorPreset
               + ", height: "
               + setpointPositionMeters
               + " meters)");

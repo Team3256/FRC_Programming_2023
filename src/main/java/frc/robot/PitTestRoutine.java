@@ -79,13 +79,13 @@ public class PitTestRoutine {
   private Command elevatorCommands() {
     Command zeroElevator = new ZeroElevator(elevatorSubsystem).until(driver.b());
     Command setElevatorHeightHIGH =
-        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.CUBE_HIGH)
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH)
             .until(driver.b());
     Command setElevatorHeightMID =
-        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_MID)
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID)
             .until(driver.b());
     Command setElevatorHeightLOW =
-        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPosition.ANY_PIECE_LOW)
+        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW)
             .until(driver.b());
     Command setElevatorToStart =
         new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPositionMeters).until(driver.b());

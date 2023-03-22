@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPosition;
+import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
@@ -20,10 +20,11 @@ import frc.robot.elevator.commands.ZeroElevator;
 public class SetArmElevatorStart extends ParallelCommandGroup {
   public SetArmElevatorStart(Elevator elevatorSubsystem, Arm armSubsystem) {
     // TODO arm not going to default
+    // TODO remove timings
     addCommands(
         new ParallelDeadlineGroup(
                 new WaitCommand(0.45), new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135)))
-            .andThen(new SetArmAngle(armSubsystem, ArmPosition.DEFAULT)),
+            .andThen(new SetArmAngle(armSubsystem, ArmPreset.DEFAULT)),
         new WaitCommand(0.3).andThen(new ZeroElevator(elevatorSubsystem)));
   }
 }
