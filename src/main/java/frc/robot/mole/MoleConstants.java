@@ -25,7 +25,7 @@ public final class MoleConstants {
   public static final double kMoleCurrentSpikingThreshold = 40;
   public static Rotation2d kDefaultMoleAngle = Rotation2d.fromDegrees(0);
   public static Rotation2d kCubeMidAngle = Rotation2d.fromDegrees(45);
-  public static Rotation2d kCubeHighAngle = Rotation2d.fromDegrees(75);
+  public static Rotation2d kCubeHighAngle = Rotation2d.fromDegrees(60);
 
   public static final double kDefaultSpeed = 0;
   public static final double kCubeMidSpeed = 0.5;

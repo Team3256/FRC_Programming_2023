@@ -10,6 +10,7 @@ package frc.robot.elevator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.drivers.CanDeviceId;
+import java.util.Map;
 
 public final class ElevatorConstants {
   public static final int kElevatorID = 5;
@@ -28,6 +29,35 @@ public final class ElevatorConstants {
   public static final double kAnyPieceMidPositionMeters = Units.inchesToMeters(0);
   public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(31);
   public static final double kGroundIntakePositionMeters = Units.inchesToMeters(0);
+
+  public static class ElevatorPreferencesKeys {
+    public static final Map<Elevator.ElevatorPreset, String> kElevatorPositionKeys =
+        Map.of(
+            Elevator.ElevatorPreset.CUBE_HIGH, "kCubeHighPositionMeters",
+            Elevator.ElevatorPreset.CONE_HIGH, "kConeHighPositionMeters",
+            Elevator.ElevatorPreset.ANY_PIECE_LOW, "kAnyPieceLowPositionMeters",
+            Elevator.ElevatorPreset.ANY_PIECE_MID, "kAnyPieceMidPositionMeters",
+            Elevator.ElevatorPreset.GROUND_INTAKE, "kGroundIntakePositionMeters",
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION, "kDoubleSubstationPositionMeters");
+
+    public static final Map<Elevator.ElevatorPreset, Double> kElevatorPositionDefaults =
+        Map.of(
+            Elevator.ElevatorPreset.CUBE_HIGH, kCubeHighPositionMeters,
+            Elevator.ElevatorPreset.CONE_HIGH, kConeHighPositionMeters,
+            Elevator.ElevatorPreset.ANY_PIECE_LOW, kAnyPieceLowPositionMeters,
+            Elevator.ElevatorPreset.ANY_PIECE_MID, kAnyPieceMidPositionMeters,
+            Elevator.ElevatorPreset.GROUND_INTAKE, kGroundIntakePositionMeters,
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION, kDoubleSubstationPositionMeters);
+
+    public static final String kPKey = "ElevatorkP";
+    public static final String kIKey = "ElevatorkI";
+    public static final String kDKey = "ElevatorkD";
+  }
+
+  // TODO: Change to real values
+  public static final double kElevatorHighPositionMeters = 0.762;
+  public static final double kElevatorMidPositionMeters = 0.381;
+  public static final double kElevatorLowPositionMeters = 0.0762;
 
   // https://www.reca.lc/linear
   // gradle simulateJava working constants

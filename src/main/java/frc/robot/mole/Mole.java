@@ -120,11 +120,6 @@ public class Mole extends SubsystemBase implements Loggable, CANTestable {
     moleScoreMotor.set(ControlMode.PercentOutput, desiredSpeed);
   }
 
-  public void setPivotPosition(double desiredAngle) {
-    molePivotMotor.set(
-        ControlMode.Position, Conversions.degreesToFalcon(desiredAngle, kMolePivotGearing));
-  }
-
   public double getMolePositionRads() {
     if (RobotBase.isReal())
       return Conversions.falconToRadians(
