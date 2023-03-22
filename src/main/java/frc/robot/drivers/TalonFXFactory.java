@@ -39,7 +39,8 @@ public class TalonFXFactory {
 
     public int CONTROL_FRAME_PERIOD_MS = 10;
     public int MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
-    public int GENERAL_STATUS_FRAME_RATE_MS = 10;
+    // TODO check if this should be 10
+    public int GENERAL_STATUS_FRAME_RATE_MS = 20;
     public int FEEDBACK_STATUS_FRAME_RATE_MS = 1000;
     public int QUAD_ENCODER_STATUS_FRAME_RATE_MS = 1000;
     public int ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 1000;
@@ -54,20 +55,20 @@ public class TalonFXFactory {
   }
 
   private static final Configuration kDefaultConfiguration = new Configuration();
-  private static final Configuration kSlaveConfiguration = new Configuration();
+  private static final Configuration kFollowerConfiguration = new Configuration();
 
   static {
     // This control frame value seems to need to be something reasonable to avoid
     // the Talon's
     // LEDs behaving erratically. Potentially try to increase as much as possible.
-    kSlaveConfiguration.CONTROL_FRAME_PERIOD_MS = 100;
-    kSlaveConfiguration.MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
-    kSlaveConfiguration.GENERAL_STATUS_FRAME_RATE_MS = 1000;
-    kSlaveConfiguration.FEEDBACK_STATUS_FRAME_RATE_MS = 1000;
-    kSlaveConfiguration.QUAD_ENCODER_STATUS_FRAME_RATE_MS = 1000;
-    kSlaveConfiguration.ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 1000;
-    kSlaveConfiguration.PULSE_WIDTH_STATUS_FRAME_RATE_MS = 1000;
-    kSlaveConfiguration.ENABLE_SOFT_LIMIT = false;
+    kFollowerConfiguration.CONTROL_FRAME_PERIOD_MS = 100;
+    kFollowerConfiguration.MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
+    kFollowerConfiguration.GENERAL_STATUS_FRAME_RATE_MS = 1000;
+    kFollowerConfiguration.FEEDBACK_STATUS_FRAME_RATE_MS = 1000;
+    kFollowerConfiguration.QUAD_ENCODER_STATUS_FRAME_RATE_MS = 1000;
+    kFollowerConfiguration.ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 1000;
+    kFollowerConfiguration.PULSE_WIDTH_STATUS_FRAME_RATE_MS = 1000;
+    kFollowerConfiguration.ENABLE_SOFT_LIMIT = false;
   }
 
   // create a CANTalon with the default (out of the box) configuration
@@ -77,10 +78,10 @@ public class TalonFXFactory {
 
   public static WPI_TalonFX createPermanentFollowerTalon(
       CanDeviceId followerId, CanDeviceId masterId) {
-    if (followerId.getBus() != masterId.getBus()) {
-      throw new RuntimeException("Master and Slave Talons must be on the same CAN bus");
+    if (!followerId.getBus().equals(masterId.getBus())) {
+      throw new RuntimeException("Master and Follower Talons must be on the same CAN bus");
     }
-    final WPI_TalonFX talon = createTalon(followerId, kSlaveConfiguration);
+    final WPI_TalonFX talon = createTalon(followerId, kFollowerConfiguration);
     talon.set(ControlMode.Follower, masterId.getDeviceNumber());
     return talon;
   }

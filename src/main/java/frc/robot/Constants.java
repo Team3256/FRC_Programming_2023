@@ -15,28 +15,60 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
   public static final boolean kDebugEnabled = false;
 
+  public static final boolean kSwerveEnabled = true;
   public static final boolean kIntakeEnabled = false;
   public static final boolean kElevatorEnabled = false;
   public static final boolean kArmEnabled = false;
-  public static final boolean kSwerveEnabled = false;
+
   public static final boolean kLedStripEnabled = true;
 
+  public static final boolean kAdvantageKitReplayEnabled = false;
+  public static final boolean kCompetitionModeEnabled = false;
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.SIM;
 
-  public static final double kStickDeadband = 0.1;
+  public static final double kStickDeadband = 0.05;
+  public static final double kStickRotationThreshold = 0.3;
   public static final double kAzimuthStickDeadband = 0.3;
+
+  public static final Field2d trajectoryViewer = new Field2d();
+  public static final Field2d waypointViewer = new Field2d();
+  public static final Field2d swerveViewer = new Field2d();
+
+  public static final class FeatureFlags {
+    public static final boolean kOperatorManualArmControlEnabled = true;
+
+    public static final boolean kSwerveAccelerationLimitingEnabled = true;
+    public static final boolean kDynamicPathGenEnabled = false;
+    public static final boolean kPitRoutineEnabled = false;
+    public static final boolean kCanTestEnabled = false;
+  }
+
+  public static final class ShuffleboardConstants {
+    public static final String kDriverTabName = "Driver";
+    public static final String kOperatorTabName = "Operator";
+    public static final String kElectricalTabName = "Electrical";
+    public static final String kIntakeLayoutName = "Intake";
+    public static final String kSwerveLayoutName = "Swerve";
+    public static final String kArmLayoutName = "Arm";
+    public static final String kElevatorLayoutName = "Elevator";
+    public static final String kLEDLayoutName = "LED";
+  }
 
   public enum RobotMode {
     REAL,
     SIM,
     REPLAY
   }
+
+  public static final double kRobotLength = 0.9271;
+  public static final double kRobotWidth = 0.9271;
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);
@@ -65,20 +97,29 @@ public final class Constants {
           };
 
       // Charging station dimensions
-      public static final double kChargingStationLength = Units.inchesToMeters(76.125);
-      public static final double kChargingStationWidth = Units.inchesToMeters(97.25);
-      public static final double kChargingStationOuterX = kOuterX - kTapeWidth;
-      public static final double kChargingStationInnerX =
-          kChargingStationOuterX - kChargingStationLength;
-      public static final double kChargingStationLeftY = kMidY - kTapeWidth;
-      public static final double kChargingStationRightY =
-          kChargingStationLeftY - kChargingStationWidth;
-      public static final Translation2d[] kChargingStationCorners =
+      public static final double kChargingStationWidth = Units.inchesToMeters(76.125);
+      public static final double kChargingStationHeight = Units.inchesToMeters(97.25);
+      public static final double kBlueChargingStationOuterX = kOuterX - kTapeWidth;
+      public static final double kBlueChargingStationInnerX =
+          kBlueChargingStationOuterX - kChargingStationWidth;
+      public static final double kBlueChargingStationLeftY = kMidY - kTapeWidth;
+      public static final double kBlueChargingStationRightY =
+          kBlueChargingStationLeftY - kChargingStationHeight;
+      public static final Translation2d[] kBlueChargingStationCorners =
           new Translation2d[] {
-            new Translation2d(kChargingStationInnerX, kChargingStationRightY),
-            new Translation2d(kChargingStationInnerX, kChargingStationLeftY),
-            new Translation2d(kChargingStationOuterX, kChargingStationRightY),
-            new Translation2d(kChargingStationOuterX, kChargingStationLeftY)
+            new Translation2d(kBlueChargingStationInnerX, kBlueChargingStationRightY),
+            new Translation2d(kBlueChargingStationInnerX, kBlueChargingStationLeftY),
+            new Translation2d(kBlueChargingStationOuterX, kBlueChargingStationRightY),
+            new Translation2d(kBlueChargingStationOuterX, kBlueChargingStationLeftY)
+          };
+      public static final Translation2d kBlueChargingStationTopLeftCorner =
+          new Translation2d(kBlueChargingStationInnerX, kBlueChargingStationRightY);
+      public static final Translation2d[][] kBlueChargingStationSegments =
+          new Translation2d[][] {
+            {kBlueChargingStationCorners[0], kBlueChargingStationCorners[1]},
+            {kBlueChargingStationCorners[0], kBlueChargingStationCorners[2]},
+            {kBlueChargingStationCorners[1], kBlueChargingStationCorners[3]},
+            {kBlueChargingStationCorners[2], kBlueChargingStationCorners[3]},
           };
 
       // Cable bump
@@ -88,9 +129,9 @@ public final class Constants {
       public static final Translation2d[] kCableBumpCorners =
           new Translation2d[] {
             new Translation2d(kCableBumpInnerX, 0.0),
-            new Translation2d(kCableBumpInnerX, kChargingStationRightY),
+            new Translation2d(kCableBumpInnerX, kBlueChargingStationRightY),
             new Translation2d(kCableBumpOuterX, 0.0),
-            new Translation2d(kCableBumpOuterX, kChargingStationRightY)
+            new Translation2d(kCableBumpOuterX, kBlueChargingStationRightY)
           };
     }
 
@@ -141,7 +182,6 @@ public final class Constants {
 
       // Complex low layout (shifted to account for cube vs cone rows and wide edge
       // nodes)
-
       public static final double kComplexLowXCones =
           kOuterX - Units.inchesToMeters(16.0) / 2.0; // Centered X under
       // cone
@@ -210,7 +250,7 @@ public final class Constants {
           kSingleSubstationLowZ + kSingleSubstationHeight;
     }
 
-    // Locations of staged game pieces
+    // Locations of staged game pieces (meters)
     public static final class StagingLocations {
       public static final double kCenterOffsetX = Units.inchesToMeters(47.36);
       public static final double kPositionX = kFieldLength / 2.0 - Units.inchesToMeters(47.36);
@@ -279,11 +319,31 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-    public static final String kLimelightNetworkTablesName = "limelight";
-    public static final double kLimelightTranslationThresholdMeters = 1;
-    public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
-    public static final double kFieldTranslationOffsetX = 6;
-    public static final double kFieldTranslationOffsetY = 5;
-    Matrix<N3, N1> visionMeasurementStdDevs;
+    public static class FrontConstants {
+      public static final String kLimelightNetworkTablesName = "limelight-front";
+      public static final double kLimelightTranslationThresholdMeters = 1;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
+      public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
+      public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
+      Matrix<N3, N1> visionMeasurementStdDevs;
+    }
+
+    public static class BackConstants {
+      public static final String kLimelightNetworkTablesName = "limelight-back";
+      public static final double kLimelightTranslationThresholdMeters = 1;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
+      public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
+      public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
+      Matrix<N3, N1> visionMeasurementStdDevs;
+    }
+
+    public static class SideConstants {
+      public static final String kLimelightNetworkTablesName = "limelight-right";
+      public static final double kLimelightTranslationThresholdMeters = 1;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
+      public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
+      public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
+      Matrix<N3, N1> visionMeasurementStdDevs;
+    }
   }
 }

@@ -44,6 +44,11 @@ public class TeleopSwerveLimited extends CommandBase {
   }
 
   @Override
+  public void initialize() {
+    System.out.println("TeleopSwerveLimited started");
+  }
+
+  @Override
   public void execute() {
     double yAxis = -translationAxis.getAsDouble() * kSensitivityScale;
     double xAxis = -strafeAxis.getAsDouble() * kSensitivityScale;
