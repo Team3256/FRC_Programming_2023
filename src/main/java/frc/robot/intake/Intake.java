@@ -44,6 +44,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   private void configureRealHardware() {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
+    // TODO: tune trigger threshold time to be greater than outtake spike
     intakeMotor.configStatorCurrentLimit(
         new StatorCurrentLimitConfiguration(
             true, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
@@ -81,7 +82,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   // TODO: Change to stator current and tune max current
   public boolean isCurrentSpiking() {
-    return intakeMotor.getSupplyCurrent() > kIntakeMaxCurrent;
+    return intakeMotor.getStatorCurrent() > kIntakeMaxCurrent;
   }
 
   public void off() {

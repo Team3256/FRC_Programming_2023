@@ -8,6 +8,7 @@
 package frc.robot.mole;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.drivers.CanDeviceId;
 
 public final class MoleConstants {
@@ -21,21 +22,34 @@ public final class MoleConstants {
   public static final CanDeviceId kMoleCANDevice = new CanDeviceId(kMoleMotorID, kMoleCANBus);
   public static final CanDeviceId kMolePivotCANDevice =
       new CanDeviceId(kMolePivotMotorID, kMolePivotCANBus);
-
-  public static final double kMoleCubeSpeed = 0.9;
-  public static final double kMolePivotSpeed = 0.9;
-
-  public static final double kMoleKeepingCurrent = 2;
-  public static final double kMolePivotKeepingCurrent = 2;
-
   public static final double kMoleCurrentSpikingThreshold = 40;
-  public static final double kMolePivotCurrentSpikingThreshold = 40;
-
-  public static final double kMolePivotGearing = 60;
-
   public static Rotation2d kDefaultMoleAngle = Rotation2d.fromDegrees(0);
-  public static Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(0);
-  public static Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(0);
+  public static Rotation2d kCubeMidAngle = Rotation2d.fromDegrees(45);
+  public static Rotation2d kCubeHighAngle = Rotation2d.fromDegrees(75);
 
-  public static Rotation2d kMolePivotAngleTolerance = Rotation2d.fromDegrees(5);
+  public static final double kDefaultSpeed = 0;
+  public static final double kCubeMidSpeed = 0.5;
+  public static final double kCubeHighSpeed = 0.9;
+
+  // Pivot Motor Constants
+  public static final double kMolePivotGearing = 60;
+  public static final double kMolePivotInertia = 60;
+  public static final double kMoleLength = 10;
+
+  public static final Rotation2d kMinConstraintAngle = Rotation2d.fromDegrees(0);
+  public static final Rotation2d kMaxConstraintAngle = Rotation2d.fromDegrees(90);
+
+  public static final TrapezoidProfile.Constraints kProfileContraints =
+      new TrapezoidProfile.Constraints(8, 4);
+
+  public static Rotation2d kMolePivotAngleTolerance = Rotation2d.fromDegrees(1);
+
+  public static final double kP = 1;
+  public static final double kI = 0;
+  public static final double kD = 0;
+
+  public static final double kArmS = 0;
+  public static final double kArmG = 0;
+  public static final double kArmV = 0;
+  public static final double kArmA = 0;
 }

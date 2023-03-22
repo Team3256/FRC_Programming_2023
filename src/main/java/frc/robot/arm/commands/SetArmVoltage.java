@@ -12,7 +12,7 @@ import frc.robot.arm.Arm;
 
 public class SetArmVoltage extends CommandBase {
   private Arm armSubsystem;
-  private double volts = 0;
+  private double volts;
 
   public SetArmVoltage(Arm armSubsystem, double volts) {
     this.armSubsystem = armSubsystem;

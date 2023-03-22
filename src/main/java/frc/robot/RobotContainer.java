@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 // import static frc.robot.Constants.ShuffleboardConstants.*;
+import static frc.robot.mole.Mole.MolePreset.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -37,6 +38,8 @@ import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
 import frc.robot.logging.Loggable;
+import frc.robot.mole.Mole;
+import frc.robot.mole.commands.SetMoleAngle;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
@@ -60,6 +63,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
+  private Mole moleSubsystem;
   private LED ledStrip;
   private Piece currentPiece = Piece.CUBE;
 
@@ -73,6 +77,7 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kIntakeEnabled) intakeSubsystem = new Intake();
     if (kElevatorEnabled) elevatorSubsystem = new Elevator();
     if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
+    if (kMoleEnabled) moleSubsystem = new Mole();
     if (kLedStripEnabled) ledStrip = new LED(0, new int[] {100});
 
     if (kIntakeEnabled) {
@@ -94,6 +99,11 @@ public class RobotContainer implements CANTestable, Loggable {
       configureSwerve();
       canBusTestables.add(swerveSubsystem);
       loggables.add(swerveSubsystem);
+    }
+    if (kMoleEnabled) {
+      configureMole();
+      canBusTestables.add(moleSubsystem);
+      loggables.add(moleSubsystem);
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -269,6 +279,8 @@ public class RobotContainer implements CANTestable, Loggable {
                   this::isCurrentPieceCone));
     }
   }
+
+  public void configureMole() {}
 
   public void configureLEDStrip() {
     ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));

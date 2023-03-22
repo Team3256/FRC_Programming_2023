@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
     public Rotation2d rotation;
 
-    private ArmPreset(Rotation2d rotation) {
+    ArmPreset(Rotation2d rotation) {
       this.rotation = rotation;
     }
   }
@@ -135,11 +135,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
    *     current relative encoder value to reflect. This will change all setpoint for the arm.
    */
   public void resetOffset(Rotation2d currentAbsolutePosition) {
-    ArmConstants.kEncoderOffsetRadians =
-        ArmConstants.kEncoderOffsetRadians
-            + (currentAbsolutePosition.getRadians() - this.getArmPositionRads());
+    kEncoderOffsetRadians =
+        kEncoderOffsetRadians + (currentAbsolutePosition.getRadians() - this.getArmPositionRads());
 
-    System.out.println("New arm offset" + ArmConstants.kEncoderOffsetRadians);
+    System.out.println("New arm offset" + kEncoderOffsetRadians);
   }
 
   public double getArmPositionRads() {

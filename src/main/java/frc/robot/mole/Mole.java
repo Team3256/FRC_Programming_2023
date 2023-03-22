@@ -9,42 +9,76 @@ package frc.robot.mole;
 
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kMoleLayoutName;
-import static frc.robot.arm.ArmConstants.kArmGearing;
 import static frc.robot.mole.MoleConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
 import frc.robot.logging.Loggable;
-import frc.robot.mole.commands.MoleIntakeCube;
 import frc.robot.swerve.helpers.Conversions;
 
 public class Mole extends SubsystemBase implements Loggable, CANTestable {
-  public enum MolePosition {
-    CUBE_GROUND(MoleConstants.kDefaultMoleAngle),
-    CUBE_LOW(MoleConstants.kDefaultMoleAngle),
-    CUBE_MID(MoleConstants.kCubeMidRotation),
-    CUBE_HIGH(MoleConstants.kCubeHighRotation);
+  public enum MolePreset {
+    CUBE_LOW(kDefaultMoleAngle, kDefaultSpeed),
+    CUBE_MID(kCubeMidAngle, kCubeMidSpeed),
+    CUBE_HIGH(kCubeHighAngle, kCubeHighSpeed);
 
     public Rotation2d rotation;
+    public double desiredSpeed;
 
-    MolePosition(Rotation2d rotation) {
+    MolePreset(Rotation2d rotation, double desiredSpeed) {
       this.rotation = rotation;
+      this.desiredSpeed = desiredSpeed;
     }
   }
 
   private WPI_TalonFX moleScoreMotor;
   private WPI_TalonFX molePivotMotor;
+
+  private final ArmFeedforward moleFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
+
+  private static final SingleJointedArmSim moleSim =
+      new SingleJointedArmSim(
+          DCMotor.getFalcon500(1),
+          kMolePivotGearing,
+          kMolePivotInertia,
+          kMoleLength,
+          kMinConstraintAngle.getRadians(),
+          kMaxConstraintAngle.getRadians(),
+          true);
+
+  private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
+  private final MechanismRoot2d molePivot = mechanism2d.getRoot("MolePivot", 0, 30);
+  private final MechanismLigament2d mole =
+      molePivot.append(
+          new MechanismLigament2d(
+              "Mole",
+              30,
+              Units.radiansToDegrees(moleSim.getAngleRads()),
+              6,
+              new Color8Bit(Color.kAzure)));
 
   public Mole() {
     if (RobotBase.isReal()) {
@@ -52,7 +86,6 @@ public class Mole extends SubsystemBase implements Loggable, CANTestable {
     } else {
       configureSimHardware();
     }
-
     off();
     System.out.println("Mole Intake Initialized");
   }
@@ -71,37 +104,44 @@ public class Mole extends SubsystemBase implements Loggable, CANTestable {
 
     molePivotMotor = new WPI_TalonFX(kMolePivotMotorID);
     molePivotMotor.setNeutralMode(NeutralMode.Brake);
+    SmartDashboard.putData("Mole Sim", mechanism2d);
   }
 
   public double getMoleSpeed() {
     return moleScoreMotor.getMotorOutputPercent();
   }
 
-  public double getMolePivotPositionRadians() {
-    return Conversions.falconToRadians(
-        molePivotMotor.getSelectedSensorPosition(), kMolePivotGearing);
-  }
-
-  public void keepCube() {
-    moleScoreMotor.set(ControlMode.Current, -kMoleKeepingCurrent);
-  }
-
   public void intakeCube() {
     System.out.println("Intake Cube");
-    moleScoreMotor.set(ControlMode.PercentOutput, kMoleCubeSpeed);
+    moleScoreMotor.set(ControlMode.PercentOutput, kDefaultSpeed);
+  }
+
+  public void shootCube(double desiredSpeed) {
+    moleScoreMotor.set(ControlMode.PercentOutput, desiredSpeed);
   }
 
   public void setPivotPosition(double desiredAngle) {
     molePivotMotor.set(
-        ControlMode.Position, Conversions.degreesToFalcon(desiredAngle, kArmGearing));
+        ControlMode.Position, Conversions.degreesToFalcon(desiredAngle, kMolePivotGearing));
   }
 
-  public void outtakeCube() {
-    moleScoreMotor.set(ControlMode.PercentOutput, kMoleCubeSpeed);
+  public double getMolePositionRads() {
+    if (RobotBase.isReal())
+      return Conversions.falconToRadians(
+          molePivotMotor.getSelectedSensorPosition(), kMolePivotGearing);
+    else return moleSim.getAngleRads();
+  }
+
+  public double calculateFeedForward(double angleRadians, double velocity) {
+    return moleFeedforward.calculate(angleRadians, velocity);
+  }
+
+  public void setInputVoltage(double voltage) {
+    molePivotMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
   public boolean isCurrentSpiking() {
-    return moleScoreMotor.getSupplyCurrent() >= kMoleCurrentSpikingThreshold;
+    return moleScoreMotor.getStatorCurrent() >= kMoleCurrentSpikingThreshold;
   }
 
   public void off() {
@@ -111,12 +151,21 @@ public class Mole extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Mole Current", moleScoreMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Mole Stator Current", moleScoreMotor.getStatorCurrent());
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    moleSim.setInput(molePivotMotor.getMotorOutputPercent() * 12);
+    moleSim.update(0.020);
+
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(moleSim.getCurrentDrawAmps()));
+    mole.setAngle(Units.radiansToDegrees(moleSim.getAngleRads()));
   }
 
   public void logInit() {
     getLayout(kDriverTabName).add(this);
-    getLayout(kDriverTabName).add(new MoleIntakeCube(this));
     getLayout(kDriverTabName).add(moleScoreMotor);
   }
 
