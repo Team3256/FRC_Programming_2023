@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
@@ -49,7 +50,6 @@ public class AutoScore extends CommandBase {
   private LED ledSubsystem;
   private GridScoreHeight gridScoreHeight;
   private BooleanSupplier cancelCommand;
-  private BooleanSupplier isCurrentPieceCone;
 
   public AutoScore(
       SwerveDrive swerveDrive,
@@ -58,8 +58,7 @@ public class AutoScore extends CommandBase {
       Arm armSubsystem,
       LED ledSubsystem,
       GridScoreHeight gridScoreHeight,
-      BooleanSupplier cancelCommand,
-      BooleanSupplier isCurrentPieceCone) {
+      BooleanSupplier cancelCommand) {
 
     this.swerveSubsystem = swerveDrive;
     this.elevatorSubsystem = elevatorSubsystem;
@@ -67,7 +66,6 @@ public class AutoScore extends CommandBase {
     this.ledSubsystem = ledSubsystem;
     this.gridScoreHeight = gridScoreHeight;
     this.cancelCommand = cancelCommand;
-    this.isCurrentPieceCone = isCurrentPieceCone;
   }
 
   @Override
@@ -92,6 +90,9 @@ public class AutoScore extends CommandBase {
 
     // Move to scoring waypoint
     Pose2d scoringWaypoint = kBlueScoreWaypointPoses[locationId];
+    GamePiece scoringGamePiece = kScoringLocationPiece[locationId];
+    BooleanSupplier isCurrentPieceCone = () -> scoringGamePiece.equals(GamePiece.CONE);
+
     System.out.println("Running: Go to grid (id: " + locationId + ") from " + start);
     if (DriverStation.getAlliance() == Alliance.Red) {
       scoringWaypoint = PathUtil.flip(scoringWaypoint);

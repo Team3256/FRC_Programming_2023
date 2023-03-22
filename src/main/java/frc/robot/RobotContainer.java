@@ -54,7 +54,7 @@ import java.util.ArrayList;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
-  public enum Piece {
+  public enum GamePiece {
     CUBE,
     CONE
   }
@@ -67,7 +67,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledStrip;
-  private Piece currentPiece = Piece.CUBE;
+  private GamePiece currentPiece = GamePiece.CUBE;
 
   private AutoPaths autoPaths;
 
@@ -196,7 +196,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
 
-    // TODO add commands for both locations
     operator
         .b()
         .onTrue(
@@ -207,7 +206,21 @@ public class RobotContainer implements CANTestable, Loggable {
                 armSubsystem,
                 ledStrip,
                 AutoIntakeAtSubstation.SubstationLocation.LEFT_SIDE,
+                () -> isMovingJoystick(driver),
                 this::isCurrentPieceCone));
+
+    // operator
+    // .b()
+    // .onTrue(
+    // new AutoIntakeAtSubstation(
+    // swerveSubsystem,
+    // intakeSubsystem,
+    // elevatorSubsystem,
+    // armSubsystem,
+    // ledStrip,
+    // AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE,
+    // () -> isMovingJoystick(driver),
+    // this::isCurrentPieceCone));
   }
 
   private void configureIntake() {
@@ -234,8 +247,7 @@ public class RobotContainer implements CANTestable, Loggable {
                     armSubsystem,
                     ledStrip,
                     AutoScore.GridScoreHeight.HIGH,
-                    () -> isMovingJoystick(driver),
-                    this::isCurrentPieceCone));
+                    () -> isMovingJoystick(driver)));
         driver
             .rightBumper()
             .onTrue(
@@ -246,8 +258,7 @@ public class RobotContainer implements CANTestable, Loggable {
                     armSubsystem,
                     ledStrip,
                     AutoScore.GridScoreHeight.MID,
-                    () -> isMovingJoystick(driver),
-                    this::isCurrentPieceCone));
+                    () -> isMovingJoystick(driver)));
       }
 
       driver
@@ -342,14 +353,14 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public boolean isCurrentPieceCone() {
-    return Piece.CONE.equals(currentPiece);
+    return GamePiece.CONE.equals(currentPiece);
   }
 
   public void setPieceToCone() {
-    currentPiece = Piece.CONE;
+    currentPiece = GamePiece.CONE;
   }
 
   public void setPieceToCube() {
-    currentPiece = Piece.CUBE;
+    currentPiece = GamePiece.CUBE;
   }
 }
