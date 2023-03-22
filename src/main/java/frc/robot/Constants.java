@@ -28,7 +28,7 @@ public final class Constants {
   public static final boolean kLedStripEnabled = true;
 
   public static final boolean kAdvantageKitReplayEnabled = false;
-  public static final boolean kCompetitionModeEnabled = false;
+  public static final boolean kCompetitionModeEnabled = true;
   public static final RobotType kRobotType = RobotType.ALPHA;
   public static final RobotMode kCurrentMode = RobotMode.REAL;
 

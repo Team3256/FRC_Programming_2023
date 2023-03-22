@@ -9,8 +9,6 @@ package frc.robot.auto.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
@@ -22,9 +20,8 @@ public class SetArmElevatorStart extends ParallelCommandGroup {
     // TODO arm not going to default
     // TODO remove timings
     addCommands(
-        new ParallelDeadlineGroup(
-                new WaitCommand(0.45), new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135)))
-            .andThen(new SetArmAngle(armSubsystem, ArmPreset.DEFAULT)),
-        new WaitCommand(0.3).andThen(new ZeroElevator(elevatorSubsystem)));
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135))
+            .andThen(new ZeroElevator(elevatorSubsystem))
+            .andThen(new SetArmAngle(armSubsystem, ArmPreset.DEFAULT)));
   }
 }
