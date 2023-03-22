@@ -39,7 +39,6 @@ import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
 import frc.robot.logging.Loggable;
 import frc.robot.mole.Mole;
-import frc.robot.mole.commands.SetMoleAngle;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
