@@ -18,7 +18,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.RobotContainer.GamePiece;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
@@ -36,17 +35,19 @@ public final class DynamicPathConstants {
   public static final double kBetweenPassageControlPointScalar = 0.90;
 
   // Obstacles
-  public static final Obstacle kBarrierAboveGrid = new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
+  public static final Obstacle kBarrierAboveGrid =
+      new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
   public static final Obstacle kLowerWall = new Obstacle(new Translation2d(0, 0), kFieldLength, 0);
-  public static final Obstacle kChargingStation = new Obstacle(
-      kBlueChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
+  public static final Obstacle kChargingStation =
+      new Obstacle(
+          kBlueChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
   public static final Obstacle[] obstacles = {
-      kBarrierAboveGrid,
-      kLowerWall,
-      kChargingStation,
-      kChargingStation.getRedVersion(),
-      kLowerWall.getRedVersion(),
-      kBarrierAboveGrid.getRedVersion()
+    kBarrierAboveGrid,
+    kLowerWall,
+    kChargingStation,
+    kChargingStation.getRedVersion(),
+    kLowerWall.getRedVersion(),
+    kBarrierAboveGrid.getRedVersion()
   };
 
   // Universal path nodes
@@ -59,12 +60,12 @@ public final class DynamicPathConstants {
   // TODO: Find a way for this to not be called during first command press (takes
   // 45 ms gen)
   static {
-    if (FeatureFlags.kDynamicPathGenEnabled)
-      CreateDynamicPathWayNodes.init();
+    if (FeatureFlags.kDynamicPathGenEnabled) CreateDynamicPathWayNodes.init();
   }
 
   public static final PathConstraints kWaypointPathConstraints = new PathConstraints(3, 3);
-  public static final PathConstraints kPathToDestinationConstraints = new PathConstraints(0.75, 0.75);
+  public static final PathConstraints kPathToDestinationConstraints =
+      new PathConstraints(0.75, 0.75);
 
   // x value for the blue tape in front of the blue scoring grid
   public static final double kBlueGridTapeX = 1.36;
@@ -88,14 +89,25 @@ public final class DynamicPathConstants {
 
   // (lowest y location to highest y location)
   public static final double kSubstationWaypointOffset = Units.feetToMeters(5);
-  public static final Pose2d kBlueTopDoubleSubstationPose = new Pose2d(15.70, 7.35, Rotation2d.fromDegrees(0));
-  public static final Pose2d kBlueBottomDoubleSubstationPose = new Pose2d(15.70, 6.10, Rotation2d.fromDegrees(0));
-  public static final Transform2d kSubstationPreSink = new Transform2d(new Translation2d(-kSubstationWaypointOffset, 0),
-      new Rotation2d());
+  public static final Pose2d kBlueTopDoubleSubstationPose =
+      new Pose2d(15.70, 7.35, Rotation2d.fromDegrees(0));
+  public static final Pose2d kBlueBottomDoubleSubstationPose =
+      new Pose2d(15.70, 6.10, Rotation2d.fromDegrees(0));
+  public static final Transform2d kSubstationPreSink =
+      new Transform2d(new Translation2d(-kSubstationWaypointOffset, 0), new Rotation2d());
 
-  public static final GamePiece[] kScoringLocationPiece = new GamePiece[] { GamePiece.CONE,
-      GamePiece.CUBE, GamePiece.CONE, GamePiece.CONE, GamePiece.CUBE, GamePiece.CONE, GamePiece.CONE, GamePiece.CUBE,
-      GamePiece.CONE };
+  public static final GamePiece[] kScoringLocationPiece =
+      new GamePiece[] {
+        GamePiece.CONE,
+        GamePiece.CUBE,
+        GamePiece.CONE,
+        GamePiece.CONE,
+        GamePiece.CUBE,
+        GamePiece.CONE,
+        GamePiece.CONE,
+        GamePiece.CUBE,
+        GamePiece.CONE
+      };
   public static final Pose2d[] kBlueScoreWaypointPoses = new Pose2d[9];
   public static final Pose2d[] kBottomBlueScoringPoses = new Pose2d[9];
   public static final Pose2d[] kMidBlueScoringPoses = new Pose2d[9];
@@ -103,23 +115,27 @@ public final class DynamicPathConstants {
 
   static {
     for (int i = 0; i < 9; i++) {
-      kBlueScoreWaypointPoses[i] = new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2,
-              kBlueNodeY[i]),
-          Rotation2d.fromDegrees(180).plus(kArmFckConstant));
-      kBottomBlueScoringPoses[i] = new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
-          Rotation2d.fromDegrees(180).plus(kArmFckConstant));
-      kMidBlueScoringPoses[i] = new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
-          Rotation2d.fromDegrees(180).plus(kArmFckConstant));
-      kHighBlueScoringPoses[i] = new Pose2d(
-          new Translation2d(
-              kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
-          Rotation2d.fromDegrees(180).plus(kArmFckConstant));
+      kBlueScoreWaypointPoses[i] =
+          new Pose2d(
+              new Translation2d(
+                  kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2,
+                  kBlueNodeY[i]),
+              Rotation2d.fromDegrees(180).plus(kArmFckConstant));
+      kBottomBlueScoringPoses[i] =
+          new Pose2d(
+              new Translation2d(
+                  kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
+              Rotation2d.fromDegrees(180).plus(kArmFckConstant));
+      kMidBlueScoringPoses[i] =
+          new Pose2d(
+              new Translation2d(
+                  kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
+              Rotation2d.fromDegrees(180).plus(kArmFckConstant));
+      kHighBlueScoringPoses[i] =
+          new Pose2d(
+              new Translation2d(
+                  kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
+              Rotation2d.fromDegrees(180).plus(kArmFckConstant));
     }
   }
 
