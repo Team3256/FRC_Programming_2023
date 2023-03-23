@@ -216,8 +216,10 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
+    // TODO: Change to only run when current is spiking
     intakeSubsystem.setDefaultCommand(
         new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
+
     (operator.rightTrigger())
         .whileTrue(
             new ConditionalCommand(
