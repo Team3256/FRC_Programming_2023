@@ -7,32 +7,47 @@
 
 package frc.robot.mole.commands;
 
+import static frc.robot.Constants.FieldConstants.Grids.kLowTranslations;
+import static frc.robot.Constants.FieldConstants.Grids.kLowTranslationsRed;
+import static frc.robot.Constants.FieldConstants.kFieldLength;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.limelight.Limelight;
 import frc.robot.mole.Mole;
 
 public class ShootInterpCube extends CommandBase {
 
   Mole moleSubsytem;
+  Pose2d odomCurrentPosition;
 
-  public ShootInterpCube(Mole moleSubsystem) {
+  public ShootInterpCube(Mole moleSubsystem, Pose2d odomCurrentPosition) {
     this.moleSubsytem = moleSubsystem;
+    this.odomCurrentPosition = odomCurrentPosition;
     addRequirements(moleSubsystem);
   }
 
   @Override
   public void execute() {
-    if (Limelight.hasValidTargets(
-        Constants.VisionConstants.FrontConstants.kLimelightNetworkTablesName)) {
-      double[] botPoseTargetSpace =
-          Limelight.getTargetPose_RobotSpace(
-              Constants.VisionConstants.FrontConstants.kLimelightNetworkTablesName);
-      double botPoseTargetSpaceVerticalDistance = botPoseTargetSpace[2];
-      moleSubsytem.shootCube(
-          moleSubsytem.getMoleShooterRPMFromDistanceInterpolation(
-              botPoseTargetSpaceVerticalDistance));
+    double minDistanceFromGridLocation = kFieldLength;
+
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+      for (int i = 0; i < kLowTranslations.length; ++i) {
+        minDistanceFromGridLocation =
+            Math.min(
+                minDistanceFromGridLocation,
+                odomCurrentPosition.getTranslation().getDistance(kLowTranslations[i]));
+      }
+    } else {
+      for (int i = 0; i < kLowTranslationsRed.length; ++i) {
+        minDistanceFromGridLocation =
+            Math.min(
+                minDistanceFromGridLocation,
+                odomCurrentPosition.getTranslation().getDistance(kLowTranslations[i]));
+      }
     }
+    moleSubsytem.shootCube(
+        moleSubsytem.getMoleShooterRPMFromDistanceInterpolation(minDistanceFromGridLocation));
   }
 
   @Override

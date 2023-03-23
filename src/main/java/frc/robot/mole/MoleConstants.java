@@ -59,9 +59,8 @@ public final class MoleConstants {
   public static final double kArmA = 0;
 
   public static final List<TrainingDataPoint> MOLE_INTERP_DATA =
-      Arrays.asList(
-          // tuned 9/10
-          new TrainingDataPoint(57.00706, 000000));
+      // TODO: tune these
+      Arrays.asList(new TrainingDataPoint(0, 0));
 
   public static final PolynomialSplineFunction distanceToMoleShooterRPMInterpolation;
 

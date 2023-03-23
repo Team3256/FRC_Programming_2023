@@ -165,6 +165,7 @@ public final class Constants {
       public static final Translation3d[] kMid3dTranslations = new Translation3d[kNodeRowCount];
       public static final Translation2d[] kHighTranslations = new Translation2d[kNodeRowCount];
       public static final Translation3d[] kHigh3dTranslations = new Translation3d[kNodeRowCount];
+      public static final Translation2d[] kLowTranslationsRed = new Translation2d[kNodeRowCount];
 
       static {
         for (int i = 0; i < kNodeRowCount; i++) {
@@ -178,6 +179,12 @@ public final class Constants {
               new Translation3d(
                   kHighX, kNodeFirstY + kNodeSeparationY * i, isCube ? kHighCubeZ : kHighConeZ);
           kHighTranslations[i] = new Translation2d(kHighX, kNodeFirstY + kNodeSeparationY * i);
+
+          // pre-compute flip
+          kLowTranslationsRed[i] =
+              new Translation2d(
+                  Constants.FieldConstants.kFieldLength - kLowTranslations[i].getX(),
+                  kLowTranslations[i].getY());
         }
       }
 
