@@ -175,4 +175,14 @@ public class Mole extends SubsystemBase implements Loggable, CANTestable {
     SmartDashboard.putBoolean("Mole CAN connected", result);
     return result;
   }
+
+  public double clampDistanceToInterpolation(double distance) {
+    // if limelight is not tracking, we are prob out of range and should set to max distance
+    if (distance == 0) return kMoleInterpolationMinValue;
+    return MathUtil.clamp(distance, kMoleInterpolationMinValue, kMoleInterpolationMaxValue);
+  }
+
+  public double getMoleShooterRPMFromDistanceInterpolation(double distance) {
+    return distanceToMoleShooterRPMInterpolation.value(clampDistanceToInterpolation(distance));
+  }
 }
