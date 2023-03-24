@@ -22,6 +22,12 @@ public class DynamicPathFinder {
   private int[] pre;
   private double[] dist;
 
+  /**
+   * initialize dynamic path finder
+   * @param src index of src node in the graph
+   * @param sink index of sink node in the graph
+   * @param pathNodes graph to run algorithm on
+   */
   public DynamicPathFinder(int src, int sink, ArrayList<PathNode> pathNodes) {
     this.src = src;
     this.sink = sink;
@@ -31,6 +37,10 @@ public class DynamicPathFinder {
     System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
   }
 
+  /**
+   * find shortest path between src and sink
+   * @return optimal path of nodes (indexes) to travel through to get from src to sink
+   */
   public List<Integer> findPath() {
     int nodesExplored = 0;
     // Time to travel from src to all other nodes
@@ -52,16 +62,22 @@ public class DynamicPathFinder {
       // Find unvisited lowest priority node
       int currentNode = pq.poll();
       if (visitedNodes[currentNode]) continue;
-
       nodesExplored++;
 
-      // Found the shortest path to sink
+      // If the shortest path to sink has been found, return the path
       if (currentNode == sink) {
         System.out.println("Path found. Explored " + nodesExplored + " nodes.");
-        return getPathIdsFromNode(sink);
+        List<Integer> pathIds = new ArrayList<>();
+        while (currentNode != src) {
+          pathIds.add(currentNode);
+          currentNode = pre[currentNode];
+        }
+        pathIds.add(currentNode);
+        Collections.reverse(pathIds);
+        return pathIds;
       }
 
-      // Update all unvisited neighboring nodes
+      // else update all unvisited neighboring nodes
       for (int childId = 0; childId < pathNodes.get(currentNode).getEdges().size(); childId++) {
         int next = pathNodes.get(currentNode).getEdges().get(childId);
         if (visitedNodes[next]) continue;
@@ -76,32 +92,15 @@ public class DynamicPathFinder {
           // Save path as new current shortest path
           dist[next] = newDist;
           pre[next] = currentNode;
-
           // Add node to queue
           pq.add(next);
         }
       }
-
       // mark as visited
       visitedNodes[currentNode] = true;
     }
-    // No paths available
+    // Sink is unreachable, return null
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
     return null;
-  }
-
-  // get the pathIds stored from src to node
-  private List<Integer> getPathIdsFromNode(int node) {
-    List<Integer> pathIds = new ArrayList<>();
-    int currentNode = node;
-
-    while (currentNode != src) {
-      pathIds.add(currentNode);
-      currentNode = pre[currentNode];
-    }
-
-    pathIds.add(currentNode);
-    Collections.reverse(pathIds);
-    return pathIds;
   }
 }

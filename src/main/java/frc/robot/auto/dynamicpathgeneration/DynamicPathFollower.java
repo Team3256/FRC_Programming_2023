@@ -32,6 +32,10 @@ import frc.robot.led.patterns.SuccessBlinkingPattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.Supplier;
 
+/*
+ * TO BE DELETED AFTER AUTOSCORE IS MERGED
+ * WILL BE REPLACED
+ */
 public class DynamicPathFollower {
   public enum GoalType {
     LOW_GRID,
