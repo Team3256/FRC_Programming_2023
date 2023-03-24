@@ -171,10 +171,13 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   @Override
   public void periodic() {
     if (Constants.kDebugEnabled) {
-      SmartDashboard.putNumber("Arm Raw Encoder value", armMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber(
+          "Arm Raw Relative Encoder value", armMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber("Arm Raw Absolute Encoder value", armEncoder.getDistance());
       SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
       SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
-      SmartDashboard.putNumber("Arm motor percent output", armMotor.getMotorOutputPercent() * 12);
+      SmartDashboard.putNumber(
+          "Arm motor open loop voltage", armMotor.getMotorOutputPercent() * 12);
       SmartDashboard.putBoolean("Arm encoder connected", armEncoder.isConnected());
     }
   }
