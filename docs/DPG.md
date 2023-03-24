@@ -8,7 +8,7 @@
 * Presink refers to the node right before the sink in a path. For example the presink of the auto score program is the pose right before the robot goes to intake the game piece.
 * Sink refers to the last node in a path. For example the sink of the DPG program is the robot's final pose.
 * Bezier is the type of curve we use to interpolate between way points. Here is a link to learn more on how they work: https://en.wikipedia.org/wiki/Bézier_curve.
-* Passage refers to the narrow space above the charge station and below the charge station in which our robot travels through. 
+* Passage refers to the narrow space above the charge station and below the charge station in which our robot travels through.
 
 ### How it works:
 * Visibility graph:

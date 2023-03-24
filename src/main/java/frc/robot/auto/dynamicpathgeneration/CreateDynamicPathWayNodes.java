@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 /**
- * Creates the blue and red  alliance visibility graphs for DPG
- * It explicitly builds the graph for the blue alliance and then mirrors all the points for the red alliance
+ * Creates the blue and red alliance visibility graphs for DPG It explicitly builds the graph for
+ * the blue alliance and then mirrors all the points for the red alliance
  */
 public class CreateDynamicPathWayNodes {
   public static void init() {
