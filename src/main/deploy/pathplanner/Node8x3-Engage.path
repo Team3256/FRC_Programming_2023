@@ -1,0 +1,185 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.927837220164768,
+        "y": 4.415879181228229
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.031538762181571,
+        "y": 4.853873966142495
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "defaultPosition"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.528272756306798,
+        "y": 4.576376531306665
+      },
+      "prevControl": {
+        "x": 5.755998123053104,
+        "y": 4.617104014834115
+      },
+      "nextControl": {
+        "x": 5.755998123053104,
+        "y": 4.617104014834115
+      },
+      "holonomicAngle": 0.1,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.9226786607477724,
+        "y": 4.423466601493401
+      },
+      "prevControl": {
+        "x": 4.436777327432516,
+        "y": 4.828969099716273
+      },
+      "nextControl": {
+        "x": 4.436777327432516,
+        "y": 4.828969099716273
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "cubeMid",
+          "defaultPosition"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 3.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.503573508232087,
+        "y": 3.3548088940389036
+      },
+      "prevControl": {
+        "x": 5.381278092742818,
+        "y": 5.6371960982176095
+      },
+      "nextControl": {
+        "x": 5.381278092742818,
+        "y": 5.6371960982176095
+      },
+      "holonomicAngle": 0.1,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.938721085715923,
+        "y": 3.7944100451218246
+      },
+      "prevControl": {
+        "x": 1.9267900622879037,
+        "y": 4.534404863205536
+      },
+      "nextControl": {
+        "x": 1.9479133509229298,
+        "y": 3.2242805285154192
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "cubeHigh",
+          "defaultPosition"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 3.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.922125162663954,
+        "y": 3.359987944002038
+      },
+      "prevControl": {
+        "x": 2.0177261541589053,
+        "y": 3.2927871431507834
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 12.0,
+  "maxAcceleration": 8.0,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 1.3045498934659092,
+      "names": [
+        "defaultPosition"
+      ]
+    },
+    {
+      "position": 0.538543146306818,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 2.6232055664062486,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 3.2188443270596707,
+      "names": [
+        "defaultPosition"
+      ]
+    }
+  ]
+}

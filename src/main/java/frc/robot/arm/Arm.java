@@ -7,16 +7,22 @@
 
 package frc.robot.arm;
 
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
+import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.kArmPositionKeys;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -27,13 +33,33 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
+import frc.robot.logging.DoubleSendable;
+import frc.robot.logging.Loggable;
+import frc.robot.swerve.helpers.Conversions;
 
-public class Arm extends SubsystemBase implements CANTestable {
+public class Arm extends SubsystemBase implements CANTestable, Loggable {
+  public enum ArmPreset {
+    DEFAULT(ArmConstants.kDefaultArmAngle),
+    ANY_PIECE_LOW(ArmConstants.kAnyPieceLowRotation),
+    CUBE_MID(ArmConstants.kCubeMidRotation),
+    CONE_MID(ArmConstants.kConeMidRotation),
+    CUBE_HIGH(ArmConstants.kCubeHighRotation),
+    CONE_HIGH(ArmConstants.kConeHighRotation),
+    GROUND_INTAKE(ArmConstants.kGroundIntakeRotation),
+    DOUBLE_SUBSTATION(ArmConstants.kDoubleSubstationRotation);
+
+    public Rotation2d rotation;
+
+    private ArmPreset(Rotation2d rotation) {
+      this.rotation = rotation;
+    }
+  }
+
   private WPI_TalonFX armMotor;
-  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
 
   private static final SingleJointedArmSim armSim =
@@ -44,7 +70,6 @@ public class Arm extends SubsystemBase implements CANTestable {
           kArmLengthMeters,
           kArmAngleMinConstraint.getRadians(),
           kArmAngleMaxConstraint.getRadians(),
-          kArmMassKg,
           true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
@@ -79,26 +104,50 @@ public class Arm extends SubsystemBase implements CANTestable {
 
   private void configureRealHardware() {
     armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
-    armMotor.enableVoltageCompensation(true);
+    armMotor.setInverted(true);
+    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.setSelectedSensorPosition(0);
+  }
+
+  public void setCoast() {
+    armMotor.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public void setBrake() {
     armMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public double calculateFeedForward(double angleRadians, double velocity) {
-    double clampedPosition =
-        MathUtil.clamp(
-            angleRadians, kArmAngleMinConstraint.getRadians(), kArmAngleMaxConstraint.getRadians());
-
-    SmartDashboard.putNumber("Position setpoint", Units.radiansToDegrees(clampedPosition));
-    return armFeedforward.calculate(clampedPosition, velocity);
+    return armFeedforward.calculate(angleRadians, velocity);
   }
 
   public void setInputVoltage(double voltage) {
     armMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
+  public void zeroEncoder() {
+    armMotor.setSelectedSensorPosition(0);
+  }
+
+  /**
+   * Reset encoder offset. Use when you know where the arm actually is in space but the relative
+   * encoder is off. Useful when the gear skips and you need to change the offset
+   *
+   * @param currentAbsolutePosition The actual position of the arm in space that you want the
+   *     current relative encoder value to reflect. This will change all setpoint for the arm.
+   */
+  public void resetOffset(Rotation2d currentAbsolutePosition) {
+    ArmConstants.kEncoderOffsetRadians =
+        ArmConstants.kEncoderOffsetRadians
+            + (currentAbsolutePosition.getRadians() - this.getArmPositionRads());
+
+    System.out.println("New arm offset" + ArmConstants.kEncoderOffsetRadians);
+  }
+
   public double getArmPositionRads() {
     if (RobotBase.isReal())
-      return armEncoder.getAbsolutePosition() * kArmEncoderConversionToRadians;
+      return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
+          + Preferences.getDouble(ArmPreferencesKeys.kEncoderOffsetKey, kEncoderOffsetRadians);
     else return armSim.getAngleRads();
   }
 
@@ -108,7 +157,14 @@ public class Arm extends SubsystemBase implements CANTestable {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    if (Constants.kDebugEnabled) {
+      SmartDashboard.putNumber("Arm Raw Encoder value", armMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
+      SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
+      SmartDashboard.putNumber("Arm motor percent output", armMotor.getMotorOutputPercent() * 12);
+    }
+  }
 
   @Override
   public void simulationPeriodic() {
@@ -123,7 +179,7 @@ public class Arm extends SubsystemBase implements CANTestable {
   }
 
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(armSim.getAngleRads()));
+    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }
@@ -133,7 +189,55 @@ public class Arm extends SubsystemBase implements CANTestable {
     System.out.println("Testing arm CAN:");
     boolean result = CANDeviceTester.testTalonFX(armMotor);
     System.out.println("Arm CAN connected: " + result);
-    SmartDashboard.putBoolean("Arm CAN connected", result);
+    getLayout(kElectricalTabName).add("Arm CAN connected", result);
     return result;
+  }
+
+  @Override
+  public void logInit() {
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName)
+        .add("Angle", new DoubleSendable(() -> Math.toDegrees(getArmPositionRads()), "Gyro"));
+    getLayout(kDriverTabName).add(armMotor);
+  }
+
+  @Override
+  public ShuffleboardLayout getLayout(String tab) {
+    return Shuffleboard.getTab(tab).getLayout(kArmLayoutName, BuiltInLayouts.kList).withSize(2, 4);
+  }
+
+  public Rotation2d getPreferencesSetpoint(Arm.ArmPreset setpoint) {
+    return new Rotation2d(
+        Preferences.getDouble(
+            ArmPreferencesKeys.kArmPositionKeys.get(setpoint),
+            ArmPreferencesKeys.kArmPositionDefaults.get(setpoint).getRadians()));
+  }
+
+  /** Populating arm preferences on network tables */
+  public static void loadArmPreferences() {
+    // Arm PID Preferences
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kP);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kIKey, ArmConstants.kI);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kD);
+    // Arm Preset Preferences
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.DEFAULT), kDefaultArmAngle.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.CUBE_MID), kCubeMidRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.CONE_MID), kConeMidRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.CUBE_HIGH), kCubeHighRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.CONE_HIGH), kConeHighRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.GROUND_INTAKE), kGroundIntakeRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION),
+        kDoubleSubstationRotation.getRadians());
+    // Arm Encoder Offset
+    Preferences.initDouble(ArmPreferencesKeys.kEncoderOffsetKey, kEncoderOffsetRadians);
   }
 }

@@ -9,12 +9,23 @@ package frc.robot.intake.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
+import frc.robot.led.LED;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.patterns.SuccessPattern;
 
 public class IntakeCone extends CommandBase {
-  private final Intake intakeSubsystem;
+  private Intake intakeSubsystem;
+  private LED ledSubsystem;
 
   public IntakeCone(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
+
+    addRequirements(intakeSubsystem);
+  }
+
+  public IntakeCone(Intake intakeSubsystem, LED ledSubsystem) {
+    this.intakeSubsystem = intakeSubsystem;
+    this.ledSubsystem = ledSubsystem;
 
     addRequirements(intakeSubsystem);
   }
@@ -27,10 +38,13 @@ public class IntakeCone extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intakeSubsystem.off();
+    if (!interrupted && ledSubsystem != null) {
+      new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
+    }
   }
 
   @Override
   public boolean isFinished() {
-    return false;
+    return intakeSubsystem.isCurrentSpiking();
   }
 }

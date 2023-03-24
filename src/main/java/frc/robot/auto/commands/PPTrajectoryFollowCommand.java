@@ -7,10 +7,10 @@
 
 package frc.robot.auto.commands;
 
-import static frc.robot.auto.AutoConstants.kAutoDebug;
+import static frc.robot.auto.AutoConstants.*;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
-import edu.wpi.first.math.MathUtil;
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,14 +19,19 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.SwerveDriveController;
+import frc.robot.auto.helpers.TrajectoryMirrorer;
 import frc.robot.swerve.SwerveDrive;
 
 public class PPTrajectoryFollowCommand extends CommandBase {
+  private static Field2d autoVisualization = new Field2d();
   private final Timer timer = new Timer();
   private PathPlannerTrajectory trajectory;
   private final SwerveDriveController controller;
@@ -35,7 +40,14 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   private boolean useAllianceColor;
   private Pose2d startPose;
   private AutoCommandRunner autoCommandRunner;
+  private Alliance alliance;
   private boolean isFirstSegment;
+
+  static {
+    if (kAutoDebug && RobotBase.isSimulation()) {
+      SmartDashboard.putData("Auto Visualization", autoVisualization);
+    }
+  }
 
   public PPTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory,
@@ -50,11 +62,6 @@ public class PPTrajectoryFollowCommand extends CommandBase {
         new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
 
     this.swerveSubsystem = swerveSubsystem;
-    PathPlannerTrajectory.PathPlannerState start =
-        (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
-    Rotation2d rotation = start.holonomicRotation;
-    Translation2d translation = start.poseMeters.getTranslation();
-    this.startPose = new Pose2d(translation, rotation);
 
     addRequirements(swerveSubsystem);
   }
@@ -67,7 +74,6 @@ public class PPTrajectoryFollowCommand extends CommandBase {
       boolean useAllianceColor,
       boolean isFirstSegment,
       SwerveDrive swerveSubsystem) {
-
     this(
         trajectory,
         xTranslationController,
@@ -104,28 +110,31 @@ public class PPTrajectoryFollowCommand extends CommandBase {
   }
 
   public void setFirstSegment(boolean first) {
-    if (!first) {
-      this.startPose = null;
-    }
+    isFirstSegment = first;
   }
 
   @Override
   public void initialize() {
     if (this.useAllianceColor) {
-      trajectory =
-          PathPlannerTrajectory.transformTrajectoryForAlliance(
-              trajectory, DriverStation.getAlliance());
-      PathPlannerTrajectory.PathPlannerState start =
-          (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0);
-      Rotation2d rotation = start.holonomicRotation;
-      Translation2d translation = start.poseMeters.getTranslation();
-      this.startPose = new Pose2d(translation, rotation);
+      this.alliance = DriverStation.getAlliance();
+    } else {
+      this.alliance = Alliance.Blue;
+      // No mirroring on blue alliance
     }
+
+    PathPlannerTrajectory.PathPlannerState start =
+        TrajectoryMirrorer.mirrorState(
+            (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0), alliance);
+    Rotation2d rotation = start.holonomicRotation;
+    Translation2d translation = start.poseMeters.getTranslation();
+    this.startPose = new Pose2d(translation, rotation);
+
     if (kAutoDebug) {
       swerveSubsystem.setTrajectory(trajectory);
+      autoVisualization.getObject("traj").setTrajectory(trajectory);
+      PathPlannerServer.sendActivePath(trajectory.getStates());
     }
     if (isFirstSegment) { // use existing pose for more accuracy if it is the first path
-      swerveSubsystem.setGyro(this.startPose.getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }
 
@@ -136,10 +145,13 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public void execute() {
-    double now = MathUtil.clamp(timer.get(), 0, trajectoryDuration);
+    double now = timer.get();
+
+    PathPlannerTrajectory.PathPlannerState nonMirroredDesired =
+        (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
 
     PathPlannerTrajectory.PathPlannerState desired =
-        (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
+        TrajectoryMirrorer.mirrorState(nonMirroredDesired, alliance);
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d desiredPose = desired.poseMeters;
     double desiredLinearVelocity = desired.velocityMetersPerSecond;
@@ -149,10 +161,17 @@ public class PPTrajectoryFollowCommand extends CommandBase {
     if (kAutoDebug) {
       SmartDashboard.putNumber("Desired Rotation", desiredRotation.getDegrees());
       SmartDashboard.putNumber("Desired Position", Units.metersToInches(desiredPose.getX()));
+
+      if (RobotBase.isSimulation()) {
+        autoVisualization.setRobotPose(new Pose2d(desiredPose.getTranslation(), desiredRotation));
+        PathPlannerServer.sendPathFollowingData(
+            new Pose2d(desiredPose.getTranslation(), desiredRotation),
+            new Pose2d(desiredPose.getTranslation(), desiredRotation));
+      }
     }
 
     if (autoCommandRunner != null) {
-      autoCommandRunner.execute(desiredPose);
+      autoCommandRunner.execute(nonMirroredDesired.poseMeters, now);
     }
 
     swerveSubsystem.drive(
@@ -160,36 +179,47 @@ public class PPTrajectoryFollowCommand extends CommandBase {
         false);
   }
 
-  // TODO: Fix to give a little more time to be in the right place
   @Override
   public boolean isFinished() {
-    return timer.get() >= trajectoryDuration; // * TRAJECTORY_DURATION_FACTOR;
+    boolean isTrajectoryFinished = isTrajectoryFinished();
+    SmartDashboard.putBoolean("Is traj finished", isTrajectoryFinished);
+
+    return isTrajectoryFinished;
   }
 
   @Override
   public void end(boolean interrupted) {
+    swerveSubsystem.drive(new ChassisSpeeds(), false);
+
     if (autoCommandRunner != null) {
-      // find out what to call the method on
-      // .atReference();
       autoCommandRunner.end();
     }
-    swerveSubsystem.drive(new ChassisSpeeds(), false);
+
+    if (kAutoDebug) {
+      System.out.println(
+          "Ended trajectory at time " + timer.get() + " seconds out of " + trajectoryDuration);
+      System.out.println("Trajectory was interrupted? " + interrupted);
+    }
   }
 
-  private Pose2d poseTolerance = new Pose2d();
-  private Pose2d poseError;
-  private Rotation2d rotationError;
+  public boolean isTrajectoryFinished() {
+    double now = timer.get();
+    if (now >= trajectoryDuration + kAutoTrajectoryTimeoutSeconds) {
+      return true;
+    }
 
-  // calculates pose differences
-  public boolean atReference() {
+    if (kAutoDebug && RobotBase.isSimulation()) {
+      return now >= trajectoryDuration;
+    }
 
-    // ---------------------------------------------
-    final Translation2d eTranslate = poseError.getTranslation();
-    final Rotation2d eRotate = rotationError;
-    final Translation2d tolTranslate = poseTolerance.getTranslation();
-    final Rotation2d tolRotate = poseTolerance.getRotation();
-    return Math.abs(eTranslate.getX()) < tolTranslate.getX()
-        && Math.abs(eTranslate.getY()) < tolTranslate.getY()
-        && Math.abs(eRotate.getRadians()) < tolRotate.getRadians();
+    Pose2d currentPose = swerveSubsystem.getPose();
+    Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
+
+    boolean reachedEndTolerance =
+        relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
+            && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
+            && now >= trajectoryDuration;
+
+    return reachedEndTolerance && now >= trajectoryDuration;
   }
 }

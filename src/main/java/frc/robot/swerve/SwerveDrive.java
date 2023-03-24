@@ -7,6 +7,7 @@
 
 package frc.robot.swerve;
 
+import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.Constants.VisionConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
@@ -16,6 +17,8 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -23,17 +26,24 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.limelight.Limelight;
+import frc.robot.logging.DoubleSendable;
+import frc.robot.logging.Loggable;
 import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveDrive extends SubsystemBase implements CANTestable {
+public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
   private final SwerveModule frontRightModule = new SwerveModule(1, FrontRight.constants);
   private final SwerveModule backLeftModule = new SwerveModule(2, BackLeft.constants);
@@ -51,13 +61,15 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
-  public Pigeon2 gyro;
+
+  private final Pigeon2 gyro;
 
   public SwerveDrive() {
-    gyro = new Pigeon2(kPigeonID);
+    gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
-    zeroGyro();
+    zeroGyroYaw();
 
+    // TODO MAKE POSITION 0,0
     poseEstimator =
         new SwerveDrivePoseEstimator(
             kSwerveKinematics,
@@ -70,7 +82,10 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
             },
             new Pose2d());
 
-    SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
+    if (Constants.kDebugEnabled) {
+      SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
+      SmartDashboard.putData("Field", field);
+    }
     /*
      * By pausing init for a second before setting module offsets, we avoid a bug
      * with inverting motors.
@@ -87,7 +102,27 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates = kSwerveKinematics.toSwerveModuleStates(chassisSpeeds);
+    Pose2d robotPoseVelocity =
+        new Pose2d(
+            chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
+            chassisSpeeds.vyMetersPerSecond * kPeriodicDeltaTime,
+            Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * kPeriodicDeltaTime));
+    Twist2d twistVelocity = (new Pose2d()).log(robotPoseVelocity);
+    ChassisSpeeds updatedChassisSpeeds =
+        new ChassisSpeeds(
+            twistVelocity.dx / kPeriodicDeltaTime,
+            twistVelocity.dy / kPeriodicDeltaTime,
+            twistVelocity.dtheta / kPeriodicDeltaTime);
+
+    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
+      chassisSpeeds.vxMetersPerSecond =
+          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+      chassisSpeeds.vyMetersPerSecond =
+          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+    }
+
+    SwerveModuleState[] swerveModuleStates =
+        kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
@@ -106,30 +141,6 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
-  }
-
-  public void drive(
-      Translation2d translation,
-      double rotation,
-      boolean fieldRelative,
-      boolean isOpenLoop,
-      double elevatorHeight) {
-    ChassisSpeeds swerveChassisSpeed =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getPose().getRotation())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
-
-    drive(swerveChassisSpeed, isOpenLoop, elevatorHeight);
-  }
-
-  public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop, double elevatorHeight) {
-    chassisSpeeds.vxMetersPerSecond =
-        adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond, elevatorHeight);
-    chassisSpeeds.vyMetersPerSecond =
-        adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond, elevatorHeight);
-
-    drive(chassisSpeeds, isOpenLoop);
   }
 
   public void setDesiredAngleState(SwerveModuleState[] swerveModuleStates) {
@@ -163,67 +174,138 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     return states;
   }
 
-  public void zeroGyro() {
+  public void zeroGyroYaw() {
     gyro.setYaw(0);
   }
 
-  public void setGyro(double yaw) {
-    gyro.setYaw(yaw);
+  public void setGyroYaw(double yawDegrees) {
+    gyro.setYaw(yawDegrees);
   }
 
   public Rotation2d getYaw() {
     double[] ypr = new double[3];
     gyro.getYawPitchRoll(ypr);
-    return (kInvertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+    return (kInvertGyroYaw) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
 
-  public boolean shouldAddVisionMeasurement(Pose2d limelightPose) {
+  public Rotation2d getPitch() {
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return Rotation2d.fromDegrees(ypr[1]);
+  }
+
+  public Rotation2d getRoll() {
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return Rotation2d.fromDegrees(ypr[2]);
+  }
+
+  public boolean shouldAddVisionMeasurement(
+      Pose2d limelightPose,
+      double LimelightTranslationThresholdMeters,
+      double LimelightRotationThreshold) {
     Pose2d relativePose = limelightPose.relativeTo(poseEstimator.getEstimatedPosition());
-    return Math.abs(relativePose.getTranslation().getNorm()) < kLimelightTranslationThresholdMeters
-        && Math.abs(relativePose.getRotation().getRadians()) < kLimelightRotationThreshold;
+    return Math.abs(relativePose.getTranslation().getNorm()) < LimelightTranslationThresholdMeters
+        && Math.abs(relativePose.getRotation().getRadians()) < LimelightRotationThreshold;
   }
 
-  @Override
-  public void periodic() {
-
-    poseEstimator.update(getYaw(), getModulePositions());
-    Logger.getInstance().recordOutput("Odometry", getPose());
-
-    if (Limelight.hasValidTargets(kLimelightNetworkTablesName)) {
-      double[] visionBotPose = Limelight.getBotpose(kLimelightNetworkTablesName);
+  public void localize(
+      String networkTablesName,
+      double fieldTransformOffsetX,
+      double fieldTransformOffsetY,
+      double LimelightTranslationThresholdMeters,
+      double LimelightRotationThreshold) {
+    if (Limelight.hasValidTargets(networkTablesName)) {
+      double[] visionBotPose = Limelight.getBotpose(networkTablesName);
 
       if (visionBotPose.length != 0) {
-        double tx = visionBotPose[0] + kFieldTranslationOffsetX;
-        double ty = visionBotPose[1] + kFieldTranslationOffsetY;
+        double tx = visionBotPose[0] + fieldTransformOffsetX;
+        double ty = visionBotPose[1] + fieldTransformOffsetY;
 
         // botpose from network tables uses degrees, not radians, so need to convert
         double rx = visionBotPose[3];
         double ry = visionBotPose[4];
         double rz = ((visionBotPose[5] + 360) % 360);
 
-        double tl = Limelight.getLatency_Pipeline(kLimelightNetworkTablesName);
+        double tl = Limelight.getLatency_Pipeline(networkTablesName);
 
         Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
 
-        if (shouldAddVisionMeasurement(limelightPose)) {
+        if (shouldAddVisionMeasurement(
+            limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)) {
           poseEstimator.addVisionMeasurement(
               limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
         }
 
-        limelightLocalizationField.setRobotPose(limelightPose);
+        if (Constants.kDebugEnabled) {
+          limelightLocalizationField.setRobotPose(limelightPose);
+          SmartDashboard.putNumber("Lime Light pose x", limelightPose.getX());
+          SmartDashboard.putNumber("Lime Light pose y", limelightPose.getY());
+          SmartDashboard.putNumber(
+              "Lime Light pose theta", limelightPose.getRotation().getDegrees());
+        }
+      }
+    }
+  }
+
+  @Override
+  public void periodic() {
+
+    poseEstimator.update(getYaw(), getModulePositions());
+    SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
+    SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
+    if (Constants.kDebugEnabled) {
+      field.setRobotPose(poseEstimator.getEstimatedPosition());
+      Logger.getInstance().recordOutput("Odometry", getPose());
+
+      for (SwerveModule mod : swerveModules) {
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
       }
     }
 
-    for (SwerveModule mod : swerveModules) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-    }
+    this.localize(
+        FrontConstants.kLimelightNetworkTablesName,
+        FrontConstants.kFieldTranslationOffsetX,
+        FrontConstants.kFieldTranslationOffsetY,
+        FrontConstants.kLimelightTranslationThresholdMeters,
+        FrontConstants.kLimelightRotationThreshold);
+    this.localize(
+        SideConstants.kLimelightNetworkTablesName,
+        SideConstants.kFieldTranslationOffsetX,
+        SideConstants.kFieldTranslationOffsetY,
+        SideConstants.kLimelightTranslationThresholdMeters,
+        SideConstants.kLimelightRotationThreshold);
+    this.localize(
+        BackConstants.kLimelightNetworkTablesName,
+        BackConstants.kFieldTranslationOffsetX,
+        BackConstants.kFieldTranslationOffsetY,
+        BackConstants.kLimelightTranslationThresholdMeters,
+        BackConstants.kLimelightTranslationThresholdMeters);
   }
 
   public void setTrajectory(Trajectory trajectory) {
     field.getObject("traj").setTrajectory(trajectory);
+  }
+
+  @Override
+  public void logInit() {
+    getLayout(kDriverTabName).add(this);
+    getLayout(kDriverTabName).add("gyro", new DoubleSendable(gyro::getYaw, "Gyro"));
+    for (int i = 0; i < swerveModules.length; i++) {
+      getLayout(kDriverTabName).add("Encoder " + i, swerveModules[i].getAngleEncoder());
+    }
+    for (int i = 0; i < swerveModules.length; i++) {
+      swerveModules[i].logInit();
+    }
+  }
+
+  public ShuffleboardLayout getLayout(String tab) {
+    return Shuffleboard.getTab(tab)
+        .getLayout(kSwerveLayoutName, BuiltInLayouts.kList)
+        .withSize(2, 4);
   }
 
   public boolean CANTest() {
@@ -234,7 +316,7 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     }
     result &= CANDeviceTester.testPigeon(gyro);
     System.out.println("Drivetrain CAN connected: " + result);
-    SmartDashboard.putBoolean("Drivetrain CAN connected", result);
+    getLayout(kElectricalTabName).add("Drivetrain CAN connected", result);
     return result;
   }
 
@@ -248,5 +330,17 @@ public class SwerveDrive extends SubsystemBase implements CANTestable {
     for (SwerveModule swerveModule : swerveModules) {
       swerveModule.setAngleMotorNeutralMode(neutralMode);
     }
+  }
+
+  public boolean isTiltedForward() {
+    return getPitch().getDegrees() > kAutoBalanceMaxError.getDegrees();
+  }
+
+  public boolean isTiltedBackward() {
+    return getPitch().getDegrees() < -kAutoBalanceMaxError.getDegrees();
+  }
+
+  public boolean isNotTilted() {
+    return Math.abs(getPitch().getDegrees()) < kAutoBalanceMaxError.getDegrees();
   }
 }

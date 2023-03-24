@@ -7,17 +7,20 @@
 
 package frc.robot.auto;
 
+import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
 
 public final class AutoConstants {
+  public static final boolean kAutoDebug = true && Constants.kDebugEnabled;
   public static final boolean changeAutosBasedOnAlliance = true;
-  public static final boolean kAutoDebug = false;
   public static final double kCommandMarkerThreshold = 0.05; // meters
 
-  public static final double kMaxSpeedMetersPerSecond = 3;
-  public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-  public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-  public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+  public static final double kMaxSpeedMetersPerSecond = 5;
+  public static final double kMaxAccelerationMetersPerSecondSquared = 7.5;
+  public static final double kMaxAngularSpeedRadiansPerSecond = 1.5 * Math.PI;
+  public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2 * Math.PI;
 
   // Constraint for the motion profiled robot angle controller
   public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
@@ -25,22 +28,33 @@ public final class AutoConstants {
           kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
   /* Auto translation constants */
-  public static double kAutoXTranslationP = 2.2;
-  public static double kAutoXTranslationI = 0.025;
-  public static double kAutoXTranslationD = 0;
+  public static final double kAutoXTranslationP = 2.2;
+  public static final double kAutoXTranslationI = 0.025;
+  public static final double kAutoXTranslationD = 0;
 
-  public static double kAutoYTranslationP = 2.2;
-  public static double kAutoYTranslationI = 0.025;
-  public static double kAutoYTranslationD = 0;
+  public static final double kAutoYTranslationP = 2.2;
+  public static final double kAutoYTranslationI = 0.025;
+  public static final double kAutoYTranslationD = 0;
 
-  public static double kTranslationFF = 0.3;
+  public static final double kTranslationFF = 0.3;
 
   /* ThetaController constants */
-  public static double kAutoThetaControllerP = 5.4;
-  public static double kAutoThetaControllerI = 0.02;
-  public static double kAutoThetaControllerD = 1.5;
-  public static TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
+  public static final double kAutoThetaControllerP = 5.0;
+  public static final double kAutoThetaControllerI = 0.00;
+  public static final double kAutoThetaControllerD = 0.0;
+  public static final TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
       new TrapezoidProfile.Constraints(
           AutoConstants.kMaxAngularSpeedRadiansPerSecond,
           AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
+
+  public static final double kTranslationToleranceMeters = 0.2;
+  public static final double kAutoMarkerTimeThreshold = 0.1; // seconds
+  public static final double kAutoMarkerTimeout = 0.5; // seconds
+  public static final double kRotationTolerance = Units.degreesToRadians(2);
+  public static final double kAutoTrajectoryTimeoutSeconds = 2;
+
+  public static final PathConstraints kFastPathConstraints =
+      new PathConstraints(7, kMaxAccelerationMetersPerSecondSquared);
+  public static final PathConstraints kSafePathConstraints = new PathConstraints(5, 5);
+  public static final PathConstraints kEngagePathConstraints = new PathConstraints(3, 3);
 }
