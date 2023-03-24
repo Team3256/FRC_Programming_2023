@@ -9,10 +9,8 @@ package frc.robot.auto.dynamicpathgeneration;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
-import frc.robot.swerve.SwerveConstants;
 import java.util.*;
 
 public class DynamicPathFinder {
@@ -89,31 +87,7 @@ public class DynamicPathFinder {
     }
     // No paths available
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
-    return new ArrayList<>();
-  }
-
-  // calculate time to travel list of pathIds
-  private double getPathTime(List<Integer> pathIds) {
-    // make sure pathIds are valid (doesn't hit obstacles)
-    double totalDistance = 0;
-    for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (PathUtil.doesPathSegmentHitObstacles(
-          pathNodes.get(pathIds.get(i)).getPoint(), pathNodes.get(pathIds.get(i + 1)).getPoint()))
-        return INF_TIME;
-      totalDistance +=
-          pathNodes
-              .get(pathIds.get(i))
-              .getPoint()
-              .getDistance(pathNodes.get(pathIds.get(i + 1)).getPoint());
-    }
-    return totalDistance / SwerveConstants.kMaxSpeed;
-  }
-
-  // convert list of pathIds into list of pathPoses
-  private List<Translation2d> getPositionsFromPathIds(List<Integer> pathIds) {
-    List<Translation2d> pathPositions = new ArrayList<>();
-    for (int node : pathIds) pathPositions.add(pathNodes.get(node).getPoint());
-    return pathPositions;
+    return null;
   }
 
   // get the pathIds stored from src to node
