@@ -317,6 +317,8 @@ public final class Constants {
   }
 
   public static class VisionConstants {
+
+    public static final int kNeuralDetectiorPipelineIndex = 0;
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
       public static final double kLimelightTranslationThresholdMeters = 1;
