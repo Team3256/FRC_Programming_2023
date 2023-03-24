@@ -29,6 +29,7 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.swerve.SwerveDrive;
+import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -149,6 +150,13 @@ public class AutoPaths {
                 .andThen(new IntakeCube(intakeSubsystem))
                 .asProxy()
                 .withName("coneLow"));
+    autoEventMap.put(
+        "engage",
+        () ->
+            new AutoBalance(swerveSubsystem)
+                .andThen(new LockSwerveX(swerveSubsystem))
+                .asProxy()
+                .withName("engage"));
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
     Supplier<Command> scorePreload =
@@ -243,12 +251,6 @@ public class AutoPaths {
     ArrayList<Command> node8x2Ready =
         autoBuilder.createPaths("Node8x2-Ready", kSafePathConstraints);
     AutoChooser.addPathGroup(scorePreload.get(), "Node8x2-Ready", node8x2Ready);
-
-    // Node2x3-Engage
-    ArrayList<Command> node2x3Engage =
-        autoBuilder.createPaths(
-            "Node2x3-Engage", kFastPathConstraints, kFastPathConstraints, kEngagePathConstraints);
-    AutoChooser.addPathGroup(scorePreload.get(), "Node2x3-Engage", node2x3Engage);
 
     // Node2-Engage
     Command node2Engage =
