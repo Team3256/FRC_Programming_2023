@@ -14,7 +14,7 @@
 * Visibility graph:
 <img width="1137" alt="Screen Shot 2023-03-20 at 5 26 20 PM" src="https://user-images.githubusercontent.com/72239682/226493704-668a83c7-6823-4f55-9748-c0a251e3bd3e.png">
 * These are the possible way points to use to travel between src and sink. They are linked in such a way that travelling between nodes does not crash into any obstacles.
-* DynamicPathFinder gets a list of points and finds the best path from start node to end node
+* We send this graph to DynamicPathFinder which finds the best path from start node to end node
 * DynamicPathGenerator uses Finder to create a trajectory for the robot to travel from a given start pose to end pose
 * DynamicPathFollower uses Generator to create a trajectory from current robot pose to the wanted node from GUI. Then it schedules a command to make the robot run the route.
 * To mirror to red paths (default is blue), we subtract all x coordinates from 16.5 to form x' (including obstacles)

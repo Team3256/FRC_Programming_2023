@@ -9,12 +9,19 @@ package frc.robot.auto.dynamicpathgeneration;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.dynamicpathgeneration.helpers.*;
+import frc.robot.auto.helpers.AutoBuilder;
+import frc.robot.swerve.SwerveDrive;
+import static frc.robot.Constants.trajectoryViewer;
+ import static frc.robot.Constants.waypointViewer;
+
 import java.util.*;
 
 public class DynamicPathGenerator {
@@ -24,8 +31,13 @@ public class DynamicPathGenerator {
   private final PathNode sinkNode;
   private final ArrayList<PathNode> dynamicPathNodes;
 
-  public DynamicPathGenerator(Pose2d srcPose, Pose2d sinkPose) {
-    this.srcPose = srcPose;
+  /**
+   * 
+   * @param robotPose the current pose of the robot
+   * @param sinkPose the wanted final pose of the robot
+   */
+  public DynamicPathGenerator(Pose2d robotPose, Pose2d sinkPose) {
+    this.srcPose = robotPose;
     this.sinkPose = sinkPose;
     dynamicPathNodes = new ArrayList<>();
     if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
@@ -33,7 +45,7 @@ public class DynamicPathGenerator {
     } else {
       dynamicPathNodes.addAll(redDynamicPathWayNodes);
     }
-    srcNode = new PathNode(srcPose.getX(), srcPose.getY(), PathNode.NodeType.SRC);
+    srcNode = new PathNode(robotPose.getX(), robotPose.getY(), PathNode.NodeType.SRC);
     sinkNode = new PathNode(sinkPose.getX(), sinkPose.getY(), PathNode.NodeType.SINK);
     // start node must be added before goal node
     dynamicPathNodes.add(srcNode);
@@ -99,5 +111,21 @@ public class DynamicPathGenerator {
     if (pathPoints.size() == 0) return null;
     // convert pathPoints into Trajectory we return
     return PathPlanner.generatePath(kDynamicPathConstraints, pathPoints);
+  }
+
+  public Command getCommand(SwerveDrive swerveDrive, PathConstraints pathConstraints) {
+     PathPlannerTrajectory trajectory = getTrajectory();
+
+     // send trajectory to networktables for logging
+     if (kDynamicPathGenerationDebug) {
+       trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
+       waypointViewer.getObject("Src").setPose(trajectory.getInitialHolonomicPose());
+       waypointViewer.getObject("Sink").setPose(trajectory.getEndState().poseMeters);
+     }
+
+     // create command that runs the trajectory
+     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
+     Command trajCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
+     return trajCommand;
   }
 }
