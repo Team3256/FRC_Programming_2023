@@ -84,7 +84,7 @@ public final class ArmConstants {
   public static final Rotation2d kDefaultArmAngle =
       Constants.kCompetitionModeEnabled ? Rotation2d.fromDegrees(72) : Rotation2d.fromDegrees(90);
   public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0);
-  public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0.065);
+  public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-30.5);
   public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(25);
   public static final Rotation2d kConeMidRotation = new Rotation2d(0.23);
