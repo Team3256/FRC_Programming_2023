@@ -30,11 +30,13 @@ import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.AutoMoveBlinkingPattern;
-import frc.robot.led.patterns.ErrorBlinkingPattern;
-import frc.robot.led.patterns.SuccessBlinkingPattern;
+import frc.robot.led.patterns.Blink.ErrorPatternBlink;
+import frc.robot.led.patterns.Blink.SuccessPatternBlink;
+import frc.robot.led.patterns.ConePattern;
+import frc.robot.led.patterns.CubePattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class AutoIntakeAtSubstation extends CommandBase {
   public enum SubstationLocation {
@@ -48,7 +50,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledSubsystem;
-  private SubstationLocation substationLocation;
+  private Supplier<SubstationLocation> substationLocation;
   private BooleanSupplier cancelCommand;
   private BooleanSupplier isCurrentPieceCone;
 
@@ -58,7 +60,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
       Elevator elevatorSubsystem,
       Arm armSubsystem,
       LED ledSubsystem,
-      SubstationLocation substationLocation,
+      Supplier<SubstationLocation> substationLocation,
       BooleanSupplier cancelCommand,
       BooleanSupplier isCurrentPieceCone) {
 
@@ -78,7 +80,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
     Alliance alliance = DriverStation.getAlliance();
 
     Pose2d end;
-    if (substationLocation.equals(SubstationLocation.RIGHT_SIDE)) {
+    if (substationLocation.get().equals(SubstationLocation.RIGHT_SIDE)) {
       // Left and right are different depending on alliance
       if (alliance == Alliance.Red) {
         end = kBlueTopDoubleSubstationPose;
@@ -111,7 +113,12 @@ public class AutoIntakeAtSubstation extends CommandBase {
 
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION),
+            new ConditionalCommand(
+                new SetElevatorHeight(
+                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
+                new SetElevatorHeight(
+                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
+                isCurrentPieceCone),
             new ConditionalCommand(
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
@@ -126,16 +133,20 @@ public class AutoIntakeAtSubstation extends CommandBase {
         PathGeneration.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
     Command stopIntake = new IntakeOff(intakeSubsystem);
-    Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
+    Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem, 0, 1);
     Command moveAwayFromSubstation =
         PathGeneration.createDynamicAbsolutePath(
             end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
 
-    Command runningLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern());
+    Command runningLEDs =
+        new ConditionalCommand(
+            new LEDSetAllSectionsPattern(ledSubsystem, new ConePattern()),
+            new LEDSetAllSectionsPattern(ledSubsystem, new CubePattern()),
+            isCurrentPieceCone);
     Command successLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
+        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPatternBlink()).withTimeout(5);
     Command errorLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
+        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink()).withTimeout(5);
 
     Command autoIntakeCommand =
         Commands.sequence(
@@ -143,7 +154,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
                 Commands.deadline(
                     runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
                 Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
-            .deadlineWith(runningLEDs)
+            .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
             .finallyDo((interrupted) -> successLEDs.schedule())
             .handleInterrupt(() -> errorLEDs.schedule());

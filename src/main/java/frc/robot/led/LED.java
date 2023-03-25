@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.led.commands.LEDToggleGamePieceDisplay;
 import frc.robot.led.patternBases.LEDPattern;
-import frc.robot.led.patterns.BlinkingConePattern;
-import frc.robot.led.patterns.BlinkingCubePattern;
+import frc.robot.led.patterns.Blink.ConePatternBlink;
+import frc.robot.led.patterns.Blink.CubePatternBlink;
 import frc.robot.logging.Loggable;
 import java.util.Arrays;
 
@@ -82,9 +82,9 @@ public class LED extends SubsystemBase implements Loggable {
   /** Toggle whether a cone or cube pattern will be displayed */
   public void toggleGamePiece() {
     if (isCubePiece) {
-      setAll(new BlinkingCubePattern());
+      setAll(new CubePatternBlink());
     } else {
-      setAll(new BlinkingConePattern());
+      setAll(new ConePatternBlink());
     }
     isCubePiece = !isCubePiece;
   }

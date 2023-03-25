@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.SuccessBlinkingPattern;
+import frc.robot.led.patterns.SuccessPattern;
 
 public class IntakeCone extends CommandBase {
   private Intake intakeSubsystem;
@@ -39,9 +39,7 @@ public class IntakeCone extends CommandBase {
   public void end(boolean interrupted) {
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
-      new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern())
-          .withTimeout(3)
-          .schedule();
+      new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
     }
   }
 

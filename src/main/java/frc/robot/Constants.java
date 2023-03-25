@@ -43,7 +43,7 @@ public final class Constants {
   public static final Field2d swerveViewer = new Field2d();
 
   public static final class FeatureFlags {
-    public static final boolean kOperatorManualArmControlEnabled = true;
+    public static final boolean kOperatorManualArmControlEnabled = false;
 
     public static final boolean kArmAbsoluteEncoderEnabled = true;
     public static final boolean kLocalizationEnabled = true;
@@ -140,6 +140,7 @@ public final class Constants {
 
     // Dimensions for grids and nodes
     public static final class Grids {
+      // X layout
       // X layout
       public static final double kOuterX = Units.inchesToMeters(54.25);
       public static final double kLowX =
@@ -330,7 +331,8 @@ public final class Constants {
   public static class VisionConstants {
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
-      public static final double kLimelightTranslationThresholdMeters = 2;
+      // TODO chaneg back to 2
+      public static final double kLimelightTranslationThresholdMeters = 8;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -339,7 +341,8 @@ public final class Constants {
 
     public static class BackConstants {
       public static final String kLimelightNetworkTablesName = "limelight-back";
-      public static final double kLimelightTranslationThresholdMeters = 2;
+      // TODO chaneg back to 2
+      public static final double kLimelightTranslationThresholdMeters = 8;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -348,7 +351,8 @@ public final class Constants {
 
     public static class SideConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
-      public static final double kLimelightTranslationThresholdMeters = 2;
+      // TODO chaneg back to 2
+      public static final double kLimelightTranslationThresholdMeters = 8;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;

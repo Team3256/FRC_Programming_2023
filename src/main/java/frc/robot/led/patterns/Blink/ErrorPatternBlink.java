@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.led.patterns.Blink;
 
 import static frc.robot.led.LEDConstants.kResolution;
 
@@ -13,16 +13,17 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.led.patternBases.BlinkingPattern;
 import frc.robot.led.patternBases.LEDPattern;
 
-public class AutoMoveBlinkingPattern extends BlinkingPattern {
-  private class AutoMovePattern extends LEDPattern {
-    public AutoMovePattern() {
+/** Blinking Red */
+public class ErrorPatternBlink extends BlinkingPattern {
+  private class ErrorPattern extends LEDPattern {
+    public ErrorPattern() {
       super();
-      setPixelRange(1, kResolution, Color.kRoyalBlue);
+      setPixelRange(1, kResolution, Color.kRed);
     }
   }
 
-  public AutoMoveBlinkingPattern() {
-    super(20, 20);
-    setMainLEDPattern(new AutoMovePattern());
+  public ErrorPatternBlink() {
+    super(10, 5);
+    setMainLEDPattern(new ErrorPattern());
   }
 }
