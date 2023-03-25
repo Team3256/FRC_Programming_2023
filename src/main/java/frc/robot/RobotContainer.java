@@ -40,6 +40,7 @@ import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.BlinkingConePattern;
 import frc.robot.led.patterns.BlinkingCubePattern;
 import frc.robot.led.patterns.FIREPattern;
+import frc.robot.limelight.AlignWithGamePiece;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -177,7 +178,11 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyroYaw));
+    //    driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyroYaw));
+    System.out.println("**********************");
+    System.out.println("ConfigureSwerve");
+    System.out.println("**********************");
+    driver.a().onTrue(new AlignWithGamePiece(swerveSubsystem, 0));
 
     driver
         .leftBumper()

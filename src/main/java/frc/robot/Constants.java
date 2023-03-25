@@ -25,7 +25,7 @@ public final class Constants {
   public static final boolean kIntakeEnabled = false;
   public static final boolean kElevatorEnabled = false;
   public static final boolean kArmEnabled = false;
-  public static final boolean kLedStripEnabled = true;
+  public static final boolean kLedStripEnabled = false;
 
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final boolean kCompetitionModeEnabled = false;
@@ -326,7 +326,7 @@ public final class Constants {
     public static class FrontConstants {
       public static final double kLimeLightTranslationAutoAlignThreshold =
           0.05; // distance in meters
-      public static final String kLimelightNetworkTablesName = "limelight-front";
+      public static final String kLimelightNetworkTablesName = "limelight-back";
       public static final double kLimelightTranslationThresholdMeters = 1;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
