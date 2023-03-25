@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
@@ -223,9 +224,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    // TODO: Change to only run when current is spiking
-    intakeSubsystem.setDefaultCommand(
-        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
+    new Trigger(intakeSubsystem::isCurrentSpiking)
+        .onTrue(new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
 
     (operator.rightTrigger())
         .whileTrue(

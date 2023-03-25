@@ -14,8 +14,8 @@ public final class IntakeConstants {
   public static final String kIntakeCANBus = "mani";
   public static final CanDeviceId kIntakeCANDevice = new CanDeviceId(kIntakeMotorID, kIntakeCANBus);
 
-  public static final double kIntakeConeSpeed = 0.9;
-  public static final double kIntakeCubeSpeed = -0.9;
+  public static final double kIntakeConeSpeed = 1;
+  public static final double kIntakeCubeSpeed = -0.8;
   public static final double kLatchConeSpeed = 0.15;
   public static final double kLatchCubeSpeed = -0.15;
   public static final double kGamePieceMaxCurrent = 7.5;
