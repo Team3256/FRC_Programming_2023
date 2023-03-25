@@ -5,15 +5,16 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.led.patterns.Blink;
 
 import frc.robot.led.patternBases.BlinkingPattern;
+import frc.robot.led.patterns.CubePattern;
 
 /** Blinking Purple */
-public class BlinkingCubePattern extends BlinkingPattern {
+public class CubePatternBlink extends BlinkingPattern {
 
-  public BlinkingCubePattern() {
-    super(35, 5);
+  public CubePatternBlink() {
+    super(40, 5);
     setMainLEDPattern(new CubePattern());
   }
 }

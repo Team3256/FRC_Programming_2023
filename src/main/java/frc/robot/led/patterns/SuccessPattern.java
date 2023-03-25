@@ -10,20 +10,11 @@ package frc.robot.led.patterns;
 import static frc.robot.led.LEDConstants.kResolution;
 
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.led.patternBases.BlinkingPattern;
 import frc.robot.led.patternBases.LEDPattern;
 
-/** Blinking Red */
-public class ErrorBlinkingPattern extends BlinkingPattern {
-  private class ErrorPattern extends LEDPattern {
-    public ErrorPattern() {
-      super();
-      setPixelRange(1, kResolution, Color.kRed);
-    }
-  }
-
-  public ErrorBlinkingPattern() {
-    super(10, 5);
-    setMainLEDPattern(new ErrorPattern());
+public class SuccessPattern extends LEDPattern {
+  public SuccessPattern() {
+    super();
+    setPixelRange(1, kResolution, Color.kGreen);
   }
 }

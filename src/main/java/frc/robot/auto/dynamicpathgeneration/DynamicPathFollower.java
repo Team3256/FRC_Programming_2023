@@ -27,8 +27,8 @@ import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.ErrorBlinkingPattern;
-import frc.robot.led.patterns.SuccessBlinkingPattern;
+import frc.robot.led.patterns.Blink.ErrorPatternBlink;
+import frc.robot.led.patterns.Blink.SuccessPatternBlink;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.Supplier;
 
@@ -71,7 +71,7 @@ public class DynamicPathFollower {
       if (locationId == -1) {
         System.out.println("locationId was invalid");
         if (ledSubsystem != null) {
-          return new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern());
+          return new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink());
         } else {
           return new InstantCommand();
         }
@@ -98,7 +98,7 @@ public class DynamicPathFollower {
     // handle invalid trajectory
     if (dynamicPathGenTrajectory == null) {
       System.out.println("No trajectory was found.");
-      return new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern());
+      return new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink());
     } else {
       System.out.println("Trajectory was found.");
     }
@@ -146,6 +146,6 @@ public class DynamicPathFollower {
     return Commands.sequence(
         dynamicPathGenTrajectoryCommand,
         finalTrajectory,
-        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()));
+        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPatternBlink()));
   }
 }
