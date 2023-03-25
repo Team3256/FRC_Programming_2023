@@ -17,8 +17,6 @@ import frc.robot.elevator.commands.ZeroElevator;
 
 public class SetArmElevatorStart extends ParallelCommandGroup {
   public SetArmElevatorStart(Elevator elevatorSubsystem, Arm armSubsystem) {
-    // TODO arm not going to default
-    // TODO remove timings
     addCommands(
         new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(135))
             .andThen(new ZeroElevator(elevatorSubsystem))

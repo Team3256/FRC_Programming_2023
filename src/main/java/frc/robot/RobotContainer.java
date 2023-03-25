@@ -27,7 +27,6 @@ import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -130,7 +129,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> 0,
                 () -> -1,
-                () -> isRotating(driver),
+                () -> isMovingJoystick(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -143,7 +142,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> 0,
                 () -> 1,
-                () -> isRotating(driver),
+                () -> isMovingJoystick(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -156,7 +155,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> 1,
                 () -> 0,
-                () -> isRotating(driver),
+                () -> isMovingJoystick(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -169,7 +168,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> -1,
                 () -> 0,
-                () -> isRotating(driver),
+                () -> isMovingJoystick(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -315,15 +314,11 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("swerveViewer", swerveViewer);
   }
 
-  public boolean isRotating(CommandXboxController controller) {
-    return Math.abs(controller.getRightX()) > kStickRotationThreshold; // threshold
-  }
-
   public boolean isMovingJoystick(CommandXboxController controller) {
-    return Math.abs(controller.getLeftX()) > kStickAutoCancelDeadband
-        || Math.abs(controller.getLeftY()) > kStickAutoCancelDeadband
-        || Math.abs(controller.getRightX()) > kStickAutoCancelDeadband
-        || Math.abs(controller.getRightY()) > kStickAutoCancelDeadband;
+    return Math.abs(controller.getLeftX()) > kStickCancelDeadband
+        || Math.abs(controller.getLeftY()) > kStickCancelDeadband
+        || Math.abs(controller.getRightX()) > kStickCancelDeadband
+        || Math.abs(controller.getRightY()) > kStickCancelDeadband;
   }
 
   @Override
