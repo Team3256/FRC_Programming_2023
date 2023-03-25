@@ -12,6 +12,7 @@ import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -275,6 +276,8 @@ public class RobotContainer implements CANTestable, Loggable {
                   new IntakeCube(intakeSubsystem),
                   this::isCurrentPieceCone));
     }
+    driver.x().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)));
+    driver.y().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(75)));
   }
 
   public void configureLEDStrip() {

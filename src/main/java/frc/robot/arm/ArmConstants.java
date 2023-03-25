@@ -63,12 +63,12 @@ public final class ArmConstants {
   public static final int kNumArmMotors = 1;
 
   public static final double kArmS = 0.13794;
-  public static final double kArmG = 0.60843;
-  public static final double kArmV = 4.19;
+  public static final double kArmG = 4.365; // 0.60843 for non simulation...4.365 for 45 deg sim...~6.525 for 75 deg sim
+  public static final double kArmV = 2; // 4.19
   public static final double kArmA = 0.029772;
-  public static final double kP = 4.4118;
+  public static final double kP = 0; // 4.4118
   public static final double kI = 0;
-  public static final double kD = 0.29266;
+  public static final double kD = 0; // 0.29266
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(8, 4);

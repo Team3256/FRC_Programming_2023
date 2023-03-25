@@ -99,6 +99,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private void configureSimHardware() {
     armMotor = new WPI_TalonFX(kArmSimulationID);
     SmartDashboard.putData("Arm Sim", mechanism2d);
+
     armTower.setColor(new Color8Bit(Color.kBlue));
   }
 
