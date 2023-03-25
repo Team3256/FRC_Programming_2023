@@ -7,6 +7,8 @@
 
 package frc.robot.auto.dynamicpathgeneration;
 
+import static frc.robot.Constants.trajectoryViewer;
+import static frc.robot.Constants.waypointViewer;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import com.pathplanner.lib.PathConstraints;
@@ -16,12 +18,10 @@ import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.auto.dynamicpathgeneration.helpers.*;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
-import static frc.robot.Constants.trajectoryViewer;
- import static frc.robot.Constants.waypointViewer;
-
 import java.util.*;
 
 public class DynamicPathGenerator {
@@ -30,32 +30,57 @@ public class DynamicPathGenerator {
   private final Pose2d sinkPose;
   private final PathNode sinkNode;
   private final ArrayList<PathNode> dynamicPathNodes;
+  private final List<Integer> pathIndexes;
 
   /**
-   * 
-   * @param robotPose the current pose of the robot
-   * @param sinkPose the wanted final pose of the robot
+   * Set up DPG
+   *
+   * @param srcPose the initial pose of the robot in the path
+   * @param sinkPose the final pose of the robot in the path
    */
-  public DynamicPathGenerator(Pose2d robotPose, Pose2d sinkPose) {
-    this.srcPose = robotPose;
+  public DynamicPathGenerator(Pose2d srcPose, Pose2d sinkPose) {
+    this.srcPose = srcPose;
     this.sinkPose = sinkPose;
+    System.out.println("Initializing DPG");
+    // * update visibility graph, taking into account the srcPose, sinkPose, and alliance color
     dynamicPathNodes = new ArrayList<>();
     if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
       dynamicPathNodes.addAll(blueDynamicPathWayNodes);
     } else {
       dynamicPathNodes.addAll(redDynamicPathWayNodes);
     }
-    srcNode = new PathNode(robotPose.getX(), robotPose.getY(), PathNode.NodeType.SRC);
+    srcNode = new PathNode(srcPose.getX(), srcPose.getY(), PathNode.NodeType.SRC);
     sinkNode = new PathNode(sinkPose.getX(), sinkPose.getY(), PathNode.NodeType.SINK);
-    // start node must be added before goal node
+    // Note: start node MUST be added before goal node
     dynamicPathNodes.add(srcNode);
     dynamicPathNodes.add(sinkNode);
+    // connect src, sink to dynamicPathNodes
+    PathNode srcClosest = connectToClosest(srcNode, dynamicPathNodes);
+    PathNode sinkClosest = connectToClosest(sinkNode, dynamicPathNodes);
+    // use Dynamic Path Finder to find the optimal path that DPG will use
+    DynamicPathFinder pathFinder =
+        new DynamicPathFinder(srcNode.getIndex(), sinkNode.getIndex(), dynamicPathNodes);
+    pathIndexes = pathFinder.findPath();
+    if (kDynamicPathGenerationDebug) {
+      System.out.println("DPG path indexes:");
+      System.out.println(pathIndexes);
+    }
+    // unconnect src, sink from dynamicPathNodes
+    PathUtil.fullyDisconnect(srcClosest, sinkNode);
+    PathUtil.fullyDisconnect(sinkClosest, sinkNode);
   }
 
-  public PathNode connectToClosest(PathNode node, ArrayList<PathNode> nodes) {
+  /**
+   * connect node to the closest node in pathNodes add node to pathNodes
+   *
+   * @param node node to connect to pathNodes
+   * @param pathNodes list of nodes that you want to try connecting node to
+   * @return
+   */
+  public PathNode connectToClosest(PathNode node, ArrayList<PathNode> pathNodes) {
     double closest = INF_TIME;
     PathNode ret = node;
-    for (PathNode q : nodes) {
+    for (PathNode q : pathNodes) {
       if (q == node) continue;
       double dist = PathUtil.straightTravelTimeWithObstacles(node.getPoint(), q.getPoint());
       if (dist < closest) {
@@ -70,62 +95,42 @@ public class DynamicPathGenerator {
     return ret;
   }
 
-  public List<Integer> getPathIds() {
-    // PathNode srcClosest = connectToClosest(dynamicPathNodes.get(src),
-    // dynamicPathNodes);
-    PathUtil.fullyConnect(srcNode, blueDynamicPathWayNodes);
-    PathNode sinkClosest = connectToClosest(sinkNode, dynamicPathNodes);
-    if (kDynamicPathGenerationDebug) {
-      System.out.println("src edges:" + srcNode.getEdges().size());
-      System.out.println("sink edges:" + sinkNode.getEdges().size());
-    }
-    DynamicPathFinder pathFinder =
-        new DynamicPathFinder(srcNode.getIndex(), sinkNode.getIndex(), dynamicPathNodes);
-    List<Integer> pathIndexes = pathFinder.findPath();
-    if (kDynamicPathGenerationDebug) {
-      System.out.println("These are the path indexes:");
-      System.out.println(pathIndexes);
-    }
-    // PathUtil.fullyDisconnect(srcClosest, dynamicPathNodes.get(src));
-    PathUtil.fullyDisconnect(sinkClosest, sinkNode);
-    return pathIndexes;
-  }
-
   public List<PathNode> getPathNodes() {
     // convert pathIds into pathNodes
-    List<Integer> pathIds = getPathIds();
     List<PathNode> pathNodes = new ArrayList<>();
-    for (int i : pathIds) {
+    for (int i : pathIndexes) {
       pathNodes.add(dynamicPathNodes.get(i));
     }
     return pathNodes;
   }
 
   public PathPlannerTrajectory getTrajectory() {
+    List<PathNode> pathNodes = getPathNodes();
+    // if no path points were found then there should be no trajectory
+    if (pathNodes.size() == 0) return null;
     Path path = new Path(getPathNodes(), srcPose.getRotation(), sinkPose.getRotation());
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());
     }
-    // if no path points were found then there should be no trajectory
-    if (pathPoints.size() == 0) return null;
     // convert pathPoints into Trajectory we return
     return PathPlanner.generatePath(kDynamicPathConstraints, pathPoints);
   }
 
   public Command getCommand(SwerveDrive swerveDrive, PathConstraints pathConstraints) {
-     PathPlannerTrajectory trajectory = getTrajectory();
-
-     // send trajectory to networktables for logging
-     if (kDynamicPathGenerationDebug) {
-       trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
-       waypointViewer.getObject("Src").setPose(trajectory.getInitialHolonomicPose());
-       waypointViewer.getObject("Sink").setPose(trajectory.getEndState().poseMeters);
-     }
-
-     // create command that runs the trajectory
-     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-     Command trajCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
-     return trajCommand;
+    PathPlannerTrajectory trajectory = getTrajectory();
+    // log src, sink, trajectory
+    if (kDynamicPathGenerationDebug) {
+      if (trajectory != null)
+        trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
+      waypointViewer.getObject("Src").setPose(srcPose);
+      waypointViewer.getObject("Sink").setPose(sinkPose);
+    }
+    // handle case no trajectory
+    if (trajectory == null) return new PrintCommand("ERROR: NO PATH AVAILABLE");
+    // create command that runs the trajectory
+    AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
+    Command trajCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
+    return trajCommand;
   }
 }

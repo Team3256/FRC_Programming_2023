@@ -24,6 +24,7 @@ public class DynamicPathFinder {
 
   /**
    * initialize dynamic path finder
+   *
    * @param src index of src node in the graph
    * @param sink index of sink node in the graph
    * @param pathNodes graph to run algorithm on
@@ -39,6 +40,7 @@ public class DynamicPathFinder {
 
   /**
    * find shortest path between src and sink
+   *
    * @return optimal path of nodes (indexes) to travel through to get from src to sink
    */
   public List<Integer> findPath() {
@@ -99,8 +101,8 @@ public class DynamicPathFinder {
       // mark as visited
       visitedNodes[currentNode] = true;
     }
-    // Sink is unreachable, return null
+    // Sink is unreachable, return empty list
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
-    return null;
+    return new ArrayList<>();
   }
 }

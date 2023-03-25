@@ -12,7 +12,7 @@ import frc.robot.Constants;
 import java.util.ArrayList;
 
 public class PathNode {
-  static int curIndex = 0;
+  private static int curIndex = 0;
   private Translation2d point;
   private ArrayList<Integer> edges;
   private int index;

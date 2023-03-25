@@ -26,7 +26,9 @@ import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathConstants;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
@@ -62,6 +64,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  private final CommandXboxController tester = new CommandXboxController(2);
 
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
@@ -192,6 +195,18 @@ public class RobotContainer implements CANTestable, Loggable {
 
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
     // driver.x().whileTrue(new AutoBalance(swerveSubsystem));
+
+    tester
+        .a()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    new DynamicPathGenerator(
+                            DynamicPathConstants.kBlueTopDoubleSubstationPose,
+                            DynamicPathConstants.kHighBlueScoringPoses[(int)(Math.random()*9)])
+                        .getCommand(swerveSubsystem, DynamicPathConstants.kDynamicPathConstraints)
+                        .schedule()));
+    tester.b().onTrue(new InstantCommand(() -> System.out.println("HEY")));
   }
 
   private Command getScoreCommand(GoalType goalType) {

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "/Preferences/ArmkP",
+    "type": "double",
+    "value": 4.4118,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ArmkI",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ArmkD",
+    "type": "double",
+    "value": 0.29266,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

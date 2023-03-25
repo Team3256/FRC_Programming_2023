@@ -61,7 +61,7 @@ public class Robot extends LoggedRobot {
         break;
       case SIM:
         DriverStation.silenceJoystickConnectionWarning(true);
-        logger.addDataReceiver(new WPILOGWriter(""));
+        // logger.addDataReceiver(new WPILOGWriter(""));
         logger.addDataReceiver(new NT4Publisher());
         break;
       case REPLAY:
@@ -83,7 +83,9 @@ public class Robot extends LoggedRobot {
       loadElevatorPreferences();
     }
     robotContainer = new RobotContainer();
-    // robotContainer.logInit();
+    if (kDebugEnabled) {
+      robotContainer.logInit();
+    }
   }
 
   @Override
