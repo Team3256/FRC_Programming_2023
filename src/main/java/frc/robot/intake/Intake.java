@@ -14,6 +14,7 @@ import static frc.robot.intake.IntakeConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -43,9 +44,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   private void configureRealHardware() {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
-    // intakeMotor.configStatorCurrentLimit(
-    // new StatorCurrentLimitConfiguration(
-    // true, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
     intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
@@ -70,6 +68,13 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     // intakeMotor.set(ControlMode.Current, -10);
   }
 
+  public void configureCurrentLimit(boolean enabled) {
+    if (kDebugEnabled) System.out.println("Setting Current Limit Configuration: " + enabled);
+    intakeMotor.configStatorCurrentLimit(
+        new StatorCurrentLimitConfiguration(
+            enabled, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
+  }
+
   public void intakeCone() {
     System.out.println("Intake cone");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
@@ -80,9 +85,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
-  // TODO: Change to stator current and tune max current
   public boolean isCurrentSpiking() {
-    return intakeMotor.getSupplyCurrent() > kIntakeMaxCurrent;
+    return intakeMotor.getStatorCurrent() > kIntakeMaxCurrent;
   }
 
   public void off() {

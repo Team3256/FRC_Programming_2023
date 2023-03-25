@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
@@ -30,6 +31,7 @@ import frc.robot.elevator.Elevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.BlinkingConePattern;
@@ -188,7 +190,7 @@ public class RobotContainer implements CANTestable, Loggable {
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
 
     operator
-        .b()
+        .a()
         .onTrue(
             new AutoIntakeAtSubstation(
                 swerveSubsystem,
@@ -200,23 +202,24 @@ public class RobotContainer implements CANTestable, Loggable {
                 () -> isMovingJoystick(driver),
                 this::isCurrentPieceCone));
 
-    // operator
-    // .b()
-    // .onTrue(
-    // new AutoIntakeAtSubstation(
-    // swerveSubsystem,
-    // intakeSubsystem,
-    // elevatorSubsystem,
-    // armSubsystem,
-    // ledStrip,
-    // AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE,
-    // () -> isMovingJoystick(driver),
-    // this::isCurrentPieceCone));
+    operator
+        .b()
+        .onTrue(
+            new AutoIntakeAtSubstation(
+                swerveSubsystem,
+                intakeSubsystem,
+                elevatorSubsystem,
+                armSubsystem,
+                ledStrip,
+                AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE,
+                () -> isMovingJoystick(driver),
+                this::isCurrentPieceCone));
   }
 
   private void configureIntake() {
-    // intakeSubsystem.setDefaultCommand(
-    // new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
+    new Trigger(intakeSubsystem::isCurrentSpiking)
+        .onTrue(new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
+
     (operator.rightTrigger())
         .whileTrue(
             new ConditionalCommand(
