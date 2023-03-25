@@ -318,8 +318,14 @@ public final class Constants {
 
   public static class VisionConstants {
 
+    public static final double kAutoAlignP = 0.0;
+    public static final double kAutoAlignI = 0.0;
+    public static final double kAutoAlignD = 0.0;
     public static final int kNeuralDetectiorPipelineIndex = 0;
+
     public static class FrontConstants {
+      public static final double kLimeLightTranslationAutoAlignThreshold =
+          0.05; // distance in meters
       public static final String kLimelightNetworkTablesName = "limelight-front";
       public static final double kLimelightTranslationThresholdMeters = 1;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
