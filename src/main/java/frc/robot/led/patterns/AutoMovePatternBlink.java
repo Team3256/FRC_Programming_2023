@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.led.patternBases.BlinkingPattern;
 import frc.robot.led.patternBases.LEDPattern;
 
-public class AutoMoveBlinkingPattern extends BlinkingPattern {
+public class AutoMovePatternBlink extends BlinkingPattern {
   private class AutoMovePattern extends LEDPattern {
     public AutoMovePattern() {
       super();
@@ -21,7 +21,7 @@ public class AutoMoveBlinkingPattern extends BlinkingPattern {
     }
   }
 
-  public AutoMoveBlinkingPattern() {
+  public AutoMovePatternBlink() {
     super(20, 20);
     setMainLEDPattern(new AutoMovePattern());
   }

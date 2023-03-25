@@ -30,9 +30,10 @@ import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.AutoMoveBlinkingPattern;
-import frc.robot.led.patterns.ErrorBlinkingPattern;
-import frc.robot.led.patterns.SuccessBlinkingPattern;
+import frc.robot.led.patterns.Blink.ErrorPatternBlink;
+import frc.robot.led.patterns.Blink.SuccessPatternBlink;
+import frc.robot.led.patterns.ConePattern;
+import frc.robot.led.patterns.CubePattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -137,11 +138,15 @@ public class AutoIntakeAtSubstation extends CommandBase {
         PathGeneration.createDynamicAbsolutePath(
             end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
 
-    Command runningLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern());
+    Command runningLEDs =
+        new ConditionalCommand(
+            new LEDSetAllSectionsPattern(ledSubsystem, new ConePattern()),
+            new LEDSetAllSectionsPattern(ledSubsystem, new CubePattern()),
+            isCurrentPieceCone);
     Command successLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
+        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPatternBlink()).withTimeout(5);
     Command errorLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
+        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink()).withTimeout(5);
 
     Command autoIntakeCommand =
         Commands.sequence(
