@@ -12,6 +12,7 @@ import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -260,6 +261,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureArm() {
+    driver.a().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)));
+    driver.b().onTrue(new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)));
     armSubsystem.setDefaultCommand(new KeepArmAtPosition(armSubsystem));
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
