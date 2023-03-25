@@ -112,7 +112,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
 
     // TOOD change back
-    armMotor.setNeutralMode(NeutralMode.Coast);
+    armMotor.setNeutralMode(NeutralMode.Brake);
     armMotor.setSelectedSensorPosition(0);
   }
 

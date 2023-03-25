@@ -33,6 +33,7 @@ public final class Constants {
   public static final RobotMode kCurrentMode = RobotMode.SIM;
 
   public static final double kStickDeadband = 0.05;
+  public static final double kStickAutoCancelDeadband = 0.25;
   public static final double kStickRotationThreshold = 0.3;
   public static final double kAzimuthStickDeadband = 0.3;
 

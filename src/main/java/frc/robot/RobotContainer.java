@@ -320,10 +320,10 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public boolean isMovingJoystick(CommandXboxController controller) {
-    return Math.abs(controller.getLeftX()) > kStickDeadband
-        || Math.abs(controller.getLeftY()) > kStickDeadband
-        || Math.abs(controller.getRightX()) > kStickDeadband
-        || Math.abs(controller.getRightY()) > kStickDeadband;
+    return Math.abs(controller.getLeftX()) > kStickAutoCancelDeadband
+        || Math.abs(controller.getLeftY()) > kStickAutoCancelDeadband
+        || Math.abs(controller.getRightX()) > kStickAutoCancelDeadband
+        || Math.abs(controller.getRightY()) > kStickAutoCancelDeadband;
   }
 
   @Override
