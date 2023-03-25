@@ -63,10 +63,13 @@ public final class ArmConstants {
   public static final int kNumArmMotors = 1;
 
   public static final double kArmS = 0.13794;
-  public static final double kArmG = 4.365; // 0.60843 for non simulation...4.365 for 45 deg sim...~6.525 for 75 deg sim
-  public static final double kArmV = 2; // 4.19
-  public static final double kArmA = 0.029772;
-  public static final double kP = 0; // 4.4118
+  public static final double kArmG = 3.6400; // 3.5875 no PID
+  // 3.45; // 0.60843 for non simulation...4.365 for 45 deg sim...~6.525 for 75 deg sim
+  // 3.395
+  public static final double kArmV = 3.5;
+  // 3.8; // 4.19 for non simulation
+  public static final double kArmA = 0.15;
+  public static final double kP = 1; // 4.4118
   public static final double kI = 0;
   public static final double kD = 0; // 0.29266
 
