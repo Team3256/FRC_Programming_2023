@@ -38,7 +38,6 @@ import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
 import frc.robot.led.patterns.Blink.ConePatternBlink;
 import frc.robot.led.patterns.Blink.CubePatternBlink;
-import frc.robot.led.patterns.Blink.SuccessPatternBlink;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -68,7 +67,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Arm armSubsystem;
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
-  private AutoIntakeAtSubstation.SubstationLocation doubleSubstationLocation = LEFT_SIDE;
+  private AutoIntakeAtSubstation.SubstationLocation doubleSubstationLocation = RIGHT_SIDE;
 
   private AutoPaths autoPaths;
 
@@ -279,9 +278,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    //    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
+    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
 
-    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new SuccessPatternBlink())));
     operator
         .rightBumper()
         .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new ConePatternBlink()))
