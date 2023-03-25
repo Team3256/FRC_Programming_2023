@@ -19,6 +19,6 @@ public final class IntakeConstants {
   public static final double kLatchConeSpeed = 0.15;
   public static final double kLatchCubeSpeed = -0.15;
   public static final double kGamePieceMaxCurrent = 7.5;
-  public static final double kIntakeMaxCurrent = 100;
-  public static final double kTriggerThresholdTime = 0.2;
+  public static final double kIntakeMaxCurrent = 80;
+  public static final double kTriggerThresholdTime = 0;
 }
