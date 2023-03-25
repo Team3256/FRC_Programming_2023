@@ -35,6 +35,7 @@ import frc.robot.led.patterns.ErrorBlinkingPattern;
 import frc.robot.led.patterns.SuccessBlinkingPattern;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class AutoIntakeAtSubstation extends CommandBase {
   public enum SubstationLocation {
@@ -48,7 +49,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledSubsystem;
-  private SubstationLocation substationLocation;
+  private Supplier<SubstationLocation> substationLocation;
   private BooleanSupplier cancelCommand;
   private BooleanSupplier isCurrentPieceCone;
 
@@ -58,7 +59,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
       Elevator elevatorSubsystem,
       Arm armSubsystem,
       LED ledSubsystem,
-      SubstationLocation substationLocation,
+      Supplier<SubstationLocation> substationLocation,
       BooleanSupplier cancelCommand,
       BooleanSupplier isCurrentPieceCone) {
 
@@ -78,7 +79,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
     Alliance alliance = DriverStation.getAlliance();
 
     Pose2d end;
-    if (substationLocation.equals(SubstationLocation.RIGHT_SIDE)) {
+    if (substationLocation.get().equals(SubstationLocation.RIGHT_SIDE)) {
       // Left and right are different depending on alliance
       if (alliance == Alliance.Red) {
         end = kBlueTopDoubleSubstationPose;
@@ -93,8 +94,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
       }
     }
 
-    Pose2d substationWaypoint =
-        new Pose2d(end.getX() - kSubstationWaypointOffset, end.getY(), end.getRotation());
+    Pose2d substationWaypoint = new Pose2d(end.getX() - kSubstationWaypointOffset, end.getY(), end.getRotation());
 
     if (alliance == Alliance.Red) {
       end = PathUtil.flip(end);
@@ -102,56 +102,48 @@ public class AutoIntakeAtSubstation extends CommandBase {
     }
 
     // commands that will be run sequentially
-    Command moveToWaypoint =
-        PathGeneration.createDynamicAbsolutePath(
-            swerveSubsystem.getPose(),
-            substationWaypoint,
-            swerveSubsystem,
-            kWaypointPathConstraints);
+    Command moveToWaypoint = PathGeneration.createDynamicAbsolutePath(
+        swerveSubsystem.getPose(),
+        substationWaypoint,
+        swerveSubsystem,
+        kWaypointPathConstraints);
 
-    Command moveArmElevatorToPreset =
-        new ParallelCommandGroup(
-            new ConditionalCommand(
-                new SetElevatorHeight(
-                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
-                new SetElevatorHeight(
-                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
-                isCurrentPieceCone),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
-                isCurrentPieceCone));
-
-    Command runIntake =
+    Command moveArmElevatorToPreset = new ParallelCommandGroup(
         new ConditionalCommand(
-            new IntakeCone(intakeSubsystem, ledSubsystem),
-            new IntakeCube(intakeSubsystem, ledSubsystem),
-            isCurrentPieceCone);
-    Command moveToSubstation =
-        PathGeneration.createDynamicAbsolutePath(
-            substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
+            new SetElevatorHeight(
+                elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
+            new SetElevatorHeight(
+                elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
+            isCurrentPieceCone),
+        new ConditionalCommand(
+            new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+            new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+            isCurrentPieceCone));
+
+    Command runIntake = new ConditionalCommand(
+        new IntakeCone(intakeSubsystem, ledSubsystem),
+        new IntakeCube(intakeSubsystem, ledSubsystem),
+        isCurrentPieceCone);
+    Command moveToSubstation = PathGeneration.createDynamicAbsolutePath(
+        substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
     Command stopIntake = new IntakeOff(intakeSubsystem);
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem, 0, 1);
-    Command moveAwayFromSubstation =
-        PathGeneration.createDynamicAbsolutePath(
-            end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
+    Command moveAwayFromSubstation = PathGeneration.createDynamicAbsolutePath(
+        end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
 
     Command runningLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new AutoMoveBlinkingPattern());
-    Command successLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
-    Command errorLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
+    Command successLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new SuccessBlinkingPattern()).withTimeout(5);
+    Command errorLEDs = new LEDSetAllSectionsPattern(ledSubsystem, new ErrorBlinkingPattern()).withTimeout(5);
 
-    Command autoIntakeCommand =
-        Commands.sequence(
-                moveToWaypoint,
-                Commands.deadline(
-                    runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
-                Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
-            .deadlineWith(runningLEDs.asProxy())
-            .until(cancelCommand)
-            .finallyDo((interrupted) -> successLEDs.schedule())
-            .handleInterrupt(() -> errorLEDs.schedule());
+    Command autoIntakeCommand = Commands.sequence(
+        moveToWaypoint,
+        Commands.deadline(
+            runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
+        Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
+        .deadlineWith(runningLEDs.asProxy())
+        .until(cancelCommand)
+        .finallyDo((interrupted) -> successLEDs.schedule())
+        .handleInterrupt(() -> errorLEDs.schedule());
 
     autoIntakeCommand.schedule();
   }
