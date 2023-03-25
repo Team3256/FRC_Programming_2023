@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
@@ -132,7 +131,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
         PathGeneration.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
     Command stopIntake = new IntakeOff(intakeSubsystem);
-    Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem);
+    Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem, 0, 1);
     Command moveAwayFromSubstation =
         PathGeneration.createDynamicAbsolutePath(
             end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
@@ -148,10 +147,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
                 moveToWaypoint,
                 Commands.deadline(
                     runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
-                Commands.deadline(
-                    moveAwayFromSubstation,
-                    new WaitCommand(2).andThen(stowArmElevator),
-                    stopIntake))
+                Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
             .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
             .finallyDo((interrupted) -> successLEDs.schedule())

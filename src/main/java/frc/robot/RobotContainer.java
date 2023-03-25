@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -28,7 +29,6 @@ import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.*;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -67,6 +67,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Arm armSubsystem;
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
+  private AutoIntakeAtSubstation.SubstationLocation doubleSubstationLocation = RIGHT_SIDE;
 
   private AutoPaths autoPaths;
 
@@ -132,7 +133,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> 0,
                 () -> -1,
-                () -> isRotating(driver),
+                () -> isMovingJoystick(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -145,7 +146,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> 0,
                 () -> 1,
-                () -> isRotating(driver),
+                () -> isMovingJoystick(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -158,7 +159,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> 1,
                 () -> 0,
-                () -> isRotating(driver),
+                () -> isMovingJoystick(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -171,7 +172,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 driver::getLeftX,
                 () -> -1,
                 () -> 0,
-                () -> isRotating(driver),
+                () -> isMovingJoystick(driver),
                 kFieldRelative,
                 kOpenLoop));
 
@@ -188,33 +189,24 @@ public class RobotContainer implements CANTestable, Loggable {
                 kFieldRelative,
                 kOpenLoop));
 
-    operator.x().onTrue(new LockSwerveX(swerveSubsystem));
+    driver.x().onTrue(new LockSwerveX(swerveSubsystem));
 
-    operator
-        .a()
+    driver
+        .leftTrigger()
         .onTrue(
-            new AutoIntakeAtSubstation(
+            new AutoIntakeAtSubstation( // TODO: Rename to clarify that this is for double
+                // substation
                 swerveSubsystem,
                 intakeSubsystem,
                 elevatorSubsystem,
                 armSubsystem,
                 ledStrip,
-                AutoIntakeAtSubstation.SubstationLocation.LEFT_SIDE,
+                RIGHT_SIDE, // Change to LEFT_SIDE for testing
                 () -> isMovingJoystick(driver),
                 this::isCurrentPieceCone));
 
-    operator
-        .b()
-        .onTrue(
-            new AutoIntakeAtSubstation(
-                swerveSubsystem,
-                intakeSubsystem,
-                elevatorSubsystem,
-                armSubsystem,
-                ledStrip,
-                AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE,
-                () -> isMovingJoystick(driver),
-                this::isCurrentPieceCone));
+    operator.a().toggleOnTrue(new InstantCommand(() -> setDoubleSubstationLocation(RIGHT_SIDE)));
+    operator.a().toggleOnFalse(new InstantCommand(() -> setDoubleSubstationLocation(LEFT_SIDE)));
   }
 
   private void configureIntake() {
@@ -222,6 +214,7 @@ public class RobotContainer implements CANTestable, Loggable {
         .onTrue(new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
 
     (operator.rightTrigger())
+        .or(driver.b())
         .whileTrue(
             new ConditionalCommand(
                 new IntakeCube(intakeSubsystem),
@@ -257,7 +250,7 @@ public class RobotContainer implements CANTestable, Loggable {
       }
 
       driver
-          .leftTrigger()
+          .y()
           .or(operator.leftTrigger())
           .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
     }
@@ -318,15 +311,11 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("swerveViewer", swerveViewer);
   }
 
-  public boolean isRotating(CommandXboxController controller) {
-    return Math.abs(controller.getRightX()) > kStickRotationThreshold; // threshold
-  }
-
   public boolean isMovingJoystick(CommandXboxController controller) {
-    return Math.abs(controller.getLeftX()) > kStickAutoCancelDeadband
-        || Math.abs(controller.getLeftY()) > kStickAutoCancelDeadband
-        || Math.abs(controller.getRightX()) > kStickAutoCancelDeadband
-        || Math.abs(controller.getRightY()) > kStickAutoCancelDeadband;
+    return Math.abs(controller.getLeftX()) > kStickCancelDeadband
+        || Math.abs(controller.getLeftY()) > kStickCancelDeadband
+        || Math.abs(controller.getRightX()) > kStickCancelDeadband
+        || Math.abs(controller.getRightY()) > kStickCancelDeadband;
   }
 
   @Override
@@ -359,5 +348,11 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void setPieceToCube() {
     currentPiece = GamePiece.CUBE;
+  }
+
+  public void setDoubleSubstationLocation(AutoIntakeAtSubstation.SubstationLocation location) {
+    doubleSubstationLocation = location;
+    SmartDashboard.putString(
+        "Current Double Substation Location: ", doubleSubstationLocation.name());
   }
 }

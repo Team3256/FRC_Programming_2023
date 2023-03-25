@@ -14,10 +14,16 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
 
 public class StowArmElevator extends ParallelCommandGroup {
-  // Add a parameter for the 0,5 seconds here
   public StowArmElevator(Elevator elevatorSubsystem, Arm armSubsystem) {
     addCommands(
         new WaitCommand(0.17).andThen(new ZeroElevator(elevatorSubsystem)),
         new SetArmAngle(armSubsystem, Arm.ArmPreset.DEFAULT));
+  }
+
+  public StowArmElevator(
+      Elevator elevatorSubsystem, Arm armSubsystem, double armWaitTime, double elevatorWaitTime) {
+    addCommands(
+        new WaitCommand(elevatorWaitTime).andThen(new ZeroElevator(elevatorSubsystem)),
+        new WaitCommand(armWaitTime).andThen(new SetArmAngle(armSubsystem, Arm.ArmPreset.DEFAULT)));
   }
 }

@@ -33,7 +33,7 @@ public final class Constants {
   public static final RobotMode kCurrentMode = RobotMode.SIM;
 
   public static final double kStickDeadband = 0.05;
-  public static final double kStickAutoCancelDeadband = 0.25;
+  public static final double kStickCancelDeadband = 0.25;
   public static final double kStickRotationThreshold = 0.3;
   public static final double kAzimuthStickDeadband = 0.3;
 
@@ -43,7 +43,7 @@ public final class Constants {
   public static final Field2d swerveViewer = new Field2d();
 
   public static final class FeatureFlags {
-    public static final boolean kOperatorManualArmControlEnabled = true;
+    public static final boolean kOperatorManualArmControlEnabled = false;
 
     public static final boolean kArmAbsoluteEncoderEnabled = true;
     public static final boolean kLocalizationEnabled = true;
