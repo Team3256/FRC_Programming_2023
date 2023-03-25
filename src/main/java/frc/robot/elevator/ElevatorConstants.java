@@ -16,13 +16,15 @@ public final class ElevatorConstants {
   public static final int kElevatorID = 5;
   public static final double kElevatorStartingPositionMeters = 0.5;
   public static final String kElevatorCANBus = "mani";
-  public static final CanDeviceId kElevatorCANDevice = new CanDeviceId(kElevatorID, kElevatorCANBus);
+  public static final CanDeviceId kElevatorCANDevice =
+      new CanDeviceId(kElevatorID, kElevatorCANBus);
   public static final int kNumElevatorMotors = 1;
   public static final boolean kElevatorInverted = true;
 
-  public static final double kDoubleSubstationPositionMeters = Units.inchesToMeters(26);
   public static final double kZeroThreshold = 0.02;
 
+  public static final double kDoubleSubstationPositionCubeMeters = 0.62;
+  public static final double kDoubleSubstationPositionConeMeters = 0.61;
   public static final double kCubeHighPositionMeters = 0.2;
   public static final double kConeHighPositionMeters = 0.43;
   public static final double kAnyPieceMidPositionMeters = 0.16;
@@ -30,21 +32,25 @@ public final class ElevatorConstants {
   public static final double kGroundIntakePositionMeters = Units.inchesToMeters(0);
 
   public static class ElevatorPreferencesKeys {
-    public static final Map<Elevator.ElevatorPreset, String> kElevatorPositionKeys = Map.of(
-        Elevator.ElevatorPreset.CUBE_HIGH, "kCubeHighPositionMeters",
-        Elevator.ElevatorPreset.CONE_HIGH, "kConeHighPositionMeters",
-        Elevator.ElevatorPreset.ANY_PIECE_LOW, "kAnyPieceLowPositionMeters",
-        Elevator.ElevatorPreset.ANY_PIECE_MID, "kAnyPieceMidPositionMeters",
-        Elevator.ElevatorPreset.GROUND_INTAKE, "kGroundIntakePositionMeters",
-        Elevator.ElevatorPreset.DOUBLE_SUBSTATION, "kDoubleSubstationPositionMeters");
+    public static final Map<Elevator.ElevatorPreset, String> kElevatorPositionKeys =
+        Map.of(
+            Elevator.ElevatorPreset.CUBE_HIGH, "kCubeHighPositionMeters",
+            Elevator.ElevatorPreset.CONE_HIGH, "kConeHighPositionMeters",
+            Elevator.ElevatorPreset.ANY_PIECE_LOW, "kAnyPieceLowPositionMeters",
+            Elevator.ElevatorPreset.ANY_PIECE_MID, "kAnyPieceMidPositionMeters",
+            Elevator.ElevatorPreset.GROUND_INTAKE, "kGroundIntakePositionMeters",
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationPositionConeMeters",
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE, "kDoubleSubstationPositionCubeMeters");
 
-    public static final Map<Elevator.ElevatorPreset, Double> kElevatorPositionDefaults = Map.of(
-        Elevator.ElevatorPreset.CUBE_HIGH, kCubeHighPositionMeters,
-        Elevator.ElevatorPreset.CONE_HIGH, kConeHighPositionMeters,
-        Elevator.ElevatorPreset.ANY_PIECE_LOW, kAnyPieceLowPositionMeters,
-        Elevator.ElevatorPreset.ANY_PIECE_MID, kAnyPieceMidPositionMeters,
-        Elevator.ElevatorPreset.GROUND_INTAKE, kGroundIntakePositionMeters,
-        Elevator.ElevatorPreset.DOUBLE_SUBSTATION, kDoubleSubstationPositionMeters);
+    public static final Map<Elevator.ElevatorPreset, Double> kElevatorPositionDefaults =
+        Map.of(
+            Elevator.ElevatorPreset.CUBE_HIGH, kCubeHighPositionMeters,
+            Elevator.ElevatorPreset.CONE_HIGH, kConeHighPositionMeters,
+            Elevator.ElevatorPreset.ANY_PIECE_LOW, kAnyPieceLowPositionMeters,
+            Elevator.ElevatorPreset.ANY_PIECE_MID, kAnyPieceMidPositionMeters,
+            Elevator.ElevatorPreset.GROUND_INTAKE, kGroundIntakePositionMeters,
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE, kDoubleSubstationPositionConeMeters,
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE, kDoubleSubstationPositionCubeMeters);
 
     public static final String kPKey = "ElevatorkP";
     public static final String kIKey = "ElevatorkI";
@@ -70,7 +76,8 @@ public final class ElevatorConstants {
   public static final double kD = 0;
   // public static final double kD = 0.0012892;
 
-  public static final TrapezoidProfile.Constraints kElevatorContraints = new TrapezoidProfile.Constraints(2.45, 2.45);
+  public static final TrapezoidProfile.Constraints kElevatorContraints =
+      new TrapezoidProfile.Constraints(2.45, 2.45);
 
   public static final double kDownSpeedVolts = -8.0;
 

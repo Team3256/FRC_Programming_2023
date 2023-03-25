@@ -82,7 +82,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   // TODO: Change to stator current and tune max current
   public boolean isCurrentSpiking() {
-    return intakeMotor.getSupplyCurrent() > kIntakeMaxCurrent;
+    return intakeMotor.getStatorCurrent() > kIntakeMaxCurrent;
   }
 
   public void off() {

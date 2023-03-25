@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
@@ -111,7 +112,12 @@ public class AutoIntakeAtSubstation extends CommandBase {
 
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION),
+            new ConditionalCommand(
+                new SetElevatorHeight(
+                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
+                new SetElevatorHeight(
+                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
+                isCurrentPieceCone),
             new ConditionalCommand(
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
@@ -142,8 +148,11 @@ public class AutoIntakeAtSubstation extends CommandBase {
                 moveToWaypoint,
                 Commands.deadline(
                     runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
-                Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
-            .deadlineWith(runningLEDs)
+                Commands.deadline(
+                    moveAwayFromSubstation,
+                    new WaitCommand(2).andThen(stowArmElevator),
+                    stopIntake))
+            .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
             .finallyDo((interrupted) -> successLEDs.schedule())
             .handleInterrupt(() -> errorLEDs.schedule());

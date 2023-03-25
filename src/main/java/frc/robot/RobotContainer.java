@@ -189,7 +189,7 @@ public class RobotContainer implements CANTestable, Loggable {
     operator.x().onTrue(new LockSwerveX(swerveSubsystem));
 
     operator
-        .b()
+        .a()
         .onTrue(
             new AutoIntakeAtSubstation(
                 swerveSubsystem,
@@ -201,18 +201,18 @@ public class RobotContainer implements CANTestable, Loggable {
                 () -> isMovingJoystick(driver),
                 this::isCurrentPieceCone));
 
-    // operator
-    // .b()
-    // .onTrue(
-    // new AutoIntakeAtSubstation(
-    // swerveSubsystem,
-    // intakeSubsystem,
-    // elevatorSubsystem,
-    // armSubsystem,
-    // ledStrip,
-    // AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE,
-    // () -> isMovingJoystick(driver),
-    // this::isCurrentPieceCone));
+    operator
+        .b()
+        .onTrue(
+            new AutoIntakeAtSubstation(
+                swerveSubsystem,
+                intakeSubsystem,
+                elevatorSubsystem,
+                armSubsystem,
+                ledStrip,
+                AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE,
+                () -> isMovingJoystick(driver),
+                this::isCurrentPieceCone));
   }
 
   private void configureIntake() {

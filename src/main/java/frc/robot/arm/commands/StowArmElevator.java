@@ -8,13 +8,16 @@
 package frc.robot.arm.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
 
 public class StowArmElevator extends ParallelCommandGroup {
+  // Add a parameter for the 0,5 seconds here
   public StowArmElevator(Elevator elevatorSubsystem, Arm armSubsystem) {
     addCommands(
-        new ZeroElevator(elevatorSubsystem), new SetArmAngle(armSubsystem, Arm.ArmPreset.DEFAULT));
+        new WaitCommand(0.17).andThen(new ZeroElevator(elevatorSubsystem)),
+        new SetArmAngle(armSubsystem, Arm.ArmPreset.DEFAULT));
   }
 }
