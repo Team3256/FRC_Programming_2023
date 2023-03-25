@@ -34,10 +34,11 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.BlinkingConePattern;
-import frc.robot.led.patterns.BlinkingCubePattern;
-import frc.robot.led.patterns.FIREPattern;
+import frc.robot.led.commands.*;
+import frc.robot.led.patterns.*;
+import frc.robot.led.patterns.Blink.ConePatternBlink;
+import frc.robot.led.patterns.Blink.CubePatternBlink;
+import frc.robot.led.patterns.Blink.SuccessPatternBlink;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -278,15 +279,16 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
+    //    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
 
+    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new SuccessPatternBlink())));
     operator
         .rightBumper()
-        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingConePattern()))
+        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new ConePatternBlink()))
         .toggleOnTrue(new InstantCommand(this::setPieceToCone));
     operator
         .leftBumper()
-        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new BlinkingCubePattern()))
+        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new CubePatternBlink()))
         .toggleOnTrue(new InstantCommand(this::setPieceToCube));
   }
 
