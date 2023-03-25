@@ -42,19 +42,18 @@ public final class ArmConstants {
     public static final String kPKey = "ArmkP";
     public static final String kIKey = "ArmkI";
     public static final String kDKey = "ArmkD";
-    public static final String kEncoderOffsetKey = "EncoderOffset";
-    public static final String kAbsoluteEncoderOffsetKey = "AbsoluteEncoderOffset";
+    public static final String kEncoderOffsetKey = "kEncoderOffset";
+    public static final String kAbsoluteEncoderOffsetKey = "kAbsoluteEncoderOffset";
   }
 
   public static final int kArmMotorID = 6;
   public static final String kArmCanBus = "mani";
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
   public static final int kArmSimulationID = 16;
-  public static final int kArmEncoderDIOPort = 10;
+  public static final int kArmEncoderDIOPort = 8;
 
-  public static final double kArmRadiansPerAbsoluteEncoderRotation = -2 * Math.PI;
-  public static final double kAbsoluteEncoderOffsetRadians =
-      -0.650724 * kArmRadiansPerAbsoluteEncoderRotation;
+  public static final double kArmRadiansPerAbsoluteEncoderRotation = 2 * Math.PI;
+  public static final double kAbsoluteEncoderOffsetRadians = -1.293487;
 
   public static final double kArmGearing = 240;
   public static double kRelativeFalconEncoderOffsetRadians =

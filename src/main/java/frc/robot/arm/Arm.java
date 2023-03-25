@@ -111,7 +111,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setInverted(true);
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
 
-    armMotor.setNeutralMode(NeutralMode.Brake);
+    // TOOD change back
+    armMotor.setNeutralMode(NeutralMode.Coast);
     armMotor.setSelectedSensorPosition(0);
   }
 
@@ -259,5 +260,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     // Arm Encoder Offset
     Preferences.initDouble(
         ArmPreferencesKeys.kEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
+    Preferences.initDouble(
+        ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
   }
 }
