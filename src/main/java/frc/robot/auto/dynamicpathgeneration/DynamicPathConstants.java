@@ -64,8 +64,7 @@ public final class DynamicPathConstants {
   }
 
   public static final PathConstraints kWaypointPathConstraints = new PathConstraints(3, 3);
-  public static final PathConstraints kPathToDestinationConstraints =
-      new PathConstraints(0.75, 0.75);
+  public static final PathConstraints kPathToDestinationConstraints = new PathConstraints(2, 2);
 
   // x value for the blue tape in front of the blue scoring grid
   public static final double kBlueGridTapeX = 1.36;
@@ -75,6 +74,7 @@ public final class DynamicPathConstants {
   public static final double kBlueLowOffset = Units.inchesToMeters(22);
   public static final double kBlueMidOffset = Units.inchesToMeters(21.5);
   public static final double kBlueHighOffset = Units.inchesToMeters(0);
+  public static final double kIntakeWidthOffset = Units.inchesToMeters(0); // Operator skill issue
 
   // Our arm is bent :)
   public static final Rotation2d kArmFckConstant = Rotation2d.fromDegrees(2);
@@ -119,22 +119,25 @@ public final class DynamicPathConstants {
           new Pose2d(
               new Translation2d(
                   kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2,
-                  kBlueNodeY[i]),
+                  kBlueNodeY[i] + kIntakeWidthOffset),
               Rotation2d.fromDegrees(180).plus(kArmFckConstant));
       kBottomBlueScoringPoses[i] =
           new Pose2d(
               new Translation2d(
-                  kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
+                  kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2,
+                  kBlueNodeY[i] + kIntakeWidthOffset),
               Rotation2d.fromDegrees(180).plus(kArmFckConstant));
       kMidBlueScoringPoses[i] =
           new Pose2d(
               new Translation2d(
-                  kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
+                  kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2,
+                  kBlueNodeY[i] + kIntakeWidthOffset),
               Rotation2d.fromDegrees(180).plus(kArmFckConstant));
       kHighBlueScoringPoses[i] =
           new Pose2d(
               new Translation2d(
-                  kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2, kBlueNodeY[i]),
+                  kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2,
+                  kBlueNodeY[i] + kIntakeWidthOffset),
               Rotation2d.fromDegrees(180).plus(kArmFckConstant));
     }
   }

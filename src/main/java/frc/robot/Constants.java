@@ -32,7 +32,7 @@ public final class Constants {
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final boolean kCompetitionModeEnabled = true;
   public static final RobotType kRobotType = RobotType.ALPHA;
-  public static final RobotMode kCurrentMode = RobotMode.REAL;
+  public static final RobotMode kCurrentMode = RobotMode.SIM;
 
   public static final double kStickDeadband = 0.05;
   public static final double kStickCancelDeadband = 0.25;
@@ -334,7 +334,7 @@ public final class Constants {
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 8;
+      public static final double kLimelightTranslationThresholdMeters = 20;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -344,7 +344,7 @@ public final class Constants {
     public static class BackConstants {
       public static final String kLimelightNetworkTablesName = "limelight-back";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 8;
+      public static final double kLimelightTranslationThresholdMeters = 20;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -354,7 +354,7 @@ public final class Constants {
     public static class SideConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 8;
+      public static final double kLimelightTranslationThresholdMeters = 20;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;

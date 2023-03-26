@@ -13,15 +13,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
+import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
@@ -29,6 +26,8 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
+import frc.robot.intake.commands.IntakeCone;
+import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.*;
@@ -48,6 +47,7 @@ public class AutoScore extends CommandBase {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledSubsystem;
+  private Intake intakeSubsystem;
   private GridScoreHeight gridScoreHeight;
   private BooleanSupplier cancelCommand;
 
@@ -61,6 +61,7 @@ public class AutoScore extends CommandBase {
       BooleanSupplier cancelCommand) {
 
     this.swerveSubsystem = swerveDrive;
+    this.intakeSubsystem = intakeSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.armSubsystem = armSubsystem;
     this.ledSubsystem = ledSubsystem;
@@ -104,6 +105,12 @@ public class AutoScore extends CommandBase {
           PathGeneration.createDynamicAbsolutePath(
               start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
 
+    Command runOuttake =
+        new ConditionalCommand(
+            new IntakeCube(intakeSubsystem, ledSubsystem),
+            new IntakeCone(intakeSubsystem, ledSubsystem),
+            isCurrentPieceCone);
+    Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
     Command moveArmElevatorToPreset;
@@ -165,10 +172,10 @@ public class AutoScore extends CommandBase {
         Commands.sequence(
                 moveToScoringWaypoint,
                 Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset))
-            .deadlineWith(runningLEDs)
+            .deadlineWith(runningLEDs.asProxy())
             .finallyDo((interrupted) -> successLEDs.schedule())
             .until(cancelCommand)
-            .handleInterrupt(() -> errorLEDs.schedule());
+            .handleInterrupt(errorLEDs::schedule);
 
     autoScore.schedule();
   }

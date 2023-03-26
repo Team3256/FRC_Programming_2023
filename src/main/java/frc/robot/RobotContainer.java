@@ -42,6 +42,7 @@ import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
 import frc.robot.led.patterns.Blink.ConePatternBlink;
 import frc.robot.led.patterns.Blink.CubePatternBlink;
+import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -195,14 +196,21 @@ public class RobotContainer implements CANTestable, Loggable {
         .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                driver::getRightX,
-                kFieldRelative,
-                kOpenLoop));
+                    swerveSubsystem,
+                    driver::getLeftY,
+                    driver::getLeftX,
+                    driver::getRightX,
+                    kFieldRelative,
+                    kOpenLoop)
+                .andThen(
+                    new LEDSetAllSectionsPattern(
+                        ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
 
-    driver.x().onTrue(new LockSwerveX(swerveSubsystem));
+    driver
+        .x()
+        .onTrue(
+            new LockSwerveX(swerveSubsystem)
+                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
 
     driver
         .leftTrigger()
@@ -214,7 +222,8 @@ public class RobotContainer implements CANTestable, Loggable {
                 elevatorSubsystem,
                 armSubsystem,
                 ledStrip,
-                () -> doubleSubstationLocation, // Change to LEFT_SIDE for testing
+                () -> RIGHT_SIDE,
+                //                () -> doubleSubstationLocation, // Change to LEFT_SIDE for testing
                 () -> isMovingJoystick(driver),
                 this::isCurrentPieceCone));
 
@@ -289,7 +298,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void configureClimb() {
     operator.povUp().onTrue(new RetractClimb(climbSubsystem));
-    operator.povDown().onTrue(new DeployClimb(climbSubsystem));
+    operator.povDown().whileTrue(new DeployClimb(climbSubsystem));
   }
 
   public void configureLEDStrip() {
