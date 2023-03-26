@@ -12,10 +12,10 @@ import static frc.robot.led.LEDConstants.kResolution;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.led.patternBases.LEDPattern;
 
-/** Full Yellow */
-public class ConePattern extends LEDPattern {
-  public ConePattern() {
+/** Full Dark Red */
+public class LockSwervePattern extends LEDPattern {
+  public LockSwervePattern() {
     super();
-    setPixelRange(1, kResolution, Color.kGold);
+    setPixelRange(1, kResolution, Color.kGreen);
   }
 }

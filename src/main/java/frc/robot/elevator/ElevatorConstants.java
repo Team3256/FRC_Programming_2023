@@ -21,12 +21,13 @@ public final class ElevatorConstants {
   public static final int kNumElevatorMotors = 1;
   public static final boolean kElevatorInverted = true;
 
-  public static final double kDoubleSubstationPositionMeters = Units.inchesToMeters(26);
   public static final double kZeroThreshold = 0.02;
 
-  public static final double kCubeHighPositionMeters = Units.inchesToMeters(0);
-  public static final double kConeHighPositionMeters = Units.inchesToMeters(15.372696);
-  public static final double kAnyPieceMidPositionMeters = Units.inchesToMeters(0);
+  public static final double kDoubleSubstationPositionCubeMeters = 0.455;
+  public static final double kDoubleSubstationPositionConeMeters = 0.55;
+  public static final double kCubeHighPositionMeters = 0.2;
+  public static final double kConeHighPositionMeters = 0.43;
+  public static final double kAnyPieceMidPositionMeters = 0.16;
   public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(31);
   public static final double kGroundIntakePositionMeters = Units.inchesToMeters(0);
 
@@ -38,7 +39,8 @@ public final class ElevatorConstants {
             Elevator.ElevatorPreset.ANY_PIECE_LOW, "kAnyPieceLowPositionMeters",
             Elevator.ElevatorPreset.ANY_PIECE_MID, "kAnyPieceMidPositionMeters",
             Elevator.ElevatorPreset.GROUND_INTAKE, "kGroundIntakePositionMeters",
-            Elevator.ElevatorPreset.DOUBLE_SUBSTATION, "kDoubleSubstationPositionMeters");
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationPositionConeMeters",
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE, "kDoubleSubstationPositionCubeMeters");
 
     public static final Map<Elevator.ElevatorPreset, Double> kElevatorPositionDefaults =
         Map.of(
@@ -47,7 +49,8 @@ public final class ElevatorConstants {
             Elevator.ElevatorPreset.ANY_PIECE_LOW, kAnyPieceLowPositionMeters,
             Elevator.ElevatorPreset.ANY_PIECE_MID, kAnyPieceMidPositionMeters,
             Elevator.ElevatorPreset.GROUND_INTAKE, kGroundIntakePositionMeters,
-            Elevator.ElevatorPreset.DOUBLE_SUBSTATION, kDoubleSubstationPositionMeters);
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE, kDoubleSubstationPositionConeMeters,
+            Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE, kDoubleSubstationPositionCubeMeters);
 
     public static final String kPKey = "ElevatorkP";
     public static final String kIKey = "ElevatorkI";
@@ -84,8 +87,8 @@ public final class ElevatorConstants {
   public static final double kElevatorGearing = 15;
   public static final double kCarriageMass = 6.28815086; // kg
 
-  public static final double kTolerancePosition = 0.025;
-  public static final double kToleranceVelocity = 0.025;
+  public static final double kTolerancePosition = Units.inchesToMeters(1);
+  public static final double kToleranceVelocity = Units.inchesToMeters(1);
   public static final double kRateLimiting = 0.05;
   public static final double kElevatorCurrentThreshold = 30; // amps
 }

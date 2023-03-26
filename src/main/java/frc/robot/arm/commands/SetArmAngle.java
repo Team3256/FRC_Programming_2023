@@ -12,6 +12,7 @@ import static frc.robot.arm.ArmConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
@@ -83,8 +84,11 @@ public class SetArmAngle extends ProfiledPIDCommand {
           this.getName()
               + " started (preset: "
               + armPreset
-              + ", rotation: "
+              + ", setpoint rotation: "
               + angleRotation2d.getDegrees()
+              + " deg)"
+              + ", current arm rotation: "
+              + Units.radiansToDegrees(armSubsystem.getArmPositionRads())
               + " deg)");
     }
   }
