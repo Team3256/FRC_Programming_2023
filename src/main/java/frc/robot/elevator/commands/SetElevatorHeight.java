@@ -10,9 +10,7 @@ package frc.robot.elevator.commands;
 import static frc.robot.elevator.ElevatorConstants.*;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
@@ -98,9 +96,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
   }
 
   @Override
-  public void execute() {
-    super.execute();
-    SmartDashboard.putNumber(
-        "Elevator setpoint position", Units.metersToInches(getController().getSetpoint().position));
+  public boolean isFinished() {
+    return getController().atGoal();
   }
 }

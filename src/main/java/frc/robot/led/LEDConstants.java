@@ -9,4 +9,5 @@ package frc.robot.led;
 
 public class LEDConstants {
   public static final int kResolution = 100;
+  public static final int kPort = 8;
 }

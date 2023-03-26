@@ -250,7 +250,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   @Override
   public void periodic() {
-
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
@@ -266,24 +265,26 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       }
     }
 
-    this.localize(
-        FrontConstants.kLimelightNetworkTablesName,
-        FrontConstants.kFieldTranslationOffsetX,
-        FrontConstants.kFieldTranslationOffsetY,
-        FrontConstants.kLimelightTranslationThresholdMeters,
-        FrontConstants.kLimelightRotationThreshold);
-    this.localize(
-        SideConstants.kLimelightNetworkTablesName,
-        SideConstants.kFieldTranslationOffsetX,
-        SideConstants.kFieldTranslationOffsetY,
-        SideConstants.kLimelightTranslationThresholdMeters,
-        SideConstants.kLimelightRotationThreshold);
-    this.localize(
-        BackConstants.kLimelightNetworkTablesName,
-        BackConstants.kFieldTranslationOffsetX,
-        BackConstants.kFieldTranslationOffsetY,
-        BackConstants.kLimelightTranslationThresholdMeters,
-        BackConstants.kLimelightTranslationThresholdMeters);
+    if (FeatureFlags.kLocalizationEnabled) {
+      this.localize(
+          FrontConstants.kLimelightNetworkTablesName,
+          FrontConstants.kFieldTranslationOffsetX,
+          FrontConstants.kFieldTranslationOffsetY,
+          FrontConstants.kLimelightTranslationThresholdMeters,
+          FrontConstants.kLimelightRotationThreshold);
+      this.localize(
+          SideConstants.kLimelightNetworkTablesName,
+          SideConstants.kFieldTranslationOffsetX,
+          SideConstants.kFieldTranslationOffsetY,
+          SideConstants.kLimelightTranslationThresholdMeters,
+          SideConstants.kLimelightRotationThreshold);
+      this.localize(
+          BackConstants.kLimelightNetworkTablesName,
+          BackConstants.kFieldTranslationOffsetX,
+          BackConstants.kFieldTranslationOffsetY,
+          BackConstants.kLimelightTranslationThresholdMeters,
+          BackConstants.kLimelightTranslationThresholdMeters);
+    }
   }
 
   public void setTrajectory(Trajectory trajectory) {

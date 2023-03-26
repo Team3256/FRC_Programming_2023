@@ -92,7 +92,7 @@ public class DynamicPathFollower {
     }
 
     // get trajectory
-    DynamicPathGenerator generator = new DynamicPathGenerator(src, dynamicPathGenSink);
+    DynamicPathGenerator generator = new DynamicPathGenerator(src, dynamicPathGenSink, swerveDrive);
     PathPlannerTrajectory dynamicPathGenTrajectory = generator.getTrajectory();
 
     // handle invalid trajectory
@@ -125,7 +125,8 @@ public class DynamicPathFollower {
       PathPoint scoringLocation =
           new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(), 2);
       PathPlannerTrajectory trajectoryToFinalSink =
-          PathPlanner.generatePath(kPathToScoreConstraints, dynamicPathGenEnd, scoringLocation);
+          PathPlanner.generatePath(
+              kPathToDestinationConstraints, dynamicPathGenEnd, scoringLocation);
       scoringLocationTrajectoryCommand =
           autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false, false);
     } else {
