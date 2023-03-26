@@ -27,11 +27,11 @@ public final class SwerveConstants {
   public static final double kSwervePitTestSpeed = 0.3;
 
   /* Meters per second squared */
-  public static int kXAccelRateLimit = 10;
-  public static int kXDecelRateLimit = 7;
+  public static double kXAccelRateLimit = 8;
+  public static double kXDecelRateLimit = 14;
 
-  public static int kYAccelRateLimit = 10;
-  public static int kYDecelRateLimit = 7;
+  public static double kYAccelRateLimit = 8;
+  public static double kYDecelRateLimit = 14;
 
   public static double kAutoEngageLimitVelocity = 1;
 

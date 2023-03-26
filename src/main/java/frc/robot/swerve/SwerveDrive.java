@@ -18,7 +18,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -69,7 +68,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     gyro.configFactoryDefault();
     zeroGyroYaw();
 
-    // TODO MAKE POSITION 0,0
+    // TODO: MAKE POSITION 0,0
     poseEstimator =
         new SwerveDrivePoseEstimator(
             kSwerveKinematics,
@@ -102,6 +101,13 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
+      chassisSpeeds.vxMetersPerSecond =
+          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+      chassisSpeeds.vyMetersPerSecond =
+          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+    }
+
     Pose2d robotPoseVelocity =
         new Pose2d(
             chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
@@ -113,13 +119,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             twistVelocity.dx / kPeriodicDeltaTime,
             twistVelocity.dy / kPeriodicDeltaTime,
             twistVelocity.dtheta / kPeriodicDeltaTime);
-
-    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
-      chassisSpeeds.vxMetersPerSecond =
-          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
-      chassisSpeeds.vyMetersPerSecond =
-          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
-    }
 
     SwerveModuleState[] swerveModuleStates =
         kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
@@ -253,6 +252,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
+
     if (Constants.kDebugEnabled) {
       field.setRobotPose(poseEstimator.getEstimatedPosition());
       Logger.getInstance().recordOutput("Odometry", getPose());
