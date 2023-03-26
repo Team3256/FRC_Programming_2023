@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.*;
+import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -84,7 +85,7 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kElevatorEnabled) elevatorSubsystem = new Elevator();
     if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
     if (kClimbEnabled) climbSubsystem = new Climb();
-    if (kLedStripEnabled) ledStrip = new LED(0, new int[] {100});
+    if (kLedStripEnabled) ledStrip = new LED(kPort, new int[] {100});
 
     if (kIntakeEnabled) {
       configureIntake();
