@@ -45,7 +45,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
     ANY_PIECE_LOW(ElevatorConstants.kAnyPieceLowPositionMeters),
     GROUND_INTAKE(ElevatorConstants.kGroundIntakePositionMeters),
-    DOUBLE_SUBSTATION(ElevatorConstants.kDoubleSubstationPositionMeters);
+    DOUBLE_SUBSTATION_CONE(ElevatorConstants.kDoubleSubstationPositionConeMeters),
+    DOUBLE_SUBSTATION_CUBE(ElevatorConstants.kDoubleSubstationPositionCubeMeters);
 
     public double position;
 
@@ -210,7 +211,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.GROUND_INTAKE),
         kGroundIntakePositionMeters);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION),
-        kDoubleSubstationPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
+        kDoubleSubstationPositionCubeMeters);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
+        kDoubleSubstationPositionConeMeters);
   }
 }

@@ -167,6 +167,8 @@ public class PPTrajectoryFollowCommand extends CommandBase {
         PathPlannerServer.sendPathFollowingData(
             new Pose2d(desiredPose.getTranslation(), desiredRotation),
             new Pose2d(desiredPose.getTranslation(), desiredRotation));
+      } else {
+        PathPlannerServer.sendPathFollowingData(desiredPose, currentPose);
       }
     }
 
@@ -217,8 +219,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
     boolean reachedEndTolerance =
         relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
-            && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance
-            && now >= trajectoryDuration;
+            && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance;
 
     return reachedEndTolerance && now >= trajectoryDuration;
   }

@@ -51,11 +51,11 @@ public class PathUtil {
     return false;
   }
 
-  public static Pose2d flip(Pose2d orig) {
+  public static Pose2d flip(Pose2d original) {
     return new Pose2d(
-        Constants.FieldConstants.kFieldLength - orig.getX(),
-        orig.getY(),
-        orig.getRotation().unaryMinus().plus(new Rotation2d(Math.PI)));
+        Constants.FieldConstants.kFieldLength - original.getX(),
+        original.getY(),
+        original.getRotation().unaryMinus().plus(Rotation2d.fromDegrees(180)));
   }
 
   public static Translation2d flip(Translation2d orig) {

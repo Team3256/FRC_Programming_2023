@@ -18,8 +18,10 @@ import frc.robot.auto.dynamicpathgeneration.helpers.FileUtil;
 import frc.robot.auto.dynamicpathgeneration.helpers.Path;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
+import frc.robot.swerve.SwerveDrive;
 import java.util.List;
 import org.json.simple.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class DynamicPathGenerationTest {
@@ -32,6 +34,12 @@ public class DynamicPathGenerationTest {
   // testInterpolatePathBase(
   // new Rotation2d(0), new Rotation2d(0), positions, "InterpolateTest-Turn");
   // }
+  public static SwerveDrive swerveDrive;
+
+  @BeforeAll
+  public static void setup() {
+    swerveDrive = new SwerveDrive();
+  }
 
   @Test
   public void testGeneratePathHigh() {
@@ -116,7 +124,7 @@ public class DynamicPathGenerationTest {
       sink = PathUtil.flip(sink);
     }
     long start = System.currentTimeMillis();
-    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
+    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink, swerveDrive);
     List<PathNode> pathNodes = generator.getPathNodes();
     System.out.println("Time to find points: " + (System.currentTimeMillis() - start));
     testInterpolatePathBase(src.getRotation(), sink.getRotation(), pathNodes, fileName);
