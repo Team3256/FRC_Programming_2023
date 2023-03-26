@@ -72,9 +72,10 @@ public class AutoBuilder {
       Command stopEvent = createCommandFromStopEvent(trajectory.getStartStopEvent());
       commands.add(stopEvent.andThen(createPathPlannerCommand(trajectory, false)));
     }
-    PathPlannerTrajectory lastTrajectory = trajectories.get(trajectories.size() - 1);
-
-    commands.add(createCommandFromStopEvent(lastTrajectory.getEndStopEvent()));
+    if (trajectories.size() > 0) {
+      PathPlannerTrajectory lastTrajectory = trajectories.get(trajectories.size() - 1);
+      commands.add(createCommandFromStopEvent(lastTrajectory.getEndStopEvent()));
+    }
 
     return commands;
   }
