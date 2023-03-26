@@ -114,7 +114,14 @@ public class DynamicPathGenerator {
       pathPoints.add(waypoint.waypointToPathPoint());
     }
     // convert pathPoints into Trajectory we return
-    return PathPlanner.generatePath(kDynamicPathConstraints, pathPoints);
+    return PathPlanner.generatePath(kWaypointPathConstraints, pathPoints);
+  }
+
+  public Command getCommand() {
+    PathPlannerTrajectory traj = getTrajectory();
+    AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
+    Command trajCommand = autoBuilder.createTrajectoryFollowCommand(traj, false, false);
+    return trajCommand;
   }
 
   public Command getCommand(SwerveDrive swerveDrive, PathConstraints pathConstraints) {

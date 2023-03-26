@@ -24,7 +24,8 @@ public final class ArmConstants {
             Arm.ArmPreset.CUBE_HIGH, "kCubeHighRotation",
             Arm.ArmPreset.CONE_HIGH, "kConeHighRotation",
             Arm.ArmPreset.GROUND_INTAKE, "kGroundIntakeRotation",
-            Arm.ArmPreset.DOUBLE_SUBSTATION, "kDoubleSubstationRotation");
+            Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, "kDoubleSubstationCubeRotation",
+            Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationConeRotation");
 
     public static final Map<Arm.ArmPreset, Rotation2d> kArmPositionDefaults =
         Map.of(
@@ -35,26 +36,27 @@ public final class ArmConstants {
             Arm.ArmPreset.CUBE_HIGH, kCubeHighRotation,
             Arm.ArmPreset.CONE_HIGH, kConeHighRotation,
             Arm.ArmPreset.GROUND_INTAKE, kGroundIntakeRotation,
-            Arm.ArmPreset.DOUBLE_SUBSTATION, kDoubleSubstationRotation);
+            Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, kDoubleSubstationRotationCone,
+            Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, kDoubleSubstationRotationCube);
 
     public static final String kPKey = "ArmkP";
     public static final String kIKey = "ArmkI";
     public static final String kDKey = "ArmkD";
-    public static final String kEncoderOffsetKey = "EncoderOffset";
+    public static final String kEncoderOffsetKey = "kEncoderOffset";
+    public static final String kAbsoluteEncoderOffsetKey = "kAbsoluteEncoderOffset";
   }
 
-  // TODO: Fix constants
   public static final int kArmMotorID = 6;
   public static final String kArmCanBus = "mani";
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
   public static final int kArmSimulationID = 16;
-  public static final int kArmEncoderDIOPort = 10;
-  private static final double kArmCountsPerRevolution = 8192;
-  public static final double kArmEncoderConversionToRadians =
-      (1 / kArmCountsPerRevolution) * 2 * Math.PI;
+  public static final int kArmEncoderDIOPort = 8;
+
+  public static final double kArmRadiansPerAbsoluteEncoderRotation = 2 * Math.PI;
+  public static final double kAbsoluteEncoderOffsetRadians = -1.293487;
 
   public static final double kArmGearing = 240;
-  public static double kEncoderOffsetRadians =
+  public static double kRelativeFalconEncoderOffsetRadians =
       Constants.kCompetitionModeEnabled ? 4.2246340316 : Math.PI / 2;
   public static final double kArmLengthMeters = 1.638059;
   public static final double kArmInertia = 35.627712818;
@@ -62,16 +64,16 @@ public final class ArmConstants {
   public static final boolean kArmSimGravity = true;
   public static final int kNumArmMotors = 1;
 
-  public static final double kArmS = 0.13794;
-  public static final double kArmG = 0.60843;
-  public static final double kArmV = 4.19;
-  public static final double kArmA = 0.029772;
-  public static final double kP = 4.4118;
+  public static final double kArmS = 0.16924;
+  public static final double kArmG = 0.15542;
+  public static final double kArmV = 4.1445;
+  public static final double kArmA = 0.17676;
+  public static final double kP = 10.96;
   public static final double kI = 0;
-  public static final double kD = 0.29266;
+  public static final double kD = 7.0262;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
-      new TrapezoidProfile.Constraints(8, 4);
+      new TrapezoidProfile.Constraints(5, 3);
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
 
@@ -81,13 +83,14 @@ public final class ArmConstants {
 
   public static final Rotation2d kDefaultArmAngle =
       Constants.kCompetitionModeEnabled ? Rotation2d.fromDegrees(72) : Rotation2d.fromDegrees(90);
-  public static final Rotation2d kDoubleSubstationRotation = Rotation2d.fromDegrees(5.5);
+  public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0.07);
+  public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0.01);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-30.5);
-  public static final Rotation2d kCubeMidRotation = Rotation2d.fromDegrees(12);
-  public static final Rotation2d kConeMidRotation = Rotation2d.fromDegrees(17.5);
-  public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(21);
-  public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(40);
+  public static final Rotation2d kCubeMidRotation = new Rotation2d(0.32);
+  public static final Rotation2d kConeMidRotation = new Rotation2d(0.18);
+  public static final Rotation2d kCubeHighRotation = new Rotation2d(0.6);
+  public static final Rotation2d kConeHighRotation = new Rotation2d(0.23);
   public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-10);
 
-  public static final double kManualArmVoltage = 3.5;
+  public static final double kManualArmVoltage = 2;
 }

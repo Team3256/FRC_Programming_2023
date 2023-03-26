@@ -94,7 +94,8 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     // azimuth angle to
     // calculate error
     double rotationPIDOutput =
-        azimuthController.calculate(swerveSubsystem.getYaw().getDegrees(), azimuthAngle);
+        azimuthController.calculate(
+            swerveSubsystem.getPose().getRotation().getDegrees(), azimuthAngle);
 
     translation = new Translation2d(yAxis, xAxis).times(kMaxSpeed);
     rotationPIDOutput =
@@ -105,6 +106,6 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return manualRotating.getAsBoolean();
+    return manualRotating.getAsBoolean() || azimuthController.atSetpoint();
   }
 }
