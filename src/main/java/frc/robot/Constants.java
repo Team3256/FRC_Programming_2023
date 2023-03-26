@@ -321,6 +321,8 @@ public final class Constants {
     public static final double kAutoAlignP = 0.0;
     public static final double kAutoAlignI = 0.0;
     public static final double kAutoAlignD = 0.0;
+    public static final double kAngleAlignmentThreshold = Units.degreesToRadians(1.0);
+    public static final double kAngleSpeedMultiplier = 0.0;
     public static final int kNeuralDetectiorPipelineIndex = 0;
 
     public static class FrontConstants {
