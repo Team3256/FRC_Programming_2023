@@ -158,8 +158,15 @@ public class Path {
     return fullJson;
   }
 
-  // find optimal bezier control points for a point given the point right before and the point right
-  // after
+  /**
+   * find optimal bezier control points for a point given the point right before and the point right after
+   * @param startPoint location of the node prior to the current node in path
+   * @param desiredPoint location of current node in path
+   * @param endPoint location of the node after the current node in path
+   * @param prevControlPointScalar scalar to multiply the prevControl unit vector
+   * @param nextControlPointScalar scalar to multiply the nextControl unit vector
+   * @return
+   */
   public Translation2d[] findControlPoints(
       Translation2d startPoint,
       Translation2d desiredPoint,
