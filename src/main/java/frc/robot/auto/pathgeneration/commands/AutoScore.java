@@ -98,8 +98,8 @@ public class AutoScore extends CommandBase {
     }
     Command moveToScoringWaypoint;
     if (kDynamicPathGenerationEnabled) {
-      DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint, swerveSubsystem);
-      moveToScoringWaypoint = gen.getCommand();
+      DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint);
+      moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);
     } else
       moveToScoringWaypoint =
           PathGeneration.createDynamicAbsolutePath(

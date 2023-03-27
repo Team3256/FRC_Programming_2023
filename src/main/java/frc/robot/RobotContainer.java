@@ -28,7 +28,6 @@ import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathConstants;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.climb.Climb;
@@ -216,11 +215,11 @@ public class RobotContainer implements CANTestable, Loggable {
                 () ->
                     new DynamicPathGenerator(
                             DynamicPathConstants.kBlueTopDoubleSubstationPose,
-                            DynamicPathConstants.kHighBlueScoringPoses[(int)(Math.random()*9)])
-                        .getCommand(swerveSubsystem, DynamicPathConstants.kDynamicPathConstraints)
+                            DynamicPathConstants.kHighBlueScoringPoses[(int) (Math.random() * 9)])
+                        .getCommand(
+                            swerveSubsystem, DynamicPathConstants.kPathToDestinationConstraints)
                         .schedule()));
     tester.b().onTrue(new InstantCommand(() -> System.out.println("HEY")));
-  }
 
     driver
         .x()

@@ -33,7 +33,7 @@ public class DynamicPathGenerator {
   private final List<Integer> pathIndexes;
 
   /**
-   * Set up DPG
+   * Set up visibility graph for DPG and store the best path for the robot to take
    *
    * @param srcPose the initial pose of the robot in the path
    * @param sinkPose the final pose of the robot in the path
@@ -42,7 +42,7 @@ public class DynamicPathGenerator {
     this.srcPose = srcPose;
     this.sinkPose = sinkPose;
     System.out.println("Initializing DPG");
-    // * update visibility graph, taking into account the srcPose, sinkPose, and alliance color
+    // update visibility graph, taking into account the srcPose, sinkPose, and alliance color
     dynamicPathNodes = new ArrayList<>();
     if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
       dynamicPathNodes.addAll(blueDynamicPathWayNodes);
@@ -51,13 +51,13 @@ public class DynamicPathGenerator {
     }
     srcNode = new PathNode(srcPose.getX(), srcPose.getY(), PathNode.NodeType.SRC);
     sinkNode = new PathNode(sinkPose.getX(), sinkPose.getY(), PathNode.NodeType.SINK);
-    // Note: start node MUST be added before goal node
+    // note: start node MUST be added before goal node
     dynamicPathNodes.add(srcNode);
     dynamicPathNodes.add(sinkNode);
     // connect src, sink to dynamicPathNodes
     PathNode srcClosest = connectToClosest(srcNode, dynamicPathNodes);
     PathNode sinkClosest = connectToClosest(sinkNode, dynamicPathNodes);
-    // use Dynamic Path Finder to find the optimal path that DPG will use
+    // use Dynamic Path Finder to find the optimal path that DPG will utilize
     DynamicPathFinder pathFinder =
         new DynamicPathFinder(srcNode.getIndex(), sinkNode.getIndex(), dynamicPathNodes);
     pathIndexes = pathFinder.findPath();
@@ -96,7 +96,7 @@ public class DynamicPathGenerator {
   }
 
   public List<PathNode> getPathNodes() {
-    // convert pathIds into pathNodes
+    // get list of stored pathIds from list of pathNodes
     List<PathNode> pathNodes = new ArrayList<>();
     for (int i : pathIndexes) {
       pathNodes.add(dynamicPathNodes.get(i));
@@ -106,36 +106,31 @@ public class DynamicPathGenerator {
 
   public PathPlannerTrajectory getTrajectory() {
     List<PathNode> pathNodes = getPathNodes();
-    // if no path points were found then there should be no trajectory
+    // case: no path nodes were found then there should be no trajectory
     if (pathNodes.size() == 0) return null;
+
+    // otherwise convert path nodes into path points
     Path path = new Path(getPathNodes(), srcPose.getRotation(), sinkPose.getRotation());
     List<PathPoint> pathPoints = new ArrayList<>();
     for (Waypoint waypoint : path.getWaypoints()) {
       pathPoints.add(waypoint.waypointToPathPoint());
     }
-    // convert pathPoints into Trajectory we return
+    // convert path points into the trajectory we return
     return PathPlanner.generatePath(kWaypointPathConstraints, pathPoints);
-  }
-
-  public Command getCommand() {
-    PathPlannerTrajectory traj = getTrajectory();
-    AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command trajCommand = autoBuilder.createTrajectoryFollowCommand(traj, false, false);
-    return trajCommand;
   }
 
   public Command getCommand(SwerveDrive swerveDrive, PathConstraints pathConstraints) {
     PathPlannerTrajectory trajectory = getTrajectory();
-    // log src, sink, trajectory
+    // log the src, sink, trajectory
     if (kDynamicPathGenerationDebug) {
       if (trajectory != null)
         trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
       waypointViewer.getObject("Src").setPose(srcPose);
       waypointViewer.getObject("Sink").setPose(sinkPose);
     }
-    // handle case no trajectory
+    // case: no trajectory available
     if (trajectory == null) return new PrintCommand("ERROR: NO PATH AVAILABLE");
-    // create command that runs the trajectory
+    // otherwise create command that runs the trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command trajCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
     return trajCommand;

@@ -44,8 +44,7 @@ public class Path {
       // case: if its the first point of the path, use startRotation for angle
       if (i == 0) {
         holonomicAngle = startRotation;
-      } 
-      else {
+      } else {
         // calculate rotation step size
         Rotation2d prevRotation = waypoints.get(i - 1).getHolonomicAngle();
         Rotation2d totRotation = endRotation.minus(prevRotation);
@@ -75,7 +74,8 @@ public class Path {
         }
       }
 
-      //2. calculate anchorPoint (waypoint location), prevControl (bezier control point behind), nextControl (bezier control point in front)
+      // 2. calculate anchorPoint (waypoint location), prevControl (bezier control point behind),
+      // nextControl (bezier control point in front)
       Translation2d anchorPoint = positions.get(i);
       Translation2d prevControl;
       Translation2d nextControl;
@@ -111,7 +111,7 @@ public class Path {
         prevControl = anchorPoint.plus(thisPointToPrevPoint);
         nextControl = null;
       }
-      //otherwise use the optimal bezier controls
+      // otherwise use the optimal bezier controls
       else {
         double prevControlPointScalar = kRegularControlPointScalar;
         double nextControlPointScalar = kRegularControlPointScalar;
@@ -159,7 +159,9 @@ public class Path {
   }
 
   /**
-   * find optimal bezier control points for a point given the point right before and the point right after
+   * find optimal bezier control points for a point given the point right before and the point right
+   * after
+   *
    * @param startPoint location of the node prior to the current node in path
    * @param desiredPoint location of current node in path
    * @param endPoint location of the node after the current node in path
