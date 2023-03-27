@@ -20,15 +20,14 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
-import frc.robot.arm.ArmConstants;
 import frc.robot.arm.Arm.ArmPreset;
+import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
-import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
@@ -56,12 +55,9 @@ import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -88,18 +84,12 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    if (kArmEnabled)
-      armSubsystem = new Arm();
-    if (kIntakeEnabled)
-      intakeSubsystem = new Intake();
-    if (kElevatorEnabled)
-      elevatorSubsystem = new Elevator();
-    if (kSwerveEnabled)
-      swerveSubsystem = new SwerveDrive();
-    if (kClimbEnabled)
-      climbSubsystem = new Climb();
-    if (kLedStripEnabled)
-      ledStrip = new LED(kPort, new int[] { 100 });
+    if (kArmEnabled) armSubsystem = new Arm();
+    if (kIntakeEnabled) intakeSubsystem = new Intake();
+    if (kElevatorEnabled) elevatorSubsystem = new Elevator();
+    if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
+    if (kClimbEnabled) climbSubsystem = new Climb();
+    if (kLedStripEnabled) ledStrip = new LED(kPort, new int[] {100});
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -209,12 +199,12 @@ public class RobotContainer implements CANTestable, Loggable {
         .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                driver::getRightX,
-                kFieldRelative,
-                kOpenLoop)
+                    swerveSubsystem,
+                    driver::getLeftY,
+                    driver::getLeftX,
+                    driver::getRightX,
+                    kFieldRelative,
+                    kOpenLoop)
                 .andThen(
                     new LEDSetAllSectionsPattern(
                         // TODO fix later
@@ -339,13 +329,14 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorOnRightSide;
+    Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide = new ParallelRaceGroup(
-          new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+      // setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem,
+      // armSubsystem)).withTimeout(1.5);
+      setArmElevatorStart = new InstantCommand();
 
       return Commands.sequence(
-          setArmElevatorOnRightSide.asProxy(),
+          setArmElevatorStart.asProxy(),
           autoPath,
           new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
     } else {
@@ -376,15 +367,14 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : canBusTestables)
-      result &= subsystem.CANTest();
+    for (CANTestable subsystem : canBusTestables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
-        armSubsystem);
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
     pitSubsystemRoutine.runPitRoutine();
   }
 
