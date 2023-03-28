@@ -14,7 +14,6 @@ import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -111,7 +110,9 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorMotorMaster.setInverted(kElevatorInverted);
     elevatorMotorMaster.setNeutralMode(NeutralMode.Brake);
 
-    elevatorMotorFollowing = TalonFXFactory.createPermanentFollowerTalon(kElevatorCANDeviceFollowing, kElevatorCANDeviceMaster);
+    elevatorMotorFollowing =
+        TalonFXFactory.createPermanentFollowerTalon(
+            kElevatorCANDeviceFollowing, kElevatorCANDeviceMaster);
     elevatorMotorFollowing.setInverted(true);
     elevatorMotorFollowing.setNeutralMode(NeutralMode.Brake);
   }
@@ -135,7 +136,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   public double getElevatorPosition() {
     if (RobotBase.isReal()) {
-      return falconToMeters(elevatorMotorMaster.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
+      return falconToMeters(
+          elevatorMotorMaster.getSelectedSensorPosition(),
+          2 * Math.PI * kDrumRadius,
+          kElevatorGearing);
     } else return elevatorSim.getPositionMeters();
   }
 
@@ -190,8 +194,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
     SmartDashboard.putNumber("Current Draw", elevatorSim.getCurrentDrawAmps());
-    SmartDashboard.putNumber("Elevator Sim Voltage", elevatorMotorMaster.getMotorOutputPercent() * 12);
-
+    SmartDashboard.putNumber(
+        "Elevator Sim Voltage", elevatorMotorMaster.getMotorOutputPercent() * 12);
   }
 
   // TODO: add following

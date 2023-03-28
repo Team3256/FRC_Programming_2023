@@ -19,7 +19,7 @@ public final class ElevatorConstants {
   public static final String kElevatorCANBus = "mani";
   public static final CanDeviceId kElevatorCANDeviceMaster =
       new CanDeviceId(kElevatorIDMaster, kElevatorCANBus);
-  public static final CanDeviceId kElevatorCANDeviceFollowing = 
+  public static final CanDeviceId kElevatorCANDeviceFollowing =
       new CanDeviceId(kElevatorIDFollowing, kElevatorCANBus);
   public static final int kNumElevatorMotors = 2;
   public static final boolean kElevatorInverted = true;
