@@ -1,7 +1,18 @@
 # Dynamic Path Generation
 
 ### Quick start:
-* Use the method DynamicPathFollower.run(sink) to make the robot travel to any desired pose.
+* Create a new Dynamic Path Generator
+  * Ex: DynamicPathGenerator dpg = new DynamicPathGenerator(Pose2d robotPose, Pose2d targetPose)
+* Use the method getCommand to get the command to run in order to run the trajectory.
+    * Ex: Command cmd = dpg.getCommand(swerveDrive, pathConstraints)
+* Run the command
+    * Ex: CommandScheduler.run(cmd)
+
+### Simulating quick start:
+* Set alliance color in SimulationGUI to wanted color (red or blue).
+* Turn teleoperated to on.
+* Assign your keyboard to a Joystick.
+* Press the key associated with the joystick button that runs auto score or auto double substation.
 
 ### Jargon:
 * Src refers to the first node in a path. For example the src of the DPG program is the robot's current pose.
@@ -14,14 +25,18 @@
 * Visibility graph:
 <img width="1137" alt="Screen Shot 2023-03-20 at 5 26 20 PM" src="https://user-images.githubusercontent.com/72239682/226493704-668a83c7-6823-4f55-9748-c0a251e3bd3e.png">
 * These are the possible way points to use to travel between src and sink. They are linked in such a way that travelling between nodes does not crash into any obstacles.
-* We send this graph to DynamicPathFinder which finds the best path from start node to end node
-* DynamicPathGenerator uses Finder to create a trajectory for the robot to travel from a given start pose to end pose
-* DynamicPathFollower uses Generator to create a trajectory from current robot pose to the wanted node from GUI. Then it schedules a command to make the robot run the route.
-* To mirror to red paths (default is blue), we subtract all x coordinates from 16.5 to form x' (including obstacles)
+* Dynamic Path Generator sends this graph to DynamicPathFinder which finds the best path from the start node to end node.
+* Dynamic Path Finder uses Djikstra's shortest path algorithm to find the optimal path in the visibility graph to get from src to sink in minimal time.
+* Programs like AutoScore and AutoDoubleSubstation uses Dynamic Path Generator to create a trajectory from the current robot pose to the wanted node in SmartDashboard.
+
+### Minor details:
+* To mirror to red paths (default is blue), we subtract all blue x coordinates from the field width to get the corresponding red x coordinate. This including the field obstacle objects we created as well. Then we invert the rotation associated with each blue pose.
+
 ### Tests:
-* Follow DynamicPathGenerationTest functions to create your own test case and visualize it.
-* In red mode all pose rotations are inverted
-### Confusing stuff:
+* Look at the DynamicPathGenerationTest file and its functions to create your own test case and visualize the result. There are many examples available in the associated directory.
+* In red mode all the tests becomes red tests instead of blue tests.
+
+### Intermediary classes used:
 * Translation2D is a point
 * Rotation2D is a rotation
 * Pose2D is a translation with a rotation
@@ -29,18 +44,17 @@
 * Path takes in a list of PathNodes and converts in into a list of waypoints
 * Waypoint is a point that can be displayed on PathPlanner
 * PathPoint is a point that can be used in a Dynamic Trajectory
-### Extremely Confusing stuff:
+
+### Implementation:
 * Translation2D is a position, not a vector, even though we often use it as a vector. Add the vector to the original position to get the final position.
 * Rotation2D is stored as a 2x2 transformation matrix. Therefore its value only ever ranges between (-180,180]
-* We do not count path length on passages during rotate interpolation
+
 ### Features:
-* Optimal control points to interpolate between consecutive points
-* Piecewise control scalar that is large when not in community zone
-* Convert path into JSON that PathPlanner can render
+* Optimal control points to interpolate a bezier curve between consecutive points
+* Piecewise control scalar that is adaptive to the state of the point. For example, it is extra small when the point is in the community zone, and extra large when the next point is very far away.
+* Convert a path or set of points into JSON that the PathPlanner app can render
 * Locked rotation during passages that minimizes the robot's radius
 * Fastest path algorithm
 * Visibility graph
-### Bugs:
-* DO NOT add/remove blue or red dynamic path way point nodes OUTSIDE of CreateDynamicPathWayNodes
-* DO NOT use anything inside dynamicpathgeneration folder EXCEPT for DynamicPathFollower outside of the folder
-* We don't want DPG breaking during competition
+* Integrated with FMS Alliance Color
+* Microservice that can be used as a plugin for programs

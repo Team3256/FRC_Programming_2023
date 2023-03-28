@@ -120,7 +120,9 @@ public class DynamicPathGenerator {
   }
 
   public Command getCommand(SwerveDrive swerveDrive, PathConstraints pathConstraints) {
+    double ms0 = System.currentTimeMillis();
     PathPlannerTrajectory trajectory = getTrajectory();
+    System.out.println("PROGRAM TOOK:" + (System.currentTimeMillis() - ms0) + " MS");
     // log the src, sink, trajectory
     if (kDynamicPathGenerationDebug) {
       if (trajectory != null)
@@ -133,6 +135,7 @@ public class DynamicPathGenerator {
     // otherwise create command that runs the trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command trajCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
+    
     return trajCommand;
   }
 }

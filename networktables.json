@@ -166,5 +166,53 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Preferences/kDoubleSubstationConeRotation",
+    "type": "double",
+    "value": 0.01,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDoubleSubstationCubeRotation",
+    "type": "double",
+    "value": 0.07,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kEncoderOffset",
+    "type": "double",
+    "value": 4.2246340316,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kAbsoluteEncoderOffset",
+    "type": "double",
+    "value": -1.293487,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDoubleSubstationPositionCubeMeters",
+    "type": "double",
+    "value": 0.455,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDoubleSubstationPositionConeMeters",
+    "type": "double",
+    "value": 0.55,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

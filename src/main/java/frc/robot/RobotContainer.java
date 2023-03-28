@@ -214,7 +214,7 @@ public class RobotContainer implements CANTestable, Loggable {
             new InstantCommand(
                 () ->
                     new DynamicPathGenerator(
-                            DynamicPathConstants.kBlueTopDoubleSubstationPose,
+                            swerveSubsystem.getPose(),
                             DynamicPathConstants.kHighBlueScoringPoses[(int) (Math.random() * 9)])
                         .getCommand(
                             swerveSubsystem, DynamicPathConstants.kPathToDestinationConstraints)
