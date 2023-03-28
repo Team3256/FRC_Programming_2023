@@ -110,12 +110,16 @@ public class AutoIntakeAtSubstation extends CommandBase {
     // commands that will be run sequentially
     Command moveToScoringWaypoint;
     if (kDynamicPathGenerationEnabled) {
-      DynamicPathGenerator gen = new DynamicPathGenerator(swerveSubsystem.getPose(), substationWaypoint);
+      DynamicPathGenerator gen =
+          new DynamicPathGenerator(swerveSubsystem.getPose(), substationWaypoint);
       moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);
     } else
       moveToScoringWaypoint =
           PathGeneration.createDynamicAbsolutePath(
-              swerveSubsystem.getPose(), substationWaypoint, swerveSubsystem, kWaypointPathConstraints);
+              swerveSubsystem.getPose(),
+              substationWaypoint,
+              swerveSubsystem,
+              kWaypointPathConstraints);
 
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
@@ -156,7 +160,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
 
     Command autoIntakeCommand =
         Commands.sequence(
-                moveToWaypoint,
+                moveToScoringWaypoint,
                 Commands.deadline(
                     runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
                 Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
