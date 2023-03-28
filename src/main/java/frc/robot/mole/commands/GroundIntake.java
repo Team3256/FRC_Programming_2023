@@ -19,6 +19,7 @@ public class GroundIntake extends SequentialCommandGroup {
         addCommands(
             new ZeroElevator(elevatorSubsystem), 
             new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(-35)),
+            // new set voltage command to push arm forward
             // new some intake command
             );
     }
