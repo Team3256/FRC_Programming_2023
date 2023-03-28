@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
@@ -109,12 +110,12 @@ public class AutoIntakeAtSubstation extends CommandBase {
     // commands that will be run sequentially
     Command moveToScoringWaypoint;
     if (kDynamicPathGenerationEnabled) {
-      DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint);
+      DynamicPathGenerator gen = new DynamicPathGenerator(swerveSubsystem.getPose(), substationWaypoint);
       moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);
     } else
       moveToScoringWaypoint =
           PathGeneration.createDynamicAbsolutePath(
-              start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
+              swerveSubsystem.getPose(), substationWaypoint, swerveSubsystem, kWaypointPathConstraints);
 
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
