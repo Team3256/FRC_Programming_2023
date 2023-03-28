@@ -14,8 +14,6 @@ import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessPattern;
 
-import static frc.robot.intake.IntakeConstants.kTriggerThresholdTimeCone;
-
 public class IntakeCone extends CommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
@@ -23,7 +21,7 @@ public class IntakeCone extends CommandBase {
 
   public IntakeCone(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentSpiking = new TimedBoolean(() -> intakeSubsystem.isCurrentSpiking(), kTriggerThresholdTimeCone);
+    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 3);
 
     addRequirements(intakeSubsystem);
   }
