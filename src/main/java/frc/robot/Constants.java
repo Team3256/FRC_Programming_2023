@@ -22,7 +22,7 @@ public final class Constants {
   public static final boolean kDebugEnabled = false;
 
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kClimbEnabled = true;
+  public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
   public static final boolean kArmEnabled = true;

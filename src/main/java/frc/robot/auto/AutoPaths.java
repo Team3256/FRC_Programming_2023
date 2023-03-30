@@ -209,11 +209,11 @@ public class AutoPaths {
     AutoChooser.createSinglePath("Node5-Mobility-Engage", node5MobilityEngage);
 
     // Node8x2
-    Command node8x2 =
+    Command node9x2 =
         autoBuilder
-            .createPath("Node8x2", kFastPathConstraints, true)
+            .createPath("Node9x2", kFastPathConstraints, true)
             .beforeStarting(scorePreloadCube.get().asProxy());
-    AutoChooser.createSinglePath("Node8x2", node8x2);
+    AutoChooser.createSinglePath("Node9x2", node9x2);
 
     // Node2x2-Engage
     ArrayList<Command> node2x2Engage =

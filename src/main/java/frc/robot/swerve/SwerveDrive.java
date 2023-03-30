@@ -61,7 +61,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
-  private boolean isLocalized;
+  private boolean isLocalized = false;
 
   private final Pigeon2 gyro;
 
@@ -86,6 +86,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
       SmartDashboard.putData("Field", field);
     }
+    SmartDashboard.putBoolean("Robot Pose Localized", isLocalized);
+
     /*
      * By pausing init for a second before setting module offsets, we avoid a bug
      * with inverting motors.
