@@ -127,6 +127,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+    SmartDashboard.putBoolean("Robot Pose Localized", false);
   }
 
   private void configureSwerve() {
