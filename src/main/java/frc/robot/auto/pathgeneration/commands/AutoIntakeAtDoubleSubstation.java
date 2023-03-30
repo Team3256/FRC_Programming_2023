@@ -155,8 +155,8 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
         Commands.sequence(
                 moveToWaypoint,
                 Commands.deadline(
-                    runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
-                Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake).asProxy())
+                    runIntake, moveArmElevatorToPreset, moveToSubstation).withTimeout(8),
+                Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
             .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
             .finallyDo((interrupted) -> successLEDs.schedule())
