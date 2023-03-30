@@ -315,6 +315,10 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
+    if (true) {
+      return new IntakeCone(intakeSubsystem);
+    }
+
     Command autoPath = autoPaths.getSelectedPath();
     Command setArmElevatorOnRightSide;
     if (kElevatorEnabled && kArmEnabled) {

@@ -8,13 +8,11 @@
 package frc.robot.helpers;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.BooleanSupplier;
 
 public class TimedBoolean {
   private BooleanSupplier condition;
   private Timer timer = new Timer();
-  private boolean timerStarted = false;
   private double triggerThreshold;
 
   public TimedBoolean(BooleanSupplier condition, double triggerThreshold) {
@@ -23,19 +21,17 @@ public class TimedBoolean {
   }
 
   public void update() {
-    if (condition.getAsBoolean() && !timerStarted) {
+    if (condition.getAsBoolean()) {
       timer.start();
-      timerStarted = true;
-    }
-    if (!condition.getAsBoolean()) {
+    } else {
       timer.stop();
       timer.reset();
-      timerStarted = false;
     }
-    SmartDashboard.putNumber("Timer", timer.get());
+    System.out.println("Timer: " + timer.get());
   }
 
   public boolean hasBeenTrueForThreshold() {
+    System.out.println(timer.get() > triggerThreshold && condition.getAsBoolean());
     return timer.get() > triggerThreshold && condition.getAsBoolean();
   }
 }

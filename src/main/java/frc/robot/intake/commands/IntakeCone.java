@@ -21,7 +21,7 @@ public class IntakeCone extends CommandBase {
 
   public IntakeCone(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 3);
+    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 1);
 
     addRequirements(intakeSubsystem);
   }
@@ -44,11 +44,11 @@ public class IntakeCone extends CommandBase {
     if (!interrupted && ledSubsystem != null) {
       new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
     }
-    isCurrentSpiking.update();
   }
 
   @Override
   public boolean isFinished() {
+    isCurrentSpiking.update();
     return isCurrentSpiking.hasBeenTrueForThreshold();
   }
 }
