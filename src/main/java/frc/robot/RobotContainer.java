@@ -223,7 +223,7 @@ public class RobotContainer implements CANTestable, Loggable {
                 armSubsystem,
                 ledStrip,
                 () -> RIGHT_SIDE,
-                //                () -> doubleSubstationLocation, // Change to LEFT_SIDE for testing
+                // () -> doubleSubstationLocation, // Change to LEFT_SIDE for testing
                 () -> isMovingJoystick(driver),
                 this::isCurrentPieceCone));
 
@@ -297,8 +297,11 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureClimb() {
-    operator.povUp().onTrue(new RetractClimb(climbSubsystem));
-    operator.povDown().whileTrue(new DeployClimb(climbSubsystem));
+    // Button conflicts
+    if (!FeatureFlags.kOperatorManualArmControlEnabled) {
+      operator.povUp().onTrue(new RetractClimb(climbSubsystem));
+      operator.povDown().whileTrue(new DeployClimb(climbSubsystem));
+    }
   }
 
   public void configureLEDStrip() {

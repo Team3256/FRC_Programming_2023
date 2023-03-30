@@ -45,11 +45,11 @@ public final class Constants {
   public static final Field2d swerveViewer = new Field2d();
 
   public static final class FeatureFlags {
-    public static final boolean kOperatorManualArmControlEnabled = false;
-
-    public static final boolean kArmAbsoluteEncoderEnabled = true;
+    // IMPORTANT: enabling manual arm control removes buddy climb bindings
+    public static final boolean kOperatorManualArmControlEnabled = true;
     public static final boolean kLocalizationEnabled = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
+
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;
