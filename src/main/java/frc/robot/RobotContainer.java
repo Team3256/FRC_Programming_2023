@@ -20,10 +20,8 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
@@ -34,8 +32,6 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPreset;
-import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -250,39 +246,30 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void configureElevator() {
     if (kArmEnabled && kIntakeEnabled) {
-      driver
-          .rightTrigger()
-          .whileTrue(
-              Commands.parallel(
-                  new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.GROUND_INTAKE),
-                  new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE),
-                  new IntakeCube(intakeSubsystem)));
-      // =======
-      // if (kLedStripEnabled) {
-      // driver
-      // .rightTrigger()
-      // .onTrue(
-      // new AutoScore(
-      // swerveSubsystem,
-      // intakeSubsystem,
-      // elevatorSubsystem,
-      // armSubsystem,
-      // ledStrip,
-      // AutoScore.GridScoreHeight.HIGH,
-      // () -> isMovingJoystick(driver)));
-      // driver
-      // .rightBumper()
-      // .onTrue(
-      // new AutoScore(
-      // swerveSubsystem,
-      // intakeSubsystem,
-      // elevatorSubsystem,
-      // armSubsystem,
-      // ledStrip,
-      // AutoScore.GridScoreHeight.MID,
-      // () -> isMovingJoystick(driver)));
-      // }
-      // >>>>>>> 965bdf3a721f9fe3c3eb5f7e85245818c351c262
+      if (kLedStripEnabled) {
+        driver
+            .rightTrigger()
+            .onTrue(
+                new AutoScore(
+                    swerveSubsystem,
+                    intakeSubsystem,
+                    elevatorSubsystem,
+                    armSubsystem,
+                    ledStrip,
+                    AutoScore.GridScoreHeight.HIGH,
+                    () -> isMovingJoystick(driver)));
+        driver
+            .rightBumper()
+            .onTrue(
+                new AutoScore(
+                    swerveSubsystem,
+                    intakeSubsystem,
+                    elevatorSubsystem,
+                    armSubsystem,
+                    ledStrip,
+                    AutoScore.GridScoreHeight.MID,
+                    () -> isMovingJoystick(driver)));
+      }
 
       driver
           .y()
