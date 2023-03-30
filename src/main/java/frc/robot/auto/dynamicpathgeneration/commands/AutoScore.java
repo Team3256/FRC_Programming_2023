@@ -82,6 +82,9 @@ public class AutoScore extends CommandBase {
 
     // Get scoring location id from SD
     int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      locationId = 8 - locationId;
+    }
     if (0 > locationId || locationId > 8) {
       System.out.println("locationId was invalid (" + locationId + ")");
       new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink()).withTimeout(6).schedule();

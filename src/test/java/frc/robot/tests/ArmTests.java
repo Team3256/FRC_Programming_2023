@@ -16,7 +16,6 @@ import frc.robot.UnitTestBase;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 public class ArmTests extends UnitTestBase {
 
@@ -32,7 +31,7 @@ public class ArmTests extends UnitTestBase {
 
   // Arm Sim is setting to minimum angle. Tests don't really work
   // Test in simulateJava, gravity is weird in tests
-  @Test
+  //  @Test
   public void testArmAngleVertical() {
     testArmAngle(Rotation2d.fromDegrees(90));
   }

@@ -102,6 +102,12 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
+      chassisSpeeds.vxMetersPerSecond =
+          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+      chassisSpeeds.vyMetersPerSecond =
+          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+    }
     Pose2d robotPoseVelocity =
         new Pose2d(
             chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
@@ -113,13 +119,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             twistVelocity.dx / kPeriodicDeltaTime,
             twistVelocity.dy / kPeriodicDeltaTime,
             twistVelocity.dtheta / kPeriodicDeltaTime);
-
-    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
-      chassisSpeeds.vxMetersPerSecond =
-          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
-      chassisSpeeds.vyMetersPerSecond =
-          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
-    }
 
     SwerveModuleState[] swerveModuleStates =
         kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
