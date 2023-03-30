@@ -132,6 +132,7 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
             new IntakeCone(intakeSubsystem, ledSubsystem),
             new IntakeCube(intakeSubsystem, ledSubsystem),
             isCurrentPieceCone);
+
     Command moveToSubstation =
         PathGeneration.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);

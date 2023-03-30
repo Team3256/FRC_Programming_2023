@@ -37,6 +37,7 @@ public class Climb extends SubsystemBase implements CANTestable {
   public void configureRealHardware() {
     climbMotor = TalonFXFactory.createDefaultTalon(kClimbCANDevice);
     climbMotor.setNeutralMode(NeutralMode.Brake);
+    climbMotor.setInverted(true);
   }
 
   public void configureSimHardware() {

@@ -7,7 +7,7 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.swerve.SwerveConstants.kXAutoBalanceVelocityMeters;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,6 +17,7 @@ import frc.robot.swerve.SwerveDrive;
 
 public class AutoBalance extends CommandBase {
   private final SwerveDrive swerveDrive;
+  private boolean slow = false;
   private Timer balancedTimer;
 
   public AutoBalance(SwerveDrive swerveDrive) {
@@ -35,11 +36,28 @@ public class AutoBalance extends CommandBase {
   public void execute() {
     if (swerveDrive.isTiltedForward()) {
       balancedTimer.reset();
-      swerveDrive.drive(new Translation2d(-kXAutoBalanceVelocityMeters, 0), 0, true, true);
+      if (slow) {
+        swerveDrive.drive(
+            new Translation2d(-kXAutoBalanceVelocityMeters * kSlowBalanceSpeedPercentage, 0),
+            0,
+            true,
+            true);
+      } else {
+        swerveDrive.drive(new Translation2d(-kXAutoBalanceVelocityMeters, 0), 0, true, true);
+      }
     } else if (swerveDrive.isTiltedBackward()) {
       balancedTimer.reset();
-      swerveDrive.drive(new Translation2d(kXAutoBalanceVelocityMeters, 0), 0, true, true);
+      if (slow) {
+        swerveDrive.drive(
+            new Translation2d(kXAutoBalanceVelocityMeters * kSlowBalanceSpeedPercentage, 0),
+            0,
+            true,
+            true);
+      } else {
+        swerveDrive.drive(new Translation2d(kXAutoBalanceVelocityMeters, 0), 0, true, true);
+      }
     } else {
+      this.slow = true;
       swerveDrive.drive(new Translation2d(0, 0), 0, true, true);
     }
   }
@@ -51,6 +69,6 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return swerveDrive.isNotTilted() && balancedTimer.get() >= 2;
+    return swerveDrive.isNotTilted() && balancedTimer.get() >= 3;
   }
 }

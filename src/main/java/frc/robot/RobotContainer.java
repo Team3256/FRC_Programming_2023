@@ -46,6 +46,7 @@ import frc.robot.led.patterns.Blink.CubePatternBlink;
 import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
+import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
 import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
@@ -210,9 +211,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
     driver
         .x()
-        .onTrue(
+        .whileTrue(
+            // TODO change back
             new LockSwerveX(swerveSubsystem)
-                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
+                .deadlineWith(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
 
     driver
         .leftTrigger()
@@ -314,6 +316,11 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
+    // TODO change back
+    if (true) {
+      return new AutoBalance(swerveSubsystem);
+    }
+
     Command autoPath = autoPaths.getSelectedPath();
     Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
