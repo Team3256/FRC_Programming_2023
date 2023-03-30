@@ -61,6 +61,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   private final SwerveModule[] swerveModules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
+  private boolean isLocalized;
 
   private final Pigeon2 gyro;
 
@@ -213,6 +214,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       double fieldTransformOffsetY,
       double LimelightTranslationThresholdMeters,
       double LimelightRotationThreshold) {
+
     if (Limelight.hasValidTargets(networkTablesName)) {
       double[] visionBotPose;
       if (FeatureFlags.kLocalizationUseWPIBlueOffset) {
@@ -242,8 +244,12 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
         Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
 
-        if (shouldAddVisionMeasurement(
-            limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)) {
+        boolean shouldAddVisionMeasurement =
+            shouldAddVisionMeasurement(
+                limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold);
+        isLocalized = isLocalized || shouldAddVisionMeasurement;
+
+        if (shouldAddVisionMeasurement) {
           poseEstimator.addVisionMeasurement(
               limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
         }
@@ -277,6 +283,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     }
 
     if (FeatureFlags.kLocalizationEnabled) {
+      isLocalized = false;
       this.localize(
           FrontConstants.kLimelightNetworkTablesName,
           FrontConstants.kFieldTranslationOffsetX,
@@ -296,6 +303,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
           BackConstants.kLimelightTranslationThresholdMeters,
           BackConstants.kLimelightTranslationThresholdMeters);
     }
+    SmartDashboard.putBoolean("Robot Pose Localized", isLocalized);
   }
 
   public void setTrajectory(Trajectory trajectory) {
