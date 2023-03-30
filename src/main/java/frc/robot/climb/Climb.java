@@ -49,7 +49,7 @@ public class Climb extends SubsystemBase implements CANTestable {
   }
 
   public void retractClimb() {
-    System.out.println("Climb Up");
+    System.out.println("Climb Retracted");
     climbMotor.set(ControlMode.Position, kClimbRetractPosition);
   }
 
