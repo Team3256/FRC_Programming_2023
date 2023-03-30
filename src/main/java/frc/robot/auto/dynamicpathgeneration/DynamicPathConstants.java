@@ -59,6 +59,7 @@ public final class DynamicPathConstants {
   public static final double preSinkX = 2.10;
   public static final double preSinkEndpointsOffset = 0.3;
   public static final double passagePoints = 8;
+
   static {
     CreateDynamicPathWayNodes.init();
   }
