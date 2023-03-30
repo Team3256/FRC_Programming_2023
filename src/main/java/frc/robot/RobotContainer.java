@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.*;
+import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
@@ -28,6 +28,7 @@ import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
+import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
@@ -73,7 +74,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Climb climbSubsystem;
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
-  private AutoIntakeAtSubstation.SubstationLocation doubleSubstationLocation = RIGHT_SIDE;
+  private SubstationLocation doubleSubstationLocation = RIGHT_SIDE;
 
   private AutoPaths autoPaths;
 
@@ -216,20 +217,17 @@ public class RobotContainer implements CANTestable, Loggable {
     driver
         .leftTrigger()
         .onTrue(
-            new AutoIntakeAtSubstation( // TODO: Rename to clarify that this is for double
-                // substation
+            new AutoIntakeAtDoubleSubstation(
                 swerveSubsystem,
                 intakeSubsystem,
                 elevatorSubsystem,
                 armSubsystem,
                 ledStrip,
-                () -> RIGHT_SIDE,
-                // () -> doubleSubstationLocation, // Change to LEFT_SIDE for testing
+                this::getSubstationLocation,
                 () -> isMovingJoystick(driver),
                 this::isCurrentPieceCone));
 
-    operator.a().toggleOnTrue(new InstantCommand(() -> setDoubleSubstationLocation(RIGHT_SIDE)));
-    operator.a().toggleOnFalse(new InstantCommand(() -> setDoubleSubstationLocation(LEFT_SIDE)));
+    operator.a().toggleOnTrue(new InstantCommand(this::toggleSubstationLocation));
   }
 
   private void configureIntake() {
@@ -298,11 +296,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureClimb() {
-    // Button conflicts
-    if (!FeatureFlags.kOperatorManualArmControlEnabled) {
-      operator.povUp().onTrue(new RetractClimb(climbSubsystem));
-      operator.povDown().whileTrue(new DeployClimb(climbSubsystem));
-    }
+    operator.back().whileTrue(new RetractClimb(climbSubsystem));
+    operator.start().whileTrue(new DeployClimb(climbSubsystem));
   }
 
   public void configureLEDStrip() {
@@ -380,9 +375,18 @@ public class RobotContainer implements CANTestable, Loggable {
     currentPiece = GamePiece.CUBE;
   }
 
-  public void setDoubleSubstationLocation(AutoIntakeAtSubstation.SubstationLocation location) {
-    doubleSubstationLocation = location;
+  public void toggleSubstationLocation() {
+    if (doubleSubstationLocation == SubstationLocation.LEFT_SIDE) {
+      doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+    } else {
+      doubleSubstationLocation = SubstationLocation.LEFT_SIDE;
+    }
+
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+  }
+
+  public SubstationLocation getSubstationLocation() {
+    return this.doubleSubstationLocation;
   }
 }

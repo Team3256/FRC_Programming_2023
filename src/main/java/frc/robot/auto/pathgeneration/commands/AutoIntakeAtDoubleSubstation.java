@@ -38,7 +38,7 @@ import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-public class AutoIntakeAtSubstation extends CommandBase {
+public class AutoIntakeAtDoubleSubstation extends CommandBase {
   public enum SubstationLocation {
     // From driver's POV
     RIGHT_SIDE,
@@ -54,7 +54,7 @@ public class AutoIntakeAtSubstation extends CommandBase {
   private BooleanSupplier cancelCommand;
   private BooleanSupplier isCurrentPieceCone;
 
-  public AutoIntakeAtSubstation(
+  public AutoIntakeAtDoubleSubstation(
       SwerveDrive swerveDrive,
       Intake intakeSubsystem,
       Elevator elevatorSubsystem,
