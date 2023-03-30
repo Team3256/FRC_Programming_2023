@@ -69,7 +69,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     gyro.configFactoryDefault();
     zeroGyroYaw();
 
-    // TODO MAKE POSITION 0,0
     poseEstimator =
         new SwerveDrivePoseEstimator(
             kSwerveKinematics,
@@ -215,11 +214,24 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       double LimelightTranslationThresholdMeters,
       double LimelightRotationThreshold) {
     if (Limelight.hasValidTargets(networkTablesName)) {
-      double[] visionBotPose = Limelight.getBotpose(networkTablesName);
+      double[] visionBotPose;
+      if (FeatureFlags.kLocalizationUseWPIBlueOffset) {
+        visionBotPose = Limelight.getBotpose_wpiBlue(networkTablesName);
+      } else {
+        visionBotPose = Limelight.getBotpose(networkTablesName);
+      }
 
       if (visionBotPose.length != 0) {
-        double tx = visionBotPose[0] + fieldTransformOffsetX;
-        double ty = visionBotPose[1] + fieldTransformOffsetY;
+        double tx;
+        double ty;
+
+        if (FeatureFlags.kLocalizationUseWPIBlueOffset) {
+          tx = visionBotPose[0];
+          ty = visionBotPose[1];
+        } else {
+          tx = visionBotPose[0] + fieldTransformOffsetX;
+          ty = visionBotPose[1] + fieldTransformOffsetY;
+        }
 
         // botpose from network tables uses degrees, not radians, so need to convert
         double rx = visionBotPose[3];
