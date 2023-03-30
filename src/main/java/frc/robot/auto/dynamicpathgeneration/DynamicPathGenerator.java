@@ -10,12 +10,14 @@ package frc.robot.auto.dynamicpathgeneration;
 import static frc.robot.Constants.trajectoryViewer;
 import static frc.robot.Constants.waypointViewer;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.helpers.PathUtil.straightTravelTimeWithObstacles;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -68,6 +70,14 @@ public class DynamicPathGenerator {
     // unconnect src, sink from dynamicPathNodes
     PathUtil.fullyDisconnect(srcClosest, sinkNode);
     PathUtil.fullyDisconnect(sinkClosest, sinkNode);
+    debugger();
+  }
+
+  public void debugger() {
+    for (PathNode node : dynamicPathNodes) {
+      System.out.println(node.getIndex() + ":" + node.getPoint());
+      System.out.println(straightTravelTimeWithObstacles(node.getPoint(), srcNode.getPoint()));
+    }
   }
 
   /**
@@ -80,18 +90,20 @@ public class DynamicPathGenerator {
   public PathNode connectToClosest(PathNode node, ArrayList<PathNode> pathNodes) {
     double closest = INF_TIME;
     PathNode ret = node;
-    for (PathNode q : pathNodes) {
-      if (q == node) continue;
-      double dist = PathUtil.straightTravelTimeWithObstacles(node.getPoint(), q.getPoint());
-      if (dist < closest) {
-        closest = dist;
-        ret = q;
-      }
-    }
-    if (kDynamicPathGenerationDebug) {
-      System.out.println("closest to " + node + " is " + ret);
-    }
-    PathUtil.fullyConnect(ret, node);
+    //    for (PathNode q : pathNodes) {
+    //      System.out.println("Try closest node:" + q.getPoint());
+    //      if (q == node) continue;
+    //      double dist = PathUtil.straightTravelTimeWithObstacles(node.getPoint(), q.getPoint());
+    //      if (dist > 0.000001 && dist < closest) {
+    //        closest = dist;
+    //        ret = q;
+    //      }
+    //      System.out.println(q.getIndex() + ": " + dist);
+    //    }
+    //    if (kDynamicPathGenerationDebug) {
+    //      System.out.println("closest to " + node + " is " + ret);
+    //    }
+    //    PathUtil.fullyConnect(ret, node);
     return ret;
   }
 
@@ -129,13 +141,18 @@ public class DynamicPathGenerator {
         trajectoryViewer.getObject("DynamicTrajectory").setTrajectory(trajectory);
       waypointViewer.getObject("Src").setPose(srcPose);
       waypointViewer.getObject("Sink").setPose(sinkPose);
+      for (PathNode pathNode : dynamicPathNodes) {
+        waypointViewer
+            .getObject("Node " + pathNode.getIndex())
+            .setPose(new Pose2d(pathNode.getX(), pathNode.getY(), new Rotation2d()));
+      }
     }
     // case: no trajectory available
     if (trajectory == null) return new PrintCommand("ERROR: NO PATH AVAILABLE");
     // otherwise create command that runs the trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
     Command trajCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
-    
+
     return trajCommand;
   }
 }

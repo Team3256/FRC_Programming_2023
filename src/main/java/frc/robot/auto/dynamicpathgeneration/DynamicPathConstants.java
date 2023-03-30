@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public final class DynamicPathConstants {
   // Flags
   public static final boolean kDynamicPathGenerationDebug = true && Constants.kDebugEnabled;
-  public static final boolean kDynamicPathGenerationEnabled = true;
+  public static final boolean kObstacleDebug = true;
 
   // Bezier
   public static final double kRegularControlPointScalar = 0.5;
@@ -35,19 +35,23 @@ public final class DynamicPathConstants {
   public static final double kBetweenPassageControlPointScalar = 0.90;
 
   // Obstacles
-  public static final Obstacle kBarrierAboveGrid =
-      new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02);
-  public static final Obstacle kLowerWall = new Obstacle(new Translation2d(0, 0), kFieldLength, 0);
-  public static final Obstacle kChargingStation =
+  public static final Obstacle kBlueBarrierAboveGrid =
+      new Obstacle(new Translation2d(0, 5.48), 3.27, 0.02, "blueBarrierAboveGrid");
+  public static final Obstacle kBlueLowerWall =
+      new Obstacle(new Translation2d(0, 0), kFieldLength, 0.001, "blueLowerWall");
+  public static final Obstacle kBlueChargingStation =
       new Obstacle(
-          kBlueChargingStationTopLeftCorner, kChargingStationWidth, kChargingStationHeight);
+          kBlueChargingStationTopLeftCorner,
+          kChargingStationWidth,
+          kChargingStationHeight,
+          "blueChargingStation");
   public static final Obstacle[] obstacles = {
-    kBarrierAboveGrid,
-    kLowerWall,
-    kChargingStation,
-    kChargingStation.getRedVersion(),
-    kLowerWall.getRedVersion(),
-    kBarrierAboveGrid.getRedVersion()
+    kBlueBarrierAboveGrid,
+    kBlueLowerWall,
+    kBlueChargingStation,
+    kBlueChargingStation.getRedVersion(),
+    kBlueLowerWall.getRedVersion(),
+    kBlueBarrierAboveGrid.getRedVersion()
   };
 
   // Universal path nodes
@@ -86,9 +90,10 @@ public final class DynamicPathConstants {
   // treat the edge nodes specially
   public static final double kRotationOffset = 0;
   public static final double kOuterNodeRotationBuffer = Units.inchesToMeters(0);
-
-  // (lowest y location to highest y location)
   public static final double kSubstationWaypointOffset = Units.feetToMeters(5);
+
+  public static final Pose2d kFieldMiddle =
+      new Pose2d(kFieldLength / 2, kFieldWidth / 2, Rotation2d.fromDegrees(0));
   public static final Pose2d kBlueTopDoubleSubstationPose =
       new Pose2d(15.45, 7.35, Rotation2d.fromDegrees(0));
   public static final Pose2d kBlueBottomDoubleSubstationPose =

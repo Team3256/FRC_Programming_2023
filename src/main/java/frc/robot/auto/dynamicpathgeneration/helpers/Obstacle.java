@@ -12,10 +12,12 @@ import frc.robot.Constants;
 import java.awt.geom.Rectangle2D;
 
 public class Obstacle {
-  public Rectangle2D.Double rectangle;
+  private final String name;
+  private final Rectangle2D.Double rectangle;
 
   // Rectangle2D.Double actually uses bottom left contrary to their docs
-  public Obstacle(Translation2d bottomLeftCorner, double width, double height) {
+  public Obstacle(Translation2d bottomLeftCorner, double width, double height, String name) {
+    this.name = name;
     rectangle =
         new Rectangle2D.Double(bottomLeftCorner.getX(), bottomLeftCorner.getY(), width, height);
   }
@@ -35,6 +37,11 @@ public class Obstacle {
     return new Obstacle(
         new Translation2d(newBottomLeftCornerX, rectangle.getY()),
         rectangle.width,
-        rectangle.height);
+        rectangle.height,
+        "RED" + name);
+  }
+
+  public String toString() {
+    return name;
   }
 }

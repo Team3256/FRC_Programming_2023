@@ -5,8 +5,9 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.pathgeneration.commands;
+package frc.robot.auto.dynamicpathgeneration.commands;
 
+import static frc.robot.Constants.FeatureFlags.kDynamicPathGenEnabled;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,8 +22,8 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
+import frc.robot.auto.dynamicpathgeneration.PathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
-import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
@@ -109,13 +110,13 @@ public class AutoIntakeAtSubstation extends CommandBase {
 
     // commands that will be run sequentially
     Command moveToScoringWaypoint;
-    if (kDynamicPathGenerationEnabled) {
+    if (kDynamicPathGenEnabled) {
       DynamicPathGenerator gen =
           new DynamicPathGenerator(swerveSubsystem.getPose(), substationWaypoint);
       moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);
     } else
       moveToScoringWaypoint =
-          PathGeneration.createDynamicAbsolutePath(
+          PathGenerator.createDynamicAbsolutePath(
               swerveSubsystem.getPose(),
               substationWaypoint,
               swerveSubsystem,
@@ -140,12 +141,12 @@ public class AutoIntakeAtSubstation extends CommandBase {
             new IntakeCube(intakeSubsystem, ledSubsystem),
             isCurrentPieceCone);
     Command moveToSubstation =
-        PathGeneration.createDynamicAbsolutePath(
+        PathGenerator.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
     Command stopIntake = new IntakeOff(intakeSubsystem);
     Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem, 0, 1);
     Command moveAwayFromSubstation =
-        PathGeneration.createDynamicAbsolutePath(
+        PathGenerator.createDynamicAbsolutePath(
             end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
 
     Command runningLEDs =

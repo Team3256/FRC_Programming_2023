@@ -21,7 +21,7 @@ public class DynamicPathObstacleTest extends UnitTestBase {
     Translation2d end = new Translation2d(2.25, 4.5);
     assertEquals(
         true,
-        DynamicPathConstants.kChargingStation.intersectsLineSegment(start, end),
+        DynamicPathConstants.kBlueChargingStation.intersectsLineSegment(start, end),
         "Charge station interction test");
   }
 
@@ -31,7 +31,7 @@ public class DynamicPathObstacleTest extends UnitTestBase {
     Translation2d end = new Translation2d(2, 3);
     assertEquals(
         true,
-        DynamicPathConstants.kChargingStation.intersectsLineSegment(start, end),
+        DynamicPathConstants.kBlueChargingStation.intersectsLineSegment(start, end),
         "Charge station interction test");
   }
 
@@ -41,7 +41,7 @@ public class DynamicPathObstacleTest extends UnitTestBase {
     Translation2d end = new Translation2d(5.5, 4.55);
     assertEquals(
         false,
-        DynamicPathConstants.kChargingStation.intersectsLineSegment(start, end),
+        DynamicPathConstants.kBlueChargingStation.intersectsLineSegment(start, end),
         "Charge station interction test");
   }
 
@@ -51,7 +51,7 @@ public class DynamicPathObstacleTest extends UnitTestBase {
     Translation2d end = new Translation2d(2.2, 2);
     assertEquals(
         false,
-        DynamicPathConstants.kChargingStation.intersectsLineSegment(start, end),
+        DynamicPathConstants.kBlueChargingStation.intersectsLineSegment(start, end),
         "Charge station interction test");
   }
 
@@ -61,7 +61,7 @@ public class DynamicPathObstacleTest extends UnitTestBase {
     Translation2d end = new Translation2d(5.24, 3.86);
     assertEquals(
         true,
-        DynamicPathConstants.kChargingStation.intersectsLineSegment(start, end),
+        DynamicPathConstants.kBlueChargingStation.intersectsLineSegment(start, end),
         "Charge station interction test");
   }
 }

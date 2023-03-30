@@ -8,8 +8,9 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.*;
-import static frc.robot.led.LEDConstants.*;
+import static frc.robot.auto.dynamicpathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.LEFT_SIDE;
+import static frc.robot.auto.dynamicpathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE;
+import static frc.robot.led.LEDConstants.kPort;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
@@ -29,7 +30,8 @@ import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathConstants;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
-import frc.robot.auto.pathgeneration.commands.*;
+import frc.robot.auto.dynamicpathgeneration.commands.AutoIntakeAtSubstation;
+import frc.robot.auto.dynamicpathgeneration.commands.AutoScore;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
@@ -40,11 +42,12 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
-import frc.robot.led.commands.*;
-import frc.robot.led.patterns.*;
+import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.Blink.ConePatternBlink;
 import frc.robot.led.patterns.Blink.CubePatternBlink;
 import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
+import frc.robot.led.patterns.FIREPattern;
+import frc.robot.led.patterns.LockSwervePattern;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -214,7 +217,7 @@ public class RobotContainer implements CANTestable, Loggable {
             new InstantCommand(
                 () ->
                     new DynamicPathGenerator(
-                            swerveSubsystem.getPose(),
+                            DynamicPathConstants.kBlueBottomDoubleSubstationPose,
                             DynamicPathConstants.kHighBlueScoringPoses[(int) (Math.random() * 9)])
                         .getCommand(
                             swerveSubsystem, DynamicPathConstants.kPathToDestinationConstraints)

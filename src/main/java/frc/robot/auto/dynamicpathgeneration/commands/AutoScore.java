@@ -5,8 +5,9 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.pathgeneration.commands;
+package frc.robot.auto.dynamicpathgeneration.commands;
 
+import static frc.robot.Constants.FeatureFlags.kDynamicPathGenEnabled;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,8 +21,8 @@ import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
+import frc.robot.auto.dynamicpathgeneration.PathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
-import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
 import frc.robot.elevator.commands.SetElevatorHeight;
@@ -97,12 +98,12 @@ public class AutoScore extends CommandBase {
       scoringWaypoint = PathUtil.flip(scoringWaypoint);
     }
     Command moveToScoringWaypoint;
-    if (kDynamicPathGenerationEnabled) {
+    if (kDynamicPathGenEnabled) {
       DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint);
       moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);
     } else
       moveToScoringWaypoint =
-          PathGeneration.createDynamicAbsolutePath(
+          PathGenerator.createDynamicAbsolutePath(
               start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
 
     Command runOuttake =
@@ -153,7 +154,7 @@ public class AutoScore extends CommandBase {
 
     // Move to scoring location
     Command moveToScoringLocation =
-        PathGeneration.createDynamicAbsolutePath(
+        PathGenerator.createDynamicAbsolutePath(
             scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
 
     // LED verbose
