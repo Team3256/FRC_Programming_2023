@@ -27,11 +27,9 @@ public class TimedBoolean {
       timer.stop();
       timer.reset();
     }
-    System.out.println("Timer: " + timer.get());
   }
 
   public boolean hasBeenTrueForThreshold() {
-    System.out.println(timer.get() > triggerThreshold && condition.getAsBoolean());
     return timer.get() > triggerThreshold && condition.getAsBoolean();
   }
 }
