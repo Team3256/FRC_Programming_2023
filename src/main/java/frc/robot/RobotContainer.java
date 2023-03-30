@@ -297,8 +297,11 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureClimb() {
-    operator.povUp().onTrue(new RetractClimb(climbSubsystem));
-    operator.povDown().whileTrue(new DeployClimb(climbSubsystem));
+    // Button conflicts
+    if (!FeatureFlags.kOperatorManualArmControlEnabled) {
+      operator.povUp().onTrue(new RetractClimb(climbSubsystem));
+      operator.povDown().whileTrue(new DeployClimb(climbSubsystem));
+    }
   }
 
   public void configureLEDStrip() {
