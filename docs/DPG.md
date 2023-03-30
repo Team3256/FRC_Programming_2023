@@ -9,10 +9,12 @@
     * Ex: CommandScheduler.run(cmd)
 
 ### Simulating quick start:
+* Create 2 windows in glass: waypointViewer + Auto Visualization
 * Set alliance color in SimulationGUI to wanted color (red or blue).
 * Turn teleoperated to on.
-* Assign your keyboard to a Joystick.
-* Press the key associated with the joystick button that runs auto score or auto double substation.
+* Assign your keyboard to Joystick port 2.
+* Press Z to run the DPG trajectory
+* Change the initial swerve pose and final swerve pose to observe how the trajectory changes.
 
 ### Jargon:
 * Src refers to the first node in a path. For example the src of the DPG program is the robot's current pose.
@@ -37,7 +39,7 @@
 * In red mode all the tests becomes red tests instead of blue tests.
 
 ### Intermediary classes used:
-* Translation2D is a point
+* Translation2D is a point, sometimes used as a vector
 * Rotation2D is a rotation
 * Pose2D is a translation with a rotation
 * PathNode is a translation with a list of possible next nodes it can travel to. Also has a isPassage flag.
