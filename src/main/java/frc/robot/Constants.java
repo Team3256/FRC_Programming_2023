@@ -19,11 +19,10 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebugEnabled = false;
+  public static final boolean kDebugEnabled = true;
 
   public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = false;
-
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
   public static final boolean kArmEnabled = true;

@@ -203,8 +203,9 @@ public class RobotContainer implements CANTestable, Loggable {
                     driver::getRightX,
                     kFieldRelative,
                     kOpenLoop)
-                .andThen(
+                .deadlineWith(
                     new LEDSetAllSectionsPattern(
+                        // TODO fix later
                         ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
 
     driver
@@ -314,14 +315,13 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorOnRightSide;
+    Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide =
-          new ParallelRaceGroup(
-              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+      setArmElevatorStart =
+          new SetArmElevatorStart(elevatorSubsystem, armSubsystem).withTimeout(1.5);
 
       return Commands.sequence(
-          setArmElevatorOnRightSide.asProxy(),
+          setArmElevatorStart.asProxy(),
           autoPath,
           new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
     } else {
