@@ -22,9 +22,13 @@ public final class ClimbConstants {
 
   public static class ClimbPreferencesKeys {
     public static final String kClimbDeployRotationKey = "kClimbDeployRotation";
+    public static final String kClimbDeploySpeedKey = "kClimbDeploySpeed";
+
     public static final String kClimbRetractRotationKey = "kClimbRetractRotation";
   }
 
   public static final double kClimbDeployRotation = 1.68;
+  public static final double kClimbDeploySpeed = 0.8;
+
   public static final double kClimbRetractRotation = kClimbDeployRotation * 2;
 }

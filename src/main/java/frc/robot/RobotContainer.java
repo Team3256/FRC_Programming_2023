@@ -31,7 +31,6 @@ import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
-import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.intake.Intake;
@@ -298,8 +297,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureClimb() {
-    operator.back().whileTrue(new RetractClimb(climbSubsystem));
     operator.start().whileTrue(new DeployClimb(climbSubsystem));
+    //    operator.back().whileTrue(new RetractClimb(climbSubsystem));
   }
 
   public void configureLEDStrip() {
