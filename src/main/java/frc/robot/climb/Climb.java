@@ -12,6 +12,7 @@ import static frc.robot.climb.ClimbConstants.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,17 +46,33 @@ public class Climb extends SubsystemBase implements CANTestable {
 
   public void deployClimb() {
     System.out.println("Climb Down");
-    climbMotor.set(ControlMode.Position, kClimbDeployPosition);
+    double deployRotation =
+        Preferences.getDouble(ClimbPreferencesKeys.kClimbDeployRotationKey, kClimbDeployRotation);
+    climbMotor.set(
+        ControlMode.Position, deployRotation * kClimbEncoderTicksPerRotation * kClimbGearing);
   }
 
   public void retractClimb() {
     System.out.println("Climb Retracted");
-    climbMotor.set(ControlMode.Position, kClimbRetractPosition);
+    double retractRotation =
+        Preferences.getDouble(ClimbPreferencesKeys.kClimbRetractRotationKey, kClimbRetractRotation);
+
+    climbMotor.set(
+        ControlMode.Position, retractRotation * kClimbEncoderTicksPerRotation * kClimbGearing);
   }
 
   public void off() {
     System.out.println("Climb Off");
     climbMotor.neutralOutput();
+  }
+
+  public static void loadClimbPreferences() {
+    Preferences.initDouble(
+        ClimbConstants.ClimbPreferencesKeys.kClimbDeployRotationKey,
+        ClimbConstants.kClimbDeployRotation);
+    Preferences.initDouble(
+        ClimbConstants.ClimbPreferencesKeys.kClimbRetractRotationKey,
+        ClimbConstants.kClimbRetractRotation);
   }
 
   public boolean CANTest() {

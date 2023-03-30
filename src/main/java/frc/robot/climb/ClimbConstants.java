@@ -20,7 +20,11 @@ public final class ClimbConstants {
   public static final double kClimbGearing = 125;
   public static final double kClimbEncoderTicksPerRotation = 2048;
 
-  public static final double kClimbDeployPosition =
-      1.68 * kClimbEncoderTicksPerRotation * kClimbGearing;
-  public static final double kClimbRetractPosition = kClimbDeployPosition * 2;
+  public static class ClimbPreferencesKeys {
+    public static final String kClimbDeployRotationKey = "kClimbDeployRotation";
+    public static final String kClimbRetractRotationKey = "kClimbRetractRotation";
+  }
+
+  public static final double kClimbDeployRotation = 1.68;
+  public static final double kClimbRetractRotation = kClimbDeployRotation * 2;
 }
