@@ -18,7 +18,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.Constants.FeatureFlags;
 import frc.robot.RobotContainer.GamePiece;
 import frc.robot.auto.dynamicpathgeneration.helpers.Obstacle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
@@ -64,7 +63,7 @@ public final class DynamicPathConstants {
   // TODO: Find a way for this to not be called during first command press (takes
   // 45 ms gen)
   static {
-    if (FeatureFlags.kDynamicPathGenEnabled) CreateDynamicPathWayNodes.init();
+    CreateDynamicPathWayNodes.init();
   }
 
   public static final PathConstraints kWaypointPathConstraints = new PathConstraints(3, 3);
