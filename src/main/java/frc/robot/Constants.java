@@ -49,7 +49,7 @@ public final class Constants {
     public static final boolean kArmAbsoluteEncoderEnabled = true;
     public static final boolean kLocalizationEnabled = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
-    public static final boolean kDynamicPathGenEnabled = true;
+    public static final boolean kLocalizationUseWPIBlueOffset = false;
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;
   }
@@ -333,7 +333,7 @@ public final class Constants {
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 20;
+      public static final double kLimelightTranslationThresholdMeters = 5;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -343,7 +343,7 @@ public final class Constants {
     public static class BackConstants {
       public static final String kLimelightNetworkTablesName = "limelight-back";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 20;
+      public static final double kLimelightTranslationThresholdMeters = 5;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -353,7 +353,7 @@ public final class Constants {
     public static class SideConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 20;
+      public static final double kLimelightTranslationThresholdMeters = 5;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
