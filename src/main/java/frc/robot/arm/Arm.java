@@ -158,7 +158,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public void off() {
     armMotor.neutralOutput();
-    System.out.println("arm off");
+    if (Constants.kDebugEnabled) {
+      System.out.println("arm off");
+    }
   }
 
   @Override

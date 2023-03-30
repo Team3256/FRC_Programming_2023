@@ -21,4 +21,5 @@ public final class IntakeConstants {
   public static final double kGamePieceMaxCurrent = 7.5;
   public static final double kIntakeMaxCurrent = 80;
   public static final double kTriggerThresholdTime = 0;
+  public static final double kTriggerThresholdTimeCone = 0.5;
 }
