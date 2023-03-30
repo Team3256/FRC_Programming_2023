@@ -63,7 +63,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   };
   private boolean isLocalized;
 
-
   private final Pigeon2 gyro;
 
   public SwerveDrive() {
@@ -245,7 +244,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
         Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
 
-        boolean shouldAddVisionMeasurement = shouldAddVisionMeasurement(
+        boolean shouldAddVisionMeasurement =
+            shouldAddVisionMeasurement(
                 limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold);
         isLocalized = isLocalized || shouldAddVisionMeasurement;
 
