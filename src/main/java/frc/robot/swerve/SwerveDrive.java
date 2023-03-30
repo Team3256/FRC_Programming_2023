@@ -246,6 +246,9 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)) {
           poseEstimator.addVisionMeasurement(
               limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+          SmartDashboard.putBoolean("Robot Pose Localized", true);
+        } else {
+          SmartDashboard.putBoolean("Robot Pose Localized", false);
         }
 
         if (Constants.kDebugEnabled) {
