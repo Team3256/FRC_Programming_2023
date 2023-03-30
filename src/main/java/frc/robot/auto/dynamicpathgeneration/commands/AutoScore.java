@@ -7,7 +7,6 @@
 
 package frc.robot.auto.dynamicpathgeneration.commands;
 
-import static frc.robot.Constants.FeatureFlags.kDynamicPathGenEnabled;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -101,7 +100,8 @@ public class AutoScore extends CommandBase {
       scoringWaypoint = PathUtil.flip(scoringWaypoint);
     }
     Command moveToScoringWaypoint;
-    if (kDynamicPathGenEnabled) {
+    boolean dynamicPathGenEnabled = SmartDashboard.getBoolean("dynamicPathGenEnabled", false);
+    if (dynamicPathGenEnabled) {
       DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint);
       moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);
     } else

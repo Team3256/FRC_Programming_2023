@@ -31,10 +31,8 @@ public class PathUtil {
 
   public static boolean doesLineSegmentHitObstacles(
       Translation2d position1, Translation2d position2) {
-    System.out.println("TESTING: " + position1 + " to " + position2);
     for (Obstacle obstacle : obstacles) {
       if (obstacle.intersectsLineSegment(position1, position2)) {
-        if (kObstacleDebug) System.out.println("Intersected " + obstacle);
         return true;
       }
     }
@@ -44,16 +42,12 @@ public class PathUtil {
   public static boolean doesPathSegmentHitObstacles(
       Translation2d position1, Translation2d position2) {
     if (doesLineSegmentHitObstacles(position1, position2)) return true;
-
     Rotation2d normalAngle = position2.minus(position1).getAngle().plus(Rotation2d.fromDegrees(90));
-    Translation2d normalVector = new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotRadius);
-    if (kObstacleDebug)
-      System.out.println("normalAngle:" + normalAngle + ", normalVector:" + normalVector);
+    Translation2d normalVector = new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotPadding);
     if (doesLineSegmentHitObstacles(position1.minus(normalVector), position2.minus(normalVector)))
       return true;
     if (doesLineSegmentHitObstacles(position1.plus(normalVector), position2.plus(normalVector)))
       return true;
-
     return false;
   }
 

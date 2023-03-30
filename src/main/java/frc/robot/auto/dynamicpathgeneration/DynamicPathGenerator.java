@@ -10,7 +10,6 @@ package frc.robot.auto.dynamicpathgeneration;
 import static frc.robot.Constants.trajectoryViewer;
 import static frc.robot.Constants.waypointViewer;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
-import static frc.robot.auto.dynamicpathgeneration.helpers.PathUtil.straightTravelTimeWithObstacles;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -70,14 +69,6 @@ public class DynamicPathGenerator {
     // unconnect src, sink from dynamicPathNodes
     PathUtil.fullyDisconnect(srcClosest, sinkNode);
     PathUtil.fullyDisconnect(sinkClosest, sinkNode);
-    debugger();
-  }
-
-  public void debugger() {
-    for (PathNode node : dynamicPathNodes) {
-      System.out.println(node.getIndex() + ":" + node.getPoint());
-      System.out.println(straightTravelTimeWithObstacles(node.getPoint(), srcNode.getPoint()));
-    }
   }
 
   /**
@@ -90,20 +81,15 @@ public class DynamicPathGenerator {
   public PathNode connectToClosest(PathNode node, ArrayList<PathNode> pathNodes) {
     double closest = INF_TIME;
     PathNode ret = node;
-    //    for (PathNode q : pathNodes) {
-    //      System.out.println("Try closest node:" + q.getPoint());
-    //      if (q == node) continue;
-    //      double dist = PathUtil.straightTravelTimeWithObstacles(node.getPoint(), q.getPoint());
-    //      if (dist > 0.000001 && dist < closest) {
-    //        closest = dist;
-    //        ret = q;
-    //      }
-    //      System.out.println(q.getIndex() + ": " + dist);
-    //    }
-    //    if (kDynamicPathGenerationDebug) {
-    //      System.out.println("closest to " + node + " is " + ret);
-    //    }
-    //    PathUtil.fullyConnect(ret, node);
+    for (PathNode q : pathNodes) {
+      if (q == node) continue;
+      double dist = PathUtil.straightTravelTimeWithObstacles(node.getPoint(), q.getPoint());
+      if (dist > 0.000001 && dist < closest) {
+        closest = dist;
+        ret = q;
+      }
+    }
+    PathUtil.fullyConnect(ret, node);
     return ret;
   }
 

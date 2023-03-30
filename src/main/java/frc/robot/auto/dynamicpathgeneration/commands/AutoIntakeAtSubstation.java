@@ -7,12 +7,12 @@
 
 package frc.robot.auto.dynamicpathgeneration.commands;
 
-import static frc.robot.Constants.FeatureFlags.kDynamicPathGenEnabled;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -110,7 +110,8 @@ public class AutoIntakeAtSubstation extends CommandBase {
 
     // commands that will be run sequentially
     Command moveToScoringWaypoint;
-    if (kDynamicPathGenEnabled) {
+    boolean dynamicPathGenEnabled = SmartDashboard.getBoolean("dynamicPathGenEnabled", false);
+    if (dynamicPathGenEnabled) {
       DynamicPathGenerator gen =
           new DynamicPathGenerator(swerveSubsystem.getPose(), substationWaypoint);
       moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);

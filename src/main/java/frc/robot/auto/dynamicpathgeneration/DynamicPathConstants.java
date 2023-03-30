@@ -151,4 +151,5 @@ public final class DynamicPathConstants {
   public static final double INF_TIME = Double.MAX_VALUE / 10;
   public static final double ILLEGAL_TIME = Double.MAX_VALUE / 20;
   public static final double kRobotRadius = 0.47 * Math.sqrt(2);
+  public static final double kRobotPadding = 0.314;
 }
