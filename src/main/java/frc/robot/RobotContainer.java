@@ -26,6 +26,7 @@ import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
+import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
@@ -51,9 +52,12 @@ import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -80,12 +84,18 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    if (kArmEnabled) armSubsystem = new Arm();
-    if (kIntakeEnabled) intakeSubsystem = new Intake();
-    if (kElevatorEnabled) elevatorSubsystem = new Elevator();
-    if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
-    if (kClimbEnabled) climbSubsystem = new Climb();
-    if (kLedStripEnabled) ledStrip = new LED(kPort, new int[] {100});
+    if (kArmEnabled)
+      armSubsystem = new Arm();
+    if (kIntakeEnabled)
+      intakeSubsystem = new Intake();
+    if (kElevatorEnabled)
+      elevatorSubsystem = new Elevator();
+    if (kSwerveEnabled)
+      swerveSubsystem = new SwerveDrive();
+    if (kClimbEnabled)
+      climbSubsystem = new Climb();
+    if (kLedStripEnabled)
+      ledStrip = new LED(kPort, new int[] { 100 });
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -195,13 +205,13 @@ public class RobotContainer implements CANTestable, Loggable {
         .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
-                    swerveSubsystem,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    driver::getRightX,
-                    kFieldRelative,
-                    kOpenLoop)
-                .andThen(
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                driver::getRightX,
+                kFieldRelative,
+                kOpenLoop)
+                .deadlineWith(
                     new LEDSetAllSectionsPattern(
                         // TODO fix later
                         ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
@@ -321,9 +331,7 @@ public class RobotContainer implements CANTestable, Loggable {
     Command autoPath = autoPaths.getSelectedPath();
     Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
-      // setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem,
-      // armSubsystem)).withTimeout(1.5);
-      setArmElevatorStart = new InstantCommand();
+      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem).withTimeout(1.5);
 
       return Commands.sequence(
           setArmElevatorStart.asProxy(),
@@ -357,14 +365,15 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : canBusTestables) result &= subsystem.CANTest();
+    for (CANTestable subsystem : canBusTestables)
+      result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine =
-        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
+    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
+        armSubsystem);
     pitSubsystemRoutine.runPitRoutine();
   }
 
