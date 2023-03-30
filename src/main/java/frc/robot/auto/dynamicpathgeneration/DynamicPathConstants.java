@@ -59,13 +59,11 @@ public final class DynamicPathConstants {
   public static final double preSinkX = 2.10;
   public static final double preSinkEndpointsOffset = 0.3;
   public static final double passagePoints = 8;
-
-  // TODO: Find a way for this to not be called during first command press (takes
-  // 45 ms gen)
   static {
     CreateDynamicPathWayNodes.init();
   }
 
+  // path constraints
   public static final PathConstraints kWaypointPathConstraints = new PathConstraints(3, 3);
   public static final PathConstraints kPathToDestinationConstraints = new PathConstraints(2, 2);
 
