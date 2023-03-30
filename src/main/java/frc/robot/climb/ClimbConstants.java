@@ -20,6 +20,7 @@ public final class ClimbConstants {
   public static final double kClimbGearing = 125;
   public static final double kClimbEncoderTicksPerRotation = 2048;
 
-  public static final double kClimbDeployPosition = 1.68 * kClimbEncoderTicksPerRotation * kClimbGearing;
+  public static final double kClimbDeployPosition =
+      1.68 * kClimbEncoderTicksPerRotation * kClimbGearing;
   public static final double kClimbRetractPosition = kClimbDeployPosition * 2;
 }
