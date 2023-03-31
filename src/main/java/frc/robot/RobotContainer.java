@@ -233,21 +233,24 @@ public class RobotContainer implements CANTestable, Loggable {
                   () -> isMovingJoystick(driver),
                   this::isCurrentPieceCone));
     } else {
-      driver
-          .leftTrigger()
-          .onTrue(
-              new ConditionalCommand(
-                  new ParallelCommandGroup(
-                      new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
-                      new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
-                      new IntakeCone(intakeSubsystem, ledStrip)),
-                  new ParallelCommandGroup(
-                      new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
-                      new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
-                      new IntakeCube(intakeSubsystem, ledStrip)),
-                  this::isCurrentPieceCone));
+      if (kElevatorEnabled && kArmEnabled) {
+
+        driver
+            .leftTrigger()
+            .onTrue(
+                new ConditionalCommand(
+                    new ParallelCommandGroup(
+                        new SetElevatorHeight(
+                            elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
+                        new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+                        new IntakeCone(intakeSubsystem, ledStrip)),
+                    new ParallelCommandGroup(
+                        new SetElevatorHeight(
+                            elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
+                        new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+                        new IntakeCube(intakeSubsystem, ledStrip)),
+                    this::isCurrentPieceCone));
+      }
     }
 
     operator.a().toggleOnTrue(new InstantCommand(this::toggleSubstationLocation));
@@ -360,11 +363,11 @@ public class RobotContainer implements CANTestable, Loggable {
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_MID),
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_MID),
                 this::isCurrentPieceCone));
-        //      case LOW_GRID:
-        //        return new ParallelCommandGroup(
-        //                new SetElevatorHeight(elevatorSubsystem,
+        // case LOW_GRID:
+        // return new ParallelCommandGroup(
+        // new SetElevatorHeight(elevatorSubsystem,
         // Elevator.ElevatorPreset.ANY_PIECE_LOW),
-        //                new SetArmAngle(armSubsystem, Arm.ArmPreset.ANY_PIECE_LOW));
+        // new SetArmAngle(armSubsystem, Arm.ArmPreset.ANY_PIECE_LOW));
       default:
         return new InstantCommand();
     }

@@ -109,7 +109,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setInverted(true);
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
 
-    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.setNeutralMode(NeutralMode.Coast);
     armMotor.setSelectedSensorPosition(0);
   }
 
@@ -150,9 +150,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public double getArmPositionRads() {
     if (RobotBase.isReal()) {
-      return armEncoder.getDistance()
-          + Preferences.getDouble(
-              ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+      return Units.degreesToRadians(
+          Units.radiansToDegrees(
+                  Preferences.getDouble(
+                          ArmPreferencesKeys.kAbsoluteEncoderOffsetKey,
+                          kAbsoluteEncoderOffsetRadians)
+                      + armEncoder.getDistance()
+                      + 2 * Math.PI)
+              % 360);
     } else return armSim.getAngleRads();
   }
 

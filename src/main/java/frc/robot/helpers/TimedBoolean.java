@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import java.util.function.BooleanSupplier;
 
 public class TimedBoolean {
-  private BooleanSupplier condition;
+  private BooleanSupplier condition = () -> false;
   private Timer timer = new Timer();
   private double triggerThreshold;
 

@@ -53,7 +53,7 @@ public final class ArmConstants {
   public static final int kArmEncoderDIOPort = 8;
 
   public static final double kArmRadiansPerAbsoluteEncoderRotation = 2 * Math.PI;
-  public static final double kAbsoluteEncoderOffsetRadians = -1.293487;
+  public static final double kAbsoluteEncoderOffsetRadians = 4.755287;
 
   public static final double kArmGearing = 240;
   public static double kRelativeFalconEncoderOffsetRadians =

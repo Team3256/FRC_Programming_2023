@@ -19,14 +19,14 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebugEnabled = false;
+  public static final boolean kDebugEnabled = true;
 
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
   public static final boolean kArmEnabled = true;
   public static final boolean kLedStripEnabled = true;
+  public static final boolean kClimbEnabled = false;
 
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final boolean kCompetitionModeEnabled = true;
@@ -44,11 +44,12 @@ public final class Constants {
   public static final Field2d swerveViewer = new Field2d();
 
   public static final class FeatureFlags {
-    public static final boolean kAutoScore = true;
+    public static final boolean kAutoScore = false;
     // IMPORTANT: enabling manual arm control removes buddy climb bindings
     public static final boolean kOperatorManualArmControlEnabled = true;
     public static final boolean kLocalizationEnabled = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
+
     public static final boolean kLocalizationUseWPIBlueOffset = false;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
