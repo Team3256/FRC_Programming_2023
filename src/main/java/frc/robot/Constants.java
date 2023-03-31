@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebugEnabled = false;
+  public static final boolean kDebugEnabled = true;
 
   public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = false;
@@ -35,7 +35,7 @@ public final class Constants {
   public static final RobotMode kCurrentMode = RobotMode.REAL;
 
   public static final double kStickDeadband = 0.05;
-  public static final double kStickCancelDeadband = 0.25;
+  public static final double kStickCancelDeadband = 0.50;
   public static final double kStickRotationThreshold = 0.3;
   public static final double kAzimuthStickDeadband = 0.3;
 
@@ -334,8 +334,8 @@ public final class Constants {
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 20;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
+      public static final double kLimelightTranslationThresholdMeters = 30;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
       Matrix<N3, N1> visionMeasurementStdDevs;
@@ -344,8 +344,8 @@ public final class Constants {
     public static class BackConstants {
       public static final String kLimelightNetworkTablesName = "limelight-back";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 20;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
+      public static final double kLimelightTranslationThresholdMeters = 30;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
       Matrix<N3, N1> visionMeasurementStdDevs;
@@ -354,8 +354,8 @@ public final class Constants {
     public static class SideConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
       // TODO chaneg back to 2
-      public static final double kLimelightTranslationThresholdMeters = 20;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(15);
+      public static final double kLimelightTranslationThresholdMeters = 30;
+      public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
       Matrix<N3, N1> visionMeasurementStdDevs;

@@ -42,7 +42,7 @@ public final class ArmConstants {
     public static final String kPKey = "ArmkP";
     public static final String kIKey = "ArmkI";
     public static final String kDKey = "ArmkD";
-    public static final String kEncoderOffsetKey = "kEncoderOffset";
+    public static final String kRelativeEncoderOffsetKey = "kRelativeEncoderOffset";
     public static final String kAbsoluteEncoderOffsetKey = "kAbsoluteEncoderOffset";
   }
 
@@ -53,7 +53,7 @@ public final class ArmConstants {
   public static final int kArmEncoderDIOPort = 8;
 
   public static final double kArmRadiansPerAbsoluteEncoderRotation = 2 * Math.PI;
-  public static final double kAbsoluteEncoderOffsetRadians = -1.293487;
+  public static final double kAbsoluteEncoderOffsetRadians = -1.666789;
 
   public static final double kArmGearing = 240;
   public static double kRelativeFalconEncoderOffsetRadians =
@@ -65,7 +65,7 @@ public final class ArmConstants {
   public static final int kNumArmMotors = 1;
 
   public static final double kArmS = 0.16924;
-  public static final double kArmG = 0.15542;
+  public static final double kArmG = 0.18542;
   public static final double kArmV = 4.1445;
   public static final double kArmA = 0.17676;
   public static final double kP = 10.96;
