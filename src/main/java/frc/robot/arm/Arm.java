@@ -150,9 +150,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public double getArmPositionRads() {
     if (RobotBase.isReal()) {
-      return armEncoder.getDistance()
-          + Preferences.getDouble(
-              ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+      if (FeatureFlags.kArmAbsoluteEncoderEnabled)
+        return armEncoder.getDistance()
+            + Preferences.getDouble(
+                ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+      else
+        return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
+            + Preferences.getDouble(
+                ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
     } else return armSim.getAngleRads();
   }
 
@@ -253,7 +258,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         kDoubleSubstationRotationCube.getRadians());
     // Arm Encoder Offset
     Preferences.initDouble(
-        ArmPreferencesKeys.kEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
+        ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
     Preferences.initDouble(
         ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
   }
