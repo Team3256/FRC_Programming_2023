@@ -42,6 +42,7 @@ import frc.robot.drivers.TalonFXFactory;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.helpers.Conversions;
+import org.opencv.core.Mat;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public enum ArmPreset {
@@ -152,10 +153,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public double getArmPositionRads() {
     if (RobotBase.isReal()) {
-      if (FeatureFlags.kArmAbsoluteEncoderEnabled)
-        return armEncoder.getDistance()
-            + Preferences.getDouble(
-                ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+      if (FeatureFlags.kArmAbsoluteEncoderEnabled) {
+        double absoluteEncoderDistance = armEncoder.getDistance() + Preferences.getDouble(ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+        if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
+          return  absoluteEncoderDistance + 2 * Math.PI;
+        } else {
+          return  absoluteEncoderDistance;
+        }
+      }
       else
         return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
             + Preferences.getDouble(
