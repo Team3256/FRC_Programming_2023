@@ -49,7 +49,7 @@ public final class Constants {
     public static final boolean kLocalizationEnabled = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
 
-    public static final boolean kLocalizationUseWPIBlueOffset = true;
+    public static final boolean kLocalizationUseWPIBlueOffset = false;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;

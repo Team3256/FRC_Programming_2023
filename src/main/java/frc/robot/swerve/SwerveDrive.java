@@ -13,6 +13,8 @@ import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -80,7 +82,12 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               backLeftModule.getPosition(),
               backRightModule.getPosition()
             },
-            new Pose2d());
+            new Pose2d(),
+            new MatBuilder<>(Nat.N3(), Nat.N1())
+                .fill(0.03, 0.03, 0.002), // Current state X, Y, theta.
+            new MatBuilder<>(Nat.N3(), Nat.N1())
+                .fill(0.003, 0.003, 0.0002) // Vision stdevs X, Y, and theta.
+            );
 
     if (Constants.kDebugEnabled) {
       SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
@@ -246,6 +253,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
         Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
 
+        // TODO investigage
         boolean shouldAddVisionMeasurement =
             shouldAddVisionMeasurement(
                 limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold);
