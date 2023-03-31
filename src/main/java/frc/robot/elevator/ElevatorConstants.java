@@ -13,11 +13,12 @@ import frc.robot.drivers.CanDeviceId;
 import java.util.Map;
 
 public final class ElevatorConstants {
-  public static final int kElevatorID = 5;
+  public static final int kElevatorIDMaster = 5;
+  public static final int kElevatorIDFollowing = 14;
   public static final double kElevatorStartingPositionMeters = 0.5;
   public static final String kElevatorCANBus = "mani";
   public static final CanDeviceId kElevatorCANDevice =
-      new CanDeviceId(kElevatorID, kElevatorCANBus);
+      new CanDeviceId(kElevatorIDMaster, kElevatorCANBus);
   public static final int kNumElevatorMotors = 1;
   public static final boolean kElevatorInverted = true;
 
