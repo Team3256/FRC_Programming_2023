@@ -157,7 +157,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
                 + Preferences.getDouble(
                     ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
         if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
-          return absoluteEncoderDistance + 2 * Math.PI;
+          // return
+          // Units.degreesToRadians((Units.radiansToDegrees(absoluteEncoderDistance) +
+          // 720) % 360);
+          return absoluteEncoderDistance + Math.PI * 2;
         } else {
           return absoluteEncoderDistance;
         }
