@@ -8,6 +8,8 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Constants.FeatureFlags.kAutoScore;
+import static frc.robot.auto.dynamicpathgeneration.DynamicPathFollower.GoalType.*;
 import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
@@ -22,17 +24,20 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -213,19 +218,37 @@ public class RobotContainer implements CANTestable, Loggable {
             new LockSwerveX(swerveSubsystem)
                 .deadlineWith(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
 
-    driver
-        .leftTrigger()
-        .onTrue(
-            new AutoIntakeAtDoubleSubstation(
-                swerveSubsystem,
-                intakeSubsystem,
-                elevatorSubsystem,
-                armSubsystem,
-                ledStrip,
-                () -> RIGHT_SIDE,
-                // this::getSubstationLocation,
-                () -> isMovingJoystick(driver),
-                this::isCurrentPieceCone));
+    if (kAutoScore) {
+      driver
+          .leftTrigger()
+          .onTrue(
+              new AutoIntakeAtDoubleSubstation(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledStrip,
+                  () -> RIGHT_SIDE,
+                  // this::getSubstationLocation,
+                  () -> isMovingJoystick(driver),
+                  this::isCurrentPieceCone));
+    } else {
+      driver
+          .leftTrigger()
+          .onTrue(
+              new ConditionalCommand(
+                  new ParallelCommandGroup(
+                      new SetElevatorHeight(
+                          elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
+                      new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+                      new IntakeCone(intakeSubsystem, ledStrip)),
+                  new ParallelCommandGroup(
+                      new SetElevatorHeight(
+                          elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
+                      new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+                      new IntakeCube(intakeSubsystem, ledStrip)),
+                  this::isCurrentPieceCone));
+    }
 
     operator.a().toggleOnTrue(new InstantCommand(this::toggleSubstationLocation));
   }
@@ -246,34 +269,39 @@ public class RobotContainer implements CANTestable, Loggable {
   public void configureElevator() {
     if (kArmEnabled && kIntakeEnabled) {
       if (kLedStripEnabled) {
-        driver
-            .rightTrigger()
-            .onTrue(
-                new AutoScore(
-                    swerveSubsystem,
-                    intakeSubsystem,
-                    elevatorSubsystem,
-                    armSubsystem,
-                    ledStrip,
-                    AutoScore.GridScoreHeight.HIGH,
-                    () -> isMovingJoystick(driver)));
-        driver
-            .rightBumper()
-            .onTrue(
-                new AutoScore(
-                    swerveSubsystem,
-                    intakeSubsystem,
-                    elevatorSubsystem,
-                    armSubsystem,
-                    ledStrip,
-                    AutoScore.GridScoreHeight.MID,
-                    () -> isMovingJoystick(driver)));
-      }
+        if (kAutoScore) {
+          driver
+              .rightTrigger()
+              .onTrue(
+                  new AutoScore(
+                      swerveSubsystem,
+                      intakeSubsystem,
+                      elevatorSubsystem,
+                      armSubsystem,
+                      ledStrip,
+                      AutoScore.GridScoreHeight.HIGH,
+                      () -> isMovingJoystick(driver)));
+          driver
+              .rightBumper()
+              .onTrue(
+                  new AutoScore(
+                      swerveSubsystem,
+                      intakeSubsystem,
+                      elevatorSubsystem,
+                      armSubsystem,
+                      ledStrip,
+                      AutoScore.GridScoreHeight.MID,
+                      () -> isMovingJoystick(driver)));
+        } else {
+          driver.rightTrigger().onTrue(getScoreCommand(DynamicPathFollower.GoalType.HIGH_GRID));
+          driver.rightBumper().onTrue(getScoreCommand(DynamicPathFollower.GoalType.MID_GRID));
+        }
 
-      driver
-          .y()
-          .or(operator.leftTrigger())
-          .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+        driver
+            .y()
+            .or(operator.leftTrigger())
+            .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+      }
     }
   }
 
@@ -311,6 +339,35 @@ public class RobotContainer implements CANTestable, Loggable {
         .leftBumper()
         .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new CubePatternBlink()))
         .toggleOnTrue(new InstantCommand(this::setPieceToCube));
+  }
+
+  private Command getScoreCommand(DynamicPathFollower.GoalType goalType) {
+    switch (goalType) {
+      case HIGH_GRID:
+        return new ParallelCommandGroup(
+            new ConditionalCommand(
+                new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
+                new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
+                this::isCurrentPieceCone),
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_HIGH),
+                new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_HIGH),
+                this::isCurrentPieceCone));
+      case MID_GRID:
+        return new ParallelCommandGroup(
+            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
+            new ConditionalCommand(
+                new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_MID),
+                new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_MID),
+                this::isCurrentPieceCone));
+        //      case LOW_GRID:
+        //        return new ParallelCommandGroup(
+        //                new SetElevatorHeight(elevatorSubsystem,
+        // Elevator.ElevatorPreset.ANY_PIECE_LOW),
+        //                new SetArmAngle(armSubsystem, Arm.ArmPreset.ANY_PIECE_LOW));
+      default:
+        return new InstantCommand();
+    }
   }
 
   public Command getAutonomousCommand() {
