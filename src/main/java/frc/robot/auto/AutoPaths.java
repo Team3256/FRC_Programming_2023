@@ -164,7 +164,7 @@ public class AutoPaths {
             Commands.parallel(
                     new ZeroElevator(elevatorSubsystem),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
-                .andThen(new IntakeCone(intakeSubsystem))
+                .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
                 .asProxy()
                 .withName("scorePreload");
     Supplier<Command> scorePreloadCone =
@@ -172,7 +172,7 @@ public class AutoPaths {
             Commands.parallel(
                     new ZeroElevator(elevatorSubsystem),
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
-                .andThen(new IntakeCone(intakeSubsystem))
+                .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
                 .asProxy()
                 .withName("scorePreload");
 

@@ -66,8 +66,8 @@ public final class ArmConstants {
 
   // CPR
   public static final double kArmS = 0.13794;
-  public static final double kArmG = 0.60843;
-  public static final double kArmV = 4.19;
+  public static final double kArmG = 0.90843;
+  public static final double kArmV = 4.6;
   public static final double kArmA = 0.029772;
   public static final double kP = 4.4118;
   public static final double kI = 0;
@@ -90,10 +90,9 @@ public final class ArmConstants {
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-35);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(150);
 
-  public static final Rotation2d kDefaultArmAngle =
-      Constants.kCompetitionModeEnabled ? Rotation2d.fromDegrees(72) : Rotation2d.fromDegrees(90);
+  public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(72);
   public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0.07);
-  public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0.01);
+  public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0.02229);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-30.5);
   public static final Rotation2d kCubeMidRotation = new Rotation2d(0.32);
   public static final Rotation2d kConeMidRotation = new Rotation2d(0.18);
@@ -101,5 +100,5 @@ public final class ArmConstants {
   public static final Rotation2d kConeHighRotation = new Rotation2d(0.23);
   public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-15);
 
-  public static final double kManualArmVoltage = 2;
+  public static final double kManualArmVoltage = 2.5;
 }

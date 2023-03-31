@@ -139,7 +139,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     ChassisSpeeds swerveChassisSpeed =
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getPose().getRotation())
+                translation.getX(), translation.getY(), rotation, getYaw())
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);

@@ -240,12 +240,14 @@ public class RobotContainer implements CANTestable, Loggable {
                 new ConditionalCommand(
                     new ParallelCommandGroup(
                         new SetElevatorHeight(
-                            elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
+                                elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
+                            .beforeStarting(new WaitCommand(0.3)),
                         new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
                         new IntakeCone(intakeSubsystem, ledStrip)),
                     new ParallelCommandGroup(
                         new SetElevatorHeight(
-                            elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
+                                elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
+                            .beforeStarting(new WaitCommand(0.3)),
                         new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
                         new IntakeCube(intakeSubsystem, ledStrip)),
                     this::isCurrentPieceCone));
