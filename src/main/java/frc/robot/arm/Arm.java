@@ -151,15 +151,17 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public double getArmPositionRads() {
     if (RobotBase.isReal()) {
-      if (FeatureFlags.kArmAbsoluteEncoderEnabled) {
-        double absoluteEncoderDistance = armEncoder.getDistance() + Preferences.getDouble(ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+      if (Constants.FeatureFlags.kArmAbsoluteEncoderEnabled) {
+        double absoluteEncoderDistance =
+            armEncoder.getDistance()
+                + Preferences.getDouble(
+                    ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
         if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
-          return  absoluteEncoderDistance + 2 * Math.PI;
+          return absoluteEncoderDistance + 2 * Math.PI;
         } else {
-          return  absoluteEncoderDistance;
+          return absoluteEncoderDistance;
         }
-      }
-      else
+      } else
         return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
             + Preferences.getDouble(
                 ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);

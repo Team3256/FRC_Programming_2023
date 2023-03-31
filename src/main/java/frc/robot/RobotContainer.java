@@ -9,7 +9,6 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.FeatureFlags.*;
-import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
@@ -78,7 +77,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Climb climbSubsystem;
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
-  private SubstationLocation doubleSubstationLocation = RIGHT_SIDE;
+  private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
 
   private AutoPaths autoPaths;
 
@@ -218,21 +217,18 @@ public class RobotContainer implements CANTestable, Loggable {
             new LockSwerveX(swerveSubsystem)
                 .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
 
-
     if (kAutoScoreEnabled) {
       driver
           .leftTrigger()
           .onTrue(
-              new AutoIntakeAtSubstation( // TODO: Rename to clarify that this is for double
+              new AutoIntakeAtDoubleSubstation( // TODO: Rename to clarify that this is for double
                   // substation
                   swerveSubsystem,
                   intakeSubsystem,
                   elevatorSubsystem,
                   armSubsystem,
                   ledStrip,
-                  () -> RIGHT_SIDE,
-                  //                () -> doubleSubstationLocation, // Change to LEFT_SIDE for
-                  // testing
+                  () -> doubleSubstationLocation, // Change to LEFT_SIDE for
                   () -> isMovingJoystick(driver),
                   this::isCurrentPieceCone));
     } else {
@@ -420,9 +416,9 @@ public class RobotContainer implements CANTestable, Loggable {
         "Current Double Substation Location", doubleSubstationLocation.toString());
   }
 
-
   public SubstationLocation getSubstationLocation() {
     return this.doubleSubstationLocation;
+  }
 
   private Command getScoreCommand(DynamicPathFollower.GoalType goalType) {
     switch (goalType) {
@@ -446,6 +442,5 @@ public class RobotContainer implements CANTestable, Loggable {
       default:
         return new InstantCommand();
     }
-
   }
 }
