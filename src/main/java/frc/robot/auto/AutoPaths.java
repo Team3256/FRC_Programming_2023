@@ -212,7 +212,7 @@ public class AutoPaths {
     Command node9x2 =
         autoBuilder
             .createPath("Node9x2", kFastPathConstraints, true)
-            .beforeStarting(scorePreloadCube.get().asProxy());
+            .beforeStarting(scorePreloadCone.get().asProxy());
     AutoChooser.createSinglePath("Node9x2", node9x2);
 
     // Node2x2-Engage
