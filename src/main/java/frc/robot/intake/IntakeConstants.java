@@ -11,6 +11,7 @@ import frc.robot.drivers.CanDeviceId;
 
 public final class IntakeConstants {
   public static final int kIntakeMotorID = 4;
+
   public static final String kIntakeCANBus = "mani";
   public static final CanDeviceId kIntakeCANDevice = new CanDeviceId(kIntakeMotorID, kIntakeCANBus);
 

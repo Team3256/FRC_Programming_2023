@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.led.CANdle;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -54,6 +55,13 @@ public final class Constants {
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;
   }
+
+  public static final class LEDConstants {
+    //TODO: Need to change the canbus string and LED later
+    public static final int CANdleID = 1;
+    public static final String CanBusString = "rio";
+  }
+
 
   public static final class ShuffleboardConstants {
     public static final String kDriverTabName = "Driver";
