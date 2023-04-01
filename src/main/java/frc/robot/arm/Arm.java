@@ -98,6 +98,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     off();
   }
 
+  public SingleJointedArmSim getSim() {
+    return armSim;
+  }
+
   private void configureSimHardware() {
     armMotor = new WPI_TalonFX(kArmSimulationID);
     SmartDashboard.putData("Arm Sim", mechanism2d);

@@ -12,10 +12,10 @@ import static frc.robot.elevator.ElevatorConstants.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.elevator.Elevator;
 
-public class ZeroElevator extends CommandBase {
+public class ResetElevatorSensor extends CommandBase {
   Elevator elevatorSubsystem;
 
-  public ZeroElevator(Elevator elevatorSubsystem) {
+  public ResetElevatorSensor(Elevator elevatorSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
     addRequirements(elevatorSubsystem);
   }

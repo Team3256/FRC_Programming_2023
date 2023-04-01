@@ -14,7 +14,11 @@ import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -34,6 +38,7 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorVolts;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -66,6 +71,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  private final CommandXboxController tester = new CommandXboxController(2);
 
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
@@ -127,7 +133,28 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+
+    // configure full robot simulation
+    tester.a().onTrue(new SetElevatorVolts(elevatorSubsystem, 8));
+    tester.b().onTrue(new SetElevatorVolts(elevatorSubsystem, -8));
+    tester.x().onTrue(new SetArmVoltage(armSubsystem, 8));
+    tester.y().onTrue(new SetArmVoltage(armSubsystem, -8));
+    robotCanvas = new Mechanism2d(50, 50);
+    robotRoot = robotCanvas.getRoot("Robot Root", 15, 0);
+    elevatorMech =
+        robotRoot.append(
+            new MechanismLigament2d(
+                "Elevator",
+                Units.metersToInches(elevatorSubsystem.getSim().getPositionMeters()),
+                45));
+    armMech = elevatorMech.append(new MechanismLigament2d("Arm", 10, 13));
+    SmartDashboard.putData("Robot Sim", robotCanvas);
   }
+
+  private final Mechanism2d robotCanvas;
+  private final MechanismRoot2d robotRoot;
+  private final MechanismLigament2d elevatorMech;
+  private final MechanismLigament2d armMech;
 
   private void configureSwerve() {
     swerveSubsystem.setDefaultCommand(
@@ -388,5 +415,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public SubstationLocation getSubstationLocation() {
     return this.doubleSubstationLocation;
+  }
+
+  public void simulatePeriodic() {
+    elevatorMech.setLength(Units.metersToInches(elevatorSubsystem.getSim().getPositionMeters()));
+    armMech.setAngle(Units.radiansToDegrees(armSubsystem.getSim().getAngleRads()));
   }
 }

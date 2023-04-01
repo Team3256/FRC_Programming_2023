@@ -16,7 +16,7 @@ import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
 
-public class SetElevatorHeight extends ProfiledPIDCommand {
+public class SetElevatorExtension extends ProfiledPIDCommand {
   private double setpointPositionMeters;
   private Elevator elevatorSubsystem;
   private ElevatorPreset elevatorPreset;
@@ -27,7 +27,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
    * @param elevatorSubsystem
    * @param setpointPositionMeters
    */
-  public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
+  public SetElevatorExtension(Elevator elevatorSubsystem, double setpointPositionMeters) {
     super(
         new ProfiledPIDController(
             Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kP),
@@ -55,7 +55,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
    * @param elevatorSubsystem
    * @param elevatorPreset
    */
-  public SetElevatorHeight(Elevator elevatorSubsystem, ElevatorPreset elevatorPreset) {
+  public SetElevatorExtension(Elevator elevatorSubsystem, ElevatorPreset elevatorPreset) {
     this(elevatorSubsystem, elevatorSubsystem.getPreferencesSetpoint(elevatorPreset));
     this.elevatorPreset = elevatorPreset;
   }

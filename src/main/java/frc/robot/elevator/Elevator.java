@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
-import frc.robot.elevator.commands.ZeroElevator;
+import frc.robot.elevator.commands.ResetElevatorSensor;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 
@@ -55,10 +55,12 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     }
   }
 
+  // real
   private WPI_TalonFX elevatorMotor;
   private ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
 
+  // sim
   private ElevatorSim elevatorSim =
       new ElevatorSim(
           DCMotor.getFalcon500(kNumElevatorMotors),
@@ -69,12 +71,16 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
           kMaxHeight,
           true);
 
-  private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
-  private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Elevator Root", 10, 0);
-  private final MechanismLigament2d elevatorMech2d =
-      mechanism2dRoot.append(
+  public ElevatorSim getSim() {
+    return elevatorSim;
+  }
+
+  private final Mechanism2d elevatorCanvas = new Mechanism2d(50, 50);
+  private final MechanismRoot2d elevatorRoot = elevatorCanvas.getRoot("Elevator Root", 15, 0);
+  private final MechanismLigament2d elevatorMech =
+      elevatorRoot.append(
           new MechanismLigament2d(
-              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
+              "Elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 45));
 
   public Elevator() {
     if (RobotBase.isReal()) {
@@ -89,7 +95,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   private void configureSimHardware() {
     elevatorMotor = new WPI_TalonFX(kElevatorID);
-    SmartDashboard.putData("Elevator Sim", mechanism2d);
+    SmartDashboard.putData("Elevator Sim", elevatorCanvas);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
@@ -143,8 +149,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    elevatorMech2d.setLength(Units.metersToInches(elevatorSim.getPositionMeters()));
-
+    elevatorMech.setLength(Units.metersToInches(elevatorSim.getPositionMeters()));
     simulationOutputToDashboard();
   }
 
@@ -157,7 +162,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   public void logInit() {
     getLayout(kDriverTabName).add(this);
-    getLayout(kDriverTabName).add(new ZeroElevator(this));
+    getLayout(kDriverTabName).add(new ResetElevatorSensor(this));
     getLayout(kDriverTabName).add("Position", new DoubleSendable(this::getElevatorPosition));
     getLayout(kDriverTabName).add(elevatorMotor);
   }

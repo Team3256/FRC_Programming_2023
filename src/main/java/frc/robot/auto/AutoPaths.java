@@ -22,8 +22,8 @@ import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
-import frc.robot.elevator.commands.ZeroElevator;
+import frc.robot.elevator.commands.ResetElevatorSensor;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -79,7 +79,7 @@ public class AutoPaths {
             runParallelWithPath(
                     Commands.deadline(
                         new IntakeCone(intakeSubsystem),
-                        new SetElevatorHeight(
+                        new SetElevatorExtension(
                             elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
                         new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
                 .asProxy()
@@ -91,7 +91,7 @@ public class AutoPaths {
             runParallelWithPath(
                     Commands.deadline(
                         new IntakeCube(intakeSubsystem),
-                        new SetElevatorHeight(
+                        new SetElevatorExtension(
                             elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
                         new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
                 .asProxy()
@@ -100,7 +100,7 @@ public class AutoPaths {
         "cubeHigh",
         () ->
             Commands.parallel(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
+                    new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
                 .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()
@@ -109,7 +109,7 @@ public class AutoPaths {
         "coneHigh",
         () ->
             Commands.parallel(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
+                    new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
                 .andThen(new IntakeCube(intakeSubsystem))
                 .asProxy()
@@ -118,7 +118,8 @@ public class AutoPaths {
         "cubeMid",
         () ->
             Commands.parallel(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
+                    new SetElevatorExtension(
+                        elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID))
                 .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()
@@ -127,7 +128,8 @@ public class AutoPaths {
         "coneMid",
         () ->
             Commands.parallel(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
+                    new SetElevatorExtension(
+                        elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_MID))
                 .andThen(new IntakeCube(intakeSubsystem))
                 .asProxy()
@@ -136,7 +138,8 @@ public class AutoPaths {
         "cubeLow",
         () ->
             Commands.parallel(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
+                    new SetElevatorExtension(
+                        elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
                     new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
                 .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()
@@ -145,7 +148,8 @@ public class AutoPaths {
         "coneLow",
         () ->
             Commands.parallel(
-                    new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
+                    new SetElevatorExtension(
+                        elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
                     new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
                 .andThen(new IntakeCube(intakeSubsystem))
                 .asProxy()
@@ -162,7 +166,7 @@ public class AutoPaths {
     Supplier<Command> scorePreloadCube =
         () ->
             Commands.parallel(
-                    new ZeroElevator(elevatorSubsystem),
+                    new ResetElevatorSensor(elevatorSubsystem),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
                 .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()
@@ -170,7 +174,7 @@ public class AutoPaths {
     Supplier<Command> scorePreloadCone =
         () ->
             Commands.parallel(
-                    new ZeroElevator(elevatorSubsystem),
+                    new ResetElevatorSensor(elevatorSubsystem),
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
                 .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()

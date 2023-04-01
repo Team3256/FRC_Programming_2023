@@ -20,7 +20,7 @@ public class KeepElevatorAtPosition extends CommandBase {
 
   @Override
   public void initialize() {
-    new SetElevatorHeight(elevatorSubsystem, elevatorSubsystem.getElevatorPosition())
+    new SetElevatorExtension(elevatorSubsystem, elevatorSubsystem.getElevatorPosition())
         .repeatedly()
         .schedule();
   }

@@ -89,6 +89,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    robotContainer.simulatePeriodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
