@@ -30,7 +30,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
    *
    * @param armSubsystem
    * @param angleRotation2d
-   * @param shouldEnd
    */
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
@@ -62,7 +61,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
    *
    * @param armSubsystem
    * @param armPreset
-   * @param shouldEnd
    */
   public SetArmAngle(Arm armSubsystem, ArmPreset armPreset) {
     this(armSubsystem, armSubsystem.getPreferencesSetpoint(armPreset));

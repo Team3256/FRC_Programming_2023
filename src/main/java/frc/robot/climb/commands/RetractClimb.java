@@ -22,14 +22,13 @@ public class RetractClimb extends CommandBase {
 
   @Override
   public void initialize() {
-    if (Constants.kDebugEnabled) {
-      System.out.println(this.getName() + " started");
-    }
+    System.out.println("Climb Retracted Started");
     climbSubsystem.retractClimb();
   }
 
   @Override
   public void end(boolean interrupted) {
+    System.out.println("Climb Retracted Ended");
     climbSubsystem.off();
   }
 

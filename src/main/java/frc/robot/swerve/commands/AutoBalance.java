@@ -28,6 +28,7 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public void initialize() {
+    System.out.println("Auto Balance Started");
     balancedTimer.start();
   }
 

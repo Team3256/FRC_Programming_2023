@@ -22,14 +22,13 @@ public class DeployClimb extends CommandBase {
 
   @Override
   public void initialize() {
-    if (Constants.kDebugEnabled) {
-      System.out.println(this.getName() + " started");
-    }
+    System.out.println("Climb Deploy Started");
     climbSubsystem.deployClimb();
   }
 
   @Override
   public void end(boolean interrupted) {
+    System.out.println("Climb Deploy Ended");
     climbSubsystem.off();
   }
 
