@@ -15,6 +15,7 @@ import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -67,6 +68,11 @@ public class RobotContainer implements CANTestable, Loggable {
     CONE
   }
 
+  public enum Mode {
+    AUTO_SCORE,
+    PRESET
+  }
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
@@ -78,6 +84,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
   private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+  private SendableChooser<Mode> modeChooser;
 
   private AutoPaths autoPaths;
 
@@ -120,6 +127,16 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
+
+    modeChooser = new SendableChooser<>();
+    if (FeatureFlags.kAutoScoreEnabled) {
+      modeChooser.setDefaultOption("Auto Score", Mode.AUTO_SCORE);
+      modeChooser.addOption("Presets", Mode.PRESET);
+    } else {
+      modeChooser.setDefaultOption("Presets", Mode.PRESET);
+      modeChooser.addOption("Auto Score", Mode.AUTO_SCORE);
+    }
+    SmartDashboard.putData("Auto Score Toggle", modeChooser);
 
     autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
     autoPaths.sendCommandsToChooser();
@@ -218,40 +235,48 @@ public class RobotContainer implements CANTestable, Loggable {
             new LockSwerveX(swerveSubsystem)
                 .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
 
-    if (kAutoScoreEnabled) {
+    if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
       driver
           .leftTrigger()
           .onTrue(
-              new AutoIntakeAtDoubleSubstation( // TODO: Rename to clarify that this is for double
-                  // substation
+              new AutoIntakeAtDoubleSubstation(
                   swerveSubsystem,
                   intakeSubsystem,
                   elevatorSubsystem,
                   armSubsystem,
                   ledStrip,
-                  () -> doubleSubstationLocation, // Change to LEFT_SIDE for
+                  () -> doubleSubstationLocation,
                   () -> isMovingJoystick(driver),
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
                   this::isCurrentPieceCone));
-    } else {
-      if (kElevatorEnabled && kArmEnabled) {
-        driver
-            .leftTrigger()
-            .onTrue(
-                new ConditionalCommand(
-                    new ParallelCommandGroup(
-                        new SetElevatorHeight(
-                                elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
-                            .beforeStarting(new WaitCommand(0.3)),
-                        new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
-                        new IntakeCone(intakeSubsystem, ledStrip)),
-                    new ParallelCommandGroup(
-                        new SetElevatorHeight(
-                                elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
-                            .beforeStarting(new WaitCommand(0.3)),
-                        new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
-                        new IntakeCube(intakeSubsystem, ledStrip)),
-                    this::isCurrentPieceCone));
-      }
+
+      driver
+          .rightTrigger()
+          .onTrue(
+              new AutoScore(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledStrip,
+                  AutoScore.GridScoreHeight.HIGH,
+                  this::isCurrentPieceCone,
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  () -> isMovingJoystick(driver)));
+
+      driver
+          .rightBumper()
+          .onTrue(
+              new AutoScore(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledStrip,
+                  AutoScore.GridScoreHeight.MID,
+                  this::isCurrentPieceCone,
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  () -> isMovingJoystick(driver)));
     }
 
     operator.a().toggleOnTrue(new InstantCommand(this::toggleSubstationLocation));
@@ -271,37 +296,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureElevator() {
-    if (kArmEnabled && kIntakeEnabled) {
-      if (kLedStripEnabled) {
-        if (kAutoScoreEnabled) {
-          driver
-              .rightTrigger()
-              .onTrue(
-                  new AutoScore(
-                      swerveSubsystem,
-                      intakeSubsystem,
-                      elevatorSubsystem,
-                      armSubsystem,
-                      ledStrip,
-                      AutoScore.GridScoreHeight.HIGH,
-                      () -> isMovingJoystick(driver)));
-          driver
-              .rightBumper()
-              .onTrue(
-                  new AutoScore(
-                      swerveSubsystem,
-                      intakeSubsystem,
-                      elevatorSubsystem,
-                      armSubsystem,
-                      ledStrip,
-                      AutoScore.GridScoreHeight.MID,
-                      () -> isMovingJoystick(driver)));
-        } else {
-          driver.rightTrigger().onTrue(getScoreCommand(DynamicPathFollower.GoalType.HIGH_GRID));
-          driver.rightBumper().onTrue(getScoreCommand(DynamicPathFollower.GoalType.MID_GRID));
-        }
-      }
-
+    if (kArmEnabled) {
       driver
           .y()
           .or(operator.leftTrigger())
