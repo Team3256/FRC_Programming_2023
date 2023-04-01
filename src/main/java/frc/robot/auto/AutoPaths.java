@@ -95,24 +95,29 @@ public class AutoPaths {
                           new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
                   .asProxy()
                   .withName("intakeCube"));
+
       autoEventMap.put(
           "cubeHigh",
           () ->
               Commands.parallel(
                       new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
+                  .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem))
                   .asProxy()
                   .withName("cubeHigh"));
+
       autoEventMap.put(
           "coneHigh",
           () ->
               Commands.parallel(
                       new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
+                  .withTimeout(2.25)
                   .andThen(new IntakeCube(intakeSubsystem))
                   .asProxy()
                   .withName("coneHigh"));
+
       autoEventMap.put(
           "cubeMid",
           () ->
@@ -120,9 +125,11 @@ public class AutoPaths {
                       new SetElevatorHeight(
                           elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID))
+                  .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem))
                   .asProxy()
                   .withName("cubeMid"));
+
       autoEventMap.put(
           "coneMid",
           () ->
@@ -130,9 +137,11 @@ public class AutoPaths {
                       new SetElevatorHeight(
                           elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_MID))
+                  .withTimeout(2.25)
                   .andThen(new IntakeCube(intakeSubsystem))
                   .asProxy()
                   .withName("coneMid"));
+
       autoEventMap.put(
           "cubeLow",
           () ->
@@ -140,9 +149,11 @@ public class AutoPaths {
                       new SetElevatorHeight(
                           elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
                       new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+                  .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem))
                   .asProxy()
                   .withName("cubeLow"));
+
       autoEventMap.put(
           "coneLow",
           () ->
@@ -150,9 +161,11 @@ public class AutoPaths {
                       new SetElevatorHeight(
                           elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
                       new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+                  .withTimeout(2.25)
                   .andThen(new IntakeCube(intakeSubsystem))
                   .asProxy()
                   .withName("coneLow"));
+
       autoEventMap.put(
           "engage",
           () ->
@@ -222,11 +235,11 @@ public class AutoPaths {
     AutoChooser.createSinglePath("Node5-Mobility-Engage", node5MobilityEngage);
 
     // Node8x2
-    Command node8x2 =
+    Command node9x2 =
         autoBuilder
-            .createPath("Node8x2", kFastPathConstraints, true)
-            .beforeStarting(scorePreloadCube.get().asProxy());
-    AutoChooser.createSinglePath("Node8x2", node8x2);
+            .createPath("Node9x2", kFastPathConstraints, true)
+            .beforeStarting(scorePreloadCone.get().asProxy());
+    AutoChooser.createSinglePath("Node9x2", node9x2);
 
     // Node2x2-Engage
     ArrayList<Command> node2x2Engage =
