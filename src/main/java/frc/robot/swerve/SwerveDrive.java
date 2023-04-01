@@ -105,6 +105,16 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     }
   }
 
+  public void stop() {
+    SwerveModuleState[] swerveModuleStates =
+        kSwerveKinematics.toSwerveModuleStates(new ChassisSpeeds());
+
+    for (SwerveModule mod : swerveModules) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
+    }
+    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
+  }
+
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
     if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
       chassisSpeeds.vxMetersPerSecond =

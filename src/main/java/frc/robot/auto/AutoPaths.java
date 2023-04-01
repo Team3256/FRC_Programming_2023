@@ -166,17 +166,18 @@ public class AutoPaths {
               Commands.parallel(
                       new ZeroElevator(elevatorSubsystem),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
+                  .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
-                  .withTimeout(4)
                   .asProxy()
                   .withName("scorePreloadCube");
+
       scorePreloadCone =
           () ->
               Commands.parallel(
                       new ZeroElevator(elevatorSubsystem),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
+                  .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
-                  .withTimeout(4)
                   .asProxy()
                   .withName("scorePreloadCone");
     }

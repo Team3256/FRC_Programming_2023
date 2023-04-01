@@ -349,7 +349,9 @@ public class RobotContainer implements CANTestable, Loggable {
       return Commands.sequence(
           setArmElevatorStart.asProxy(),
           autoPath,
-          new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
+          Commands.parallel(
+              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
+              new LockSwerveX(swerveSubsystem)));
     } else {
       return autoPath;
     }
