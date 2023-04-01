@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import frc.robot.Constants;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
@@ -41,9 +42,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
             angleRotation2d.getRadians(),
             kArmAngleMinConstraint.getRadians(),
             kArmAngleMaxConstraint.getRadians()),
-        (output, setpoint) ->
-            armSubsystem.setInputVoltage(
-                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
+        (output, setpoint) -> armSubsystem.setInputVoltage(
+            output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
         armSubsystem);
 
     getController()
@@ -55,7 +55,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
   }
 
   /**
-   * Constructor for setting the arm to a Rotation2d specified in the preferences hash map
+   * Constructor for setting the arm to a Rotation2d specified in the preferences
+   * hash map
    *
    * @param armSubsystem
    * @param armPreset

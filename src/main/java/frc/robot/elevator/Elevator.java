@@ -31,6 +31,8 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
@@ -56,25 +58,23 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private WPI_TalonFX elevatorMotor;
-  private ElevatorFeedforward elevatorFeedforward =
-      new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
+  private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV,
+      kElevatorA);
 
-  private ElevatorSim elevatorSim =
-      new ElevatorSim(
-          DCMotor.getFalcon500(kNumElevatorMotors),
-          kElevatorGearing,
-          kCarriageMass,
-          kDrumRadius,
-          kMinHeight,
-          kMaxHeight,
-          true);
+  private ElevatorSim elevatorSim = new ElevatorSim(
+      DCMotor.getFalcon500(kNumElevatorMotors),
+      kElevatorGearing,
+      kCarriageMass,
+      kDrumRadius,
+      kMinHeight,
+      kMaxHeight,
+      true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
   private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Elevator Root", 10, 0);
-  private final MechanismLigament2d elevatorMech2d =
-      mechanism2dRoot.append(
-          new MechanismLigament2d(
-              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
+  private final MechanismLigament2d elevatorMech2d = mechanism2dRoot.append(
+      new MechanismLigament2d(
+          "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
 
   public Elevator() {
     if (RobotBase.isReal()) {
@@ -120,7 +120,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     if (RobotBase.isReal()) {
       return falconToMeters(
           elevatorMotor.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
-    } else return elevatorSim.getPositionMeters();
+    } else
+      return elevatorSim.getPositionMeters();
   }
 
   public void setCoast() {
@@ -185,9 +186,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public double getPreferencesSetpoint(Elevator.ElevatorPreset setpoint) {
-    return Preferences.getDouble(
-        ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
-        ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));
+    if (Constants.kDebugEnabled && FeatureFlags.kUsePrefs) {
+      return Preferences.getDouble(
+          ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
+          ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));
+    } else {
+      return setpoint.position;
+    }
   }
 
   /** Populating elevator preferences on network tables */
