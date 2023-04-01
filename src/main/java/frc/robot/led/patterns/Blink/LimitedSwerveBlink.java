@@ -10,13 +10,11 @@ package frc.robot.led.patterns.Blink;
 import frc.robot.led.patternBases.BlinkingPattern;
 import frc.robot.led.patterns.ConePattern;
 import frc.robot.led.patterns.CubePattern;
-import java.util.function.BooleanSupplier;
 
 public class LimitedSwerveBlink extends BlinkingPattern {
-
-  public LimitedSwerveBlink(BooleanSupplier isCurrentPieceCone) {
+  public LimitedSwerveBlink(boolean isCurrentPieceCone) {
     super(5, 5);
-    if (isCurrentPieceCone.getAsBoolean()) {
+    if (isCurrentPieceCone) {
       setMainLEDPattern(new ConePattern());
     } else {
       setMainLEDPattern(new CubePattern());

@@ -30,7 +30,7 @@ public final class Constants {
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final boolean kCompetitionModeEnabled = true;
   public static final RobotType kRobotType = RobotType.ALPHA;
-  public static final RobotMode kCurrentMode = RobotMode.REAL;
+  public static final RobotMode kCurrentMode = RobotMode.SIM;
 
   public static final double kStickDeadband = 0.05;
   public static final double kStickCancelDeadband = 0.50;
