@@ -15,7 +15,7 @@ public class BlinkingPattern extends AnimatedPattern {
   /**
    * Blinking Pattern Animation
    *
-   * @param onFrames number of frames that the main LED Pattern will be displayed
+   * @param onFrames  number of frames that the main LED Pattern will be displayed
    * @param offFrames number of frames that nothing will be displayed
    */
   public BlinkingPattern(int onFrames, int offFrames) {

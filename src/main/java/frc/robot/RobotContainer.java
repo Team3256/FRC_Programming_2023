@@ -56,9 +56,12 @@ import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -85,12 +88,18 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    if (kArmEnabled) armSubsystem = new Arm();
-    if (kIntakeEnabled) intakeSubsystem = new Intake();
-    if (kElevatorEnabled) elevatorSubsystem = new Elevator();
-    if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
-    if (kClimbEnabled) climbSubsystem = new Climb();
-    if (kLedStripEnabled) ledStrip = new LED(kPort, new int[] {100});
+    if (kArmEnabled)
+      armSubsystem = new Arm();
+    if (kIntakeEnabled)
+      intakeSubsystem = new Intake();
+    if (kElevatorEnabled)
+      elevatorSubsystem = new Elevator();
+    if (kSwerveEnabled)
+      swerveSubsystem = new SwerveDrive();
+    if (kClimbEnabled)
+      climbSubsystem = new Climb();
+    if (kLedStripEnabled)
+      ledStrip = new LED(kPort, new int[] { 100 });
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -200,16 +209,17 @@ public class RobotContainer implements CANTestable, Loggable {
         .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
-                    swerveSubsystem,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    driver::getRightX,
-                    kFieldRelative,
-                    kOpenLoop)
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                driver::getRightX,
+                kFieldRelative,
+                kOpenLoop)
                 .deadlineWith(
-                    new LEDSetAllSectionsPattern(
-                        // TODO fix later
-                        ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
+                    new ConditionalCommand(
+                        new LEDSetAllSectionsPattern(ledStrip, new LimitedSwerveBlink(true)),
+                        new LEDSetAllSectionsPattern(ledStrip, new LimitedSwerveBlink(false)),
+                        this::isCurrentPieceCone)));
 
     driver
         .x()
@@ -239,13 +249,13 @@ public class RobotContainer implements CANTestable, Loggable {
                 new ConditionalCommand(
                     new ParallelCommandGroup(
                         new SetElevatorHeight(
-                                elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
+                            elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
                             .beforeStarting(new WaitCommand(0.3)),
                         new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
                         new IntakeCone(intakeSubsystem, ledStrip)),
                     new ParallelCommandGroup(
                         new SetElevatorHeight(
-                                elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
+                            elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
                             .beforeStarting(new WaitCommand(0.3)),
                         new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
                         new IntakeCube(intakeSubsystem, ledStrip)),
@@ -382,14 +392,15 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : canBusTestables) result &= subsystem.CANTest();
+    for (CANTestable subsystem : canBusTestables)
+      result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine =
-        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
+    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
+        armSubsystem);
     pitSubsystemRoutine.runPitRoutine();
   }
 
