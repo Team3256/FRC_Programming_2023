@@ -23,13 +23,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
@@ -37,7 +35,6 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -416,29 +413,5 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public SubstationLocation getSubstationLocation() {
     return this.doubleSubstationLocation;
-  }
-
-  private Command getScoreCommand(DynamicPathFollower.GoalType goalType) {
-    switch (goalType) {
-      case HIGH_GRID:
-        return new ParallelCommandGroup(
-            new ConditionalCommand(
-                new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
-                new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
-                this::isCurrentPieceCone),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_HIGH),
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_HIGH),
-                this::isCurrentPieceCone));
-      case MID_GRID:
-        return new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_MID),
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_MID),
-                this::isCurrentPieceCone));
-      default:
-        return new InstantCommand();
-    }
   }
 }

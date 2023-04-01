@@ -84,9 +84,10 @@ public class AutoScore extends CommandBase {
         case HIGH:
           Commands.parallel(
                   new ConditionalCommand(
-                      new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
-                      new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
-                      isCurrentLEDPieceCone),
+                          new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                          new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
+                          isCurrentLEDPieceCone)
+                      .beforeStarting(new WaitCommand(0.5)),
                   new ConditionalCommand(
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
