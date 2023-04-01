@@ -23,8 +23,9 @@ public final class AutoConstants {
   public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2 * Math.PI;
 
   // Constraint for the motion profiled robot angle controller
-  public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-      kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+      new TrapezoidProfile.Constraints(
+          kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
   /* Auto translation constants */
   public static final double kAutoXTranslationP = 2.2;
@@ -41,9 +42,10 @@ public final class AutoConstants {
   public static final double kAutoThetaControllerP = 6.0;
   public static final double kAutoThetaControllerI = 0.00;
   public static final double kAutoThetaControllerD = 0.0;
-  public static final TrapezoidProfile.Constraints kAutoThetaControllerConstraints = new TrapezoidProfile.Constraints(
-      AutoConstants.kMaxAngularSpeedRadiansPerSecond,
-      AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
+  public static final TrapezoidProfile.Constraints kAutoThetaControllerConstraints =
+      new TrapezoidProfile.Constraints(
+          AutoConstants.kMaxAngularSpeedRadiansPerSecond,
+          AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
 
   public static final double kTranslationToleranceMeters = 0.5;
   public static final double kAutoMarkerTimeThreshold = 0.1; // seconds
@@ -51,8 +53,8 @@ public final class AutoConstants {
   public static final double kRotationTolerance = Units.degreesToRadians(5);
   public static final double kAutoTrajectoryTimeoutSeconds = 0.1;
 
-  public static final PathConstraints kFastPathConstraints = new PathConstraints(7,
-      kMaxAccelerationMetersPerSecondSquared);
+  public static final PathConstraints kFastPathConstraints =
+      new PathConstraints(7, kMaxAccelerationMetersPerSecondSquared);
   public static final PathConstraints kSafePathConstraints = new PathConstraints(5, 5);
   public static final PathConstraints kEngagePathConstraints = new PathConstraints(3, 3);
   public static final PathConstraints kGroundIntakeConstraints = new PathConstraints(1.5, 1.5);
