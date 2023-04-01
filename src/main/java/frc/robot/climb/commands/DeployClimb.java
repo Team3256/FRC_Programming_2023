@@ -8,7 +8,6 @@
 package frc.robot.climb.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.climb.Climb;
 
 public class DeployClimb extends CommandBase {
