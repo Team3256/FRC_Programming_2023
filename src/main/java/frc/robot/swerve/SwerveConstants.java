@@ -28,10 +28,10 @@ public final class SwerveConstants {
 
   /* Meters per second squared */
   public static int kXAccelRateLimit = 8;
-  public static int kXDecelRateLimit = 14;
+  public static int kXDecelRateLimit = 15;
 
   public static int kYAccelRateLimit = 8;
-  public static int kYDecelRateLimit = 14;
+  public static int kYDecelRateLimit = 15;
 
   public static double kAutoEngageLimitVelocity = 1;
 

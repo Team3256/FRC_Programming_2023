@@ -9,6 +9,7 @@ package frc.robot.swerve;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.Constants.VisionConstants.*;
+import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -85,7 +86,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.9, 0.9, 0.02), // Current state X, Y, theta.
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.10, 0.10, 0.04));
 
-    if (Constants.kDebugEnabled) {
+    if (kDebugEnabled) {
       SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
       SmartDashboard.putData("Field", field);
     }
@@ -178,6 +179,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   public void zeroGyroYaw() {
     gyro.setYaw(0);
+    if(kDebugEnabled) System.out.println("Resetting Gyro");
   }
 
   public void setGyroYaw(double yawDegrees) {
@@ -252,7 +254,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
         }
 
-        if (Constants.kDebugEnabled) {
+        if (kDebugEnabled) {
           limelightLocalizationField.setRobotPose(limelightPose);
           SmartDashboard.putNumber("Lime Light pose x", limelightPose.getX());
           SmartDashboard.putNumber("Lime Light pose y", limelightPose.getY());
@@ -268,7 +270,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
-    if (Constants.kDebugEnabled) {
+    if (kDebugEnabled) {
       field.setRobotPose(poseEstimator.getEstimatedPosition());
       Logger.getInstance().recordOutput("Odometry", getPose());
 
