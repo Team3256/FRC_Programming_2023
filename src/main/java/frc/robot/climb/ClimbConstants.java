@@ -30,5 +30,5 @@ public final class ClimbConstants {
   public static final double kClimbDeployRotation = 1.68;
   public static final double kClimbRetractRotation = kClimbDeployRotation * 2;
   public static final double kClimbDeploySpeed = 0.9;
-  public static final double kClimbRetractSpeed = -0.5;
+  public static final double kClimbRetractSpeed = -1.0;
 }

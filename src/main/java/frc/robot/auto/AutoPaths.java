@@ -57,10 +57,10 @@ public class AutoPaths {
     Supplier<Command> scorePreloadCone = () -> new InstantCommand();
     Supplier<Command> scorePreloadCube = () -> new InstantCommand();
 
-    if (swerveSubsystem == null
-        || intakeSubsystem == null
-        || armSubsystem == null
-        || elevatorSubsystem == null) {
+    if (swerveSubsystem != null
+        && intakeSubsystem != null
+        && armSubsystem != null
+        && elevatorSubsystem != null) {
 
       autoEventMap.put(
           "defaultPosition",
@@ -167,16 +167,18 @@ public class AutoPaths {
                       new ZeroElevator(elevatorSubsystem),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
                   .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
+                  .withTimeout(4)
                   .asProxy()
-                  .withName("scorePreload");
+                  .withName("scorePreloadCube");
       scorePreloadCone =
           () ->
               Commands.parallel(
                       new ZeroElevator(elevatorSubsystem),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
                   .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
+                  .withTimeout(4)
                   .asProxy()
-                  .withName("scorePreload");
+                  .withName("scorePreloadCone");
     }
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);

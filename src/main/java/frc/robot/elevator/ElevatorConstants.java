@@ -24,7 +24,7 @@ public final class ElevatorConstants {
   public static final double kZeroThreshold = 0.02;
 
   public static final double kDoubleSubstationPositionCubeMeters = 0.52;
-  public static final double kDoubleSubstationPositionConeMeters = 0.64;
+  public static final double kDoubleSubstationPositionConeMeters = 0.69;
   public static final double kCubeHighPositionMeters = 0.225;
   public static final double kConeHighPositionMeters = 0.454;
   public static final double kAnyPieceMidPositionMeters = 0.184;

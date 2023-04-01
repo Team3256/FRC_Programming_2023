@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebugEnabled = false;
+  public static final boolean kDebugEnabled = true;
 
   public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = true;
@@ -49,6 +49,7 @@ public final class Constants {
     public static final boolean kArmAbsoluteEncoderEnabled = true;
     public static final boolean kLocalizationEnabled = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
+    public static final boolean kUsePrefs = false;
 
     public static final boolean kLocalizationUseWPIBlueOffset = false;
     public static final boolean kDynamicPathGenEnabled = false;

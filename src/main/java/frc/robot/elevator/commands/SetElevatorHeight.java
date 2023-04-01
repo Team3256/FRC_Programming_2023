@@ -12,7 +12,6 @@ import static frc.robot.elevator.ElevatorConstants.*;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
-import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
 
@@ -70,29 +69,25 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
       getController().setGoal(setpointPositionMeters);
     }
 
-    if (Constants.kDebugEnabled) {
-      System.out.println(
-          this.getName()
-              + " started (preset: "
-              + this.elevatorPreset
-              + ", height: "
-              + setpointPositionMeters
-              + " meters)");
-    }
+    System.out.println(
+        this.getName()
+            + " started (preset: "
+            + this.elevatorPreset
+            + ", height: "
+            + setpointPositionMeters
+            + " meters)");
   }
 
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
-    if (Constants.kDebugEnabled) {
-      System.out.println(
-          this.getName()
-              + " finished (preset: "
-              + this.elevatorPreset
-              + ", height: "
-              + setpointPositionMeters
-              + " meters)");
-    }
+    System.out.println(
+        this.getName()
+            + " finished (preset: "
+            + this.elevatorPreset
+            + ", height: "
+            + setpointPositionMeters
+            + " meters)");
   }
 
   @Override

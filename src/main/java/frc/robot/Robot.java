@@ -78,7 +78,7 @@ public class Robot extends LoggedRobot {
 
     logger.start(); // Start advkit logger
 
-    if (kDebugEnabled) {
+    if (kDebugEnabled && FeatureFlags.kUsePrefs) {
       loadArmPreferences();
       loadElevatorPreferences();
     }

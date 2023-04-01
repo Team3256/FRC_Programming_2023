@@ -83,6 +83,9 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
     System.out.println(
         "Is running auto intake instead of presets: " + isAutoScoreMode.getAsBoolean());
     if (!isAutoScoreMode.getAsBoolean()) {
+      System.out.println(
+          "Running intake preset at double substation for cone? "
+              + isCurrentPieceCone.getAsBoolean());
       new ConditionalCommand(
               new ParallelCommandGroup(
                   new SetElevatorHeight(
