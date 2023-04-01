@@ -182,6 +182,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   }
 
   public void setGyroYaw(double yawDegrees) {
+    if (kDebugEnabled) System.out.println("Setting gyro yaw to: " + yawDegrees);
     gyro.setYaw(yawDegrees);
   }
 

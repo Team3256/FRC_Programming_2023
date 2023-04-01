@@ -233,7 +233,6 @@ public class RobotContainer implements CANTestable, Loggable {
                   this::isCurrentPieceCone));
     } else {
       if (kElevatorEnabled && kArmEnabled) {
-
         driver
             .leftTrigger()
             .onTrue(
