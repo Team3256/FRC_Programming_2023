@@ -35,7 +35,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
@@ -179,7 +178,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   public void zeroGyroYaw() {
     gyro.setYaw(0);
-    if(kDebugEnabled) System.out.println("Resetting Gyro");
+    if (kDebugEnabled) System.out.println("Resetting Gyro");
   }
 
   public void setGyroYaw(double yawDegrees) {

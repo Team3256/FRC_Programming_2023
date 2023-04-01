@@ -328,8 +328,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureClimb() {
-    operator.back().whileTrue(new RetractClimb(climbSubsystem));
     operator.start().whileTrue(new DeployClimb(climbSubsystem));
+    operator.back().whileTrue(new RetractClimb(climbSubsystem));
   }
 
   public void configureLEDStrip() {
