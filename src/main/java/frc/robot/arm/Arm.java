@@ -8,6 +8,8 @@
 package frc.robot.arm;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
+import static frc.robot.Constants.Simulation.percentOutputToVoltageMultiplier;
+import static frc.robot.Constants.Simulation.simulateDeltaSec;
 import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.kArmPositionKeys;
 
@@ -31,6 +33,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.drivers.CANDeviceTester;
@@ -226,29 +229,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   private void configureSimHardware() {
     armMotor = new WPI_TalonFX(kArmSimulationID);
-    SmartDashboard.putData("Arm Sim", mechanism2d);
   }
-
-  private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
-  private final MechanismRoot2d armPivot = mechanism2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d arm =
-      armPivot.append(
-          new MechanismLigament2d(
-              "Arm",
-              30,
-              Units.radiansToDegrees(armSim.getAngleRads()),
-              6,
-              new Color8Bit(Color.kYellow)));
 
   @Override
   public void simulationPeriodic() {
-    armSim.setInput(armMotor.getMotorOutputPercent() * 12);
-    armSim.update(0.020);
-
+    armSim.setInput(armMotor.getMotorOutputPercent() * percentOutputToVoltageMultiplier);
+    armSim.update(simulateDeltaSec);
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
-    arm.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
-
     simulationOutputToDashboard();
   }
 

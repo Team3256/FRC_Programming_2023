@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
+
   public static final boolean kDebugEnabled = true;
 
   public static final boolean kSwerveEnabled = true;
@@ -53,6 +54,11 @@ public final class Constants {
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;
+  }
+
+  public static final class Simulation {
+    public static final double simulateDeltaSec = 0.020;
+    public static final int percentOutputToVoltageMultiplier = 12;
   }
 
   public static final class ShuffleboardConstants {

@@ -8,6 +8,8 @@
 package frc.robot.elevator;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
+import static frc.robot.Constants.Simulation.percentOutputToVoltageMultiplier;
+import static frc.robot.Constants.Simulation.simulateDeltaSec;
 import static frc.robot.elevator.ElevatorConstants.*;
 import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
@@ -195,25 +197,15 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   private void configureSimHardware() {
     elevatorMotor = new WPI_TalonFX(kElevatorID);
-    SmartDashboard.putData("Elevator Sim", elevatorCanvas);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
-  private final Mechanism2d elevatorCanvas = new Mechanism2d(50, 50);
-  private final MechanismRoot2d elevatorRoot = elevatorCanvas.getRoot("Elevator Root", 15, 0);
-  private final MechanismLigament2d elevatorMech =
-      elevatorRoot.append(
-          new MechanismLigament2d(
-              "Elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 45));
-
   @Override
   public void simulationPeriodic() {
-    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * 12);
-    elevatorSim.update(0.020);
-
+    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * percentOutputToVoltageMultiplier);
+    elevatorSim.update(simulateDeltaSec);
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    elevatorMech.setLength(Units.metersToInches(elevatorSim.getPositionMeters()));
     simulationOutputToDashboard();
   }
 
