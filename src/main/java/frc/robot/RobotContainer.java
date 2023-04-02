@@ -135,21 +135,32 @@ public class RobotContainer implements CANTestable, Loggable {
         "Current Double Substation Location", doubleSubstationLocation.toString());
 
     // configure full robot simulation
-    tester.a().onTrue(new SetElevatorVolts(elevatorSubsystem, 8));
-    tester.b().onTrue(new SetElevatorVolts(elevatorSubsystem, -8));
-    tester.x().onTrue(new SetArmVoltage(armSubsystem, 8));
-    tester.y().onTrue(new SetArmVoltage(armSubsystem, -8));
+    tester
+        .a()
+        .onTrue(
+            new ParallelCommandGroup(
+                new SetElevatorVolts(elevatorSubsystem, 12),
+                new SetArmVoltage(armSubsystem, -12),
+                new IntakeCone(intakeSubsystem)));
+    tester
+        .b()
+        .onTrue(
+            new ParallelCommandGroup(
+                new SetElevatorVolts(elevatorSubsystem, -12),
+                new SetArmVoltage(armSubsystem, 12),
+                new IntakeCube(intakeSubsystem)));
 
-    robotCanvas = new Mechanism2d(3, 3);
-    robotRoot = robotCanvas.getRoot("Robot Root", 1.5, 0);
-    robotRoot.append(new MechanismLigament2d("right base", kRobotLength / 2, 0));
-    robotRoot.append(new MechanismLigament2d("left base", kRobotLength / 2, 180));
+    robotCanvas = new Mechanism2d(2.5, 2.5);
+    robotRoot = robotCanvas.getRoot("Robot Root", 1.25, 0);
+    robotRoot.append(new MechanismLigament2d("Right base", kRobotLength / 2, 0));
+    robotRoot.append(new MechanismLigament2d("Left base", kRobotLength / 2, 180));
     elevatorMech =
         robotRoot.append(
             new MechanismLigament2d(
                 "Elevator", elevatorSubsystem.getSim().getPositionMeters(), 45));
 
     armMech = elevatorMech.append(new MechanismLigament2d("Arm", 0.4, 13));
+    intakeMech = armMech.append(new MechanismLigament2d("Intake", 0.1, 0));
     SmartDashboard.putData("Robot Sim", robotCanvas);
   }
 
@@ -157,6 +168,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private final MechanismRoot2d robotRoot;
   private final MechanismLigament2d elevatorMech;
   private final MechanismLigament2d armMech;
+  private final MechanismLigament2d intakeMech;
 
   private void configureSwerve() {
     swerveSubsystem.setDefaultCommand(
@@ -422,5 +434,6 @@ public class RobotContainer implements CANTestable, Loggable {
   public void simulatePeriodic() {
     elevatorMech.setLength(elevatorSubsystem.getSim().getPositionMeters());
     armMech.setAngle(Units.radiansToDegrees(armSubsystem.getSim().getAngleRads()));
+    intakeMech.setAngle(Units.radiansToDegrees(intakeSubsystem.getIntakeAngle()));
   }
 }

@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -47,9 +48,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
-  private void configureSimHardware() {
-    intakeMotor = new WPI_TalonFX(kIntakeMotorID);
-    intakeMotor.setNeutralMode(NeutralMode.Brake);
+  public double getIntakeAngle() {
+    return intakeMotor.getSelectedSensorPosition();
   }
 
   public double getIntakeSpeed() {
@@ -76,11 +76,13 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   public void intakeCone() {
     System.out.println("Intake cone");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
+    intakeMotor.getSimCollection().setBusVoltage(kIntakeConeSpeed);
   }
 
   public void intakeCube() {
     System.out.println("Intake cube");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
+    intakeMotor.getSimCollection().setBusVoltage(kIntakeCubeSpeed);
   }
 
   public boolean isCurrentSpiking() {
@@ -117,5 +119,23 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     System.out.println("Intake CAN connected: " + result);
     SmartDashboard.putBoolean("Intake CAN connected", result);
     return result;
+  }
+
+  // sim
+  private void configureSimHardware() {
+    intakeMotor = new WPI_TalonFX(kIntakeMotorID);
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    intakeMotor.getSimCollection().setBusVoltage(8);
+    simulationOutputToDashboard();
+  }
+
+  private void simulationOutputToDashboard() {
+    SmartDashboard.putNumber("Intake angle position", Units.radiansToDegrees(getIntakeAngle()));
+    SmartDashboard.putNumber("Current Draw", intakeMotor.getStatorCurrent());
+    SmartDashboard.putNumber("Intake Sim Voltage", intakeMotor.getMotorOutputPercent() * 12);
   }
 }
