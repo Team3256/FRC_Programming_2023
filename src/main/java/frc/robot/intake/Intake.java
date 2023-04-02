@@ -9,6 +9,8 @@ package frc.robot.intake;
 
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kIntakeLayoutName;
+import static frc.robot.Constants.Simulation.percentOutputToVoltageMultiplier;
+import static frc.robot.Constants.Simulation.simulateDeltaSec;
 import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.intake.IntakeConstants.*;
 
@@ -16,11 +18,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.simulation.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
@@ -46,10 +50,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private void configureRealHardware() {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
-  }
-
-  public double getIntakeAngle() {
-    return intakeMotor.getSelectedSensorPosition();
   }
 
   public double getIntakeSpeed() {
@@ -122,6 +122,12 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   // sim
+  DCMotorSim intakeSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 1);
+
+  public DCMotorSim getSim() {
+    return intakeSim;
+  }
+
   private void configureSimHardware() {
     intakeMotor = new WPI_TalonFX(kIntakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
@@ -129,13 +135,18 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void simulationPeriodic() {
-    intakeMotor.getSimCollection().setBusVoltage(8);
+    intakeSim.setInput(intakeMotor.getMotorOutputPercent() * percentOutputToVoltageMultiplier);
+    intakeSim.update(simulateDeltaSec);
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(intakeSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
   }
 
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Intake angle position", Units.radiansToDegrees(getIntakeAngle()));
-    SmartDashboard.putNumber("Current Draw", intakeMotor.getStatorCurrent());
-    SmartDashboard.putNumber("Intake Sim Voltage", intakeMotor.getMotorOutputPercent() * 12);
+    SmartDashboard.putNumber(
+        "Intake angle",
+        Units.radiansToDegrees(Units.radiansToDegrees(intakeSim.getAngularPositionRad())));
+    SmartDashboard.putNumber("Intake current draw", intakeMotor.getStatorCurrent());
+    SmartDashboard.putNumber("Intake sim voltage", intakeMotor.getMotorOutputPercent());
   }
 }

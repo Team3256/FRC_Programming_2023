@@ -424,6 +424,7 @@ public class RobotContainer implements CANTestable, Loggable {
       Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
       SmartDashboard.putData("Robot Sim", robotCanvas);
       MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", robotSimWindowWidth / 2, 0);
+      MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.8*robotSimWindowWidth, 0);
       robotRoot.append(new MechanismLigament2d("Right base", kRobotLength / 2, 0));
       robotRoot.append(new MechanismLigament2d("Left base", kRobotLength / 2, 180));
       elevatorMechanism =
@@ -439,6 +440,7 @@ public class RobotContainer implements CANTestable, Loggable {
           armMechanism.append(new MechanismLigament2d("IntakeTop", intakeRadius, 0));
       intakeMechanismBottom =
           armMechanism.append(new MechanismLigament2d("IntakeBottom", intakeRadius, 180));
+      goalRoot.append(new MechanismLigament2d("CubeLow", FieldConstants.Grids.kHighCubeZ,90));
     }
   }
 
@@ -448,8 +450,10 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kArmEnabled)
       armMechanism.setAngle(Units.radiansToDegrees(armSubsystem.getSim().getAngleRads()));
     if (kIntakeEnabled) {
-      intakeMechanismTop.setAngle(Units.radiansToDegrees(intakeSubsystem.getIntakeAngle()));
-      intakeMechanismTop.setAngle(Units.radiansToDegrees(180 + intakeSubsystem.getIntakeAngle()));
+      intakeMechanismTop.setAngle(
+          Units.radiansToDegrees(intakeSubsystem.getSim().getAngularPositionRad()));
+      intakeMechanismTop.setAngle(
+          180 + Units.radiansToDegrees(intakeSubsystem.getSim().getAngularPositionRad()));
     }
   }
 }

@@ -63,7 +63,7 @@ public final class Constants {
     public static final double robotSimWindowHeight = 2.5;
     public static final double elevatorTiltDeg = 45.89;
     public static final double armLength = 0.31416;
-    public static final double intakeRadius = 0.05;
+    public static final double intakeRadius = 0.1;
   }
 
   public static final class ShuffleboardConstants {
