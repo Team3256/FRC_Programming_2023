@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -424,7 +426,7 @@ public class RobotContainer implements CANTestable, Loggable {
       Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
       SmartDashboard.putData("Robot Sim", robotCanvas);
       MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", robotSimWindowWidth / 2, 0);
-      MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.8*robotSimWindowWidth, 0);
+      MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
       robotRoot.append(new MechanismLigament2d("Right base", kRobotLength / 2, 0));
       robotRoot.append(new MechanismLigament2d("Left base", kRobotLength / 2, 180));
       elevatorMechanism =
@@ -440,7 +442,13 @@ public class RobotContainer implements CANTestable, Loggable {
           armMechanism.append(new MechanismLigament2d("IntakeTop", intakeRadius, 0));
       intakeMechanismBottom =
           armMechanism.append(new MechanismLigament2d("IntakeBottom", intakeRadius, 180));
-      goalRoot.append(new MechanismLigament2d("CubeLow", FieldConstants.Grids.kHighCubeZ,90));
+      goalRoot.append(
+          new MechanismLigament2d(
+              "CubeLow",
+              FieldConstants.Grids.kMidCubeZ,
+              90,
+              1,
+              new Color8Bit((Color.kAquamarine))));
     }
   }
 
