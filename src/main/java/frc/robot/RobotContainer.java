@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Constants.Simulation.*;
 import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
@@ -87,6 +88,11 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<CANTestable> canBusTestables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
+  private MechanismLigament2d elevatorMechanism;
+  private MechanismLigament2d armMechanism;
+  private MechanismLigament2d intakeMechanismTop;
+  private MechanismLigament2d intakeMechanismBottom;
+
   public RobotContainer() {
     if (kArmEnabled) armSubsystem = new Arm();
     if (kIntakeEnabled) intakeSubsystem = new Intake();
@@ -133,42 +139,8 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
-
-    // configure full robot simulation
-    tester
-        .a()
-        .onTrue(
-            new ParallelCommandGroup(
-                new SetElevatorVolts(elevatorSubsystem, 12),
-                new SetArmVoltage(armSubsystem, -12),
-                new IntakeCone(intakeSubsystem)));
-    tester
-        .b()
-        .onTrue(
-            new ParallelCommandGroup(
-                new SetElevatorVolts(elevatorSubsystem, -12),
-                new SetArmVoltage(armSubsystem, 12),
-                new IntakeCube(intakeSubsystem)));
-
-    robotCanvas = new Mechanism2d(2.5, 2.5);
-    robotRoot = robotCanvas.getRoot("Robot Root", 1.25, 0);
-    robotRoot.append(new MechanismLigament2d("Right base", kRobotLength / 2, 0));
-    robotRoot.append(new MechanismLigament2d("Left base", kRobotLength / 2, 180));
-    elevatorMech =
-        robotRoot.append(
-            new MechanismLigament2d(
-                "Elevator", elevatorSubsystem.getSim().getPositionMeters(), 45));
-
-    armMech = elevatorMech.append(new MechanismLigament2d("Arm", 0.4, 13));
-    intakeMech = armMech.append(new MechanismLigament2d("Intake", 0.1, 0));
-    SmartDashboard.putData("Robot Sim", robotCanvas);
+    simulateInit();
   }
-
-  private final Mechanism2d robotCanvas;
-  private final MechanismRoot2d robotRoot;
-  private final MechanismLigament2d elevatorMech;
-  private final MechanismLigament2d armMech;
-  private final MechanismLigament2d intakeMech;
 
   private void configureSwerve() {
     swerveSubsystem.setDefaultCommand(
@@ -431,9 +403,53 @@ public class RobotContainer implements CANTestable, Loggable {
     return this.doubleSubstationLocation;
   }
 
+  public void simulateInit() {
+    // configure full robot simulation
+    if (kElevatorEnabled && kArmEnabled && kIntakeEnabled) {
+      tester
+          .a()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetElevatorVolts(elevatorSubsystem, 12),
+                  new SetArmVoltage(armSubsystem, -12),
+                  new IntakeCone(intakeSubsystem)));
+      tester
+          .b()
+          .onTrue(
+              new ParallelCommandGroup(
+                  new SetElevatorVolts(elevatorSubsystem, -12),
+                  new SetArmVoltage(armSubsystem, 12),
+                  new IntakeCube(intakeSubsystem)));
+
+      Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
+      SmartDashboard.putData("Robot Sim", robotCanvas);
+      MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", robotSimWindowWidth / 2, 0);
+      robotRoot.append(new MechanismLigament2d("Right base", kRobotLength / 2, 0));
+      robotRoot.append(new MechanismLigament2d("Left base", kRobotLength / 2, 180));
+      elevatorMechanism =
+          robotRoot.append(
+              new MechanismLigament2d(
+                  "Elevator", elevatorSubsystem.getSim().getPositionMeters(), elevatorTiltDeg));
+
+      armMechanism =
+          elevatorMechanism.append(
+              new MechanismLigament2d(
+                  "Arm", armLength, Units.radiansToDegrees(armSubsystem.getSim().getAngleRads())));
+      intakeMechanismTop =
+          armMechanism.append(new MechanismLigament2d("IntakeTop", intakeRadius, 0));
+      intakeMechanismBottom =
+          armMechanism.append(new MechanismLigament2d("IntakeBottom", intakeRadius, 180));
+    }
+  }
+
   public void simulatePeriodic() {
-    elevatorMech.setLength(elevatorSubsystem.getSim().getPositionMeters());
-    armMech.setAngle(Units.radiansToDegrees(armSubsystem.getSim().getAngleRads()));
-    intakeMech.setAngle(Units.radiansToDegrees(intakeSubsystem.getIntakeAngle()));
+    if (kElevatorEnabled)
+      elevatorMechanism.setLength(elevatorSubsystem.getSim().getPositionMeters());
+    if (kArmEnabled)
+      armMechanism.setAngle(Units.radiansToDegrees(armSubsystem.getSim().getAngleRads()));
+    if (kIntakeEnabled) {
+      intakeMechanismTop.setAngle(Units.radiansToDegrees(intakeSubsystem.getIntakeAngle()));
+      intakeMechanismTop.setAngle(Units.radiansToDegrees(180 + intakeSubsystem.getIntakeAngle()));
+    }
   }
 }

@@ -59,6 +59,11 @@ public final class Constants {
   public static final class Simulation {
     public static final double simulateDeltaSec = 0.020;
     public static final int percentOutputToVoltageMultiplier = 12;
+    public static final double robotSimWindowWidth = 2.5;
+    public static final double robotSimWindowHeight = 2.5;
+    public static final double elevatorTiltDeg = 45.89;
+    public static final double armLength = 0.31416;
+    public static final double intakeRadius = 0.05;
   }
 
   public static final class ShuffleboardConstants {
