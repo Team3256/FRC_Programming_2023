@@ -60,28 +60,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
 
-  // sim
-  private ElevatorSim elevatorSim =
-      new ElevatorSim(
-          DCMotor.getFalcon500(kNumElevatorMotors),
-          kElevatorGearing,
-          kCarriageMass,
-          kDrumRadius,
-          kMinHeight,
-          kMaxHeight,
-          true);
-
-  public ElevatorSim getSim() {
-    return elevatorSim;
-  }
-
-  private final Mechanism2d elevatorCanvas = new Mechanism2d(50, 50);
-  private final MechanismRoot2d elevatorRoot = elevatorCanvas.getRoot("Elevator Root", 15, 0);
-  private final MechanismLigament2d elevatorMech =
-      elevatorRoot.append(
-          new MechanismLigament2d(
-              "Elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 45));
-
   public Elevator() {
     if (RobotBase.isReal()) {
       configureRealHardware();
@@ -91,12 +69,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
     System.out.println("Elevator initialized");
     off();
-  }
-
-  private void configureSimHardware() {
-    elevatorMotor = new WPI_TalonFX(kElevatorID);
-    SmartDashboard.putData("Elevator Sim", elevatorCanvas);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   private void configureRealHardware() {
@@ -143,17 +115,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   @Override
-  public void simulationPeriodic() {
-    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * 12);
-    elevatorSim.update(0.020);
-
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    elevatorMech.setLength(Units.metersToInches(elevatorSim.getPositionMeters()));
-    simulationOutputToDashboard();
-  }
-
-  @Override
   public void periodic() {
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
@@ -172,12 +133,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     return Shuffleboard.getTab(tab)
         .getLayout(kElevatorLayoutName, BuiltInLayouts.kList)
         .withSize(2, 4);
-  }
-
-  private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
-    SmartDashboard.putNumber("Current Draw", elevatorSim.getCurrentDrawAmps());
-    SmartDashboard.putNumber("Elevator Sim Voltage", elevatorMotor.getMotorOutputPercent() * 12);
   }
 
   @Override
@@ -221,5 +176,50 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
         kDoubleSubstationPositionConeMeters);
+  }
+
+  // sim
+  private ElevatorSim elevatorSim =
+      new ElevatorSim(
+          DCMotor.getFalcon500(kNumElevatorMotors),
+          kElevatorGearing,
+          kCarriageMass,
+          kDrumRadius,
+          kMinExtension,
+          kMaxExtension,
+          true);
+
+  public ElevatorSim getSim() {
+    return elevatorSim;
+  }
+
+  private void configureSimHardware() {
+    elevatorMotor = new WPI_TalonFX(kElevatorID);
+    SmartDashboard.putData("Elevator Sim", elevatorCanvas);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+  }
+
+  private final Mechanism2d elevatorCanvas = new Mechanism2d(50, 50);
+  private final MechanismRoot2d elevatorRoot = elevatorCanvas.getRoot("Elevator Root", 15, 0);
+  private final MechanismLigament2d elevatorMech =
+      elevatorRoot.append(
+          new MechanismLigament2d(
+              "Elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 45));
+
+  @Override
+  public void simulationPeriodic() {
+    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * 12);
+    elevatorSim.update(0.020);
+
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
+    elevatorMech.setLength(Units.metersToInches(elevatorSim.getPositionMeters()));
+    simulationOutputToDashboard();
+  }
+
+  private void simulationOutputToDashboard() {
+    SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
+    SmartDashboard.putNumber("Current Draw", elevatorSim.getCurrentDrawAmps());
+    SmartDashboard.putNumber("Elevator Sim Voltage", elevatorMotor.getMotorOutputPercent() * 12);
   }
 }

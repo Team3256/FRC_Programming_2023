@@ -139,15 +139,17 @@ public class RobotContainer implements CANTestable, Loggable {
     tester.b().onTrue(new SetElevatorVolts(elevatorSubsystem, -8));
     tester.x().onTrue(new SetArmVoltage(armSubsystem, 8));
     tester.y().onTrue(new SetArmVoltage(armSubsystem, -8));
-    robotCanvas = new Mechanism2d(50, 50);
-    robotRoot = robotCanvas.getRoot("Robot Root", 15, 0);
+
+    robotCanvas = new Mechanism2d(3, 3);
+    robotRoot = robotCanvas.getRoot("Robot Root", 1.5, 0);
+    robotRoot.append(new MechanismLigament2d("right base", kRobotLength / 2, 0));
+    robotRoot.append(new MechanismLigament2d("left base", kRobotLength / 2, 180));
     elevatorMech =
         robotRoot.append(
             new MechanismLigament2d(
-                "Elevator",
-                Units.metersToInches(elevatorSubsystem.getSim().getPositionMeters()),
-                45));
-    armMech = elevatorMech.append(new MechanismLigament2d("Arm", 10, 13));
+                "Elevator", elevatorSubsystem.getSim().getPositionMeters(), 45));
+
+    armMech = elevatorMech.append(new MechanismLigament2d("Arm", 0.4, 13));
     SmartDashboard.putData("Robot Sim", robotCanvas);
   }
 
@@ -418,7 +420,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void simulatePeriodic() {
-    elevatorMech.setLength(Units.metersToInches(elevatorSubsystem.getSim().getPositionMeters()));
+    elevatorMech.setLength(elevatorSubsystem.getSim().getPositionMeters());
     armMech.setAngle(Units.radiansToDegrees(armSubsystem.getSim().getAngleRads()));
   }
 }

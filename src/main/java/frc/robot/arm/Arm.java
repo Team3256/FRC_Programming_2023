@@ -64,29 +64,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
   private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
 
-  private static final SingleJointedArmSim armSim =
-      new SingleJointedArmSim(
-          DCMotor.getFalcon500(kNumArmMotors),
-          kArmGearing,
-          kArmInertia,
-          kArmLengthMeters,
-          kArmAngleMinConstraint.getRadians(),
-          kArmAngleMaxConstraint.getRadians(),
-          true);
-
-  private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
-  private final MechanismRoot2d armPivot = mechanism2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d armTower =
-      armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
-  private final MechanismLigament2d arm =
-      armPivot.append(
-          new MechanismLigament2d(
-              "Arm",
-              30,
-              Units.radiansToDegrees(armSim.getAngleRads()),
-              6,
-              new Color8Bit(Color.kYellow)));
-
   public Arm() {
     if (RobotBase.isReal()) {
       configureRealHardware();
@@ -96,16 +73,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
     System.out.println("Arm initialized");
     off();
-  }
-
-  public SingleJointedArmSim getSim() {
-    return armSim;
-  }
-
-  private void configureSimHardware() {
-    armMotor = new WPI_TalonFX(kArmSimulationID);
-    SmartDashboard.putData("Arm Sim", mechanism2d);
-    armTower.setColor(new Color8Bit(Color.kBlue));
   }
 
   private void configureRealHardware() {
@@ -182,24 +149,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   @Override
-  public void simulationPeriodic() {
-    armSim.setInput(armMotor.getMotorOutputPercent() * 12);
-    armSim.update(0.020);
-
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
-    arm.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
-
-    simulationOutputToDashboard();
-  }
-
-  private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
-    SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
-    SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
-  }
-
-  @Override
   public boolean CANTest() {
     System.out.println("Testing arm CAN:");
     boolean result = CANDeviceTester.testTalonFX(armMotor);
@@ -260,5 +209,54 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         ArmPreferencesKeys.kEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
     Preferences.initDouble(
         ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+  }
+
+  // sim
+  private static final SingleJointedArmSim armSim =
+      new SingleJointedArmSim(
+          DCMotor.getFalcon500(kNumArmMotors),
+          kArmGearing,
+          kArmInertia,
+          kArmLengthMeters,
+          kArmAngleMinConstraint.getRadians(),
+          kArmAngleMaxConstraint.getRadians(),
+          true);
+
+  public SingleJointedArmSim getSim() {
+    return armSim;
+  }
+
+  private void configureSimHardware() {
+    armMotor = new WPI_TalonFX(kArmSimulationID);
+    SmartDashboard.putData("Arm Sim", mechanism2d);
+  }
+
+  private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
+  private final MechanismRoot2d armPivot = mechanism2d.getRoot("ArmPivot", 30, 30);
+  private final MechanismLigament2d arm =
+      armPivot.append(
+          new MechanismLigament2d(
+              "Arm",
+              30,
+              Units.radiansToDegrees(armSim.getAngleRads()),
+              6,
+              new Color8Bit(Color.kYellow)));
+
+  @Override
+  public void simulationPeriodic() {
+    armSim.setInput(armMotor.getMotorOutputPercent() * 12);
+    armSim.update(0.020);
+
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    arm.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
+
+    simulationOutputToDashboard();
+  }
+
+  private void simulationOutputToDashboard() {
+    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
+    SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
+    SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }
 }

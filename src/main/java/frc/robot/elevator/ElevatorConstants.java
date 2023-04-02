@@ -82,8 +82,8 @@ public final class ElevatorConstants {
   public static final double kDownSpeedVolts = -8.0;
 
   public static final double kDrumRadius = 0.0222377;
-  public static final double kMinHeight = 0;
-  public static final double kMaxHeight = Units.inchesToMeters(29.5);
+  public static final double kMinExtension = 0;
+  public static final double kMaxExtension = Units.inchesToMeters(29.5);
   public static final double kElevatorGearing = 15;
   public static final double kCarriageMass = 6.28815086; // kg
 

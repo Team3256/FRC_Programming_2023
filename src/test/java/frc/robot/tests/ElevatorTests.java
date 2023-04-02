@@ -31,7 +31,7 @@ public class ElevatorTests extends UnitTestBase {
 
   // @Test
   public void testElevatorHeightMax() {
-    testElevatorHeight(ElevatorConstants.kMaxHeight);
+    testElevatorHeight(ElevatorConstants.kMaxExtension);
   }
 
   // @Test
@@ -42,7 +42,7 @@ public class ElevatorTests extends UnitTestBase {
 
     double height = elevatorSubsystem.getElevatorPosition();
     System.out.println(height);
-    assertEquals(ElevatorConstants.kMinHeight, height, DELTA, "Zeroing elevator");
+    assertEquals(ElevatorConstants.kMinExtension, height, DELTA, "Zeroing elevator");
   }
 
   public void testElevatorHeight(double heightSetpointMeters) { // 1 meter
