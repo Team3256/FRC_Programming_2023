@@ -21,7 +21,7 @@ public class IntakeCone extends CommandBase {
 
   public IntakeCone(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 1);
+    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 3);
 
     addRequirements(intakeSubsystem);
   }

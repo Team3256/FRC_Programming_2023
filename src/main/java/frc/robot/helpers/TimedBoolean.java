@@ -13,7 +13,7 @@ import java.util.function.BooleanSupplier;
 public class TimedBoolean {
   private BooleanSupplier condition;
   private Timer timer = new Timer();
-  private double triggerThreshold;
+  private double triggerThreshold; // Represents amount of time before current is listed as spiking
 
   public TimedBoolean(BooleanSupplier condition, double triggerThreshold) {
     this.condition = condition;
