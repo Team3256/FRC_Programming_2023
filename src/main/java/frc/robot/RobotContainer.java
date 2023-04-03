@@ -221,10 +221,8 @@ public class RobotContainer implements CANTestable, Loggable {
                     kFieldRelative,
                     kOpenLoop)
                 .deadlineWith(
-                    new ConditionalCommand(
-                        new LEDSetAllSectionsPattern(ledStrip, new LimitedSwerveBlink(true)),
-                        new LEDSetAllSectionsPattern(ledStrip, new LimitedSwerveBlink(false)),
-                        this::isCurrentPieceCone)));
+                    new LEDSetAllSectionsPattern(
+                        ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
 
     driver
         .x()
@@ -409,9 +407,5 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
-  }
-
-  public SubstationLocation getSubstationLocation() {
-    return this.doubleSubstationLocation;
   }
 }

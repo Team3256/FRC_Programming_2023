@@ -10,10 +10,9 @@ package frc.robot.auto;
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.Constants;
 
 public final class AutoConstants {
-  public static final boolean kAutoDebug = false && Constants.kDebugEnabled;
+  public static final boolean kAutoDebug = false;
   public static final boolean changeAutosBasedOnAlliance = true;
   public static final double kCommandMarkerThreshold = 0.05; // meters
 

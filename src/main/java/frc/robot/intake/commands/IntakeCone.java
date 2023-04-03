@@ -38,7 +38,7 @@ public class IntakeCone extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Started Intake cone");
+    System.out.println("Ended Intake cone");
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
       new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
