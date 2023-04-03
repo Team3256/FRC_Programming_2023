@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
@@ -184,10 +185,14 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     return result;
   }
 
-  public double getPreferencesSetpoint(Elevator.ElevatorPreset setpoint) {
-    return Preferences.getDouble(
-        ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
-        ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));
+  public double getElevatorSetpoint(Elevator.ElevatorPreset setpoint) {
+    if (FeatureFlags.kUsePrefs) {
+      return Preferences.getDouble(
+          ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
+          ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));
+    } else {
+      return setpoint.position;
+    }
   }
 
   /** Populating elevator preferences on network tables */

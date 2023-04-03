@@ -184,6 +184,6 @@ public final class SwerveConstants {
   public static final double kSensitivityScale = 0.3;
 
   /* AutoBalance */
-  public static double kXAutoBalanceVelocityMeters = 1;
-  public static final Rotation2d kAutoBalanceMaxError = new Rotation2d(Units.degreesToRadians(5));
+  public static double kXAutoBalanceVelocityMeters = 0.7;
+  public static final Rotation2d kAutoBalanceMaxError = new Rotation2d(Units.degreesToRadians(10));
 }

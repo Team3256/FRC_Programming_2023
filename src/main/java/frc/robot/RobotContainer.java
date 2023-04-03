@@ -9,13 +9,13 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.FeatureFlags.*;
-import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,20 +23,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathFollower;
 import frc.robot.auto.pathgeneration.commands.*;
+import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -67,6 +65,11 @@ public class RobotContainer implements CANTestable, Loggable {
     CONE
   }
 
+  public enum Mode {
+    AUTO_SCORE,
+    PRESET
+  }
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
@@ -77,7 +80,8 @@ public class RobotContainer implements CANTestable, Loggable {
   private Climb climbSubsystem;
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
-  private AutoIntakeAtSubstation.SubstationLocation doubleSubstationLocation = RIGHT_SIDE;
+  private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+  private SendableChooser<Mode> modeChooser;
 
   private AutoPaths autoPaths;
 
@@ -120,6 +124,16 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
+
+    modeChooser = new SendableChooser<>();
+    if (FeatureFlags.kAutoScoreEnabled) {
+      modeChooser.setDefaultOption("Auto Score", Mode.AUTO_SCORE);
+      modeChooser.addOption("Presets", Mode.PRESET);
+    } else {
+      modeChooser.setDefaultOption("Presets", Mode.PRESET);
+      modeChooser.addOption("Auto Score", Mode.AUTO_SCORE);
+    }
+    SmartDashboard.putData("Auto Score Toggle", modeChooser);
 
     autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
     autoPaths.sendCommandsToChooser();
@@ -206,7 +220,7 @@ public class RobotContainer implements CANTestable, Loggable {
                     driver::getRightX,
                     kFieldRelative,
                     kOpenLoop)
-                .andThen(
+                .deadlineWith(
                     new LEDSetAllSectionsPattern(
                         ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
 
@@ -216,45 +230,51 @@ public class RobotContainer implements CANTestable, Loggable {
             new LockSwerveX(swerveSubsystem)
                 .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
 
-    if (kAutoScoreEnabled) {
+    if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
       driver
           .leftTrigger()
           .onTrue(
-              new AutoIntakeAtSubstation( // TODO: Rename to clarify that this is for double
-                  // substation
+              new AutoIntakeAtDoubleSubstation(
                   swerveSubsystem,
                   intakeSubsystem,
                   elevatorSubsystem,
                   armSubsystem,
                   ledStrip,
-                  () -> RIGHT_SIDE,
-                  //                () -> doubleSubstationLocation, // Change to LEFT_SIDE for
-                  // testing
+                  () -> doubleSubstationLocation,
                   () -> isMovingJoystick(driver),
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
                   this::isCurrentPieceCone));
-    } else {
-      if (kElevatorEnabled && kArmEnabled) {
 
-        driver
-            .leftTrigger()
-            .onTrue(
-                new ConditionalCommand(
-                    new ParallelCommandGroup(
-                        new SetElevatorHeight(
-                            elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
-                        new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
-                        new IntakeCone(intakeSubsystem, ledStrip)),
-                    new ParallelCommandGroup(
-                        new SetElevatorHeight(
-                            elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
-                        new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
-                        new IntakeCube(intakeSubsystem, ledStrip)),
-                    this::isCurrentPieceCone));
-      }
+      driver
+          .rightTrigger()
+          .onTrue(
+              new AutoScore(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledStrip,
+                  AutoScore.GridScoreHeight.HIGH,
+                  this::isCurrentPieceCone,
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  () -> isMovingJoystick(driver)));
+
+      driver
+          .rightBumper()
+          .onTrue(
+              new AutoScore(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledStrip,
+                  AutoScore.GridScoreHeight.MID,
+                  this::isCurrentPieceCone,
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  () -> isMovingJoystick(driver)));
     }
 
-    operator.a().toggleOnTrue(new InstantCommand(() -> setDoubleSubstationLocation(RIGHT_SIDE)));
-    operator.a().toggleOnFalse(new InstantCommand(() -> setDoubleSubstationLocation(LEFT_SIDE)));
+    operator.a().toggleOnTrue(new InstantCommand(this::toggleSubstationLocation));
   }
 
   private void configureIntake() {
@@ -271,37 +291,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureElevator() {
-    if (kArmEnabled && kIntakeEnabled) {
-      if (kLedStripEnabled) {
-        if (kAutoScoreEnabled) {
-          driver
-              .rightTrigger()
-              .onTrue(
-                  new AutoScore(
-                      swerveSubsystem,
-                      intakeSubsystem,
-                      elevatorSubsystem,
-                      armSubsystem,
-                      ledStrip,
-                      AutoScore.GridScoreHeight.HIGH,
-                      () -> isMovingJoystick(driver)));
-          driver
-              .rightBumper()
-              .onTrue(
-                  new AutoScore(
-                      swerveSubsystem,
-                      intakeSubsystem,
-                      elevatorSubsystem,
-                      armSubsystem,
-                      ledStrip,
-                      AutoScore.GridScoreHeight.MID,
-                      () -> isMovingJoystick(driver)));
-        } else {
-          driver.rightTrigger().onTrue(getScoreCommand(DynamicPathFollower.GoalType.HIGH_GRID));
-          driver.rightBumper().onTrue(getScoreCommand(DynamicPathFollower.GoalType.MID_GRID));
-        }
-      }
-
+    if (kArmEnabled) {
       driver
           .y()
           .or(operator.leftTrigger())
@@ -328,8 +318,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureClimb() {
-    operator.povUp().onTrue(new RetractClimb(climbSubsystem));
-    operator.povDown().whileTrue(new DeployClimb(climbSubsystem));
+    operator.start().whileTrue(new DeployClimb(climbSubsystem));
+    operator.back().whileTrue(new RetractClimb(climbSubsystem));
   }
 
   public void configureLEDStrip() {
@@ -347,16 +337,16 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorOnRightSide;
+    Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide =
-          new ParallelRaceGroup(
-              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
 
       return Commands.sequence(
-          setArmElevatorOnRightSide.asProxy(),
+          setArmElevatorStart.asProxy(),
           autoPath,
-          new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
+          Commands.parallel(
+              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
+              new LockSwerveX(swerveSubsystem)));
     } else {
       return autoPath;
     }
@@ -408,33 +398,14 @@ public class RobotContainer implements CANTestable, Loggable {
     currentPiece = GamePiece.CUBE;
   }
 
-  public void setDoubleSubstationLocation(AutoIntakeAtSubstation.SubstationLocation location) {
-    doubleSubstationLocation = location;
+  public void toggleSubstationLocation() {
+    if (doubleSubstationLocation == SubstationLocation.LEFT_SIDE) {
+      doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+    } else {
+      doubleSubstationLocation = SubstationLocation.LEFT_SIDE;
+    }
+
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
-  }
-
-  private Command getScoreCommand(DynamicPathFollower.GoalType goalType) {
-    switch (goalType) {
-      case HIGH_GRID:
-        return new ParallelCommandGroup(
-            new ConditionalCommand(
-                new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
-                new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
-                this::isCurrentPieceCone),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_HIGH),
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_HIGH),
-                this::isCurrentPieceCone));
-      case MID_GRID:
-        return new ParallelCommandGroup(
-            new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_MID),
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_MID),
-                this::isCurrentPieceCone));
-      default:
-        return new InstantCommand();
-    }
   }
 }
