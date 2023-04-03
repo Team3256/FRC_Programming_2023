@@ -55,7 +55,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
    * @param elevatorPreset
    */
   public SetElevatorHeight(Elevator elevatorSubsystem, ElevatorPreset elevatorPreset) {
-    this(elevatorSubsystem, elevatorSubsystem.getPreferencesSetpoint(elevatorPreset));
+    this(elevatorSubsystem, elevatorSubsystem.getElevatorSetpoint(elevatorPreset));
     this.elevatorPreset = elevatorPreset;
   }
 
@@ -65,7 +65,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
 
     // update at runtime in case robot prefs changed
     if (elevatorPreset != null) {
-      setpointPositionMeters = elevatorSubsystem.getPreferencesSetpoint(elevatorPreset);
+      setpointPositionMeters = elevatorSubsystem.getElevatorSetpoint(elevatorPreset);
       getController().setGoal(setpointPositionMeters);
     }
 

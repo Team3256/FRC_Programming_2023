@@ -17,7 +17,7 @@ public final class ArmConstants {
   public static class ArmPreferencesKeys {
     public static final Map<Arm.ArmPreset, String> kArmPositionKeys =
         Map.of(
-            Arm.ArmPreset.DEFAULT, "kDefaultArmAngle",
+            Arm.ArmPreset.DEFAULT, "kDefaultArmRotation",
             Arm.ArmPreset.ANY_PIECE_LOW, "kAnyPieceLowRotation",
             Arm.ArmPreset.CUBE_MID, "kCubeMidRotation",
             Arm.ArmPreset.CONE_MID, "kConeMidRotation",
@@ -72,23 +72,6 @@ public final class ArmConstants {
   public static final double kP = 10.608;
   public static final double kI = 0;
   public static final double kD = 7.8777;
-
-  // Idaho old motor no gas shock
-  // public static final double kArmS = 0.15768;
-  // public static final double kArmG = 0.34038;
-  // public static final double kArmV = 4.1381;
-  // public static final double kArmA = 0.040393;
-  // public static final double kP = 4.7028;
-  // public static final double kI = 0;
-  // public static final double kD = 0.64407;
-
-  // public static final double kArmS = 0.16924;
-  // public static final double kArmG = 0.18542;
-  // public static final double kArmV = 4.1445;
-  // public static final double kArmA = 0.17676;
-  // public static final double kP = 10.96;
-  // public static final double kI = 0;
-  // public static final double kD = 7.0262;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(5, 2);

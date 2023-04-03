@@ -186,8 +186,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     return result;
   }
 
-  public double getPreferencesSetpoint(Elevator.ElevatorPreset setpoint) {
-    if (Constants.kDebugEnabled && FeatureFlags.kUsePrefs) {
+  public double getElevatorSetpoint(Elevator.ElevatorPreset setpoint) {
+    if (FeatureFlags.kUsePrefs) {
       return Preferences.getDouble(
           ElevatorPreferencesKeys.kElevatorPositionKeys.get(setpoint),
           ElevatorPreferencesKeys.kElevatorPositionDefaults.get(setpoint));

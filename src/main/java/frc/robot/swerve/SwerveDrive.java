@@ -293,7 +293,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       }
     }
 
-    if (FeatureFlags.kLocalizationEnabled && !DriverStation.isAutonomous()) {
+    if (FeatureFlags.kLocalizationEnabled) {
       this.localize(
           FrontConstants.kLimelightNetworkTablesName,
           FrontConstants.kFieldTranslationOffsetX,

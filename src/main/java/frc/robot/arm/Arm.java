@@ -9,7 +9,7 @@ package frc.robot.arm;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
-import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.kArmPositionKeys;
+import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -158,9 +158,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
                 + Preferences.getDouble(
                     ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
         if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
-          // return
-          // Units.degreesToRadians((Units.radiansToDegrees(absoluteEncoderDistance) +
-          // 720) % 360);
           return absoluteEncoderDistance + Math.PI * 2;
         } else {
           return absoluteEncoderDistance;
@@ -174,9 +171,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public void off() {
     armMotor.neutralOutput();
-    if (Constants.kDebugEnabled) {
-      // System.out.println("arm off");
-    }
   }
 
   @Override
@@ -233,8 +227,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     return Shuffleboard.getTab(tab).getLayout(kArmLayoutName, BuiltInLayouts.kList).withSize(2, 4);
   }
 
-  public Rotation2d getPreferencesSetpoint(Arm.ArmPreset setpoint) {
-    if (Constants.kDebugEnabled && FeatureFlags.kUsePrefs) {
+  public Rotation2d getArmSetpoint(Arm.ArmPreset setpoint) {
+    if (FeatureFlags.kUsePrefs) {
       return new Rotation2d(
           Preferences.getDouble(
               ArmPreferencesKeys.kArmPositionKeys.get(setpoint),
@@ -250,6 +244,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kP);
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kIKey, ArmConstants.kI);
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kD);
+
+    // Arm Encoder Offset
+    Preferences.initDouble(ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
+    Preferences.initDouble(ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
     // Arm Preset Preferences
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.DEFAULT), kDefaultArmAngle.getRadians());
@@ -271,10 +269,5 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
         kDoubleSubstationRotationCube.getRadians());
-    // Arm Encoder Offset
-    Preferences.initDouble(
-        ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
-    Preferences.initDouble(
-        ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
   }
 }
