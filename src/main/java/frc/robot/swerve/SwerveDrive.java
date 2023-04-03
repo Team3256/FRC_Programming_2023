@@ -66,6 +66,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   private final Pigeon2 gyro;
 
+  private boolean isLocalized;
+
   public SwerveDrive() {
     gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
@@ -258,6 +260,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
         Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
 
+        isLocalized =
+            shouldAddVisionMeasurement(
+                    limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)
+                || isLocalized;
+
         if (shouldAddVisionMeasurement(
             limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)) {
           poseEstimator.addVisionMeasurement(
@@ -277,11 +284,32 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   @Override
   public void periodic() {
+    isLocalized = false;
+
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
     field.setRobotPose(poseEstimator.getEstimatedPosition());
     Logger.getInstance().recordOutput("Odometry", getPose());
+
+    this.localize(
+        FrontConstants.kLimelightNetworkTablesName,
+        FrontConstants.kFieldTranslationOffsetX,
+        FrontConstants.kFieldTranslationOffsetY,
+        FrontConstants.kLimelightTranslationThresholdMeters,
+        FrontConstants.kLimelightRotationThreshold);
+    this.localize(
+        SideConstants.kLimelightNetworkTablesName,
+        SideConstants.kFieldTranslationOffsetX,
+        SideConstants.kFieldTranslationOffsetY,
+        SideConstants.kLimelightTranslationThresholdMeters,
+        SideConstants.kLimelightRotationThreshold);
+    this.localize(
+        BackConstants.kLimelightNetworkTablesName,
+        BackConstants.kFieldTranslationOffsetX,
+        BackConstants.kFieldTranslationOffsetY,
+        BackConstants.kLimelightTranslationThresholdMeters,
+        BackConstants.kLimelightTranslationThresholdMeters);
 
     if (kDebugEnabled) {
       for (SwerveModule mod : swerveModules) {
@@ -291,27 +319,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
       }
     }
-
-    if (FeatureFlags.kLocalizationEnabled) {
-      this.localize(
-          FrontConstants.kLimelightNetworkTablesName,
-          FrontConstants.kFieldTranslationOffsetX,
-          FrontConstants.kFieldTranslationOffsetY,
-          FrontConstants.kLimelightTranslationThresholdMeters,
-          FrontConstants.kLimelightRotationThreshold);
-      this.localize(
-          SideConstants.kLimelightNetworkTablesName,
-          SideConstants.kFieldTranslationOffsetX,
-          SideConstants.kFieldTranslationOffsetY,
-          SideConstants.kLimelightTranslationThresholdMeters,
-          SideConstants.kLimelightRotationThreshold);
-      this.localize(
-          BackConstants.kLimelightNetworkTablesName,
-          BackConstants.kFieldTranslationOffsetX,
-          BackConstants.kFieldTranslationOffsetY,
-          BackConstants.kLimelightTranslationThresholdMeters,
-          BackConstants.kLimelightTranslationThresholdMeters);
-    }
+    SmartDashboard.putBoolean("Is Localized", isLocalized);
   }
 
   public void setTrajectory(Trajectory trajectory) {
