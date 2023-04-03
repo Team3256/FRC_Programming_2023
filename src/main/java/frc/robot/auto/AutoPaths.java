@@ -13,9 +13,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
@@ -30,6 +29,7 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.swerve.SwerveDrive;
+import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,203 +68,208 @@ public class AutoPaths {
         "defaultPosition",
         () ->
             runParallelWithPath(
-                new ParallelCommandGroup(
+                Commands.parallel(
                         new StowArmElevator(elevatorSubsystem, armSubsystem),
                         new IntakeOff(intakeSubsystem))
-                    .withTimeout(2.5)
                     .asProxy()
                     .withName("defaultPosition")));
     autoEventMap.put(
         "intakeCone",
         () ->
             runParallelWithPath(
-                new ParallelCommandGroup(
+                    Commands.deadline(
+                        new IntakeCone(intakeSubsystem),
                         new SetElevatorHeight(
                             elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                        new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE),
-                        new IntakeCone(intakeSubsystem))
-                    .withTimeout(1.75)
-                    .asProxy()
-                    .withName("intakeCone")));
+                        new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
+                .asProxy()
+                .withName("intakeCone"));
+
     autoEventMap.put(
         "intakeCube",
         () ->
             runParallelWithPath(
-                    new ParallelCommandGroup(
+                    Commands.deadline(
+                        new IntakeCube(intakeSubsystem),
                         new SetElevatorHeight(
                             elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                        new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE),
-                        new IntakeCube(intakeSubsystem)))
-                .withTimeout(1.75)
+                        new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
                 .asProxy()
                 .withName("intakeCube"));
     autoEventMap.put(
         "cubeHigh",
         () ->
-            new ParallelCommandGroup(
+            Commands.parallel(
                     new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
-                    new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
-                .withTimeout(1.5)
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
+                .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()
                 .withName("cubeHigh"));
     autoEventMap.put(
         "coneHigh",
         () ->
-            new ParallelCommandGroup(
+            Commands.parallel(
                     new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
-                    new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
-                .withTimeout(1.5)
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
+                .andThen(new IntakeCube(intakeSubsystem))
                 .asProxy()
                 .withName("coneHigh"));
     autoEventMap.put(
         "cubeMid",
         () ->
-            new ParallelCommandGroup(
+            Commands.parallel(
                     new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
-                    new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
-                .withTimeout(1.5)
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID))
+                .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()
                 .withName("cubeMid"));
     autoEventMap.put(
         "coneMid",
         () ->
-            new ParallelCommandGroup(
+            Commands.parallel(
                     new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
-                    new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
-                    new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
-                .withTimeout(1.5)
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_MID))
+                .andThen(new IntakeCube(intakeSubsystem))
                 .asProxy()
                 .withName("coneMid"));
     autoEventMap.put(
         "cubeLow",
         () ->
-            new ParallelCommandGroup(
+            Commands.parallel(
                     new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
-                    new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW),
-                    new WaitCommand(0.5).andThen(new IntakeCone(intakeSubsystem)))
-                .withTimeout(1.5)
+                    new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+                .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()
                 .withName("cubeLow"));
     autoEventMap.put(
         "coneLow",
         () ->
-            new ParallelCommandGroup(
+            Commands.parallel(
                     new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
-                    new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW),
-                    new WaitCommand(0.5).andThen(new IntakeCube(intakeSubsystem)))
-                .withTimeout(1.5)
+                    new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+                .andThen(new IntakeCube(intakeSubsystem))
                 .asProxy()
                 .withName("coneLow"));
+    autoEventMap.put(
+        "engage",
+        () ->
+            new AutoBalance(swerveSubsystem)
+                .andThen(new LockSwerveX(swerveSubsystem))
+                .asProxy()
+                .withName("engage"));
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
-    Supplier<Command> scorePreload =
+    Supplier<Command> scorePreloadCube =
         () ->
-            new ParallelCommandGroup(
+            Commands.parallel(
                     new ZeroElevator(elevatorSubsystem),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
-                    new WaitCommand(1.35).andThen(new IntakeCone(intakeSubsystem)))
-                .withTimeout(1.5)
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
+                .andThen(new IntakeCone(intakeSubsystem))
+                .asProxy()
+                .withName("scorePreload");
+    Supplier<Command> scorePreloadCone =
+        () ->
+            Commands.parallel(
+                    new ZeroElevator(elevatorSubsystem),
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
+                .andThen(new IntakeCone(intakeSubsystem))
                 .asProxy()
                 .withName("scorePreload");
 
     Command node8Mobility =
         autoBuilder
             .createPath("Node8-Mobility", kEngagePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node8-Mobility", node8Mobility);
 
     Command node2Mobility =
         autoBuilder
             .createPath("Node2-Mobility", kEngagePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node2-Mobility", node2Mobility);
 
     // Node5-Engage
     ArrayList<Command> node5Engage =
         autoBuilder.createPaths("Node5-Engage", kEngagePathConstraints);
     AutoChooser.addPathGroup(
-        scorePreload.get(), "Node5-Engage", node5Engage, new LockSwerveX(swerveSubsystem));
+        scorePreloadCube.get(), "Node5-Engage", node5Engage, new LockSwerveX(swerveSubsystem));
 
     // Node8-Preload-Ready
     Command node8PreloadReady =
         autoBuilder
             .createPath("Node8-Preload-Ready", kSafePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node8-Preload-Ready", node8PreloadReady);
 
     // Node5-Mobility-Engage
     Command node5MobilityEngage =
         autoBuilder
             .createPath("Node5-Mobility-Engage", kEngagePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node5-Mobility-Engage", node5MobilityEngage);
 
     // Node8x2
     Command node8x2 =
         autoBuilder
             .createPath("Node8x2", kFastPathConstraints, true)
-            .beforeStarting(scorePreload.get().asProxy());
+            .beforeStarting(scorePreloadCube.get().asProxy());
     AutoChooser.createSinglePath("Node8x2", node8x2);
 
     // Node2x2-Engage
     ArrayList<Command> node2x2Engage =
         autoBuilder.createPaths("Node2x2-Engage", kSafePathConstraints, kEngagePathConstraints);
     AutoChooser.addPathGroup(
-        scorePreload.get(), "Node2x2-Engage", node2x2Engage, new LockSwerveX(swerveSubsystem));
+        scorePreloadCube.get(), "Node2x2-Engage", node2x2Engage, new LockSwerveX(swerveSubsystem));
 
     // Node2-Preload-Ready
     Command node2PreloadReady =
         autoBuilder
             .createPath("Node2-Preload-Ready", kSafePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node2-Preload-Ready", node2PreloadReady);
 
     // Node8-Preload-Engage
     Command node8PreloadEngage =
         autoBuilder
             .createPath("Node8-Preload-Engage", kEngagePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node8-Preload-Engage", node8PreloadEngage);
 
     // Node8x3-Engage
-    ArrayList<Command> node8x3Engage =
+    ArrayList<Command> node9x2Engage =
         autoBuilder.createPaths(
-            "Node8x3-Engage", kFastPathConstraints, kFastPathConstraints, kEngagePathConstraints);
-    AutoChooser.addPathGroup(scorePreload.get(), "Node8x3-Engage", node8x3Engage);
+            "Node9x2+1-Engage",
+            kSafePathConstraints,
+            kGroundIntakeConstraints,
+            kSafePathConstraints,
+            kGroundIntakeConstraints,
+            kEngagePathConstraints);
+    AutoChooser.addPathGroup(scorePreloadCone.get(), "Node9x2+1-Engage", node9x2Engage);
 
     // Node8-Mobility-Engage
     Command node8MobilityEngage =
         autoBuilder
             .createPath("Node8-Mobility-Engage", kEngagePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node8-Mobility-Engage", node8MobilityEngage);
 
     // Node2-Preload-Engage
     Command node2PreloadEngage =
         autoBuilder
             .createPath("Node2-Preload-Engage", kEngagePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node2-Preload-Engage", node2PreloadEngage);
 
     // Node8x2-Ready
     ArrayList<Command> node8x2Ready =
         autoBuilder.createPaths("Node8x2-Ready", kSafePathConstraints);
-    AutoChooser.addPathGroup(scorePreload.get(), "Node8x2-Ready", node8x2Ready);
-
-    // Node2x3-Engage
-    ArrayList<Command> node2x3Engage =
-        autoBuilder.createPaths(
-            "Node2x3-Engage", kFastPathConstraints, kFastPathConstraints, kEngagePathConstraints);
-    AutoChooser.addPathGroup(scorePreload.get(), "Node2x3-Engage", node2x3Engage);
+    AutoChooser.addPathGroup(scorePreloadCube.get(), "Node8x2-Ready", node8x2Ready);
 
     // Node2-Engage
     Command node2Engage =
         autoBuilder
             .createPath("Node2-Engage", kEngagePathConstraints, true)
-            .beforeStarting(scorePreload.get());
+            .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node2-Engage", node2Engage);
 
     AutoChooser.sendChooserToDashboard("Auto Chooser");

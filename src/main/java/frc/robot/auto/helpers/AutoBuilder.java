@@ -72,9 +72,10 @@ public class AutoBuilder {
       Command stopEvent = createCommandFromStopEvent(trajectory.getStartStopEvent());
       commands.add(stopEvent.andThen(createPathPlannerCommand(trajectory, false)));
     }
-    PathPlannerTrajectory lastTrajectory = trajectories.get(trajectories.size() - 1);
-
-    commands.add(createCommandFromStopEvent(lastTrajectory.getEndStopEvent()));
+    if (trajectories.size() > 0) {
+      PathPlannerTrajectory lastTrajectory = trajectories.get(trajectories.size() - 1);
+      commands.add(createCommandFromStopEvent(lastTrajectory.getEndStopEvent()));
+    }
 
     return commands;
   }
@@ -85,6 +86,15 @@ public class AutoBuilder {
   }
 
   public Command createPathPlannerCommand(
+      PathPlannerTrajectory trajectory, boolean isFirstSegment, boolean useAllianceColor) {
+
+    return new FollowPathWithEvents(
+        createTrajectoryFollowCommand(trajectory, isFirstSegment, useAllianceColor),
+        trajectory.getMarkers(),
+        suppliedEventMap);
+  }
+
+  public Command createTrajectoryFollowCommand(
       PathPlannerTrajectory trajectory, boolean isFirstSegment, boolean useAllianceColor) {
     PIDController xTranslationController =
         new PIDController(kAutoXTranslationP, kAutoXTranslationI, kAutoXTranslationD);
@@ -99,17 +109,14 @@ public class AutoBuilder {
 
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    PPTrajectoryFollowCommand pathCommand =
-        new PPTrajectoryFollowCommand(
-            trajectory,
-            xTranslationController,
-            yTranslationController,
-            thetaController,
-            useAllianceColor,
-            isFirstSegment,
-            this.swerveSubsystem);
-
-    return new FollowPathWithEvents(pathCommand, trajectory.getMarkers(), suppliedEventMap);
+    return new PPTrajectoryFollowCommand(
+        trajectory,
+        xTranslationController,
+        yTranslationController,
+        thetaController,
+        useAllianceColor,
+        isFirstSegment,
+        this.swerveSubsystem);
   }
 
   public Command createCommandFromStopEvent(StopEvent stopEvent) {

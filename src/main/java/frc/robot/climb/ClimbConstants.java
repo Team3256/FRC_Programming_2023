@@ -16,7 +16,15 @@ public final class ClimbConstants {
   public static final String kClimbCANBus = "mani";
 
   public static final CanDeviceId kClimbCANDevice = new CanDeviceId(kClimbMotorID, kClimbCANBus);
-  public static final double kClimbDeployPosition = 2048 * 125 * 1.68;
 
-  public static final double kClimbRetractPosition = 0;
+  public static final double kClimbGearing = 125;
+  public static final double kClimbEncoderTicksPerRotation = 2048;
+
+  public static class ClimbPreferencesKeys {
+    public static final String kClimbDeployRotationKey = "kClimbDeployRotation";
+    public static final String kClimbRetractRotationKey = "kClimbRetractRotation";
+  }
+
+  public static final double kClimbDeployRotation = 1.68;
+  public static final double kClimbRetractRotation = kClimbDeployRotation * 2;
 }

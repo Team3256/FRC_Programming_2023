@@ -69,7 +69,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     gyro.configFactoryDefault();
     zeroGyroYaw();
 
-    // TODO MAKE POSITION 0,0
     poseEstimator =
         new SwerveDrivePoseEstimator(
             kSwerveKinematics,
@@ -102,6 +101,12 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
+      chassisSpeeds.vxMetersPerSecond =
+          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
+      chassisSpeeds.vyMetersPerSecond =
+          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
+    }
     Pose2d robotPoseVelocity =
         new Pose2d(
             chassisSpeeds.vxMetersPerSecond * kPeriodicDeltaTime,
@@ -113,13 +118,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             twistVelocity.dx / kPeriodicDeltaTime,
             twistVelocity.dy / kPeriodicDeltaTime,
             twistVelocity.dtheta / kPeriodicDeltaTime);
-
-    if (FeatureFlags.kSwerveAccelerationLimitingEnabled) {
-      chassisSpeeds.vxMetersPerSecond =
-          adaptiveXRateLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
-      chassisSpeeds.vyMetersPerSecond =
-          adaptiveYRateLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
-    }
 
     SwerveModuleState[] swerveModuleStates =
         kSwerveKinematics.toSwerveModuleStates(updatedChassisSpeeds);
@@ -216,11 +214,24 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       double LimelightTranslationThresholdMeters,
       double LimelightRotationThreshold) {
     if (Limelight.hasValidTargets(networkTablesName)) {
-      double[] visionBotPose = Limelight.getBotpose(networkTablesName);
+      double[] visionBotPose;
+      if (FeatureFlags.kLocalizationUseWPIBlueOffset) {
+        visionBotPose = Limelight.getBotpose_wpiBlue(networkTablesName);
+      } else {
+        visionBotPose = Limelight.getBotpose(networkTablesName);
+      }
 
       if (visionBotPose.length != 0) {
-        double tx = visionBotPose[0] + fieldTransformOffsetX;
-        double ty = visionBotPose[1] + fieldTransformOffsetY;
+        double tx;
+        double ty;
+
+        if (FeatureFlags.kLocalizationUseWPIBlueOffset) {
+          tx = visionBotPose[0];
+          ty = visionBotPose[1];
+        } else {
+          tx = visionBotPose[0] + fieldTransformOffsetX;
+          ty = visionBotPose[1] + fieldTransformOffsetY;
+        }
 
         // botpose from network tables uses degrees, not radians, so need to convert
         double rx = visionBotPose[3];
@@ -250,7 +261,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   @Override
   public void periodic() {
-
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
@@ -266,24 +276,26 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       }
     }
 
-    this.localize(
-        FrontConstants.kLimelightNetworkTablesName,
-        FrontConstants.kFieldTranslationOffsetX,
-        FrontConstants.kFieldTranslationOffsetY,
-        FrontConstants.kLimelightTranslationThresholdMeters,
-        FrontConstants.kLimelightRotationThreshold);
-    this.localize(
-        SideConstants.kLimelightNetworkTablesName,
-        SideConstants.kFieldTranslationOffsetX,
-        SideConstants.kFieldTranslationOffsetY,
-        SideConstants.kLimelightTranslationThresholdMeters,
-        SideConstants.kLimelightRotationThreshold);
-    this.localize(
-        BackConstants.kLimelightNetworkTablesName,
-        BackConstants.kFieldTranslationOffsetX,
-        BackConstants.kFieldTranslationOffsetY,
-        BackConstants.kLimelightTranslationThresholdMeters,
-        BackConstants.kLimelightTranslationThresholdMeters);
+    if (FeatureFlags.kLocalizationEnabled) {
+      this.localize(
+          FrontConstants.kLimelightNetworkTablesName,
+          FrontConstants.kFieldTranslationOffsetX,
+          FrontConstants.kFieldTranslationOffsetY,
+          FrontConstants.kLimelightTranslationThresholdMeters,
+          FrontConstants.kLimelightRotationThreshold);
+      this.localize(
+          SideConstants.kLimelightNetworkTablesName,
+          SideConstants.kFieldTranslationOffsetX,
+          SideConstants.kFieldTranslationOffsetY,
+          SideConstants.kLimelightTranslationThresholdMeters,
+          SideConstants.kLimelightRotationThreshold);
+      this.localize(
+          BackConstants.kLimelightNetworkTablesName,
+          BackConstants.kFieldTranslationOffsetX,
+          BackConstants.kFieldTranslationOffsetY,
+          BackConstants.kLimelightTranslationThresholdMeters,
+          BackConstants.kLimelightTranslationThresholdMeters);
+    }
   }
 
   public void setTrajectory(Trajectory trajectory) {

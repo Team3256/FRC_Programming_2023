@@ -5,15 +5,16 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns;
+package frc.robot.led.patterns.Blink;
 
 import frc.robot.led.patternBases.BlinkingPattern;
+import frc.robot.led.patterns.SuccessPattern;
 
-/** Blinking Yellow */
-public class BlinkingConePattern extends BlinkingPattern {
+/** Blinking Red */
+public class SuccessPatternBlink extends BlinkingPattern {
 
-  public BlinkingConePattern() {
-    super(35, 5);
-    setMainLEDPattern(new ConePattern());
+  public SuccessPatternBlink() {
+    super(10, 5);
+    setMainLEDPattern(new SuccessPattern());
   }
 }

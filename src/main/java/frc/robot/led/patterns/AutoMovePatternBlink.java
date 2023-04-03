@@ -13,17 +13,16 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.led.patternBases.BlinkingPattern;
 import frc.robot.led.patternBases.LEDPattern;
 
-/** Blinking Red */
-public class ErrorBlinkingPattern extends BlinkingPattern {
-  private class ErrorPattern extends LEDPattern {
-    public ErrorPattern() {
+public class AutoMovePatternBlink extends BlinkingPattern {
+  private class AutoMovePattern extends LEDPattern {
+    public AutoMovePattern() {
       super();
-      setPixelRange(1, kResolution, Color.kRed);
+      setPixelRange(1, kResolution, Color.kRoyalBlue);
     }
   }
 
-  public ErrorBlinkingPattern() {
-    super(10, 5);
-    setMainLEDPattern(new ErrorPattern());
+  public AutoMovePatternBlink() {
+    super(20, 20);
+    setMainLEDPattern(new AutoMovePattern());
   }
 }

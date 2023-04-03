@@ -14,7 +14,10 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.dynamicpathgeneration.helpers.*;
+import frc.robot.auto.helpers.AutoBuilder;
+import frc.robot.swerve.SwerveDrive;
 import java.util.*;
 
 public class DynamicPathGenerator {
@@ -23,10 +26,12 @@ public class DynamicPathGenerator {
   private final Pose2d sinkPose;
   private final PathNode sinkNode;
   private final ArrayList<PathNode> dynamicPathNodes;
+  private final SwerveDrive swerveDrive;
 
-  public DynamicPathGenerator(Pose2d srcPose, Pose2d sinkPose) {
+  public DynamicPathGenerator(Pose2d srcPose, Pose2d sinkPose, SwerveDrive swerveDrive) {
     this.srcPose = srcPose;
     this.sinkPose = sinkPose;
+    this.swerveDrive = swerveDrive;
     dynamicPathNodes = new ArrayList<>();
     if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
       dynamicPathNodes.addAll(blueDynamicPathWayNodes);
@@ -98,6 +103,13 @@ public class DynamicPathGenerator {
     // if no path points were found then there should be no trajectory
     if (pathPoints.size() == 0) return null;
     // convert pathPoints into Trajectory we return
-    return PathPlanner.generatePath(kDynamicPathConstraints, pathPoints);
+    return PathPlanner.generatePath(kWaypointPathConstraints, pathPoints);
+  }
+
+  public Command getCommand() {
+    PathPlannerTrajectory traj = getTrajectory();
+    AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
+    Command trajCommand = autoBuilder.createTrajectoryFollowCommand(traj, false, false);
+    return trajCommand;
   }
 }
