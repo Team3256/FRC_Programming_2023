@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.arm.Arm.loadArmPreferences;
 import static frc.robot.elevator.Elevator.loadElevatorPreferences;
 

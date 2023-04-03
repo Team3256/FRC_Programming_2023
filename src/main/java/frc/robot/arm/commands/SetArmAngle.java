@@ -77,18 +77,18 @@ public class SetArmAngle extends ProfiledPIDCommand {
       getController().setGoal(angleRotation2d.getRadians());
     }
 
-     if (AutoConstants.kAutoDebug) {
-     System.out.println(
-     this.getName()
-     + " started (preset: "
-     + armPreset
-     + ", setpoint rotation: "
-     + angleRotation2d.getDegrees()
-     + " deg)"
-     + ", current arm rotation: "
-     + Units.radiansToDegrees(armSubsystem.getArmPositionRads())
-     + " deg)");
-     }
+    if (AutoConstants.kAutoDebug) {
+      System.out.println(
+          this.getName()
+              + " started (preset: "
+              + armPreset
+              + ", setpoint rotation: "
+              + angleRotation2d.getDegrees()
+              + " deg)"
+              + ", current arm rotation: "
+              + Units.radiansToDegrees(armSubsystem.getArmPositionRads())
+              + " deg)");
+    }
   }
 
   @Override
@@ -96,14 +96,14 @@ public class SetArmAngle extends ProfiledPIDCommand {
     super.end(interrupted);
     armSubsystem.off();
     if (AutoConstants.kAutoDebug) {
-     System.out.println(
-     this.getName()
-     + " ended (preset: "
-     + armPreset
-     + ", rotation: "
-     + angleRotation2d.getDegrees()
-     + " deg)");
-     }
+      System.out.println(
+          this.getName()
+              + " ended (preset: "
+              + armPreset
+              + ", rotation: "
+              + angleRotation2d.getDegrees()
+              + " deg)");
+    }
   }
 
   @Override

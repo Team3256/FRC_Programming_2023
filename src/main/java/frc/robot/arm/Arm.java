@@ -246,8 +246,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kD);
 
     // Arm Encoder Offset
-    Preferences.initDouble(ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
-    Preferences.initDouble(ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+    Preferences.initDouble(
+        ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
+    Preferences.initDouble(
+        ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
     // Arm Preset Preferences
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.DEFAULT), kDefaultArmAngle.getRadians());
