@@ -7,10 +7,6 @@
 
 package frc.robot.swerve;
 
-import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.Constants.VisionConstants.*;
-import static frc.robot.swerve.SwerveConstants.*;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -18,7 +14,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -42,6 +37,10 @@ import frc.robot.logging.Loggable;
 import frc.robot.swerve.helpers.AdaptiveSlewRateLimiter;
 import frc.robot.swerve.helpers.SwerveModule;
 import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.Constants.ShuffleboardConstants.*;
+import static frc.robot.Constants.VisionConstants.*;
+import static frc.robot.swerve.SwerveConstants.*;
 
 public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable {
   private final SwerveModule frontLeftModule = new SwerveModule(0, FrontLeft.constants);
@@ -190,6 +189,12 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     double[] ypr = new double[3];
     gyro.getYawPitchRoll(ypr);
     return Rotation2d.fromDegrees(ypr[1]);
+  }
+
+  public double autoBalanceMeasurement() {
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return ypr[1];
   }
 
   public Rotation2d getRoll() {
