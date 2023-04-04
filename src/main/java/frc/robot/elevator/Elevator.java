@@ -27,9 +27,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
@@ -200,10 +198,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     elevatorLigament =
         new MechanismLigament2d("Elevator", elevatorSim.getPositionMeters(), elevatorTiltDeg);
-    Mechanism2d canvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
-    SmartDashboard.putData("Elevator Sim", canvas);
-    MechanismRoot2d root = canvas.getRoot("Root", robotSimWindowWidth / 2, 0);
-    root.append(elevatorLigament);
   }
 
   @Override

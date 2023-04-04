@@ -26,9 +26,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.*;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -228,10 +226,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor = new WPI_TalonFX(kArmSimulationID);
     armLigament =
         new MechanismLigament2d("Arm", armLength, Units.radiansToDegrees(armSim.getAngleRads()));
-    Mechanism2d canvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
-    SmartDashboard.putData("Arm Sim", canvas);
-    MechanismRoot2d root = canvas.getRoot("Root", robotSimWindowWidth / 2, 0);
-    root.append(armLigament);
   }
 
   @Override
