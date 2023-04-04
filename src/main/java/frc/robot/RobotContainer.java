@@ -33,7 +33,6 @@ import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
-import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
@@ -346,20 +345,24 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorStart;
-    if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
-
-      return Commands.sequence(
-          setArmElevatorStart.asProxy(),
-          autoPath,
-          Commands.parallel(
-              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
-              new LockSwerveX(swerveSubsystem)));
-    } else {
-      return autoPath;
-    }
+    //    Command autoPath = autoPaths.getSelectedPath();
+    //    Command setArmElevatorStart;
+    //    if (kElevatorEnabled && kArmEnabled) {
+    //      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
+    //
+    //      return Commands.sequence(
+    //          setArmElevatorStart.asProxy(),
+    //          autoPath,
+    //          Commands.parallel(
+    //              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
+    //              new LockSwerveX(swerveSubsystem)));
+    //    } else {
+    //      return autoPath;
+    //    }
+    return new ParallelCommandGroup(
+        new SetElevatorVolts(elevatorSubsystem, 12),
+        new SetArmVoltage(armSubsystem, -12),
+        new IntakeCone(intakeSubsystem));
   }
 
   @Override
@@ -443,20 +446,19 @@ public class RobotContainer implements CANTestable, Loggable {
 
       Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
       SmartDashboard.putData("Robot Sim", robotCanvas);
-      MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", robotSimWindowWidth / 2, 0);
+      MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", kRobotLength, 0);
       MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
-      robotRoot.append(new MechanismLigament2d("Right base", kRobotLength / 2, 0));
-      robotRoot.append(new MechanismLigament2d("Left base", kRobotLength / 2, 180));
+      robotRoot.append(new MechanismLigament2d("Drive Chassis", kRobotLength, 0));
       robotRoot.append(elevatorSubsystem.getLigament());
       elevatorSubsystem.getLigament().append(armSubsystem.getLigament());
       armSubsystem.getLigament().append(intakeSubsystem.getLigamentTop());
       armSubsystem.getLigament().append(intakeSubsystem.getLigamentBottom());
       goalRoot.append(
           new MechanismLigament2d(
-              "CubeLow",
+              "Cube Mid",
               FieldConstants.Grids.kMidCubeZ,
               90,
-              1,
+              3,
               new Color8Bit((Color.kAquamarine))));
     }
   }
