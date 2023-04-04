@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.arm.Arm;
 
 public class SetArmVoltage extends CommandBase {
-  private Arm armSubsystem;
-  private double volts = 0;
+  private final Arm armSubsystem;
+  private final double volts;
 
   public SetArmVoltage(Arm armSubsystem, double volts) {
     this.armSubsystem = armSubsystem;

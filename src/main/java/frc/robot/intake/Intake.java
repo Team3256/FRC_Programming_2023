@@ -57,12 +57,10 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void latchCone() {
-    if (kDebugEnabled) System.out.println("Latch cone");
     intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
 
   public void latchCube() {
-    if (kDebugEnabled) System.out.println("Latch Cube");
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
 
@@ -74,7 +72,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void intakeCone() {
-    System.out.println("Intake cone");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
     intakeMotor.getSimCollection().setBusVoltage(kIntakeConeSpeed);
   }
@@ -85,7 +82,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void intakeCube() {
-    System.out.println("Intake cube");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
     intakeMotor.getSimCollection().setBusVoltage(kIntakeCubeSpeed);
   }
@@ -100,7 +96,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void off() {
-    System.out.println("Intake off");
     intakeMotor.neutralOutput();
   }
 
