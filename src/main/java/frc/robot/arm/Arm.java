@@ -50,7 +50,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
     public Rotation2d rotation;
 
-    private ArmPreset(Rotation2d rotation) {
+    ArmPreset(Rotation2d rotation) {
       this.rotation = rotation;
     }
   }
@@ -225,13 +225,13 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private void configureSimHardware() {
     armMotor = new WPI_TalonFX(kArmSimulationID);
     armLigament =
-        new MechanismLigament2d("Arm", armLength, Units.radiansToDegrees(armSim.getAngleRads()));
+        new MechanismLigament2d("Arm", kArmLength, Units.radiansToDegrees(armSim.getAngleRads()));
   }
 
   @Override
   public void simulationPeriodic() {
-    armSim.setInput(armMotor.getMotorOutputPercent() * percentOutputToVoltageMultiplier);
-    armSim.update(simulateDeltaSec);
+    armSim.setInput(armMotor.getMotorOutputPercent() * kVoltage);
+    armSim.update(kSimulateDelta);
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();

@@ -148,16 +148,16 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor = new WPI_TalonFX(kIntakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     intakeLigamentTop =
-        new MechanismLigament2d("IntakeTop", intakeRadius, intakeSim.getAngularPositionRad());
+        new MechanismLigament2d("IntakeTop", kIntakeRadius, intakeSim.getAngularPositionRad());
     intakeLigamentBottom =
         new MechanismLigament2d(
-            "IntakeBottom", intakeRadius, intakeSim.getAngularPositionRad() + 180);
+            "IntakeBottom", kIntakeRadius, intakeSim.getAngularPositionRad() + 180);
   }
 
   @Override
   public void simulationPeriodic() {
-    intakeSim.setInput(intakeMotor.getMotorOutputPercent() * percentOutputToVoltageMultiplier);
-    intakeSim.update(simulateDeltaSec);
+    intakeSim.setInput(intakeMotor.getMotorOutputPercent() * kVoltage);
+    intakeSim.update(kSimulateDelta);
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(intakeSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();

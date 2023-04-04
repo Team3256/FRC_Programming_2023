@@ -197,13 +197,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorMotor = new WPI_TalonFX(kElevatorID);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     elevatorLigament =
-        new MechanismLigament2d("Elevator", elevatorSim.getPositionMeters(), elevatorTiltDeg);
+        new MechanismLigament2d("Elevator", elevatorSim.getPositionMeters(), kElevatorAngleOffset);
   }
 
   @Override
   public void simulationPeriodic() {
-    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * percentOutputToVoltageMultiplier);
-    elevatorSim.update(simulateDeltaSec);
+    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * kVoltage);
+    elevatorSim.update(kSimulateDelta);
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
@@ -213,6 +213,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
     SmartDashboard.putNumber("Current Draw", elevatorSim.getCurrentDrawAmps());
-    SmartDashboard.putNumber("Elevator Sim Voltage", elevatorMotor.getMotorOutputPercent() * 12);
+    SmartDashboard.putNumber(
+        "Elevator Sim Voltage", elevatorMotor.getMotorOutputPercent() * kVoltage);
   }
 }
