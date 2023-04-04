@@ -45,20 +45,15 @@ public class Climb extends SubsystemBase implements CANTestable {
   }
 
   public void deployClimb() {
-    System.out.println("Climb Down");
-    double deployRotation =
-        Preferences.getDouble(ClimbPreferencesKeys.kClimbDeployRotationKey, kClimbDeployRotation);
-    climbMotor.set(
-        ControlMode.Position, deployRotation * kClimbEncoderTicksPerRotation * kClimbGearing);
+    double deploySpeed =
+        Preferences.getDouble(ClimbPreferencesKeys.kClimbDeploySpeedKey, kClimbDeploySpeed);
+    climbMotor.set(ControlMode.PercentOutput, deploySpeed);
   }
 
   public void retractClimb() {
-    System.out.println("Climb Retracted");
-    double retractRotation =
-        Preferences.getDouble(ClimbPreferencesKeys.kClimbRetractRotationKey, kClimbRetractRotation);
-
-    climbMotor.set(
-        ControlMode.Position, retractRotation * kClimbEncoderTicksPerRotation * kClimbGearing);
+    double retractSpeed =
+        Preferences.getDouble(ClimbPreferencesKeys.kClimbRetractSpeedKey, kClimbRetractSpeed);
+    climbMotor.set(ControlMode.PercentOutput, retractSpeed);
   }
 
   public void off() {

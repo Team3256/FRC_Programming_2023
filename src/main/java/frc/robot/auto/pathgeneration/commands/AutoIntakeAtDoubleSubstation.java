@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
@@ -52,6 +53,7 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
   private LED ledSubsystem;
   private Supplier<SubstationLocation> substationLocation;
   private BooleanSupplier cancelCommand;
+  private BooleanSupplier isAutoScoreMode;
   private BooleanSupplier isCurrentPieceCone;
 
   public AutoIntakeAtDoubleSubstation(
@@ -62,6 +64,7 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
       LED ledSubsystem,
       Supplier<SubstationLocation> substationLocation,
       BooleanSupplier cancelCommand,
+      BooleanSupplier isAutoScoreMode,
       BooleanSupplier isCurrentPieceCone) {
 
     this.swerveSubsystem = swerveDrive;
@@ -70,12 +73,37 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
     this.armSubsystem = armSubsystem;
     this.ledSubsystem = ledSubsystem;
     this.substationLocation = substationLocation;
+    this.isAutoScoreMode = isAutoScoreMode;
     this.cancelCommand = cancelCommand;
     this.isCurrentPieceCone = isCurrentPieceCone;
   }
 
   @Override
   public void initialize() {
+    System.out.println(
+        "Is running auto intake instead of presets: " + isAutoScoreMode.getAsBoolean());
+    if (!isAutoScoreMode.getAsBoolean()) {
+      System.out.println(
+          "Running intake preset at double substation for cone? "
+              + isCurrentPieceCone.getAsBoolean());
+      new ConditionalCommand(
+              new ParallelCommandGroup(
+                  new SetElevatorHeight(
+                          elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
+                      .beforeStarting(new WaitCommand(0.3)),
+                  new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+                  new IntakeCone(intakeSubsystem, ledSubsystem)),
+              new ParallelCommandGroup(
+                  new SetElevatorHeight(
+                          elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
+                      .beforeStarting(new WaitCommand(0.3)),
+                  new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+                  new IntakeCube(intakeSubsystem, ledSubsystem)),
+              isCurrentPieceCone)
+          .schedule();
+      return;
+    }
+
     System.out.println("Running: Go to substation from " + swerveSubsystem.getPose());
     Alliance alliance = DriverStation.getAlliance();
 

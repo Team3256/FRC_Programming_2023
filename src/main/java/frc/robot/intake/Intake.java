@@ -57,12 +57,10 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void latchCone() {
-    if (kDebugEnabled) System.out.println("Latch cone");
     intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
 
   public void latchCube() {
-    if (kDebugEnabled) System.out.println("Latch Cube");
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
 
@@ -74,13 +72,21 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void intakeCone() {
-    System.out.println("Intake cone");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
   }
 
+  public void outakeCone() {
+    System.out.println("Outake cone");
+    intakeMotor.set(ControlMode.PercentOutput, kOutakeConeSpeed);
+  }
+
   public void intakeCube() {
-    System.out.println("Intake cube");
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
+  }
+
+  public void outakeCube() {
+    System.out.println("Outake cube");
+    intakeMotor.set(ControlMode.PercentOutput, kOutakeCubeSpeed);
   }
 
   public boolean isCurrentSpiking() {
@@ -88,7 +94,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void off() {
-    System.out.println("Intake off");
     intakeMotor.neutralOutput();
   }
 

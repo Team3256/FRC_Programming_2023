@@ -20,6 +20,7 @@ public class IntakeOff extends CommandBase {
 
   @Override
   public void initialize() {
+    System.out.println("Intake off");
     intakeSubsystem.off();
   }
 
