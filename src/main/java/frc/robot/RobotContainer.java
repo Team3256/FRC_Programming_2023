@@ -222,6 +222,7 @@ public class RobotContainer implements CANTestable, Loggable {
                     kOpenLoop)
                 .deadlineWith(
                     new LEDSetAllSectionsPattern(
+                        // TODO fix later
                         ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
 
     driver
@@ -407,5 +408,9 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+  }
+
+  public SubstationLocation getSubstationLocation() {
+    return this.doubleSubstationLocation;
   }
 }
