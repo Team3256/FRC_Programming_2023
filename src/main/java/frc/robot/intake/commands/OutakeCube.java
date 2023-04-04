@@ -2,7 +2,6 @@
 package frc.robot.intake.commands;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
