@@ -9,8 +9,7 @@ package frc.robot.intake;
 
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kIntakeLayoutName;
-import static frc.robot.Constants.Simulation.percentOutputToVoltageMultiplier;
-import static frc.robot.Constants.Simulation.simulateDeltaSec;
+import static frc.robot.Constants.Simulation.*;
 import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.intake.IntakeConstants.*;
 
@@ -25,6 +24,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.*;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.CANDeviceTester;
@@ -122,15 +124,31 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   // sim
-  DCMotorSim intakeSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 1);
+  private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 1);
+  private MechanismLigament2d intakeLigamentTop;
+  private MechanismLigament2d intakeLigamentBottom;
 
-  public DCMotorSim getSim() {
-    return intakeSim;
+  public MechanismLigament2d getLigamentTop() {
+    return intakeLigamentTop;
+  }
+
+  public MechanismLigament2d getLigamentBottom() {
+    return intakeLigamentBottom;
   }
 
   private void configureSimHardware() {
     intakeMotor = new WPI_TalonFX(kIntakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
+    intakeLigamentTop =
+        new MechanismLigament2d("IntakeTop", intakeRadius, intakeSim.getAngularPositionRad());
+    intakeLigamentBottom =
+        new MechanismLigament2d(
+            "IntakeBottom", intakeRadius, intakeSim.getAngularPositionRad() + 180);
+    Mechanism2d canvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
+    SmartDashboard.putData("Intake Sim", canvas);
+    MechanismRoot2d root = canvas.getRoot("Root", robotSimWindowWidth / 2, 0);
+    root.append(intakeLigamentTop);
+    root.append(intakeLigamentBottom);
   }
 
   @Override
@@ -140,6 +158,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(intakeSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
+    intakeLigamentTop.setAngle(Units.radiansToDegrees(intakeSim.getAngularPositionRad()));
+    intakeLigamentBottom.setAngle(Units.radiansToDegrees(intakeSim.getAngularPositionRad()) + 180);
   }
 
   private void simulationOutputToDashboard() {

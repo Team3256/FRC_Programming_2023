@@ -15,7 +15,6 @@ import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -89,11 +88,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final ArrayList<CANTestable> canBusTestables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
-
-  private MechanismLigament2d elevatorMechanism;
-  private MechanismLigament2d armMechanism;
-  private MechanismLigament2d intakeMechanismTop;
-  private MechanismLigament2d intakeMechanismBottom;
 
   public RobotContainer() {
     if (kArmEnabled) armSubsystem = new Arm();
@@ -429,19 +423,10 @@ public class RobotContainer implements CANTestable, Loggable {
       MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
       robotRoot.append(new MechanismLigament2d("Right base", kRobotLength / 2, 0));
       robotRoot.append(new MechanismLigament2d("Left base", kRobotLength / 2, 180));
-      elevatorMechanism =
-          robotRoot.append(
-              new MechanismLigament2d(
-                  "Elevator", elevatorSubsystem.getSim().getPositionMeters(), elevatorTiltDeg));
-
-      armMechanism =
-          elevatorMechanism.append(
-              new MechanismLigament2d(
-                  "Arm", armLength, Units.radiansToDegrees(armSubsystem.getSim().getAngleRads())));
-      intakeMechanismTop =
-          armMechanism.append(new MechanismLigament2d("IntakeTop", intakeRadius, 0));
-      intakeMechanismBottom =
-          armMechanism.append(new MechanismLigament2d("IntakeBottom", intakeRadius, 180));
+      robotRoot.append(elevatorSubsystem.getLigament());
+      elevatorSubsystem.getLigament().append(armSubsystem.getLigament());
+      armSubsystem.getLigament().append(intakeSubsystem.getLigamentTop());
+      armSubsystem.getLigament().append(intakeSubsystem.getLigamentBottom());
       goalRoot.append(
           new MechanismLigament2d(
               "CubeLow",
@@ -449,19 +434,6 @@ public class RobotContainer implements CANTestable, Loggable {
               90,
               1,
               new Color8Bit((Color.kAquamarine))));
-    }
-  }
-
-  public void simulatePeriodic() {
-    if (kElevatorEnabled)
-      elevatorMechanism.setLength(elevatorSubsystem.getSim().getPositionMeters());
-    if (kArmEnabled)
-      armMechanism.setAngle(Units.radiansToDegrees(armSubsystem.getSim().getAngleRads()));
-    if (kIntakeEnabled) {
-      intakeMechanismTop.setAngle(
-          Units.radiansToDegrees(intakeSubsystem.getSim().getAngularPositionRad()));
-      intakeMechanismTop.setAngle(
-          180 + Units.radiansToDegrees(intakeSubsystem.getSim().getAngularPositionRad()));
     }
   }
 }

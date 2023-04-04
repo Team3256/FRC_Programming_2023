@@ -8,8 +8,7 @@
 package frc.robot.arm;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.Constants.Simulation.percentOutputToVoltageMultiplier;
-import static frc.robot.Constants.Simulation.simulateDeltaSec;
+import static frc.robot.Constants.Simulation.*;
 import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.kArmPositionKeys;
 
@@ -27,6 +26,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.*;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -216,13 +218,20 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           kArmAngleMinConstraint.getRadians(),
           kArmAngleMaxConstraint.getRadians(),
           true);
+  private MechanismLigament2d armLigament;
 
-  public SingleJointedArmSim getSim() {
-    return armSim;
+  public MechanismLigament2d getLigament() {
+    return armLigament;
   }
 
   private void configureSimHardware() {
     armMotor = new WPI_TalonFX(kArmSimulationID);
+    armLigament =
+        new MechanismLigament2d("Arm", armLength, Units.radiansToDegrees(armSim.getAngleRads()));
+    Mechanism2d canvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
+    SmartDashboard.putData("Arm Sim", canvas);
+    MechanismRoot2d root = canvas.getRoot("Root", robotSimWindowWidth / 2, 0);
+    root.append(armLigament);
   }
 
   @Override
@@ -232,6 +241,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
+    armLigament.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
   }
 
   private void simulationOutputToDashboard() {
