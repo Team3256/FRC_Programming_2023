@@ -40,6 +40,7 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
+import frc.robot.swerve.helpers.Conversions;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public enum ArmPreset {
@@ -226,7 +227,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public Rotation2d getArmSetpoint(Arm.ArmPreset setpoint) {
-    if (FeatureFlags.kUsePrefs) {
+    if (Constants.FeatureFlags.kUsePrefs) {
       return new Rotation2d(
           Preferences.getDouble(
               ArmPreferencesKeys.kArmPositionKeys.get(setpoint),
