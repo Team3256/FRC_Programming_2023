@@ -48,15 +48,15 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     DOUBLE_SUBSTATION_CONE(ElevatorConstants.kDoubleSubstationPositionConeMeters),
     DOUBLE_SUBSTATION_CUBE(ElevatorConstants.kDoubleSubstationPositionCubeMeters);
 
-    public double position;
+    public final double position;
 
     private ElevatorPreset(double position) {
       this.position = position;
     }
   }
 
-  private WPI_TalonFX elevatorMotorMaster;
-  private WPI_TalonFX elevatorMotorMasterFollowing;
+  private WPI_TalonFX elevatorMotor;
+  private WPI_TalonFX elevatorFollowerMotor;
   private ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
 
@@ -69,13 +69,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
           kMinHeight,
           kMaxHeight,
           true);
-
-  private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
+  // TODO: use the same canvas for all mechanisms
+  private final Mechanism2d mechanism2d = new Mechanism2d(50, 50);
   private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Elevator Root", 10, 0);
   private final MechanismLigament2d elevatorMech2d =
       mechanism2dRoot.append(
           new MechanismLigament2d(
-              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
+              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 35.4));
 
   public Elevator() {
     if (RobotBase.isReal()) {
@@ -89,20 +89,24 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void configureSimHardware() {
-    elevatorMotorMaster = new WPI_TalonFX(kElevatorIDMaster);
+    elevatorMotor = new WPI_TalonFX(kElevatorMainID);
     SmartDashboard.putData("Elevator Sim", mechanism2d);
-    elevatorMotorMaster.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   private void configureRealHardware() {
-    elevatorMotorMaster = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
-    elevatorMotorMaster.setInverted(kElevatorInverted);
-    elevatorMotorMaster.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
+    elevatorMotor.setInverted(kElevatorInverted);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+
+    elevatorFollowerMotor =
+        TalonFXFactory.createPermanentFollowerTalon(kElevatorFollowerCANDevice, kElevatorCANDevice);
+    elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public boolean isMotorCurrentSpiking() {
     if (RobotBase.isReal()) {
-      return elevatorMotorMaster.getSupplyCurrent() >= kElevatorCurrentThreshold;
+      return elevatorMotor.getSupplyCurrent() >= kElevatorCurrentThreshold;
     } else {
       return elevatorSim.getCurrentDrawAmps() >= kElevatorCurrentThreshold;
     }
@@ -114,32 +118,32 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   public void setInputVoltage(double voltage) {
     SmartDashboard.putNumber("Elevator Voltage", voltage);
-    elevatorMotorMaster.setVoltage(MathUtil.clamp(voltage, -12, 12));
+    elevatorMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
   public double getElevatorPosition() {
     if (RobotBase.isReal()) {
       return falconToMeters(
-          elevatorMotorMaster.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
+          elevatorMotor.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
     } else return elevatorSim.getPositionMeters();
   }
 
   public void setCoast() {
-    elevatorMotorMaster.setNeutralMode(NeutralMode.Coast);
+    elevatorMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   public void zeroElevator() {
-    elevatorMotorMaster.setSelectedSensorPosition(0);
+    elevatorMotor.setSelectedSensorPosition(0);
   }
 
   public void off() {
-    elevatorMotorMaster.neutralOutput();
+    elevatorMotor.neutralOutput();
     System.out.println("Elevator off");
   }
 
   @Override
   public void simulationPeriodic() {
-    elevatorSim.setInput(elevatorMotorMaster.getMotorOutputPercent() * 12);
+    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * 12);
     elevatorSim.update(0.020);
 
     RoboRioSim.setVInVoltage(
@@ -153,14 +157,14 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public void periodic() {
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
-    SmartDashboard.putNumber("Elevator Current Draw", elevatorMotorMaster.getSupplyCurrent());
+    SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
   }
 
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName).add(new ZeroElevator(this));
     getLayout(kDriverTabName).add("Position", new DoubleSendable(this::getElevatorPosition));
-    getLayout(kDriverTabName).add(elevatorMotorMaster);
+    getLayout(kDriverTabName).add(elevatorMotor);
   }
 
   @Override
@@ -173,13 +177,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
     SmartDashboard.putNumber("Current Draw", elevatorSim.getCurrentDrawAmps());
-    SmartDashboard.putNumber("Elevator Sim Voltage", elevatorMotorMaster.getMotorOutputPercent() * 12);
+    SmartDashboard.putNumber("Elevator Sim Voltage", elevatorMotor.getMotorOutputPercent() * 12);
   }
 
   @Override
   public boolean CANTest() {
     System.out.println("Testing Elevator CAN:");
-    boolean result = CANDeviceTester.testTalonFX(elevatorMotorMaster);
+    boolean result = CANDeviceTester.testTalonFX(elevatorMotor);
     System.out.println("Elevator CAN connected: " + result);
     getLayout(kElectricalTabName).add("Elevator CAN connected", result);
     return result;

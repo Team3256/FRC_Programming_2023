@@ -26,7 +26,6 @@ import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
-import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
@@ -34,6 +33,7 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -314,19 +314,20 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorStart;
-    if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorStart =
-          new SetArmElevatorStart(elevatorSubsystem, armSubsystem).withTimeout(1.5);
-
-      return Commands.sequence(
-          setArmElevatorStart.asProxy(),
-          autoPath,
-          new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
-    } else {
-      return autoPath;
-    }
+    //    Command autoPath = autoPaths.getSelectedPath();
+    //    Command setArmElevatorStart;
+    //    if (kElevatorEnabled && kArmEnabled) {
+    //      setArmElevatorStart =
+    //          new SetArmElevatorStart(elevatorSubsystem, armSubsystem).withTimeout(1.5);
+    //
+    //      return Commands.sequence(
+    //          setArmElevatorStart.asProxy(),
+    //          autoPath,
+    //          new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
+    //    } else {
+    //      return autoPath;
+    //    }
+    return new SetElevatorHeight(elevatorSubsystem, 1);
   }
 
   @Override
