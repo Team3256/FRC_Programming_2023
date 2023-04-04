@@ -15,10 +15,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
-import frc.robot.Constants;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
+import frc.robot.auto.AutoConstants;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
@@ -30,7 +30,6 @@ public class SetArmAngle extends ProfiledPIDCommand {
    *
    * @param armSubsystem
    * @param angleRotation2d
-   * @param shouldEnd
    */
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
@@ -62,10 +61,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
    *
    * @param armSubsystem
    * @param armPreset
-   * @param shouldEnd
    */
   public SetArmAngle(Arm armSubsystem, ArmPreset armPreset) {
-    this(armSubsystem, armSubsystem.getPreferencesSetpoint(armPreset));
+    this(armSubsystem, armSubsystem.getArmSetpoint(armPreset));
     this.armPreset = armPreset;
   }
 
@@ -75,11 +73,11 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
     // update at runtime in case robot prefs changed
     if (armPreset != null) {
-      angleRotation2d = armSubsystem.getPreferencesSetpoint(armPreset);
+      angleRotation2d = armSubsystem.getArmSetpoint(armPreset);
       getController().setGoal(angleRotation2d.getRadians());
     }
 
-    if (Constants.kDebugEnabled) {
+    if (AutoConstants.kAutoDebug) {
       System.out.println(
           this.getName()
               + " started (preset: "
@@ -97,7 +95,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
     armSubsystem.off();
-    if (Constants.kDebugEnabled) {
+    if (AutoConstants.kAutoDebug) {
       System.out.println(
           this.getName()
               + " ended (preset: "
