@@ -7,26 +7,25 @@
 
 package frc.robot.intake.commands;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.helpers.TimedBoolean;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessPattern;
 
-public class IntakeCone extends CommandBase {
+public class OutakeCube extends CommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
-  private TimedBoolean isCurrentSpiking;
+  private WPI_TalonFX intakeMotor;
 
-  public IntakeCone(Intake intakeSubsystem) {
+  public OutakeCube(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 1);
 
     addRequirements(intakeSubsystem);
   }
 
-  public IntakeCone(Intake intakeSubsystem, LED ledSubsystem) {
+  public OutakeCube(Intake intakeSubsystem, LED ledSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
     this.ledSubsystem = ledSubsystem;
 
@@ -35,13 +34,11 @@ public class IntakeCone extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("Started Intake cone");
     intakeSubsystem.intakeCone();
   }
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Ended Intake cone");
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
       new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
@@ -50,7 +47,6 @@ public class IntakeCone extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    isCurrentSpiking.update();
-    return isCurrentSpiking.hasBeenTrueForThreshold();
+    return intakeMotor.getSelectedSensorPosition() > 1000;
   }
 }

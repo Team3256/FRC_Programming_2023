@@ -172,8 +172,8 @@
           "defaultPosition"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "deadline",
+        "waitTime": 3.0
       }
     }
   ],
@@ -182,7 +182,7 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 2.217655806107954,
+      "position": 1.8,
       "names": [
         "intakeCube"
       ]
