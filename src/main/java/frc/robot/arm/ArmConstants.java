@@ -99,7 +99,7 @@ public final class ArmConstants {
   public static final Rotation2d kConeMidRotation = new Rotation2d(0.18);
   public static final Rotation2d kCubeHighRotation = new Rotation2d(0.6);
   public static final Rotation2d kConeHighRotation = new Rotation2d(0.23);
-  public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-15);
+  public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-10);
 
   public static final double kManualArmVoltage = 2.5;
 }
