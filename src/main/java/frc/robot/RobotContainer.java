@@ -222,14 +222,14 @@ public class RobotContainer implements CANTestable, Loggable {
                     kOpenLoop)
                 .deadlineWith(
                     new LEDSetAllSectionsPattern(
-                        // TODO fix later
                         ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
 
     driver
         .x()
-        .whileTrue(
+        .onTrue(
             new LockSwerveX(swerveSubsystem)
-                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
+                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                .until(() -> isMovingJoystick(driver)));
 
     if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
       driver
@@ -347,7 +347,9 @@ public class RobotContainer implements CANTestable, Loggable {
           autoPath,
           Commands.parallel(
               new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
-              new LockSwerveX(swerveSubsystem)));
+              new LockSwerveX(swerveSubsystem)
+                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                  .until(() -> isMovingJoystick(driver))));
     } else {
       return autoPath;
     }
