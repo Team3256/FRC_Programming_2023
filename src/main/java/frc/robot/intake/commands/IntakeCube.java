@@ -30,11 +30,13 @@ public class IntakeCube extends CommandBase {
 
   @Override
   public void initialize() {
+    System.out.println("Started Intake cube");
     intakeSubsystem.intakeCube();
   }
 
   @Override
   public void end(boolean interrupted) {
+    System.out.println("Ended Intake cube");
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
       new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
