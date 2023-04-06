@@ -66,8 +66,7 @@ public class DynamicPathFollower {
     }
 
     if (goalType != GoalType.DOUBLE_STATION_TOP && goalType != GoalType.DOUBLE_STATION_BOTTOM) {
-      // TODO CHANGE TO -1
-      int locationId = (int) SmartDashboard.getNumber("guiColumn", 7);
+      int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
       if (locationId == -1) {
         System.out.println("locationId was invalid");
         if (ledSubsystem != null) {
@@ -112,23 +111,20 @@ public class DynamicPathFollower {
     }
     // create command that runs trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command dynamicPathGenTrajectoryCommand =
-        autoBuilder.createPathPlannerCommand(dynamicPathGenTrajectory, false, false);
+    Command dynamicPathGenTrajectoryCommand = autoBuilder.createPathPlannerCommand(dynamicPathGenTrajectory, false,
+        false);
 
     Command scoringLocationTrajectoryCommand;
     if (goalType != GoalType.HIGH_GRID) {
-      PathPoint dynamicPathGenEnd =
-          new PathPoint(
-              dynamicPathGenSink.getTranslation(),
-              new Rotation2d(),
-              dynamicPathGenSink.getRotation());
-      PathPoint scoringLocation =
-          new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(), 2);
-      PathPlannerTrajectory trajectoryToFinalSink =
-          PathPlanner.generatePath(
-              kPathToDestinationConstraints, dynamicPathGenEnd, scoringLocation);
-      scoringLocationTrajectoryCommand =
-          autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false, false);
+      PathPoint dynamicPathGenEnd = new PathPoint(
+          dynamicPathGenSink.getTranslation(),
+          new Rotation2d(),
+          dynamicPathGenSink.getRotation());
+      PathPoint scoringLocation = new PathPoint(finalSink.getTranslation(), new Rotation2d(), finalSink.getRotation(),
+          2);
+      PathPlannerTrajectory trajectoryToFinalSink = PathPlanner.generatePath(
+          kPathToDestinationConstraints, dynamicPathGenEnd, scoringLocation);
+      scoringLocationTrajectoryCommand = autoBuilder.createPathPlannerCommand(trajectoryToFinalSink, false, false);
     } else {
       scoringLocationTrajectoryCommand = new InstantCommand();
     }
@@ -138,10 +134,9 @@ public class DynamicPathFollower {
 
     Command finalTrajectory = scoringLocationTrajectoryCommand;
     if (useInBetweenCommand) {
-      finalTrajectory =
-          new ParallelDeadlineGroup(
-              new WaitCommand(1.5).andThen(scoringLocationTrajectoryCommand),
-              inBetweenTrajectoryCommand.get().asProxy());
+      finalTrajectory = new ParallelDeadlineGroup(
+          new WaitCommand(1.5).andThen(scoringLocationTrajectoryCommand),
+          inBetweenTrajectoryCommand.get().asProxy());
     }
 
     return Commands.sequence(
