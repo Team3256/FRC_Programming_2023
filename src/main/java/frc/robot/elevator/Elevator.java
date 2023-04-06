@@ -57,25 +57,23 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private WPI_TalonFX elevatorMotor;
-  private ElevatorFeedforward elevatorFeedforward =
-      new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
+  private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV,
+      kElevatorA);
 
-  private ElevatorSim elevatorSim =
-      new ElevatorSim(
-          DCMotor.getFalcon500(kNumElevatorMotors),
-          kElevatorGearing,
-          kCarriageMass,
-          kDrumRadius,
-          kMinHeight,
-          kMaxHeight,
-          true);
+  private ElevatorSim elevatorSim = new ElevatorSim(
+      DCMotor.getFalcon500(kNumElevatorMotors),
+      kElevatorGearing,
+      kCarriageMass,
+      kDrumRadius,
+      kMinHeight,
+      kMaxHeight,
+      true);
 
   private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
   private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Elevator Root", 10, 0);
-  private final MechanismLigament2d elevatorMech2d =
-      mechanism2dRoot.append(
-          new MechanismLigament2d(
-              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
+  private final MechanismLigament2d elevatorMech2d = mechanism2dRoot.append(
+      new MechanismLigament2d(
+          "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
 
   public Elevator() {
     if (RobotBase.isReal()) {
@@ -97,8 +95,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private void configureRealHardware() {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
     elevatorMotor.setInverted(kElevatorInverted);
-    // TODO brake
-    elevatorMotor.setNeutralMode(NeutralMode.Coast);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -122,7 +119,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     if (RobotBase.isReal()) {
       return falconToMeters(
           elevatorMotor.getSelectedSensorPosition(), 2 * Math.PI * kDrumRadius, kElevatorGearing);
-    } else return elevatorSim.getPositionMeters();
+    } else
+      return elevatorSim.getPositionMeters();
   }
 
   public void setCoast() {
