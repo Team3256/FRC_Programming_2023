@@ -25,7 +25,6 @@ public class LEDSetSectionPattern extends CommandBase {
 
   @Override
   public void initialize() {
-    super.initialize();
     ledStrip.set(sectionId, ledPattern);
   }
 
