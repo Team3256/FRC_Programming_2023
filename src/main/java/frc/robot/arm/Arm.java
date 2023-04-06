@@ -110,7 +110,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setInverted(true);
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
 
-    armMotor.setNeutralMode(NeutralMode.Brake);
+    // TODO brake
+    armMotor.setNeutralMode(NeutralMode.Coast);
     armMotor.setSelectedSensorPosition(0);
   }
 
@@ -178,7 +179,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
       SmartDashboard.putNumber(
           "Arm Raw Relative Encoder value", armMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Arm Raw Absolute Encoder value", armEncoder.getDistance());
-      SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
+      SmartDashboard.putNumber("Arm angle deg", Units.radiansToDegrees(getArmPositionRads()));
+      SmartDashboard.putNumber("Arm angle rad", getArmPositionRads());
       SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
       SmartDashboard.putNumber(
           "Arm motor open loop voltage", armMotor.getMotorOutputPercent() * 12);
