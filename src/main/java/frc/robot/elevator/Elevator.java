@@ -49,7 +49,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     DOUBLE_SUBSTATION_CONE(ElevatorConstants.kDoubleSubstationPositionConeMeters),
     DOUBLE_SUBSTATION_CUBE(ElevatorConstants.kDoubleSubstationPositionCubeMeters);
 
-    public double position;
+    public final double position;
 
     private ElevatorPreset(double position) {
       this.position = position;
@@ -57,6 +57,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private WPI_TalonFX elevatorMotor;
+  private WPI_TalonFX elevatorFollowerMotor;
   private ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
 
@@ -69,13 +70,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
           kMinHeight,
           kMaxHeight,
           true);
-
-  private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
+  // TODO: use the same canvas for all mechanisms
+  private final Mechanism2d mechanism2d = new Mechanism2d(50, 50);
   private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Elevator Root", 10, 0);
   private final MechanismLigament2d elevatorMech2d =
       mechanism2dRoot.append(
           new MechanismLigament2d(
-              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
+              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 35.4));
 
   public Elevator() {
     if (RobotBase.isReal()) {
@@ -89,7 +90,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void configureSimHardware() {
-    elevatorMotor = new WPI_TalonFX(kElevatorID);
+    elevatorMotor = new WPI_TalonFX(kElevatorMasterID);
     SmartDashboard.putData("Elevator Sim", mechanism2d);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
   }
@@ -98,6 +99,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
     elevatorMotor.setInverted(kElevatorInverted);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
+
+    elevatorFollowerMotor =
+        TalonFXFactory.createPermanentFollowerTalon(kElevatorFollowerCANDevice, kElevatorCANDevice);
+    elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public boolean isMotorCurrentSpiking() {

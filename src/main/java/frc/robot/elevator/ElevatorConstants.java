@@ -13,11 +13,14 @@ import frc.robot.drivers.CanDeviceId;
 import java.util.Map;
 
 public final class ElevatorConstants {
-  public static final int kElevatorID = 5;
+  public static final int kElevatorMasterID = 5;
+  public static final int kElevatorFollowerID = 14;
   public static final double kElevatorStartingPositionMeters = 0.5;
   public static final String kElevatorCANBus = "mani";
   public static final CanDeviceId kElevatorCANDevice =
-      new CanDeviceId(kElevatorID, kElevatorCANBus);
+      new CanDeviceId(kElevatorMasterID, kElevatorCANBus);
+  public static final CanDeviceId kElevatorFollowerCANDevice =
+      new CanDeviceId(kElevatorFollowerID, kElevatorCANBus);
   public static final int kNumElevatorMotors = 1;
   public static final boolean kElevatorInverted = true;
 
@@ -57,11 +60,6 @@ public final class ElevatorConstants {
     public static final String kDKey = "ElevatorkD";
   }
 
-  // TODO: Change to real values
-  public static final double kElevatorHighPositionMeters = 0.762;
-  public static final double kElevatorMidPositionMeters = 0.381;
-  public static final double kElevatorLowPositionMeters = 0.0762;
-
   // https://www.reca.lc/linear
   // gradle simulateJava working constants
   // for some reason the elevator acts differntly in unit tests vs sim
@@ -82,8 +80,8 @@ public final class ElevatorConstants {
   public static final double kDownSpeedVolts = -8.0;
 
   public static final double kDrumRadius = 0.0222377;
-  public static final double kMinHeight = 0;
-  public static final double kMaxHeight = Units.inchesToMeters(29.5);
+  public static final double kMinHeight = Units.inchesToMeters(10);
+  public static final double kMaxHeight = Units.inchesToMeters(30);
   public static final double kElevatorGearing = 15;
   public static final double kCarriageMass = 6.28815086; // kg
 
