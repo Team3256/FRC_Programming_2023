@@ -8,7 +8,6 @@
 package frc.robot.led.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.helpers.DebugCommandBase;
 import frc.robot.led.LED;
 import frc.robot.led.patternBases.LEDPattern;
 
