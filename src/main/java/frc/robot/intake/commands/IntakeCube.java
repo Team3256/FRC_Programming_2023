@@ -7,13 +7,13 @@
 
 package frc.robot.intake.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessPattern;
 
-public class IntakeCube extends CommandBase {
+public class IntakeCube extends DebugCommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
 
@@ -30,13 +30,13 @@ public class IntakeCube extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("Started Intake cube");
+    super.initialize();
     intakeSubsystem.intakeCube();
   }
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Ended Intake cube");
+    super.end(interrupted);
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
       new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();

@@ -13,12 +13,12 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-public class TeleopSwerveWithAzimuth extends CommandBase {
+public class TeleopSwerveWithAzimuth extends DebugCommandBase {
   private Translation2d translation;
   private boolean fieldRelative;
   private boolean openLoop;
@@ -53,11 +53,6 @@ public class TeleopSwerveWithAzimuth extends CommandBase {
     this.openLoop = openLoop;
     this.azimuthController = new PIDController(kAzimuthP, kAzimuthI, kAzimuthD);
     azimuthController.enableContinuousInput(-180, 180);
-  }
-
-  @Override
-  public void initialize() {
-    System.out.println("TeleopSwerveWithAzimuth started");
   }
 
   @Override
