@@ -9,7 +9,6 @@ package frc.robot.intake.commands;
 
 import static frc.robot.intake.IntakeConstants.kOuttakeRotations;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
@@ -19,7 +18,6 @@ import frc.robot.led.patterns.SuccessPattern;
 public class OuttakeCube extends CommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
-  private WPI_TalonFX intakeMotor;
 
   public OuttakeCube(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
@@ -36,7 +34,6 @@ public class OuttakeCube extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("Started Outtake Cube");
     intakeSubsystem.zeroEncoder();
     intakeSubsystem.outtakeCube();
   }
@@ -52,7 +49,6 @@ public class OuttakeCube extends CommandBase {
   // TODO: Make outtake finish after a specified amount of time instead of distance
   @Override
   public boolean isFinished() {
-    System.out.println("Ended Outtake Cube");
     return Math.abs(intakeSubsystem.getIntakeRevolutions()) > kOuttakeRotations;
   }
 }

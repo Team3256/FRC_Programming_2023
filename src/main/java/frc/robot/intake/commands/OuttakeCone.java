@@ -34,7 +34,6 @@ public class OuttakeCone extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("Started Outtake Cone");
     intakeSubsystem.zeroEncoder();
     intakeSubsystem.outtakeCone();
   }
@@ -42,7 +41,6 @@ public class OuttakeCone extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intakeSubsystem.off();
-    System.out.println("Ended Outtake Cone");
     if (!interrupted && ledSubsystem != null) {
       new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
     }

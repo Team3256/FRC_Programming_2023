@@ -59,8 +59,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   public double getIntakeRevolutions() {
     return Conversions.falconToRadians(intakeMotor.getSelectedSensorPosition(), kIntakeGearing)
-        / 2
-        * Math.PI;
+        / (2 * Math.PI);
   }
 
   public void latchCone() {
