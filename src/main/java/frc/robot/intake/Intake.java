@@ -11,6 +11,7 @@ import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kIntakeLayoutName;
 import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.intake.IntakeConstants.*;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -56,20 +57,17 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void latchCone() {
-    if (kDebugEnabled)
-      System.out.println("Latch cone");
+    if (kDebugEnabled) System.out.println("Latch cone");
     intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
 
   public void latchCube() {
-    if (kDebugEnabled)
-      System.out.println("Latch Cube");
+    if (kDebugEnabled) System.out.println("Latch Cube");
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
 
   public void configureCurrentLimit(boolean enabled) {
-    if (kDebugEnabled)
-      System.out.println("Setting Current Limit Configuration: " + enabled);
+    if (kDebugEnabled) System.out.println("Setting Current Limit Configuration: " + enabled);
     intakeMotor.configStatorCurrentLimit(
         new StatorCurrentLimitConfiguration(
             enabled, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
