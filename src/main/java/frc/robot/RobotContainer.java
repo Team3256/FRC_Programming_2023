@@ -340,7 +340,7 @@ public class RobotContainer implements CANTestable, Loggable {
     Command autoPath = autoPaths.getSelectedPath();
     Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
+      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem).withTimeout(4);
 
       return Commands.sequence(
           setArmElevatorStart.asProxy(),

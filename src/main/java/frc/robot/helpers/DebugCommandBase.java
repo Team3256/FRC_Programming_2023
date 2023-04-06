@@ -28,7 +28,7 @@ public abstract class DebugCommandBase extends CommandBase {
               + this.getName()
               + ", Interrupted?: "
               + interrupted
-              + ", Time: "
+              + ", Timestamp: "
               + Timer.getFPGATimestamp());
     }
   }

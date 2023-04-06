@@ -57,6 +57,14 @@ public class AutoPaths {
     Supplier<Command> scorePreloadCone = () -> new InstantCommand();
     Supplier<Command> scorePreloadCube = () -> new InstantCommand();
 
+    autoEventMap.put(
+        "engage",
+        () ->
+            new AutoBalance(swerveSubsystem)
+                .andThen(new LockSwerveX(swerveSubsystem))
+                .asProxy()
+                .withName("engage"));
+
     if (swerveSubsystem != null
         && intakeSubsystem != null
         && armSubsystem != null
@@ -166,14 +174,6 @@ public class AutoPaths {
                   .asProxy()
                   .withName("coneLow"));
 
-      autoEventMap.put(
-          "engage",
-          () ->
-              new AutoBalance(swerveSubsystem)
-                  .andThen(new LockSwerveX(swerveSubsystem))
-                  .asProxy()
-                  .withName("engage"));
-
       scorePreloadCube =
           () ->
               Commands.parallel(
@@ -213,7 +213,10 @@ public class AutoPaths {
     ArrayList<Command> node5Engage =
         autoBuilder.createPaths("Node5-Engage", kEngagePathConstraints);
     AutoChooser.addPathGroup(
-        scorePreloadCube.get(), "Node5-Engage", node5Engage, new LockSwerveX(swerveSubsystem));
+        scorePreloadCube.get(),
+        "Node5-Engage",
+        node5Engage,
+        new AutoBalance(swerveSubsystem).andThen(new LockSwerveX(swerveSubsystem)));
 
     // Node8-Preload-Ready
     Command node8PreloadReady =
@@ -307,6 +310,7 @@ public class AutoPaths {
                 swerveSubsystem.setGyroYaw(
                     (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
                         .getDegrees()));
+
     return AutoChooser.getCommand().finallyDo((interrupted) -> zeroGyroTeleop.schedule());
   }
 }
