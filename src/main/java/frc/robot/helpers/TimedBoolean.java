@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj.Timer;
 import java.util.function.BooleanSupplier;
 
 public class TimedBoolean {
-  private BooleanSupplier condition;
-  private Timer timer = new Timer();
-  private double triggerThreshold;
+  private final BooleanSupplier condition;
+  private final Timer timer = new Timer();
+  private final double triggerThresholdTime;
 
-  public TimedBoolean(BooleanSupplier condition, double triggerThreshold) {
+  public TimedBoolean(BooleanSupplier condition, double triggerThresholdTime) {
     this.condition = condition;
-    this.triggerThreshold = triggerThreshold;
+    this.triggerThresholdTime = triggerThresholdTime;
   }
 
   public void update() {
@@ -30,6 +30,6 @@ public class TimedBoolean {
   }
 
   public boolean hasBeenTrueForThreshold() {
-    return timer.get() > triggerThreshold && condition.getAsBoolean();
+    return timer.get() > triggerThresholdTime && condition.getAsBoolean();
   }
 }

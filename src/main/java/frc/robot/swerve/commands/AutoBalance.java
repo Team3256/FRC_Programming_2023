@@ -12,6 +12,7 @@ import static frc.robot.swerve.SwerveConstants.*;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.helpers.TimedBoolean;
 import frc.robot.swerve.SwerveDrive;
 
 public class AutoBalance extends PIDCommand {
@@ -28,6 +29,6 @@ public class AutoBalance extends PIDCommand {
 
   @Override
   public boolean isFinished() {
-    return getController().atSetpoint();
+    return new TimedBoolean(() -> getController().atSetpoint(), 2).hasBeenTrueForThreshold();
   }
 }
