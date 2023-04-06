@@ -28,6 +28,7 @@ import frc.robot.drivers.TalonFXFactory;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.logging.Loggable;
+import frc.robot.swerve.helpers.Conversions;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private WPI_TalonFX intakeMotor;
@@ -56,6 +57,12 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     return intakeMotor.getMotorOutputPercent();
   }
 
+  public double getIntakeRevolutions() {
+    return Conversions.falconToRadians(intakeMotor.getSelectedSensorPosition(), kIntakeGearing)
+        / 2
+        * Math.PI;
+  }
+
   public void latchCone() {
     intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
@@ -79,8 +86,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kIntakeConeSpeed);
   }
 
-  public void outakeCone() {
-    System.out.println("Outake cone");
+  public void outtakeCone() {
     intakeMotor.set(ControlMode.PercentOutput, kOutakeConeSpeed);
   }
 
@@ -88,8 +94,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kIntakeCubeSpeed);
   }
 
-  public void outakeCube() {
-    System.out.println("Outake cube");
+  public void outtakeCube() {
     intakeMotor.set(ControlMode.PercentOutput, kOutakeCubeSpeed);
   }
 

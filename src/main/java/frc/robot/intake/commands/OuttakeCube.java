@@ -7,26 +7,27 @@
 
 package frc.robot.intake.commands;
 
+import static frc.robot.intake.IntakeConstants.kOuttakeRotations;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
-import frc.robot.intake.IntakeConstants;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessPattern;
 
-public class OutakeCone extends CommandBase {
+public class OuttakeCube extends CommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
   private WPI_TalonFX intakeMotor;
 
-  public OutakeCone(Intake intakeSubsystem) {
+  public OuttakeCube(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
 
     addRequirements(intakeSubsystem);
   }
 
-  public OutakeCone(Intake intakeSubsystem, LED ledSubsystem) {
+  public OuttakeCube(Intake intakeSubsystem, LED ledSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
     this.ledSubsystem = ledSubsystem;
 
@@ -35,8 +36,9 @@ public class OutakeCone extends CommandBase {
 
   @Override
   public void initialize() {
+    System.out.println("Started Outtake Cube");
     intakeSubsystem.zeroEncoder();
-    intakeSubsystem.outakeCone();
+    intakeSubsystem.outtakeCube();
   }
 
   @Override
@@ -47,8 +49,10 @@ public class OutakeCone extends CommandBase {
     }
   }
 
+  // TODO: Make outtake finish after a specified amount of time instead of distance
   @Override
   public boolean isFinished() {
-    return intakeMotor.getSelectedSensorPosition() < -IntakeConstants.kOutakeEncoderDistance;
+    System.out.println("Ended Outtake Cube");
+    return Math.abs(intakeSubsystem.getIntakeRevolutions()) > kOuttakeRotations;
   }
 }
