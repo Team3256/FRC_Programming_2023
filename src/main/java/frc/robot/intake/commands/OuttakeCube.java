@@ -7,8 +7,7 @@
 
 package frc.robot.intake.commands;
 
-import static frc.robot.intake.IntakeConstants.kOuttakeRotations;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
@@ -18,6 +17,8 @@ import frc.robot.led.patterns.SuccessPattern;
 public class OuttakeCube extends CommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
+  private final Timer timer = new Timer();
+  private double outtakeTime = 2.5;
 
   public OuttakeCube(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
@@ -25,16 +26,21 @@ public class OuttakeCube extends CommandBase {
     addRequirements(intakeSubsystem);
   }
 
+  public OuttakeCube(Intake intakeSubsystem, double time) {
+    this(intakeSubsystem);
+    this.outtakeTime = time;
+  }
+
   public OuttakeCube(Intake intakeSubsystem, LED ledSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
+    this(intakeSubsystem);
     this.ledSubsystem = ledSubsystem;
 
-    addRequirements(intakeSubsystem);
+    addRequirements(ledSubsystem);
   }
 
   @Override
   public void initialize() {
-    intakeSubsystem.zeroEncoder();
+    timer.restart();
     intakeSubsystem.outtakeCube();
   }
 
@@ -46,9 +52,8 @@ public class OuttakeCube extends CommandBase {
     }
   }
 
-  // TODO: Make outtake finish after a specified amount of time instead of distance
   @Override
   public boolean isFinished() {
-    return Math.abs(intakeSubsystem.getIntakeRevolutions()) > kOuttakeRotations;
+    return timer.hasElapsed(outtakeTime);
   }
 }

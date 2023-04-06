@@ -12,8 +12,8 @@ import java.util.function.BooleanSupplier;
 
 public class TimedBoolean {
   private BooleanSupplier condition;
-  private Timer timer = new Timer();
-  private double triggerThreshold;
+  private final Timer timer = new Timer();
+  private final double triggerThreshold;
 
   public TimedBoolean(BooleanSupplier condition, double triggerThreshold) {
     this.condition = condition;
@@ -30,6 +30,6 @@ public class TimedBoolean {
   }
 
   public boolean hasBeenTrueForThreshold() {
-    return timer.get() > triggerThreshold && condition.getAsBoolean();
+    return timer.hasElapsed(triggerThreshold) && condition.getAsBoolean();
   }
 }
