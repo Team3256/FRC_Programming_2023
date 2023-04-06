@@ -23,7 +23,6 @@ public class LEDSetAllSectionsPattern extends CommandBase {
 
   @Override
   public void initialize() {
-    super.initialize();
     led.setAll(ledPattern);
   }
 
