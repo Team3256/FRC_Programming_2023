@@ -7,6 +7,8 @@
 
 package frc.robot.swerve;
 
+import static frc.robot.Constants.kRobotType;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,8 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.COTSFalconSwerveConstants;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
-
-import static frc.robot.Constants.kRobotType;
 
 public final class SwerveConstants {
   public static final int kPigeonID = 1;
@@ -185,8 +185,7 @@ public final class SwerveConstants {
 
   /* AutoBalance */
   public static double kXAutoBalanceVelocityMeters = 0.7;
-  public static final Rotation2d kAutoBalanceMaxError = new Rotation2d(Units.degreesToRadians(10));
-
+  public static final Rotation2d kAutoBalanceTolerance = Rotation2d.fromDegrees(10);
   public static final double kAutoBalanceP = 1;
   public static final double kAutoBalanceI = 0;
   public static final double kAutoBalanceD = 0;

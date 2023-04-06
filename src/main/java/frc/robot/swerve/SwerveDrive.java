@@ -15,6 +15,7 @@ import static frc.robot.swerve.SwerveConstants.*;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -209,10 +210,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     return Rotation2d.fromDegrees(ypr[1]);
   }
 
-  public double autoBalanceMeasurement() {
-    double[] ypr = new double[3];
-    gyro.getYawPitchRoll(ypr);
-    return ypr[1];
+  public double getAutoBalanceOffset() {
+    return MathUtil.inputModulus(getPitch().getDegrees(), -180, 180);
   }
 
   public Rotation2d getRoll() {
@@ -374,14 +373,14 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   }
 
   public boolean isTiltedForward() {
-    return getPitch().getDegrees() > kAutoBalanceMaxError.getDegrees();
+    return getPitch().getDegrees() > kAutoBalanceTolerance.getDegrees();
   }
 
   public boolean isTiltedBackward() {
-    return getPitch().getDegrees() < -kAutoBalanceMaxError.getDegrees();
+    return getPitch().getDegrees() < -kAutoBalanceTolerance.getDegrees();
   }
 
   public boolean isNotTilted() {
-    return Math.abs(getPitch().getDegrees()) < kAutoBalanceMaxError.getDegrees();
+    return Math.abs(getPitch().getDegrees()) < kAutoBalanceTolerance.getDegrees();
   }
 }
