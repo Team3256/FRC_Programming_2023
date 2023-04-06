@@ -17,6 +17,8 @@ import frc.robot.swerve.SwerveDrive;
 
 public class AutoBalance extends PIDCommand {
 
+  TimedBoolean isBalanced;
+
   public AutoBalance(SwerveDrive swerveDrive) {
     super(
         new PIDController(kAutoBalanceP, kAutoBalanceI, kAutoBalanceD),
@@ -25,10 +27,12 @@ public class AutoBalance extends PIDCommand {
         (output) -> swerveDrive.drive(new Translation2d(output, 0), 0, true, true),
         swerveDrive);
     getController().setTolerance(kAutoBalanceTolerance.getDegrees());
+    isBalanced = new TimedBoolean(() -> getController().atSetpoint(), 2);
   }
 
   @Override
   public boolean isFinished() {
-    return new TimedBoolean(() -> getController().atSetpoint(), 2).hasBeenTrueForThreshold();
+    isBalanced.update();
+    return isBalanced.hasBeenTrueForThreshold();
   }
 }
