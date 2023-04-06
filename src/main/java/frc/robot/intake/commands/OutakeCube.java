@@ -4,6 +4,7 @@ package frc.robot.intake.commands;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
+import frc.robot.intake.IntakeConstants;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessPattern;
@@ -28,6 +29,7 @@ public class OutakeCube extends CommandBase {
 
   @Override
   public void initialize() {
+    intakeSubsystem.zeroEncoder();
     intakeSubsystem.intakeCone();
   }
 
@@ -41,6 +43,6 @@ public class OutakeCube extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return intakeMotor.getSelectedSensorPosition() > 1000;
+    return intakeMotor.getSelectedSensorPosition() > IntakeConstants.kOutakeEncoderDistance;
   }
 }

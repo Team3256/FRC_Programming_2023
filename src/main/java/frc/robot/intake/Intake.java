@@ -56,20 +56,27 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void latchCone() {
-    if (kDebugEnabled) System.out.println("Latch cone");
+    if (kDebugEnabled)
+      System.out.println("Latch cone");
     intakeMotor.set(ControlMode.PercentOutput, kLatchConeSpeed);
   }
 
   public void latchCube() {
-    if (kDebugEnabled) System.out.println("Latch Cube");
+    if (kDebugEnabled)
+      System.out.println("Latch Cube");
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
 
   public void configureCurrentLimit(boolean enabled) {
-    if (kDebugEnabled) System.out.println("Setting Current Limit Configuration: " + enabled);
+    if (kDebugEnabled)
+      System.out.println("Setting Current Limit Configuration: " + enabled);
     intakeMotor.configStatorCurrentLimit(
         new StatorCurrentLimitConfiguration(
             enabled, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
+  }
+
+  public void zeroEncoder() {
+    intakeMotor.setSelectedSensorPosition(0);
   }
 
   public void intakeCone() {
