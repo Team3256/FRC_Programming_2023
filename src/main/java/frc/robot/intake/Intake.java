@@ -87,7 +87,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void outtakeCone() {
-    intakeMotor.set(ControlMode.PercentOutput, kOutakeConeSpeed);
+    intakeMotor.set(ControlMode.PercentOutput, kOuttakeConeSpeed);
   }
 
   public void intakeCube() {
@@ -95,7 +95,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void outtakeCube() {
-    intakeMotor.set(ControlMode.PercentOutput, kOutakeCubeSpeed);
+    intakeMotor.set(ControlMode.PercentOutput, kOuttakeCubeSpeed);
   }
 
   public boolean isCurrentSpiking() {
