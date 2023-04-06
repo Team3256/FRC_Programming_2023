@@ -85,7 +85,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             },
             new Pose2d(),
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.9, 0.9, 0.02), // Current state X, Y, theta.
-            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.10, 0.10, 0.04));
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.10, 0.10, 0.5));
 
     if (kDebugEnabled) {
       SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
@@ -257,7 +257,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
         double rz = ((visionBotPose[5] + 360) % 360);
 
         double tl = Limelight.getLatency_Pipeline(networkTablesName);
-
         Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
 
         isLocalized =
@@ -267,8 +266,28 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
         if (shouldAddVisionMeasurement(
             limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)) {
-          poseEstimator.addVisionMeasurement(
-              limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+
+          if (FeatureFlags.kLocalizationStdDistanceBased) {
+            double[] aprilTagLocation = Limelight.getTargetPose_RobotSpace(networkTablesName);
+            double aprilTagDistance =
+                new Translation2d(aprilTagLocation[0], aprilTagLocation[1]).getNorm();
+
+            if (kDebugEnabled) {
+              SmartDashboard.putNumber("April Tag Distance", aprilTagDistance);
+            }
+
+            poseEstimator.addVisionMeasurement(
+                limelightPose,
+                Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl),
+                new MatBuilder<>(Nat.N3(), Nat.N1())
+                    .fill(
+                        aprilTagDistanceToStd(aprilTagDistance),
+                        aprilTagDistanceToStd(aprilTagDistance),
+                        0.5));
+          } else {
+            poseEstimator.addVisionMeasurement(
+                limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+          }
         }
 
         if (kDebugEnabled) {
@@ -280,6 +299,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
         }
       }
     }
+  }
+
+  private double aprilTagDistanceToStd(double distance) {
+    // Looked good on desmos
+    return Math.pow(distance, 2) / 3;
   }
 
   @Override
