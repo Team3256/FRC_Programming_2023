@@ -12,10 +12,10 @@ import static frc.robot.swerve.SwerveConstants.*;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.swerve.SwerveDrive;
 
-public class LockSwerveHorizontal extends CommandBase {
+public class LockSwerveHorizontal extends DebugCommandBase {
   private final SwerveDrive swerveSubsystem;
 
   public LockSwerveHorizontal(SwerveDrive swerveSubsystem) {
@@ -25,7 +25,7 @@ public class LockSwerveHorizontal extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("LockSwerveHorizontal started");
+    super.initialize();
     double inwardAngle = Math.atan(kTrackWidth / kWheelBase);
     SwerveModuleState[] states = new SwerveModuleState[4];
 

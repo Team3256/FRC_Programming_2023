@@ -7,10 +7,10 @@
 
 package frc.robot.arm.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.arm.Arm;
+import frc.robot.helpers.DebugCommandBase;
 
-public class SetArmVoltage extends CommandBase {
+public class SetArmVoltage extends DebugCommandBase {
   private final Arm armSubsystem;
   private final double volts;
 
@@ -22,6 +22,7 @@ public class SetArmVoltage extends CommandBase {
 
   @Override
   public void initialize() {
+    super.initialize();
     armSubsystem.setInputVoltage(volts);
   }
 
@@ -30,6 +31,7 @@ public class SetArmVoltage extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     armSubsystem.off();
   }
 
