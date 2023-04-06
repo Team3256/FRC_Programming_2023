@@ -29,6 +29,7 @@ public class IntakeCone extends DebugCommandBase {
   public IntakeCone(Intake intakeSubsystem, LED ledSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
     this.ledSubsystem = ledSubsystem;
+    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 1);
 
     addRequirements(intakeSubsystem);
   }
