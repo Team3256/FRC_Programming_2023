@@ -34,8 +34,6 @@ public class OuttakeCone extends CommandBase {
   public OuttakeCone(Intake intakeSubsystem, LED ledSubsystem) {
     this(intakeSubsystem);
     this.ledSubsystem = ledSubsystem;
-
-    addRequirements(ledSubsystem);
   }
 
   @Override

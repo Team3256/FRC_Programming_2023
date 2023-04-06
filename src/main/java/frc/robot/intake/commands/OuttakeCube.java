@@ -34,8 +34,6 @@ public class OuttakeCube extends CommandBase {
   public OuttakeCube(Intake intakeSubsystem, LED ledSubsystem) {
     this(intakeSubsystem);
     this.ledSubsystem = ledSubsystem;
-
-    addRequirements(ledSubsystem);
   }
 
   @Override
