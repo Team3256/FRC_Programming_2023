@@ -7,10 +7,10 @@
 
 package frc.robot.intake.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
 
-public class IntakeOff extends CommandBase {
+public class IntakeOff extends DebugCommandBase {
   private final Intake intakeSubsystem;
 
   public IntakeOff(Intake intakeSubsystem) {
@@ -20,7 +20,7 @@ public class IntakeOff extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("Intake off");
+    super.initialize();
     intakeSubsystem.off();
   }
 

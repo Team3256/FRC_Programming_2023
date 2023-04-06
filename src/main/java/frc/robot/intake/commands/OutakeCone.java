@@ -8,13 +8,13 @@
 package frc.robot.intake.commands;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessPattern;
 
-public class OutakeCone extends CommandBase {
+public class OutakeCone extends DebugCommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
   private WPI_TalonFX intakeMotor;
@@ -34,11 +34,13 @@ public class OutakeCone extends CommandBase {
 
   @Override
   public void initialize() {
+    super.initialize();
     intakeSubsystem.intakeCube();
   }
 
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
       new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();

@@ -7,11 +7,11 @@
 
 package frc.robot.led.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.led.LED;
 import frc.robot.led.patternBases.LEDPattern;
 
-public class LEDSetAllSectionsPattern extends CommandBase {
+public class LEDSetAllSectionsPattern extends DebugCommandBase {
   private final LED led;
   private final LEDPattern ledPattern;
 
@@ -23,6 +23,7 @@ public class LEDSetAllSectionsPattern extends CommandBase {
 
   @Override
   public void initialize() {
+    super.initialize();
     led.setAll(ledPattern);
   }
 
