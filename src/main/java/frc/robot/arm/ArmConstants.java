@@ -96,15 +96,12 @@ public final class ArmConstants {
   public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-10);
 
   // CUBE
-  public static final Rotation2d kDoubleSubstationRotationCube = Rotation2d.fromDegrees(13.061565);
+  public static final Rotation2d kDoubleSubstationRotationCube = Rotation2d.fromDegrees(17.318706);
   public static final Rotation2d kCubeMidRotation = new Rotation2d(0.32);
   public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(27.818361);
 
   // CONE
   public static final Rotation2d kDoubleSubstationRotationCone = Rotation2d.fromDegrees(17.318706);
-  // Michael presets
-  // public static final Rotation2d kDoubleSubstationRotationCone =
-  // Rotation2d.fromDegrees(35.5);
   public static final Rotation2d kConeMidRotation = new Rotation2d(0.32);
   public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(20.404575);
 
