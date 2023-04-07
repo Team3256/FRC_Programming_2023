@@ -334,6 +334,10 @@ public final class Constants {
   }
 
   public static class VisionConstants {
+    // TODO: set the indexes
+    public static final int kClassifierPipelineIndex = -1;
+    public static final int kDetectorPipelineIndex = -1;
+
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
       public static final double kLimelightTranslationThresholdMeters = 30;
