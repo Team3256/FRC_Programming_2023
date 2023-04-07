@@ -291,9 +291,10 @@ public class RobotContainer implements CANTestable, Loggable {
         .or(driver.b())
         .whileTrue(
             new ConditionalCommand(
-                new IntakeCube(intakeSubsystem),
-                new IntakeCone(intakeSubsystem),
+                new OutakeCone(intakeSubsystem),
+                new OutakeCube(intakeSubsystem),
                 this::isCurrentPieceCone));
+  
   }
 
   public void configureElevator() {
