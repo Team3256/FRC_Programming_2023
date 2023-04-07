@@ -90,13 +90,13 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
               new ParallelCommandGroup(
                   new SetElevatorHeight(
                           elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
-                      .beforeStarting(new WaitCommand(0.3)),
+                      .beforeStarting(new WaitCommand(0.45)),
                   new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
                   new IntakeCone(intakeSubsystem, ledSubsystem)),
               new ParallelCommandGroup(
                   new SetElevatorHeight(
                           elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
-                      .beforeStarting(new WaitCommand(0.3)),
+                      .beforeStarting(new WaitCommand(0.45)),
                   new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
                   new IntakeCube(intakeSubsystem, ledSubsystem)),
               isCurrentPieceCone)

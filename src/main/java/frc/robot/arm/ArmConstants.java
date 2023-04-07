@@ -91,7 +91,7 @@ public final class ArmConstants {
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-35);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
 
-  public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(90);
+  public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(85);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-30.5);
   public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-10);
 
@@ -101,11 +101,13 @@ public final class ArmConstants {
   public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(27.818361);
 
   // CONE
-  public static final Rotation2d kDoubleSubstationRotationCone = Rotation2d.fromDegrees(11.318706);
+  public static final Rotation2d kDoubleSubstationRotationCone = Rotation2d.fromDegrees(17.318706);
+  // Michael presets
+  // public static final Rotation2d kDoubleSubstationRotationCone =
+  // Rotation2d.fromDegrees(35.5);
   public static final Rotation2d kConeMidRotation = new Rotation2d(0.32);
   public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(20.404575);
 
-  // Michael presets
   // CONE DOUBLE SUBSTATION: Elevator=0in, Arm=35.541792deg
 
   public static final double kManualArmVoltage = 2.5;

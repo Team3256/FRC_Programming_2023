@@ -30,8 +30,10 @@ public final class ElevatorConstants {
   public static final double kDoubleSubstationPositionCubeMeters = 0.455;
   public static final double kCubeHighPositionMeters = 0.2;
 
-  public static final double kDoubleSubstationPositionConeMeters = 0.55;
-  public static final double kConeHighPositionMeters = 0.43;
+  // Michael presets
+  // public static final double kDoubleSubstationPositionConeMeters = 0;
+  public static final double kDoubleSubstationPositionConeMeters = 0.557;
+  public static final double kConeHighPositionMeters = 0.55;
 
   public static class ElevatorPreferencesKeys {
     public static final Map<Elevator.ElevatorPreset, String> kElevatorPositionKeys =
