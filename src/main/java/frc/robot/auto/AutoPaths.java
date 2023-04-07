@@ -20,7 +20,6 @@ import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
-import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -178,7 +177,7 @@ public class AutoPaths {
       scorePreloadCube =
           () ->
               Commands.parallel(
-                      new ZeroElevator(elevatorSubsystem),
+                      new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
                   .withTimeout(2.25)
                   .andThen(new OutakeCube(intakeSubsystem).withTimeout(1))
@@ -188,7 +187,7 @@ public class AutoPaths {
       scorePreloadCone =
           () ->
               Commands.parallel(
-                      new ZeroElevator(elevatorSubsystem),
+                      new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
                   .withTimeout(2.25)
                   .andThen(new OutakeCone(intakeSubsystem).withTimeout(1))
