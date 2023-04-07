@@ -145,11 +145,12 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new ConditionalCommand(
-                new SetElevatorHeight(
-                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
-                new SetElevatorHeight(
-                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
-                isCurrentPieceCone),
+                    new SetElevatorHeight(
+                        elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
+                    new SetElevatorHeight(
+                        elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
+                    isCurrentPieceCone)
+                .beforeStarting(new WaitCommand(0.45)),
             new ConditionalCommand(
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),

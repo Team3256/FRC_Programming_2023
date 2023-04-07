@@ -157,7 +157,7 @@ public class AutoScore extends CommandBase {
         scoringLocation = kHighBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new WaitCommand(0.17)
+                new WaitCommand(0.5)
                     .andThen(
                         new ConditionalCommand(
                             new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
@@ -172,7 +172,7 @@ public class AutoScore extends CommandBase {
         scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new WaitCommand(0.17)
+                new WaitCommand(0.5)
                     .andThen(
                         new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID)),
                 new ConditionalCommand(
