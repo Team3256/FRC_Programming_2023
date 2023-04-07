@@ -29,7 +29,7 @@ public final class ElevatorConstants {
 
   // CONE
   public static final double kDoubleSubstationPositionCubeMeters = 0.530;
-  public static final double kCubeHighPositionMeters = 0.2;
+  public static final double kCubeHighPositionMeters = 0.4;
 
   // CONE
   public static final double kDoubleSubstationPositionConeMeters = 0.557;
