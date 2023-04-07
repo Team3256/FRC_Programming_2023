@@ -53,6 +53,6 @@ public class AutoBalance extends DebugCommandBase {
 
   @Override
   public boolean isFinished() {
-    return swerveDrive.isNotTilted() && balancedTimer.get() >= 2;
+    return swerveDrive.isNotTilted() && balancedTimer.get() >= 3;
   }
 }

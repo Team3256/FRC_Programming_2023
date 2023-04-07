@@ -28,7 +28,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -322,24 +321,24 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     Logger.getInstance().recordOutput("Odometry", getPose());
 
     // if (!DriverStation.isAutonomous()) {
-      this.localize(
-          FrontConstants.kLimelightNetworkTablesName,
-          FrontConstants.kFieldTranslationOffsetX,
-          FrontConstants.kFieldTranslationOffsetY,
-          FrontConstants.kLimelightTranslationThresholdMeters,
-          FrontConstants.kLimelightRotationThreshold);
-      this.localize(
-          SideConstants.kLimelightNetworkTablesName,
-          SideConstants.kFieldTranslationOffsetX,
-          SideConstants.kFieldTranslationOffsetY,
-          SideConstants.kLimelightTranslationThresholdMeters,
-          SideConstants.kLimelightRotationThreshold);
-      this.localize(
-          BackConstants.kLimelightNetworkTablesName,
-          BackConstants.kFieldTranslationOffsetX,
-          BackConstants.kFieldTranslationOffsetY,
-          BackConstants.kLimelightTranslationThresholdMeters,
-          BackConstants.kLimelightTranslationThresholdMeters);
+    this.localize(
+        FrontConstants.kLimelightNetworkTablesName,
+        FrontConstants.kFieldTranslationOffsetX,
+        FrontConstants.kFieldTranslationOffsetY,
+        FrontConstants.kLimelightTranslationThresholdMeters,
+        FrontConstants.kLimelightRotationThreshold);
+    this.localize(
+        SideConstants.kLimelightNetworkTablesName,
+        SideConstants.kFieldTranslationOffsetX,
+        SideConstants.kFieldTranslationOffsetY,
+        SideConstants.kLimelightTranslationThresholdMeters,
+        SideConstants.kLimelightRotationThreshold);
+    this.localize(
+        BackConstants.kLimelightNetworkTablesName,
+        BackConstants.kFieldTranslationOffsetX,
+        BackConstants.kFieldTranslationOffsetY,
+        BackConstants.kLimelightTranslationThresholdMeters,
+        BackConstants.kLimelightTranslationThresholdMeters);
     // }
 
     if (kDebugEnabled) {
