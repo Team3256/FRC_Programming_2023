@@ -12,6 +12,7 @@ import static frc.robot.auto.AutoConstants.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
@@ -167,20 +168,22 @@ public class AutoPaths {
           () ->
               Commands.parallel(
                       new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
+                              elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW)
+                          .beforeStarting(new WaitCommand(0.5)),
                       new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCone(intakeSubsystem))
+                  .andThen(new OutakeCone(intakeSubsystem).withTimeout(1.5))
                   .asProxy()
                   .withName("coneLow"));
 
       scorePreloadCube =
           () ->
               Commands.parallel(
-                      new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
+                      new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH)
+                          .beforeStarting(new WaitCommand(0.5)),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCube(intakeSubsystem).withTimeout(1))
+                  .andThen(new OutakeCube(intakeSubsystem).withTimeout(1.5))
                   .asProxy()
                   .withName("scorePreloadCube");
 

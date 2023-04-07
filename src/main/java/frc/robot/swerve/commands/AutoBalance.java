@@ -41,6 +41,7 @@ public class AutoBalance extends DebugCommandBase {
       balancedTimer.reset();
       swerveDrive.drive(new Translation2d(kXAutoBalanceVelocityMeters, 0), 0, true, true);
     } else {
+      balancedTimer.start();
       swerveDrive.drive(new Translation2d(0, 0), 0, true, true);
     }
   }
