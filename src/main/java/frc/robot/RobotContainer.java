@@ -129,6 +129,7 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
+    configureTests();
 
     modeChooser = new SendableChooser<>();
     if (FeatureFlags.kAutoScoreEnabled) {
@@ -294,7 +295,6 @@ public class RobotContainer implements CANTestable, Loggable {
                 new OutakeCone(intakeSubsystem),
                 new OutakeCube(intakeSubsystem),
                 this::isCurrentPieceCone));
-  
   }
 
   public void configureElevator() {
