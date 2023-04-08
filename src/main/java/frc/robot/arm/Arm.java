@@ -41,17 +41,19 @@ import frc.robot.swerve.helpers.Conversions;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public enum ArmPreset {
-    DEFAULT(ArmConstants.kDefaultArmAngle),
-    ANY_PIECE_LOW(ArmConstants.kAnyPieceLowRotation),
-    CUBE_MID(ArmConstants.kCubeMidRotation),
-    CONE_MID(ArmConstants.kConeMidRotation),
-    CUBE_HIGH(ArmConstants.kCubeHighRotation),
-    CONE_HIGH(ArmConstants.kConeHighRotation),
-    GROUND_INTAKE(ArmConstants.kGroundIntakeRotation),
-    DOUBLE_SUBSTATION_CUBE(ArmConstants.kDoubleSubstationRotationCube),
-    DOUBLE_SUBSTATION_CONE(ArmConstants.kDoubleSubstationRotationCone);
+    STOW_CUBE(kStowRotationCube),
+    STOW_CONE(kStowRotationCone),
+    ANY_PIECE_LOW(kAnyPieceLowRotation),
+    CUBE_MID(kCubeMidRotation),
+    CONE_MID(kConeMidRotation),
+    CUBE_HIGH(kCubeHighRotation),
+    CONE_HIGH(kConeHighRotation),
+    CONE_GROUND_INTAKE(kConeGroundIntakeRotation),
+    CUBE_GROUND_INTAKE(kCubeGroundIntakeRotation),
+    DOUBLE_SUBSTATION_CUBE(kDoubleSubstationRotationCube),
+    DOUBLE_SUBSTATION_CONE(kDoubleSubstationRotationCone);
 
-    public Rotation2d rotation;
+    public final Rotation2d rotation;
 
     ArmPreset(Rotation2d rotation) {
       this.rotation = rotation;
@@ -199,9 +201,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
     Preferences.initDouble(
         ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
-    // Arm Preset Preferences
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.DEFAULT), kDefaultArmAngle.getRadians());
+        kArmPositionKeys.get(ArmPreset.STOW_CONE), kStowRotationCone.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(ArmPreset.STOW_CUBE), kStowRotationCube.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
     Preferences.initDouble(
@@ -213,7 +216,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.CONE_HIGH), kConeHighRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.GROUND_INTAKE), kGroundIntakeRotation.getRadians());
+        kArmPositionKeys.get(ArmPreset.CONE_GROUND_INTAKE), kConeGroundIntakeRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(ArmPreset.CUBE_GROUND_INTAKE), kCubeGroundIntakeRotation.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
         kDoubleSubstationRotationCone.getRadians());

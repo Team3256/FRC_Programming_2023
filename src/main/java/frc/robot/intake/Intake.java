@@ -140,6 +140,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private void configureSimHardware() {
     intakeMotor = new WPI_TalonFX(kIntakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
+
     intakePivot =
         new MechanismLigament2d(
             "Intake Wrist",
@@ -157,7 +158,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
         BatterySim.calculateDefaultBatteryLoadedVoltage(intakeSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
     intakePivot.setAngle(Units.radiansToDegrees(getArmPositionRads()) * (86.058 / 180) - 90);
-    // -90 --> 0
   }
 
   private void simulationOutputToDashboard() {

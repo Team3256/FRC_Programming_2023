@@ -30,11 +30,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
-import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
@@ -42,6 +42,7 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -305,7 +306,7 @@ public class RobotContainer implements CANTestable, Loggable {
       driver
           .y()
           .or(operator.leftTrigger())
-          .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+          .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
     }
   }
 
@@ -346,22 +347,29 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorStart;
-    if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
-
-      return Commands.sequence(
-          setArmElevatorStart.asProxy(),
-          autoPath,
-          Commands.parallel(
-              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
-              new LockSwerveX(swerveSubsystem)
-                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
-                  .until(() -> isMovingJoystick(driver))));
-    } else {
-      return autoPath;
-    }
+    //    Command autoPath = autoPaths.getSelectedPath();
+    //    if (kElevatorEnabled && kArmEnabled) {
+    //
+    //      return Commands.sequence(
+    //          autoPath,
+    //          Commands.parallel(
+    //              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
+    //              new LockSwerveX(swerveSubsystem)
+    //                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+    //                  .until(() -> isMovingJoystick(driver))));
+    //    } else {
+    //      return autoPath;
+    //    }
+    return (new ParallelCommandGroup(
+        new ConditionalCommand(
+                new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
+                new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
+                () -> true)
+            .beforeStarting(new WaitCommand(0.5)),
+        new ConditionalCommand(
+            new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_HIGH),
+            new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_HIGH),
+            () -> true)));
   }
 
   @Override

@@ -164,7 +164,8 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
         PathGeneration.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
     Command stopIntake = new IntakeOff(intakeSubsystem);
-    Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem, 0, 1);
+    Command stowArmElevator =
+        new StowArmElevator(elevatorSubsystem, armSubsystem, 0, 1, isCurrentPieceCone);
     Command moveAwayFromSubstation =
         PathGeneration.createDynamicAbsolutePath(
             end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);

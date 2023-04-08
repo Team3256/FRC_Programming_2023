@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
-import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
 import frc.robot.elevator.Elevator;
@@ -25,7 +24,6 @@ import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
-import frc.robot.intake.commands.IntakeOff;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -62,15 +60,16 @@ public class AutoPaths {
         && armSubsystem != null
         && elevatorSubsystem != null) {
 
-      autoEventMap.put(
-          "defaultPosition",
-          () ->
-              runParallelWithPath(
-                  Commands.parallel(
-                          new StowArmElevator(elevatorSubsystem, armSubsystem),
-                          new IntakeOff(intakeSubsystem))
-                      .asProxy()
-                      .withName("defaultPosition")));
+      //      autoEventMap.put(
+      //          "defaultPosition",
+      //          () ->
+      //              runParallelWithPath(
+      //                  Commands.parallel(
+      //                          new StowArmElevator(elevatorSubsystem, armSubsystem,
+      // isCurrentPieceCone),
+      //                          new IntakeOff(intakeSubsystem))
+      //                      .asProxy()
+      //                      .withName("defaultPosition")));
 
       autoEventMap.put(
           "intakeCone",
@@ -80,7 +79,7 @@ public class AutoPaths {
                           new IntakeCone(intakeSubsystem),
                           new SetElevatorExtension(
                               elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
+                          new SetArmAngle(armSubsystem, ArmPreset.CONE_GROUND_INTAKE)))
                   .asProxy()
                   .withName("intakeCone"));
 
@@ -92,7 +91,7 @@ public class AutoPaths {
                           new IntakeCube(intakeSubsystem),
                           new SetElevatorExtension(
                               elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
+                          new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)))
                   .asProxy()
                   .withName("intakeCube"));
 
@@ -144,15 +143,15 @@ public class AutoPaths {
                   .asProxy()
                   .withName("coneMid"));
 
-      autoEventMap.put(
-          "defaultPosition",
-          () ->
-              runParallelWithPath(
-                  Commands.parallel(
-                          new StowArmElevator(elevatorSubsystem, armSubsystem),
-                          new IntakeOff(intakeSubsystem))
-                      .asProxy()
-                      .withName("defaultPosition")));
+      //      autoEventMap.put(
+      //          "defaultPosition",
+      //          () ->
+      //              runParallelWithPath(
+      //                  Commands.parallel(
+      //                          new StowArmElevator(elevatorSubsystem, armSubsystem),
+      //                          new IntakeOff(intakeSubsystem))
+      //                      .asProxy()
+      //                      .withName("defaultPosition")));
       autoEventMap.put(
           "intakeCone",
           () ->
@@ -161,7 +160,7 @@ public class AutoPaths {
                           new IntakeCone(intakeSubsystem),
                           new SetElevatorExtension(
                               elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
+                          new SetArmAngle(armSubsystem, ArmPreset.CONE_GROUND_INTAKE)))
                   .asProxy()
                   .withName("intakeCone"));
 
@@ -173,7 +172,7 @@ public class AutoPaths {
                           new IntakeCube(intakeSubsystem),
                           new SetElevatorExtension(
                               elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
+                          new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)))
                   .asProxy()
                   .withName("intakeCube"));
       autoEventMap.put(
