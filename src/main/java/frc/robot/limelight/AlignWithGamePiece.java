@@ -7,13 +7,13 @@
 
 package frc.robot.limelight;
 
+import static frc.robot.Constants.VisionConstants.*;
+import static frc.robot.Constants.VisionConstants.FrontConstants.kLimelightNetworkTablesName;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.swerve.SwerveDrive;
-
-import static frc.robot.Constants.VisionConstants.FrontConstants.kLimelightNetworkTablesName;
-import static frc.robot.Constants.VisionConstants.*;
 
 public class AlignWithGamePiece extends PIDCommand {
 
