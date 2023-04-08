@@ -25,6 +25,7 @@ public final class ArmConstants {
             Map.entry(Arm.ArmPreset.CUBE_HIGH, "kCubeHighRotation"),
             Map.entry(Arm.ArmPreset.CONE_HIGH, "kConeHighRotation"),
             Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, "kCubeGroundIntakeRotation"),
+            Map.entry(Arm.ArmPreset.CONE_GROUND_INTAKE, "kConeGroundIntakeRotation"),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, "kDoubleSubstationCubeRotation"),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationConeRotation"));
 
@@ -38,6 +39,7 @@ public final class ArmConstants {
             Map.entry(Arm.ArmPreset.CUBE_HIGH, kCubeHighRotation),
             Map.entry(Arm.ArmPreset.CONE_HIGH, kConeHighRotation),
             Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, kCubeGroundIntakeRotation),
+            Map.entry(Arm.ArmPreset.CONE_GROUND_INTAKE, kConeGroundIntakeRotation),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, kDoubleSubstationRotationCube),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, kDoubleSubstationRotationCone));
 
@@ -92,10 +94,8 @@ public final class ArmConstants {
   // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
-
-  public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(90);
-  public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(150);
-  public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(160);
+  public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(160);
+  public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(150);
   public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0);
   public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0);
   public static final Rotation2d kCubeMidRotation = new Rotation2d(0);

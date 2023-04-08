@@ -75,8 +75,8 @@ public final class Constants {
     REPLAY
   }
 
-  public static final double kRobotLength = 0.9271;
-  public static final double kRobotWidth = 0.9271;
+  public static final double kRobotLength = Units.inchesToMeters(32.625);
+  public static final double kRobotWidth = Units.inchesToMeters(32.625);
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);
