@@ -22,7 +22,7 @@ public final class Constants {
   public static final boolean kDebugEnabled = false;
 
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kClimbEnabled = true;
+  public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
   public static final boolean kArmEnabled = true;
@@ -31,7 +31,7 @@ public final class Constants {
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final boolean kCompetitionModeEnabled = true;
   public static final RobotType kRobotType = RobotType.ALPHA;
-  public static final RobotMode kCurrentMode = RobotMode.SIM;
+  public static final RobotMode kCurrentMode = RobotMode.REAL;
 
   public static final double kStickDeadband = 0.05;
   public static final double kStickCancelDeadband = 0.50;
@@ -50,7 +50,7 @@ public final class Constants {
     public static final boolean kLocalizationEnabled = true;
     public static final boolean kLocalizationStdDistanceBased = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
-
+    public static final boolean kGamePieceDetection = true;
     public static final boolean kUsePrefs = false;
     public static final boolean kLocalizationUseWPIBlueOffset = false;
     public static final boolean kDynamicPathGenEnabled = false;
@@ -335,8 +335,9 @@ public final class Constants {
 
   public static class VisionConstants {
     // TODO: set the indexes
-    public static final int kClassifierPipelineIndex = -1;
-    public static final int kDetectorPipelineIndex = -1;
+    public static final int kDefaultPipeline = 0;
+
+    public static final int kDetectorPipelineIndex = 1;
 
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";

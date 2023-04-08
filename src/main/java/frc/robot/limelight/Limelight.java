@@ -139,12 +139,17 @@ public class Limelight {
     return getLimelightNTDouble(limelightName, "tid");
   }
 
-  public static double getNeuralClassID(String limelightName) {
-    return getLimelightNTDouble(limelightName, "tclass");
+  public static String getNeuralClassID(String limelightName) {
+    return getLimelightNTString(limelightName, "tclass");
   }
 
-  /////
-  /////
+  public static boolean isConeDetected(String limelightName) {
+    return getNeuralClassID(limelightName).equals("cone");
+  }
+
+  public static boolean isCubeDetected(String limelightName) {
+    return getNeuralClassID(limelightName).equals("cube");
+  }
 
   public static void setPipelineIndex(String limelightName, int pipelineIndex) {
     setLimelightNTDouble(limelightName, "pipeline", pipelineIndex);

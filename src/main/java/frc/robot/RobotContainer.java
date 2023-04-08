@@ -45,6 +45,7 @@ import frc.robot.led.patterns.*;
 import frc.robot.led.patterns.Blink.ConePatternBlink;
 import frc.robot.led.patterns.Blink.CubePatternBlink;
 import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
+import frc.robot.limelight.Limelight;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -144,6 +145,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+    SmartDashboard.putString("Game Piece Detected", Limelight.getNeuralClassID("limelight-front"));
   }
 
   private void configureSwerve() {

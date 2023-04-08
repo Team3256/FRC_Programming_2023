@@ -7,6 +7,7 @@
 
 package frc.robot.intake.commands;
 
+import static frc.robot.Constants.FeatureFlags.*;
 import static frc.robot.Constants.VisionConstants.*;
 
 import edu.wpi.first.wpilibj2.command.*;
@@ -16,6 +17,7 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.limelight.Limelight;
+import java.util.function.BooleanSupplier;
 
 public class GroundIntake extends CommandBase {
 
@@ -23,26 +25,41 @@ public class GroundIntake extends CommandBase {
   private Arm armSubsystem;
   private Intake intakeSubsystem;
 
+  private BooleanSupplier isCurrentPieceCone;
+
   public GroundIntake(Elevator elevatorSubsystem, Arm armSubsystem, Intake intakeSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
     this.armSubsystem = armSubsystem;
     this.intakeSubsystem = intakeSubsystem;
   }
 
-  // TODO: Add gamepiece detection
+  public GroundIntake(
+      Elevator elevatorSubsystem,
+      Arm armSubsystem,
+      Intake intakeSubsystem,
+      BooleanSupplier isCurrentPieceCone) {
+    this(elevatorSubsystem, armSubsystem, intakeSubsystem);
+    this.isCurrentPieceCone = isCurrentPieceCone;
+  }
+
   @Override
   public void initialize() {
-    Limelight.setPipelineIndex(
-        FrontConstants.kLimelightNetworkTablesName, kClassifierPipelineIndex);
+    if (kGamePieceDetection) {
+      Limelight.setPipelineIndex(
+          FrontConstants.kLimelightNetworkTablesName, kDetectorPipelineIndex);
+      isCurrentPieceCone =
+          () -> Limelight.isConeDetected(FrontConstants.kLimelightNetworkTablesName);
+    }
 
     Commands.parallel(
         new ZeroElevator(elevatorSubsystem),
         new SetArmAngle(armSubsystem, Arm.ArmPreset.GROUND_INTAKE),
-        new IntakeCone(intakeSubsystem));
+        new ConditionalCommand(
+            new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone));
   }
 
   @Override
   public void end(boolean interrupted) {
-    Limelight.setPipelineIndex(FrontConstants.kLimelightNetworkTablesName, 0);
+    Limelight.setPipelineIndex(FrontConstants.kLimelightNetworkTablesName, kDefaultPipeline);
   }
 }
