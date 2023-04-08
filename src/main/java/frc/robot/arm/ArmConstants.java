@@ -58,7 +58,7 @@ public final class ArmConstants {
   public static final double kArmGearing = 4;
   public static double kRelativeFalconEncoderOffsetRadians =
       Constants.kCompetitionModeEnabled ? 4.2246340316 : Math.PI / 2;
-  public static final double kArmLengthMeters = 0.569075;
+  public static final double kArmLengthMeters = 0.462407;
   public static final double kArmInertia = 0.410;
   public static final double kArmMassKg = 7.5;
   public static final boolean kArmSimGravity = true;

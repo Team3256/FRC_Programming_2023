@@ -15,7 +15,6 @@ import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -31,11 +30,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
+import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
@@ -43,7 +42,6 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -348,25 +346,22 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    //    Command autoPath = autoPaths.getSelectedPath();
-    //    Command setArmElevatorStart;
-    //    if (kElevatorEnabled && kArmEnabled) {
-    //      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
-    //
-    //      return Commands.sequence(
-    //          setArmElevatorStart.asProxy(),
-    //          autoPath,
-    //          Commands.parallel(
-    //              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
-    //              new LockSwerveX(swerveSubsystem)
-    //                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
-    //                  .until(() -> isMovingJoystick(driver))));
-    //    } else {
-    //      return autoPath;
-    //    }
-    return new ParallelCommandGroup(
-        new SetElevatorExtension(elevatorSubsystem, 1),
-        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(30)));
+    Command autoPath = autoPaths.getSelectedPath();
+    Command setArmElevatorStart;
+    if (kElevatorEnabled && kArmEnabled) {
+      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
+
+      return Commands.sequence(
+          setArmElevatorStart.asProxy(),
+          autoPath,
+          Commands.parallel(
+              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
+              new LockSwerveX(swerveSubsystem)
+                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                  .until(() -> isMovingJoystick(driver))));
+    } else {
+      return autoPath;
+    }
   }
 
   @Override
@@ -436,16 +431,19 @@ public class RobotContainer implements CANTestable, Loggable {
 
       Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
       SmartDashboard.putData("Robot Sim", robotCanvas);
+
       MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", 0.5, 0);
       MechanismRoot2d elevatorRoot =
           robotCanvas.getRoot("Elevator Root", 0.5, Units.inchesToMeters(2.773));
       MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
 
-      robotRoot.append(new MechanismLigament2d("Drive Chassis", kRobotLength, 0));
+      robotRoot.append(
+          new MechanismLigament2d(
+              "Drive Chassis", kRobotLength, 0, 20, new Color8Bit(235, 137, 52)));
       elevatorRoot.append(elevatorSubsystem.getLigament());
 
       MechanismLigament2d armPivot =
-          new MechanismLigament2d("Arm Pivot", 0.045, 90, 0, new Color8Bit(Color.kRed));
+          new MechanismLigament2d("Arm Pivot", 0.045, 90, 0, new Color8Bit(Color.kBlack));
 
       MechanismLigament2d intakePivot = intakeSubsystem.getWrist();
 
