@@ -43,7 +43,6 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -364,9 +363,7 @@ public class RobotContainer implements CANTestable, Loggable {
     //    } else {
     //      return autoPath;
     //    }
-    return new ParallelCommandGroup(
-        new SetElevatorExtension(elevatorSubsystem, Units.inchesToMeters(30)),
-        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)));
+    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90));
   }
 
   @Override
@@ -436,20 +433,57 @@ public class RobotContainer implements CANTestable, Loggable {
 
       Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
       SmartDashboard.putData("Robot Sim", robotCanvas);
-      MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", kRobotLength, 0);
+      MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", 0.5, 0);
+      MechanismRoot2d elevatorRoot =
+          robotCanvas.getRoot("Elevator Root", 0.5, Units.inchesToMeters(2.773));
       MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
+
       robotRoot.append(new MechanismLigament2d("Drive Chassis", kRobotLength, 0));
-      robotRoot.append(elevatorSubsystem.getLigament());
+      elevatorRoot.append(elevatorSubsystem.getLigament());
 
       MechanismLigament2d armPivot =
-          new MechanismLigament2d("Arm Pivot", 0.045, 90, 0, new Color8Bit(Color.kBlack));
+          new MechanismLigament2d("Arm Pivot", 0.045, 90, 0, new Color8Bit(Color.kRed));
+
+      MechanismLigament2d intakePivot = intakeSubsystem.getWrist();
+
       elevatorSubsystem
           .getLigament()
-          .append(new MechanismLigament2d("Elevator Right", Units.inchesToMeters(6.25), 0));
+          .append(
+              new MechanismLigament2d(
+                  "Elevator Right", Units.inchesToMeters(6.25), 0, 10, new Color8Bit(Color.kRed)));
       elevatorSubsystem.getLigament().append(armPivot);
       armPivot.append(armSubsystem.getLigament());
-      // armSubsystem.getLigament().append(intakeSubsystem.getLigamentTop());
-      // armSubsystem.getLigament().append(intakeSubsystem.getLigamentBottom());
+      armSubsystem.getLigament().append(intakePivot);
+
+      intakePivot
+          .append(
+              new MechanismLigament2d(
+                  "Intake 1",
+                  Units.inchesToMeters(3),
+                  -3.728 + 90,
+                  4,
+                  new Color8Bit(Color.kYellow)))
+          .append(
+              new MechanismLigament2d(
+                  "Intake 2",
+                  Units.inchesToMeters(6.813),
+                  128.732,
+                  4,
+                  new Color8Bit(Color.kYellow)))
+          .append(
+              new MechanismLigament2d(
+                  "Intake 3",
+                  Units.inchesToMeters(11.738),
+                  92.834,
+                  4,
+                  new Color8Bit(Color.kYellow)))
+          .append(
+              new MechanismLigament2d(
+                  "Intake 4",
+                  Units.inchesToMeters(10.104),
+                  153.392,
+                  4,
+                  new Color8Bit(Color.kYellow)));
 
       goalRoot.append(
           new MechanismLigament2d(

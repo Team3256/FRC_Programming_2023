@@ -201,16 +201,19 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
           true);
   private MechanismLigament2d elevatorLigament;
 
-  public MechanismLigament2d getLigament() {
-    return elevatorLigament;
-  }
-
   private void configureSimHardware() {
     elevatorMotor = new WPI_TalonFX(kElevatorMasterID);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     elevatorLigament =
-        new MechanismLigament2d("Elevator", elevatorSim.getPositionMeters(), kElevatorAngleOffset);
+        new MechanismLigament2d(
+            "Elevator",
+            Units.inchesToMeters(29) + elevatorSim.getPositionMeters(),
+            kElevatorAngleOffset);
     elevatorLigament.setColor(new Color8Bit(Color.kRed));
+  }
+
+  public MechanismLigament2d getLigament() {
+    return elevatorLigament;
   }
 
   @Override
@@ -220,7 +223,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
-    elevatorLigament.setLength(elevatorSim.getPositionMeters());
+    elevatorLigament.setLength(Units.inchesToMeters(29) + elevatorSim.getPositionMeters());
   }
 
   private void simulationOutputToDashboard() {

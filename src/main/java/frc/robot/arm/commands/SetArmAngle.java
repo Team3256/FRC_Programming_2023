@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.ArmConstants;
 import frc.robot.auto.AutoConstants;
 
 public class SetArmAngle extends ProfiledPIDCommand {
@@ -34,11 +33,11 @@ public class SetArmAngle extends ProfiledPIDCommand {
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
         new ProfiledPIDController(
-            Preferences.getDouble(ArmPreferencesKeys.kPKey, ArmConstants.kP),
-            Preferences.getDouble(ArmPreferencesKeys.kIKey, ArmConstants.kI),
-            Preferences.getDouble(ArmPreferencesKeys.kDKey, ArmConstants.kD),
+            Preferences.getDouble(ArmPreferencesKeys.kPKey, kP),
+            Preferences.getDouble(ArmPreferencesKeys.kIKey, kI),
+            Preferences.getDouble(ArmPreferencesKeys.kDKey, kD),
             kArmProfileContraints),
-        armSubsystem::getArmPositionRads,
+        Arm::getArmPositionRads,
         MathUtil.clamp(
             angleRotation2d.getRadians(),
             kArmAngleMinConstraint.getRadians(),

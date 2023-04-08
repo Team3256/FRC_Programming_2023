@@ -65,7 +65,7 @@ public final class ArmConstants {
   public static final int kNumArmMotors = 1;
 
   public static final double kArmS = 0.16924;
-  public static final double kArmG = 0.15542;
+  public static final double kArmG = 0;
   public static final double kArmV = 4.1445;
   public static final double kArmA = 0.17676;
   public static final double kP = 10.96;
