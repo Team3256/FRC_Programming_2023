@@ -40,6 +40,7 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.SetElevatorVolts;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
@@ -230,14 +231,14 @@ public class RobotContainer implements CANTestable, Loggable {
                     kOpenLoop)
                 .deadlineWith(
                     new LEDSetAllSectionsPattern(
-                        // TODO fix later
                         ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
 
     driver
         .x()
         .onTrue(
             new LockSwerveX(swerveSubsystem)
-                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
+                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                .until(() -> isMovingJoystick(driver)));
 
     if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
       driver
@@ -355,14 +356,13 @@ public class RobotContainer implements CANTestable, Loggable {
     //          autoPath,
     //          Commands.parallel(
     //              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
-    //              new LockSwerveX(swerveSubsystem)));
+    //              new LockSwerveX(swerveSubsystem)
+    //                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+    //                  .until(() -> isMovingJoystick(driver))));
     //    } else {
     //      return autoPath;
     //    }
-    return new ParallelCommandGroup(
-        new SetElevatorVolts(elevatorSubsystem, 12),
-        new SetArmVoltage(armSubsystem, -12),
-        new IntakeCone(intakeSubsystem));
+    return new SetElevatorExtension(elevatorSubsystem, 1);
   }
 
   @Override

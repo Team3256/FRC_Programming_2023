@@ -48,7 +48,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     DOUBLE_SUBSTATION_CONE(ElevatorConstants.kDoubleSubstationPositionConeMeters),
     DOUBLE_SUBSTATION_CUBE(ElevatorConstants.kDoubleSubstationPositionCubeMeters);
 
-    public double position;
+    public final double position;
 
     private ElevatorPreset(double position) {
       this.position = position;
@@ -57,6 +57,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   // real
   private WPI_TalonFX elevatorMotor;
+  private WPI_TalonFX elevatorFollowerMotor;
   private ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
 
@@ -75,6 +76,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
     elevatorMotor.setInverted(kElevatorInverted);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
+
+    elevatorFollowerMotor =
+        TalonFXFactory.createPermanentFollowerTalon(kElevatorFollowerCANDevice, kElevatorCANDevice);
+    elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -182,7 +187,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
         kDoubleSubstationPositionConeMeters);
   }
 
-  // sim
+  // Elevator Sim
   private final ElevatorSim elevatorSim =
       new ElevatorSim(
           DCMotor.getFalcon500(kNumElevatorMotors),
@@ -199,7 +204,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void configureSimHardware() {
-    elevatorMotor = new WPI_TalonFX(kElevatorID);
+    elevatorMotor = new WPI_TalonFX(kElevatorMasterID);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     elevatorLigament =
         new MechanismLigament2d("Elevator", elevatorSim.getPositionMeters(), kElevatorAngleOffset);

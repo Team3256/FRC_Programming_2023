@@ -19,9 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
-
   public static final boolean kDebugEnabled = true;
-
   public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = true;
   public static final boolean kIntakeEnabled = true;
@@ -49,9 +47,10 @@ public final class Constants {
     public static final boolean kOperatorManualArmControlEnabled = true;
     public static final boolean kArmAbsoluteEncoderEnabled = true;
     public static final boolean kLocalizationEnabled = true;
+    public static final boolean kLocalizationStdDistanceBased = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
-    public static final boolean kUsePrefs = false;
 
+    public static final boolean kUsePrefs = false;
     public static final boolean kLocalizationUseWPIBlueOffset = false;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
@@ -64,7 +63,6 @@ public final class Constants {
     public static final double robotSimWindowWidth = 2.5;
     public static final double robotSimWindowHeight = 2.5;
     public static final double kElevatorAngleOffset = 35.4;
-    public static final double kArmLength = 0.31416;
     public static final double kIntakeRadius = 0.1;
   }
 
@@ -85,8 +83,8 @@ public final class Constants {
     REPLAY
   }
 
-  public static final double kRobotLength = 0.9271;
-  public static final double kRobotWidth = 0.9271;
+  public static final double kRobotLength = Units.inchesToMeters(32.625);
+  public static final double kRobotWidth = Units.inchesToMeters(32.625);
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);

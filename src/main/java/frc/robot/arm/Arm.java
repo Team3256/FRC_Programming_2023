@@ -239,7 +239,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private void configureSimHardware() {
     armMotor = new WPI_TalonFX(kArmSimulationID);
     armLigament =
-        new MechanismLigament2d("Arm", kArmLength, Units.radiansToDegrees(armSim.getAngleRads()));
+        new MechanismLigament2d(
+            "Arm", kArmLengthMeters, Units.radiansToDegrees(armSim.getAngleRads()));
   }
 
   @Override
