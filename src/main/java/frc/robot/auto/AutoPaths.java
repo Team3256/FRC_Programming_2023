@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
-import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
 import frc.robot.elevator.Elevator;
@@ -67,7 +66,8 @@ public class AutoPaths {
           () ->
               runParallelWithPath(
                   Commands.parallel(
-                          new StowArmElevator(elevatorSubsystem, armSubsystem),
+                          //                          new StowArmElevator(elevatorSubsystem,
+                          // armSubsystem),
                           new IntakeOff(intakeSubsystem))
                       .asProxy()
                       .withName("defaultPosition")));
@@ -77,10 +77,13 @@ public class AutoPaths {
           () ->
               runParallelWithPath(
                       Commands.deadline(
-                          new IntakeCone(intakeSubsystem),
-                          new SetElevatorHeight(
-                              elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
+                          new IntakeCone(intakeSubsystem)
+                          //                          new SetElevatorHeight(
+                          //                              elevatorSubsystem,
+                          // Elevator.ElevatorPreset.GROUND_INTAKE),
+                          //                          new SetArmAngle(armSubsystem,
+                          // ArmPreset.GROUND_INTAKE)
+                          ))
                   .asProxy()
                   .withName("intakeCone"));
 
@@ -89,10 +92,13 @@ public class AutoPaths {
           () ->
               runParallelWithPath(
                       Commands.deadline(
-                          new IntakeCube(intakeSubsystem),
-                          new SetElevatorHeight(
-                              elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.GROUND_INTAKE)))
+                          new IntakeCube(intakeSubsystem)
+                          //                          new SetElevatorHeight(
+                          //                              elevatorSubsystem,
+                          // Elevator.ElevatorPreset.GROUND_INTAKE),
+                          //                          new SetArmAngle(armSubsystem,
+                          // ArmPreset.GROUND_INTAKE)))
+                          ))
                   .asProxy()
                   .withName("intakeCube"));
 

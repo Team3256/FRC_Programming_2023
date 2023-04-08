@@ -8,7 +8,6 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.FeatureFlags.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
@@ -27,7 +26,6 @@ import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
-import frc.robot.auto.commands.SetArmElevatorStart;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
@@ -296,7 +294,7 @@ public class RobotContainer implements CANTestable, Loggable {
       driver
           .y()
           .or(operator.leftTrigger())
-          .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem));
+          .onTrue(new StowArmElevator(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
     }
   }
 
@@ -338,15 +336,12 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
-
       return Commands.sequence(
-          setArmElevatorStart.asProxy(),
           autoPath,
           Commands.parallel(
-              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
+              new StowArmElevator(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
+                  .asProxy(),
               new LockSwerveX(swerveSubsystem)
                   .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
                   .until(() -> isMovingJoystick(driver))));
@@ -399,6 +394,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void setPieceToCube() {
     currentPiece = GamePiece.CUBE;
+  }
+
+  public GamePiece getCurrentPiece() {
+    return currentPiece;
   }
 
   public void toggleSubstationLocation() {
