@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.ElevatorConstants;
-import frc.robot.elevator.commands.ResetElevatorSensor;
 import frc.robot.elevator.commands.SetElevatorExtension;
+import frc.robot.elevator.commands.ZeroElevator;
 
 public class ElevatorTests extends UnitTestBase {
   public final double DELTA = Units.inchesToMeters(2);
@@ -36,7 +36,7 @@ public class ElevatorTests extends UnitTestBase {
 
   // @Test
   public void testElevatorZero() {
-    Command zeroElevator = new ResetElevatorSensor(elevatorSubsystem);
+    Command zeroElevator = new ZeroElevator(elevatorSubsystem);
     System.out.println(elevatorSubsystem.getElevatorPosition());
     runScheduler(2, zeroElevator, elevatorSubsystem);
 

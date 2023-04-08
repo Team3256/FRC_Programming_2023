@@ -13,13 +13,13 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.ResetElevatorSensor;
+import frc.robot.elevator.commands.ZeroElevator;
 
 public class SetArmElevatorStart extends ParallelCommandGroup {
   public SetArmElevatorStart(Elevator elevatorSubsystem, Arm armSubsystem) {
     addCommands(
         new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(180))
-            .andThen(new ResetElevatorSensor(elevatorSubsystem))
+            .andThen(new ZeroElevator(elevatorSubsystem))
             .andThen(new SetArmAngle(armSubsystem, ArmPreset.DEFAULT)));
   }
 }

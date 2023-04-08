@@ -7,11 +7,11 @@
 
 package frc.robot.intake.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
 import java.util.function.BooleanSupplier;
 
-public class LatchGamePiece extends CommandBase {
+public class LatchGamePiece extends DebugCommandBase {
   private Intake intakeSubsystem;
   private BooleanSupplier isCurrentPieceCone;
 
@@ -23,6 +23,7 @@ public class LatchGamePiece extends CommandBase {
 
   @Override
   public void initialize() {
+    super.initialize();
     intakeSubsystem.configureCurrentLimit(true);
   }
 
@@ -37,6 +38,7 @@ public class LatchGamePiece extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     intakeSubsystem.configureCurrentLimit(false);
     intakeSubsystem.off();
   }

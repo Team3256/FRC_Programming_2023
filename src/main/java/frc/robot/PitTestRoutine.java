@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.ResetElevatorSensor;
 import frc.robot.elevator.commands.SetElevatorExtension;
+import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -77,7 +77,7 @@ public class PitTestRoutine {
   }
 
   private Command elevatorCommands() {
-    Command zeroElevator = new ResetElevatorSensor(elevatorSubsystem).until(driver.b());
+    Command zeroElevator = new ZeroElevator(elevatorSubsystem).until(driver.b());
     Command setElevatorHeightHIGH =
         new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH)
             .until(driver.b());

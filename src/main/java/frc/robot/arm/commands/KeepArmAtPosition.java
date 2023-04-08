@@ -8,10 +8,10 @@
 package frc.robot.arm.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.arm.Arm;
+import frc.robot.helpers.DebugCommandBase;
 
-public class KeepArmAtPosition extends CommandBase {
+public class KeepArmAtPosition extends DebugCommandBase {
   private Arm armSubsystem;
 
   public KeepArmAtPosition(Arm armSubsystem) {
@@ -21,6 +21,7 @@ public class KeepArmAtPosition extends CommandBase {
 
   @Override
   public void initialize() {
+    super.initialize();
     new SetArmAngle(armSubsystem, new Rotation2d(armSubsystem.getArmPositionRads()))
         .repeatedly()
         .schedule();

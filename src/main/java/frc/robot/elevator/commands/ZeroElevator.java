@@ -9,26 +9,26 @@ package frc.robot.elevator.commands;
 
 import static frc.robot.elevator.ElevatorConstants.*;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.elevator.Elevator;
+import frc.robot.helpers.DebugCommandBase;
 
-public class ResetElevatorSensor extends CommandBase {
+public class ZeroElevator extends DebugCommandBase {
   Elevator elevatorSubsystem;
 
-  public ResetElevatorSensor(Elevator elevatorSubsystem) {
+  public ZeroElevator(Elevator elevatorSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
     addRequirements(elevatorSubsystem);
   }
 
   @Override
   public void initialize() {
+    super.initialize();
     elevatorSubsystem.setInputVoltage(kDownSpeedVolts);
-    System.out.println("Zeroing elevator");
   }
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Zero elevator finished");
+    super.end(interrupted);
     elevatorSubsystem.off();
     if (!interrupted) elevatorSubsystem.zeroElevator();
   }
