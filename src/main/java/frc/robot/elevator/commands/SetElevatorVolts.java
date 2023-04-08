@@ -7,11 +7,10 @@
 
 package frc.robot.elevator.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.elevator.Elevator;
+import frc.robot.helpers.DebugCommandBase;
 
-public class SetElevatorVolts extends CommandBase {
+public class SetElevatorVolts extends DebugCommandBase {
   private Elevator elevatorSubsystem;
   private double volts = 0;
 
@@ -23,14 +22,13 @@ public class SetElevatorVolts extends CommandBase {
 
   @Override
   public void initialize() {
+    super.initialize();
     elevatorSubsystem.setInputVoltage(volts);
-    if (Constants.kDebugEnabled) {
-      System.out.println(this.getName() + " started (volts: " + volts + ")");
-    }
   }
 
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     elevatorSubsystem.off();
   }
 

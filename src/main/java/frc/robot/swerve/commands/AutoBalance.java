@@ -11,11 +11,11 @@ import static frc.robot.swerve.SwerveConstants.kXAutoBalanceVelocityMeters;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.swerve.SwerveDrive;
 
-public class AutoBalance extends CommandBase {
+public class AutoBalance extends DebugCommandBase {
   private final SwerveDrive swerveDrive;
   private Timer balancedTimer;
 
@@ -28,7 +28,7 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public void initialize() {
-    System.out.println("Auto Balance Started");
+    super.initialize();
     balancedTimer.start();
   }
 
@@ -47,6 +47,7 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     CommandScheduler.getInstance().schedule(new LockSwerveX(swerveDrive));
   }
 
