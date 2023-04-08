@@ -18,7 +18,6 @@ import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
-import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
@@ -147,7 +146,7 @@ public class AutoScore extends CommandBase {
             new IntakeCube(intakeSubsystem, ledSubsystem),
             new IntakeCone(intakeSubsystem, ledSubsystem),
             isCurrentPieceCone);
-    Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
+    //    Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
     Command moveArmElevatorToPreset;

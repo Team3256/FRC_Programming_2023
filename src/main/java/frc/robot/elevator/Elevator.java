@@ -9,7 +9,7 @@ package frc.robot.elevator;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.elevator.ElevatorConstants.*;
-import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
+import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.*;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -41,13 +41,15 @@ import frc.robot.logging.Loggable;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPreset {
-    CUBE_HIGH(ElevatorConstants.kCubeHighPositionMeters),
-    CONE_HIGH(ElevatorConstants.kConeHighPositionMeters),
-    ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
-    ANY_PIECE_LOW(ElevatorConstants.kAnyPieceLowPositionMeters),
-    GROUND_INTAKE(ElevatorConstants.kGroundIntakePositionMeters),
-    DOUBLE_SUBSTATION_CONE(ElevatorConstants.kDoubleSubstationPositionConeMeters),
-    DOUBLE_SUBSTATION_CUBE(ElevatorConstants.kDoubleSubstationPositionCubeMeters);
+    STOW_CONE(kStowPositionCone),
+    STOW_CUBE(kStowPositionCube),
+    CUBE_HIGH(kCubeHighPositionMeters),
+    CONE_HIGH(kConeHighPositionMeters),
+    ANY_PIECE_MID(kAnyPieceMidPositionMeters),
+    ANY_PIECE_LOW(kAnyPieceLowPositionMeters),
+    GROUND_INTAKE(kGroundIntakePositionMeters),
+    DOUBLE_SUBSTATION_CONE(kDoubleSubstationPositionConeMeters),
+    DOUBLE_SUBSTATION_CUBE(kDoubleSubstationPositionCubeMeters);
 
     public final double position;
 
@@ -203,10 +205,13 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   /** Populating elevator preferences on network tables */
   public static void loadElevatorPreferences() {
     // Elevator PID Preferences
-    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kPKey, ElevatorConstants.kP);
-    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kIKey, ElevatorConstants.kI);
-    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kDKey, ElevatorConstants.kD);
+    Preferences.initDouble(ElevatorPreferencesKeys.kPKey, kP);
+    Preferences.initDouble(ElevatorPreferencesKeys.kIKey, kI);
+    Preferences.initDouble(ElevatorPreferencesKeys.kDKey, kD);
     // Elevator Preset Preferences
+    Preferences.initDouble(kElevatorPositionKeys.get(ElevatorPreset.STOW_CONE), kStowPositionCone);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.STOW_CUBE), kStowPositionCube);
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.CUBE_HIGH), kCubeHighPositionMeters);
     Preferences.initDouble(
