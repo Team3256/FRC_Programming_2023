@@ -22,10 +22,7 @@ public final class ElevatorConstants {
   public static final CanDeviceId kElevatorFollowerCANDevice =
       new CanDeviceId(kElevatorFollowerID, kElevatorCANBus);
   public static final int kNumElevatorMotors = 1;
-  public static final boolean kElevatorInverted = true;
-
   public static final double kZeroThreshold = 0.02;
-
   public static final double kDoubleSubstationPositionCubeMeters = 0.455;
   public static final double kDoubleSubstationPositionConeMeters = 0.55;
   public static final double kCubeHighPositionMeters = 0.2;
@@ -61,18 +58,14 @@ public final class ElevatorConstants {
   }
 
   // https://www.reca.lc/linear
-  // gradle simulateJava working constants
-  // for some reason the elevator acts differntly in unit tests vs sim
   public static final double kElevatorS = 0.22563;
   public static final double kElevatorG = 0.76032;
   public static final double kElevatorV = 9.19241;
   public static final double kElevatorA = 0;
 
-  // public static final double kP = 0.0032534;
   public static final double kP = 18;
   public static final double kI = 0;
   public static final double kD = 0;
-  // public static final double kD = 0.0012892;
 
   public static final TrapezoidProfile.Constraints kElevatorContraints =
       new TrapezoidProfile.Constraints(2.45, 2.45);

@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.*;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.drivers.CANDeviceTester;
@@ -240,7 +242,11 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor = new WPI_TalonFX(kArmSimulationID);
     armLigament =
         new MechanismLigament2d(
-            "Arm", kArmLengthMeters, Units.radiansToDegrees(armSim.getAngleRads()));
+            "Arm",
+            kArmLengthMeters,
+            Units.radiansToDegrees(armSim.getAngleRads()) - 90,
+            10,
+            new Color8Bit(Color.kBlue));
   }
 
   @Override
@@ -250,7 +256,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
-    armLigament.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
+    armLigament.setAngle(Units.radiansToDegrees(armSim.getAngleRads()) - 90);
   }
 
   private void simulationOutputToDashboard() {

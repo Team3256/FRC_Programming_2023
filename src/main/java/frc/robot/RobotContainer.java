@@ -15,6 +15,8 @@ import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -29,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
@@ -41,7 +44,6 @@ import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorExtension;
-import frc.robot.elevator.commands.SetElevatorVolts;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -362,7 +364,9 @@ public class RobotContainer implements CANTestable, Loggable {
     //    } else {
     //      return autoPath;
     //    }
-    return new SetElevatorExtension(elevatorSubsystem, 1);
+    return new ParallelCommandGroup(
+        new SetElevatorExtension(elevatorSubsystem, Units.inchesToMeters(30)),
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)));
   }
 
   @Override
@@ -429,20 +433,6 @@ public class RobotContainer implements CANTestable, Loggable {
   public void simulateInit() {
     // configure full robot simulation
     if (kElevatorEnabled && kArmEnabled && kIntakeEnabled) {
-      tester
-          .a()
-          .onTrue(
-              new ParallelCommandGroup(
-                  new SetElevatorVolts(elevatorSubsystem, 12),
-                  new SetArmVoltage(armSubsystem, -12),
-                  new IntakeCone(intakeSubsystem)));
-      tester
-          .b()
-          .onTrue(
-              new ParallelCommandGroup(
-                  new SetElevatorVolts(elevatorSubsystem, -12),
-                  new SetArmVoltage(armSubsystem, 12),
-                  new IntakeCube(intakeSubsystem)));
 
       Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
       SmartDashboard.putData("Robot Sim", robotCanvas);
@@ -450,9 +440,17 @@ public class RobotContainer implements CANTestable, Loggable {
       MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
       robotRoot.append(new MechanismLigament2d("Drive Chassis", kRobotLength, 0));
       robotRoot.append(elevatorSubsystem.getLigament());
-      elevatorSubsystem.getLigament().append(armSubsystem.getLigament());
-      armSubsystem.getLigament().append(intakeSubsystem.getLigamentTop());
-      armSubsystem.getLigament().append(intakeSubsystem.getLigamentBottom());
+
+      MechanismLigament2d armPivot =
+          new MechanismLigament2d("Arm Pivot", 0.045, 90, 0, new Color8Bit(Color.kBlack));
+      elevatorSubsystem
+          .getLigament()
+          .append(new MechanismLigament2d("Elevator Right", Units.inchesToMeters(6.25), 0));
+      elevatorSubsystem.getLigament().append(armPivot);
+      armPivot.append(armSubsystem.getLigament());
+      // armSubsystem.getLigament().append(intakeSubsystem.getLigamentTop());
+      // armSubsystem.getLigament().append(intakeSubsystem.getLigamentBottom());
+
       goalRoot.append(
           new MechanismLigament2d(
               "Cube Mid",

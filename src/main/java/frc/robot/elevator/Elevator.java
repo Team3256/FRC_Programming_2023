@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
@@ -74,7 +76,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   private void configureRealHardware() {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
-    elevatorMotor.setInverted(kElevatorInverted);
+    elevatorMotor.setInverted(true);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
 
     elevatorFollowerMotor =
@@ -208,6 +210,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     elevatorLigament =
         new MechanismLigament2d("Elevator", elevatorSim.getPositionMeters(), kElevatorAngleOffset);
+    elevatorLigament.setColor(new Color8Bit(Color.kRed));
   }
 
   @Override
