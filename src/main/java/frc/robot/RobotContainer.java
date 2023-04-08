@@ -43,6 +43,7 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -363,7 +364,9 @@ public class RobotContainer implements CANTestable, Loggable {
     //    } else {
     //      return autoPath;
     //    }
-    return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90));
+    return new ParallelCommandGroup(
+        new SetElevatorExtension(elevatorSubsystem, 1),
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(30)));
   }
 
   @Override
@@ -461,29 +464,25 @@ public class RobotContainer implements CANTestable, Loggable {
                   "Intake 1",
                   Units.inchesToMeters(3),
                   -3.728 + 90,
-                  4,
+                  3,
                   new Color8Bit(Color.kYellow)))
           .append(
               new MechanismLigament2d(
                   "Intake 2",
                   Units.inchesToMeters(6.813),
                   128.732,
-                  4,
+                  3,
                   new Color8Bit(Color.kYellow)))
           .append(
               new MechanismLigament2d(
                   "Intake 3",
                   Units.inchesToMeters(11.738),
                   92.834,
-                  4,
+                  3,
                   new Color8Bit(Color.kYellow)))
           .append(
               new MechanismLigament2d(
-                  "Intake 4",
-                  Units.inchesToMeters(10.104),
-                  153.392,
-                  4,
-                  new Color8Bit(Color.kYellow)));
+                  "Intake 4", Units.inchesToMeters(10.5), 152.3, 3, new Color8Bit(Color.kYellow)));
 
       goalRoot.append(
           new MechanismLigament2d(

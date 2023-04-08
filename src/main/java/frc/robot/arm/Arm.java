@@ -240,11 +240,16 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   private void configureSimHardware() {
     armMotor = new WPI_TalonFX(kArmSimulationID);
+    armMotor.setInverted(true);
+
+    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.setSelectedSensorPosition(0);
+
     armLigament =
         new MechanismLigament2d(
             "Arm",
             kArmLengthMeters,
-            Units.radiansToDegrees(armSim.getAngleRads()) - 90,
+            Units.radiansToDegrees(getArmPositionRads()) - 90,
             10,
             new Color8Bit(Color.kBlue));
   }
@@ -256,7 +261,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
-    armLigament.setAngle(Units.radiansToDegrees(armSim.getAngleRads()) - 90);
+    armLigament.setAngle(Units.radiansToDegrees(getArmPositionRads()) - 90);
   }
 
   private void simulationOutputToDashboard() {
