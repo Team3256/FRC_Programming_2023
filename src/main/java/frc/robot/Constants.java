@@ -323,12 +323,9 @@ public final class Constants {
     public static final double kAutoAlignD = 0.0;
     public static final double kAngleAlignmentThreshold = Units.degreesToRadians(1.0);
     public static final double kAngleSpeedMultiplier = 0.0;
-    public static final int kNeuralDetectiorPipelineIndex = 0;
 
     public static class FrontConstants {
-      public static final double kLimeLightTranslationAutoAlignThreshold =
-          0.05; // distance in meters
-      public static final String kLimelightNetworkTablesName = "limelight-back";
+      public static final String kLimelightNetworkTablesName = "limelight-front";
       public static final double kLimelightTranslationThresholdMeters = 1;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(7.5);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;

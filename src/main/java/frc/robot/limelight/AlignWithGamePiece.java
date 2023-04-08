@@ -7,21 +7,19 @@
 
 package frc.robot.limelight;
 
-import static frc.robot.Constants.VisionConstants.*;
-import static frc.robot.Constants.VisionConstants.FrontConstants.kLimeLightTranslationAutoAlignThreshold;
-import static frc.robot.Constants.VisionConstants.FrontConstants.kLimelightNetworkTablesName;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.swerve.SwerveDrive;
+
+import static frc.robot.Constants.VisionConstants.FrontConstants.kLimelightNetworkTablesName;
+import static frc.robot.Constants.VisionConstants.*;
 
 public class AlignWithGamePiece extends PIDCommand {
 
   private static SwerveDrive swerveDrive = new SwerveDrive();
   private static int pipelineIndex;
   private static int previousPipelineIndex;
-  private static double latestTranslationX = 2 * kLimeLightTranslationAutoAlignThreshold;
 
   /** Creates a new AlignWithGamePiece. */
   public AlignWithGamePiece(SwerveDrive swerveDrive, int pipelineIndex) {
@@ -31,13 +29,13 @@ public class AlignWithGamePiece extends PIDCommand {
         AlignWithGamePiece::getAngleToTarget,
         // Set reference to target
         0,
-        // Pipe output to turn robot
-        output -> AlignWithGamePiece.slideToTheRight(output),
+        // Pipe output to move robot
+        output -> AlignWithGamePiece.move(output),
         // Require the drive
         swerveDrive);
 
-    this.pipelineIndex = pipelineIndex;
-    this.swerveDrive = swerveDrive;
+    AlignWithGamePiece.pipelineIndex = pipelineIndex;
+    AlignWithGamePiece.swerveDrive = swerveDrive;
   }
 
   // Called when the command is initially scheduled.
@@ -47,8 +45,6 @@ public class AlignWithGamePiece extends PIDCommand {
     System.out.println("Align with Game Piece Command Initialized");
     System.out.println("**********************");
 
-    // Get the bot pose
-    double[] botPose = Limelight.getBotpose(kLimelightNetworkTablesName);
     // Archive the current pipeline index
     previousPipelineIndex = (int) Limelight.getCurrentPipelineIndex(kLimelightNetworkTablesName);
     // Set the pipeline index
@@ -89,35 +85,6 @@ public class AlignWithGamePiece extends PIDCommand {
     return false;
   }
 
-  // // return the tx value from the latest limelight targeting.
-  // public static double getTranslationX() {
-  //   System.out.println("**********************");
-  //   System.out.println("Align with Game Piece Command::GetTranslationX");
-  //   System.out.println("**********************");
-  //   LimelightResults latestResults = Limelight.getLatestResults(kLimelightNetworkTablesName);
-  //   double[] robotSpace = Limelight.getBotpose_wpiBlue(kLimelightNetworkTablesName);
-  //   System.out.println("Latest Results: " + latestResults);
-  //   System.out.println("JSON Dump: " + Limelight.getJSONDump(kLimelightNetworkTablesName));
-  //   SmartDashboard.putNumberArray("RobotSpace", robotSpace);
-  //   if (robotSpace.length < 1) {
-  //     System.out.println("**********************");
-  //     System.out.println("NO TARGETS FOUND");
-  //     System.out.println("**********************");
-  //     return 0;
-  //   }
-  //   System.out.println("**********************");
-  //   System.out.println("TARGETS FOUND: " + robotSpace.length);
-  //   System.out.println("**********************");
-  //   double distance = robotSpace[1];
-  //   double angleToTarget = latestResults.targetingResults.targets_Detector[0].tx;
-
-  //   latestTranslationX = Math.tan(angleToTarget) * distance;
-  //   SmartDashboard.putNumber("Latest Translation X", latestTranslationX);
-  //   System.out.println("Latest Translation X");
-  //   System.out.println(latestTranslationX);
-  //   return 0;
-  // }
-
   public static double getAngleToTarget() {
     System.out.println("**********************");
     System.out.println("Align with Game Piece Command::GetAngleToTarget");
@@ -136,12 +103,12 @@ public class AlignWithGamePiece extends PIDCommand {
     return angleToTarget;
   }
 
-  public static void slideToTheRight(double angle) {
+  public static void move(double angle) {
     System.out.println("**********************");
     System.out.println("Align with Game Piece Command::MoveALittle");
     System.out.println("**********************");
 
-    // Find how much to move
+    // Find how fast to move
     double X = angle * kAngleSpeedMultiplier;
     // Move the robot
     swerveDrive.drive(new Translation2d(X, 0), 0, false, false);
