@@ -209,7 +209,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorLigament =
         new MechanismLigament2d(
             "Elevator",
-            Units.inchesToMeters(29) + elevatorSim.getPositionMeters(),
+            Units.inchesToMeters(8.304) + elevatorSim.getPositionMeters(),
             kElevatorAngleOffset);
     elevatorLigament.setColor(new Color8Bit(Color.kRed));
   }
@@ -225,7 +225,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
-    elevatorLigament.setLength(Units.inchesToMeters(29) + elevatorSim.getPositionMeters());
+    elevatorLigament.setLength(Units.inchesToMeters(8.304) + elevatorSim.getPositionMeters());
   }
 
   private void simulationOutputToDashboard() {
