@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+
 import static frc.robot.Constants.FeatureFlags.*;
 import static frc.robot.Constants.Simulation.*;
 import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation.*;
@@ -347,29 +348,19 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    //    Command autoPath = autoPaths.getSelectedPath();
-    //    if (kElevatorEnabled && kArmEnabled) {
-    //
-    //      return Commands.sequence(
-    //          autoPath,
-    //          Commands.parallel(
-    //              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
-    //              new LockSwerveX(swerveSubsystem)
-    //                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
-    //                  .until(() -> isMovingJoystick(driver))));
-    //    } else {
-    //      return autoPath;
-    //    }
-    return (new ParallelCommandGroup(
-        new ConditionalCommand(
-                new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
-                new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
-                () -> true)
-            .beforeStarting(new WaitCommand(0.5)),
-        new ConditionalCommand(
-            new SetArmAngle(armSubsystem, Arm.ArmPreset.CONE_HIGH),
-            new SetArmAngle(armSubsystem, Arm.ArmPreset.CUBE_HIGH),
-            () -> true)));
+    Command autoPath = autoPaths.getSelectedPath();
+    if (kElevatorEnabled && kArmEnabled) {
+      return Commands.sequence(
+          autoPath,
+          Commands.parallel(
+              new StowArmElevator(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
+                  .asProxy(),
+              new LockSwerveX(swerveSubsystem)
+                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                  .until(() -> isMovingJoystick(driver))));
+    } else {
+      return autoPath;
+    }
   }
 
   @Override
@@ -416,6 +407,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void setPieceToCube() {
     currentPiece = GamePiece.CUBE;
+  }
+
+  public GamePiece getCurrentPiece() {
+    return currentPiece;
   }
 
   public void toggleSubstationLocation() {

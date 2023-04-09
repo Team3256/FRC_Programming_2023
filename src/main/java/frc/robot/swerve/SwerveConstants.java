@@ -37,6 +37,8 @@ public final class SwerveConstants {
 
   public static final COTSFalconSwerveConstants kChosenModule =
       COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
+
+  /* Drivetrain Constants */
   public static final double kTrackWidth = Units.inchesToMeters(20.75);
   public static final double kWheelBase = Units.inchesToMeters(20.75);
   public static final double kWheelDiameter = 0.1016;

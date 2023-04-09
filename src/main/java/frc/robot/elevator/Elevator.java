@@ -10,7 +10,7 @@ package frc.robot.elevator;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.Constants.Simulation.*;
 import static frc.robot.elevator.ElevatorConstants.*;
-import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
+import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.*;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
