@@ -66,18 +66,13 @@ public final class ElevatorConstants {
   }
 
   // https://www.reca.lc/linear
-  // gradle simulateJava working constants
-  // for some reason the elevator acts differntly in unit tests vs sim
-  public static final double kElevatorS = 0.22563;
-  public static final double kElevatorG = 0.76032;
-  public static final double kElevatorV = 9.19241;
-  public static final double kElevatorA = 0;
-
-  // public static final double kP = 0.0032534;
-  public static final double kP = 18;
+  public static final double kElevatorS = 0;
+  public static final double kElevatorG = 0.51;
+  public static final double kElevatorV = 11.95;
+  public static final double kElevatorA = 0.05;
+  public static final double kP = 4;
   public static final double kI = 0;
   public static final double kD = 0;
-  // public static final double kD = 0.0012892;
 
   public static final TrapezoidProfile.Constraints kElevatorContraints =
       new TrapezoidProfile.Constraints(2.45, 2.45);

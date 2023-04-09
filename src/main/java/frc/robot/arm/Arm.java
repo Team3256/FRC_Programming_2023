@@ -236,7 +236,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           kArmLengthMeters,
           kArmAngleMinConstraint.getRadians(),
           kArmAngleMaxConstraint.getRadians(),
-          kArmSimGravity);
+          true);
   private MechanismLigament2d armLigament;
 
   public MechanismLigament2d getLigament() {

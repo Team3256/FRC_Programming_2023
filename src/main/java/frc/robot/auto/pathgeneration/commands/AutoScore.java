@@ -93,7 +93,6 @@ public class AutoScore extends CommandBase {
                       isCurrentLEDPieceCone))
               .schedule();
           break;
-        default:
         case MID:
           Commands.parallel(
                   new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
@@ -102,7 +101,12 @@ public class AutoScore extends CommandBase {
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
                       isCurrentLEDPieceCone))
               .schedule();
-          ;
+          break;
+        case LOW:
+          Commands.parallel(
+                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
+                  new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+              .schedule();
           break;
       }
 

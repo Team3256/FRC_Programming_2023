@@ -8,7 +8,6 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-
 import static frc.robot.Constants.FeatureFlags.*;
 import static frc.robot.Constants.Simulation.*;
 import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation.*;
@@ -31,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
@@ -43,7 +41,6 @@ import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -430,25 +427,22 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void simulateInit() {
     // configure full robot simulation
-    if (kElevatorEnabled && kArmEnabled && kIntakeEnabled) {
 
-      Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
-      SmartDashboard.putData("Robot Sim", robotCanvas);
+    Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
+    SmartDashboard.putData("Robot Sim", robotCanvas);
 
-      MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", 0.5, 0);
-      MechanismRoot2d elevatorRoot =
-          robotCanvas.getRoot("Elevator Root", 0.5, Units.inchesToMeters(2.773));
-      MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
+    MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", 0.5, 0);
+    MechanismRoot2d elevatorRoot =
+        robotCanvas.getRoot("Elevator Root", 0.5, Units.inchesToMeters(2.773));
+    MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
 
-      robotRoot.append(
-          new MechanismLigament2d(
-              "Drive Chassis", kRobotLength, 0, 20, new Color8Bit(235, 137, 52)));
+    robotRoot.append(
+        new MechanismLigament2d("Drive Chassis", kRobotLength, 0, 20, new Color8Bit(235, 137, 52)));
+    MechanismLigament2d armPivot =
+        new MechanismLigament2d("Arm Pivot", 0.045, 90, 0, new Color8Bit(Color.kBlack));
+
+    if (kElevatorEnabled) {
       elevatorRoot.append(elevatorSubsystem.getLigament());
-
-      MechanismLigament2d armPivot =
-          new MechanismLigament2d("Arm Pivot", 0.045, 90, 0, new Color8Bit(Color.kBlack));
-
-      MechanismLigament2d intakePivot = intakeSubsystem.getWrist();
 
       elevatorSubsystem
           .getLigament()
@@ -456,42 +450,52 @@ public class RobotContainer implements CANTestable, Loggable {
               new MechanismLigament2d(
                   "Elevator Right", Units.inchesToMeters(6.25), 0, 10, new Color8Bit(Color.kRed)));
       elevatorSubsystem.getLigament().append(armPivot);
+    }
+
+    if (kArmEnabled) {
+      MechanismLigament2d intakePivot = intakeSubsystem.getWrist();
+
       armPivot.append(armSubsystem.getLigament());
       armSubsystem.getLigament().append(intakePivot);
 
-      intakePivot
-          .append(
-              new MechanismLigament2d(
-                  "Intake 1",
-                  Units.inchesToMeters(3),
-                  -3.728 + 90,
-                  3,
-                  new Color8Bit(Color.kYellow)))
-          .append(
-              new MechanismLigament2d(
-                  "Intake 2",
-                  Units.inchesToMeters(6.813),
-                  128.732,
-                  3,
-                  new Color8Bit(Color.kYellow)))
-          .append(
-              new MechanismLigament2d(
-                  "Intake 3",
-                  Units.inchesToMeters(11.738),
-                  92.834,
-                  3,
-                  new Color8Bit(Color.kYellow)))
-          .append(
-              new MechanismLigament2d(
-                  "Intake 4", Units.inchesToMeters(10.5), 152.3, 3, new Color8Bit(Color.kYellow)));
-
-      goalRoot.append(
-          new MechanismLigament2d(
-              "Cube Mid",
-              FieldConstants.Grids.kMidCubeZ,
-              90,
-              3,
-              new Color8Bit((Color.kAquamarine))));
+      if (kIntakeEnabled) {
+        intakePivot
+            .append(
+                new MechanismLigament2d(
+                    "Intake 1",
+                    Units.inchesToMeters(3),
+                    -3.728 + 90,
+                    3,
+                    new Color8Bit(Color.kYellow)))
+            .append(
+                new MechanismLigament2d(
+                    "Intake 2",
+                    Units.inchesToMeters(6.813),
+                    128.732,
+                    3,
+                    new Color8Bit(Color.kYellow)))
+            .append(
+                new MechanismLigament2d(
+                    "Intake 3",
+                    Units.inchesToMeters(11.738),
+                    92.834,
+                    3,
+                    new Color8Bit(Color.kYellow)))
+            .append(
+                new MechanismLigament2d(
+                    "Intake 4",
+                    Units.inchesToMeters(10.5),
+                    152.3,
+                    3,
+                    new Color8Bit(Color.kYellow)));
+      }
     }
+    goalRoot.append(
+        new MechanismLigament2d(
+            "Goal",
+            FieldConstants.LoadingZone.kDoubleSubstationShelfZ,
+            90,
+            5,
+            new Color8Bit((Color.kGreen))));
   }
 }

@@ -59,32 +59,22 @@ public final class ArmConstants {
   public static final double kArmRadiansPerAbsoluteEncoderRotation = 2 * Math.PI;
   public static final double kAbsoluteEncoderOffsetRadians = -1.666789;
 
-  public static final double kArmGearing = 1 / 4; // 1:4
+  public static final double kArmGearing = 16;
   public static double kRelativeFalconEncoderOffsetRadians =
       Constants.kCompetitionModeEnabled ? 4.2246340316 : Math.PI / 2;
   public static final double kArmLengthMeters = 0.569075;
   public static final double kArmInertia = 0.410;
   public static final double kArmMassKg = 7.5;
-  public static final boolean kArmSimGravity = true;
   public static final int kNumArmMotors = 1;
 
-  public static final double kArmS = 0.16924;
-  public static final double kArmG = 0.15542;
-  public static final double kArmV = 4.1445;
-  public static final double kArmA = 0.17676;
-  public static final double kP = 10.96;
+  // https://www.reca.lc/arm
+  public static final double kArmS = 0.27;
+  public static final double kArmG = 2.99;
+  public static final double kArmV = 0.29;
+  public static final double kArmA = 0.08;
+  public static final double kP = 1;
   public static final double kI = 0;
-  public static final double kD = 7.0262;
-
-  //  CONSTANTS FOR NO GAS SHOCK BELOW:
-
-  //  public static final double kArmS = 0.91487;
-  //  public static final double kArmG = 0.98236;
-  //  public static final double kArmV = 2.9364;
-  //  public static final double kArmA = 0.18338;
-  //  public static final double kP = 10.608;
-  //  public static final double kI = 0;
-  //  public static final double kD = 7.8777;
+  public static final double kD = 0;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(5, 2);
