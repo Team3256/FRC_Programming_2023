@@ -70,7 +70,7 @@ public final class ElevatorConstants {
   public static final double kElevatorG = 0.51;
   public static final double kElevatorV = 11.95;
   public static final double kElevatorA = 0.05;
-  public static final double kP = 4;
+  public static final double kP = 10;
   public static final double kI = 0;
   public static final double kD = 0;
 

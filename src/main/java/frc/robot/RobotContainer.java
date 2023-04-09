@@ -439,7 +439,8 @@ public class RobotContainer implements CANTestable, Loggable {
     robotRoot.append(
         new MechanismLigament2d("Drive Chassis", kRobotLength, 0, 20, new Color8Bit(235, 137, 52)));
     MechanismLigament2d armPivot =
-        new MechanismLigament2d("Arm Pivot", 0.045, 90, 0, new Color8Bit(Color.kBlack));
+        new MechanismLigament2d(
+            "Arm Pivot", Units.inchesToMeters(4.25), 90, 10, new Color8Bit(Color.kBlue));
 
     if (kElevatorEnabled) {
       elevatorRoot.append(elevatorSubsystem.getLigament());
@@ -448,7 +449,7 @@ public class RobotContainer implements CANTestable, Loggable {
           .getLigament()
           .append(
               new MechanismLigament2d(
-                  "Elevator Right", Units.inchesToMeters(6.25), 0, 10, new Color8Bit(Color.kRed)));
+                  "Elevator Right", Units.inchesToMeters(6), 0, 10, new Color8Bit(Color.kRed)));
       elevatorSubsystem.getLigament().append(armPivot);
     }
 

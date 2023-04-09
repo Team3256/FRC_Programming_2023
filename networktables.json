@@ -2,7 +2,7 @@
   {
     "name": "/Preferences/ArmkP",
     "type": "double",
-    "value": 10.96,
+    "value": 11.0,
     "properties": {
       "persistent": true
     }
@@ -18,7 +18,7 @@
   {
     "name": "/Preferences/ArmkD",
     "type": "double",
-    "value": 7.0262,
+    "value": 2.0,
     "properties": {
       "persistent": true
     }
@@ -114,7 +114,7 @@
   {
     "name": "/Preferences/ElevatorkP",
     "type": "double",
-    "value": 18.0,
+    "value": 10.0,
     "properties": {
       "persistent": true
     }
@@ -187,6 +187,62 @@
     "name": "/Preferences/kDoubleSubstationPositionConeMeters",
     "type": "double",
     "value": 0.55,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kRelativeEncoderOffset",
+    "type": "double",
+    "value": 4.2246340316,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kStowRotationCone",
+    "type": "double",
+    "value": 2.705260340591211,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kStowRotationCube",
+    "type": "double",
+    "value": 2.8797932657906435,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kConeGroundIntakeRotation",
+    "type": "double",
+    "value": 2.6179938779914944,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kCubeGroundIntakeRotation",
+    "type": "double",
+    "value": 3.141592653589793,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kStowPositionCone",
+    "type": "double",
+    "value": 0.2032,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kStowPositionCube",
+    "type": "double",
+    "value": 0.2286,
     "properties": {
       "persistent": true
     }

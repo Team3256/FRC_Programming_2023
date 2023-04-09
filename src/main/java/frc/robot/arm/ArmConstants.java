@@ -72,9 +72,9 @@ public final class ArmConstants {
   public static final double kArmG = 2.99;
   public static final double kArmV = 0.29;
   public static final double kArmA = 0.08;
-  public static final double kP = 1;
+  public static final double kP = 11;
   public static final double kI = 0;
-  public static final double kD = 0;
+  public static final double kD = 2;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(5, 2);
@@ -84,8 +84,8 @@ public final class ArmConstants {
   // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
-  public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(160);
-  public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(150);
+  public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(165);
+  public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(155);
   public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0);
   public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0);
   public static final Rotation2d kCubeMidRotation = new Rotation2d(0);
