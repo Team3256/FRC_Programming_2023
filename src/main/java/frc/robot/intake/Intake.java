@@ -9,10 +9,10 @@ package frc.robot.intake;
 
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kIntakeLayoutName;
-import static frc.robot.Constants.Simulation.*;
 import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.arm.Arm.getArmPositionRads;
 import static frc.robot.intake.IntakeConstants.*;
+import static frc.robot.simulation.SimulationConstants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;

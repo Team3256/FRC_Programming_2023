@@ -8,9 +8,9 @@
 package frc.robot.arm;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
-import static frc.robot.Constants.Simulation.*;
 import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.*;
+import static frc.robot.simulation.SimulationConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;

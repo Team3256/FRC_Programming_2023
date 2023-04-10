@@ -57,15 +57,6 @@ public final class Constants {
     public static final boolean kCanTestEnabled = false;
   }
 
-  public static final class Simulation {
-    public static final double kSimulateDelta = 0.020;
-    public static final int kVoltage = 12;
-    public static final double robotSimWindowWidth = 2.5;
-    public static final double robotSimWindowHeight = 2.5;
-    public static final double kElevatorAngleOffset = 35.4;
-    public static final double kIntakeRadius = 0.1;
-  }
-
   public static final class ShuffleboardConstants {
     public static final String kDriverTabName = "Driver";
     public static final String kOperatorTabName = "Operator";

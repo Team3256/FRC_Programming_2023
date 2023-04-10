@@ -1,0 +1,127 @@
+// Copyright (c) 2023 FRC 3256
+// https://github.com/Team3256
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
+package frc.robot.simulation;
+
+import static frc.robot.Constants.*;
+import static frc.robot.simulation.SimulationConstants.*;
+
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.arm.Arm;
+import frc.robot.elevator.Elevator;
+import frc.robot.intake.Intake;
+import frc.robot.swerve.SwerveDrive;
+
+public class RobotSimulation {
+  private SwerveDrive swerveSubsystem;
+  private Intake intakeSubsystem;
+  private Arm armSubsystem;
+  private Elevator elevatorSubsystem;
+
+  public RobotSimulation(
+      SwerveDrive swerveSubsystem,
+      Intake intakeSubsystem,
+      Arm armSubsystem,
+      Elevator elevatorSubsystem) {
+    this.swerveSubsystem = swerveSubsystem;
+    this.intakeSubsystem = intakeSubsystem;
+    this.armSubsystem = armSubsystem;
+    this.elevatorSubsystem = elevatorSubsystem;
+  }
+
+  public void initialize() {
+    Mechanism2d robotCanvas = new Mechanism2d(kRobotSimWindowWidth, kRobotSimWindowHeight);
+    SmartDashboard.putData("Robot Sim", robotCanvas);
+
+    MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", kRootX, kRootY);
+    MechanismRoot2d elevatorRoot =
+        robotCanvas.getRoot(
+            "Elevator Root", kRootX + Units.inchesToMeters(4.159), Units.inchesToMeters(2.773));
+    MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * kRobotSimWindowWidth, 0);
+
+    robotRoot.append(
+        new MechanismLigament2d("Drive Chassis", kRobotLength, 0, 20, new Color8Bit(235, 137, 52)));
+    MechanismLigament2d armPivot =
+        new MechanismLigament2d(
+            "Arm Pivot", Units.inchesToMeters(4.25), 90, kArmLineWidth, new Color8Bit(Color.kBlue));
+
+    if (kElevatorEnabled) {
+      elevatorRoot.append(
+          new MechanismLigament2d(
+              "Initial Elevator Height",
+              Units.inchesToMeters(29),
+              kElevatorAngleOffset,
+              kElevatorLineWidth,
+              new Color8Bit(Color.kRed)));
+      elevatorRoot.append(elevatorSubsystem.getLigament());
+
+      elevatorSubsystem
+          .getLigament()
+          .append(
+              new MechanismLigament2d(
+                  "Elevator Right",
+                  Units.inchesToMeters(6),
+                  0,
+                  kElevatorLineWidth,
+                  new Color8Bit(Color.kRed)));
+      elevatorSubsystem.getLigament().append(armPivot);
+    }
+
+    if (kArmEnabled) {
+      MechanismLigament2d intakePivot = intakeSubsystem.getWrist();
+
+      armPivot.append(armSubsystem.getLigament());
+      armSubsystem.getLigament().append(intakePivot);
+
+      if (kIntakeEnabled) {
+        intakePivot
+            .append(
+                new MechanismLigament2d(
+                    "Intake 1",
+                    Units.inchesToMeters(3),
+                    -3.728 + 90,
+                    kIntakeLineWidth,
+                    new Color8Bit(Color.kYellow)))
+            .append(
+                new MechanismLigament2d(
+                    "Intake 2",
+                    Units.inchesToMeters(6.813),
+                    128.732,
+                    kIntakeLineWidth,
+                    new Color8Bit(Color.kYellow)))
+            .append(
+                new MechanismLigament2d(
+                    "Intake 3",
+                    Units.inchesToMeters(11.738),
+                    92.834,
+                    kIntakeLineWidth,
+                    new Color8Bit(Color.kYellow)))
+            .append(
+                new MechanismLigament2d(
+                    "Intake 4",
+                    Units.inchesToMeters(10.5),
+                    152.3,
+                    kIntakeLineWidth,
+                    new Color8Bit(Color.kYellow)));
+      }
+    }
+
+    goalRoot.append(
+        new MechanismLigament2d(
+            "Goal",
+            FieldConstants.LoadingZone.kDoubleSubstationShelfZ,
+            90,
+            5,
+            new Color8Bit((Color.kGreen))));
+  }
+}

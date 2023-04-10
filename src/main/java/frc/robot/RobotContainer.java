@@ -9,21 +9,15 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.FeatureFlags.*;
-import static frc.robot.Constants.Simulation.*;
 import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -52,6 +46,7 @@ import frc.robot.led.patterns.Blink.ConePatternBlink;
 import frc.robot.led.patterns.Blink.CubePatternBlink;
 import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
 import frc.robot.logging.Loggable;
+import frc.robot.simulation.RobotSimulation;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
 import frc.robot.swerve.commands.TeleopSwerve;
@@ -88,6 +83,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
   private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+  private RobotSimulation robotSimulation;
   private SendableChooser<Mode> modeChooser;
 
   private AutoPaths autoPaths;
@@ -141,6 +137,8 @@ public class RobotContainer implements CANTestable, Loggable {
       modeChooser.addOption("Auto Score", Mode.AUTO_SCORE);
     }
     SmartDashboard.putData("Auto Score Toggle", modeChooser);
+    SmartDashboard.putString(
+        "Current Double Substation Location", doubleSubstationLocation.toString());
 
     autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
     autoPaths.sendCommandsToChooser();
@@ -149,9 +147,11 @@ public class RobotContainer implements CANTestable, Loggable {
       PathPlannerServer.startServer(5811);
     }
 
-    SmartDashboard.putString(
-        "Current Double Substation Location", doubleSubstationLocation.toString());
-    simulateInit();
+    if (RobotBase.isSimulation()) {
+      robotSimulation =
+          new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
+      robotSimulation.initialize();
+    }
   }
 
   private void configureSwerve() {
@@ -427,84 +427,5 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void simulateInit() {
     // configure full robot simulation
-
-    Mechanism2d robotCanvas = new Mechanism2d(robotSimWindowWidth, robotSimWindowHeight);
-    SmartDashboard.putData("Robot Sim", robotCanvas);
-
-    MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", 0.5, 0);
-    MechanismRoot2d elevatorRoot =
-        robotCanvas.getRoot(
-            "Elevator Root", 0.5 + Units.inchesToMeters(4.159), Units.inchesToMeters(2.773));
-    MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
-
-    robotRoot.append(
-        new MechanismLigament2d("Drive Chassis", kRobotLength, 0, 20, new Color8Bit(235, 137, 52)));
-    MechanismLigament2d armPivot =
-        new MechanismLigament2d(
-            "Arm Pivot", Units.inchesToMeters(4.25), 90, 10, new Color8Bit(Color.kBlue));
-
-    if (kElevatorEnabled) {
-      elevatorRoot.append(
-          new MechanismLigament2d(
-              "Initial Elevator Height",
-              Units.inchesToMeters(29),
-              kElevatorAngleOffset,
-              10,
-              new Color8Bit(Color.kRed)));
-      elevatorRoot.append(elevatorSubsystem.getLigament());
-
-      elevatorSubsystem
-          .getLigament()
-          .append(
-              new MechanismLigament2d(
-                  "Elevator Right", Units.inchesToMeters(6), 0, 10, new Color8Bit(Color.kRed)));
-      elevatorSubsystem.getLigament().append(armPivot);
-    }
-
-    if (kArmEnabled) {
-      MechanismLigament2d intakePivot = intakeSubsystem.getWrist();
-
-      armPivot.append(armSubsystem.getLigament());
-      armSubsystem.getLigament().append(intakePivot);
-
-      if (kIntakeEnabled) {
-        intakePivot
-            .append(
-                new MechanismLigament2d(
-                    "Intake 1",
-                    Units.inchesToMeters(3),
-                    -3.728 + 90,
-                    3,
-                    new Color8Bit(Color.kYellow)))
-            .append(
-                new MechanismLigament2d(
-                    "Intake 2",
-                    Units.inchesToMeters(6.813),
-                    128.732,
-                    3,
-                    new Color8Bit(Color.kYellow)))
-            .append(
-                new MechanismLigament2d(
-                    "Intake 3",
-                    Units.inchesToMeters(11.738),
-                    92.834,
-                    3,
-                    new Color8Bit(Color.kYellow)))
-            .append(
-                new MechanismLigament2d(
-                    "Intake 4",
-                    Units.inchesToMeters(10.5),
-                    152.3,
-                    3,
-                    new Color8Bit(Color.kYellow)));
-      }
-    }
-    goalRoot.append(
-        new MechanismLigament2d(
-            "Goal",
-            FieldConstants.LoadingZone.kDoubleSubstationShelfZ,
-            90,
-            5,
-            new Color8Bit((Color.kGreen))));
   }
 }
