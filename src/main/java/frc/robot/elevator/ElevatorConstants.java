@@ -21,7 +21,7 @@ public final class ElevatorConstants {
       new CanDeviceId(kElevatorMasterID, kElevatorCANBus);
   public static final CanDeviceId kElevatorFollowerCANDevice =
       new CanDeviceId(kElevatorFollowerID, kElevatorCANBus);
-  public static final int kNumElevatorMotors = 1;
+  public static final int kNumElevatorMotors = 2;
   public static final boolean kElevatorInverted = true;
 
   public static final double kZeroThreshold = 0.02;
@@ -34,6 +34,30 @@ public final class ElevatorConstants {
   public static final double kAnyPieceMidPositionMeters = Units.inchesToMeters(36);
   public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(6);
   public static final double kGroundIntakePositionMeters = Units.inchesToMeters(0);
+
+  // https://www.reca.lc/linear
+  public static final double kElevatorS = 0;
+  public static final double kElevatorG = 0.79013;
+  public static final double kElevatorV = 6.04;
+  public static final double kElevatorA = 0.11;
+  public static final double kP = 200;
+  public static final double kI = 0;
+  public static final double kD = 5;
+
+  public static final TrapezoidProfile.Constraints kElevatorContraints =
+      new TrapezoidProfile.Constraints(2.45, 2.45);
+
+  public static final double kDownSpeedVolts = -8.0;
+
+  public static final double kDrumRadius = Units.inchesToMeters(1.88);
+  public static final double kMinExtension = Units.inchesToMeters(0);
+  public static final double kMaxExtension = Units.inchesToMeters(57);
+  public static final double kElevatorGearing = 15.5;
+  public static final double kCarriageMass = 9; // kg
+  public static final double kTolerancePosition = Units.inchesToMeters(1);
+  public static final double kToleranceVelocity = Units.inchesToMeters(1);
+  public static final double kRateLimiting = 0.05;
+  public static final double kElevatorCurrentThreshold = 30; // amps
 
   public static class ElevatorPreferencesKeys {
     public static final Map<Elevator.ElevatorPreset, String> kElevatorPositionKeys =
@@ -64,28 +88,4 @@ public final class ElevatorConstants {
     public static final String kIKey = "ElevatorkI";
     public static final String kDKey = "ElevatorkD";
   }
-
-  // https://www.reca.lc/linear
-  public static final double kElevatorS = 0;
-  public static final double kElevatorG = 0.51;
-  public static final double kElevatorV = 11.95;
-  public static final double kElevatorA = 0.05;
-  public static final double kP = 10;
-  public static final double kI = 0;
-  public static final double kD = 0;
-
-  public static final TrapezoidProfile.Constraints kElevatorContraints =
-      new TrapezoidProfile.Constraints(2.45, 2.45);
-
-  public static final double kDownSpeedVolts = -8.0;
-
-  public static final double kDrumRadius = Units.inchesToMeters(1.88);
-  public static final double kMinExtension = Units.inchesToMeters(0);
-  public static final double kMaxExtension = Units.inchesToMeters(57);
-  public static final double kElevatorGearing = 15.5;
-  public static final double kCarriageMass = 9; // kg
-  public static final double kTolerancePosition = Units.inchesToMeters(1);
-  public static final double kToleranceVelocity = Units.inchesToMeters(1);
-  public static final double kRateLimiting = 0.05;
-  public static final double kElevatorCurrentThreshold = 30; // amps
 }

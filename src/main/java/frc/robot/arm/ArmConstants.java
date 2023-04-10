@@ -14,42 +14,6 @@ import frc.robot.drivers.CanDeviceId;
 import java.util.Map;
 
 public final class ArmConstants {
-  public static class ArmPreferencesKeys {
-    public static final Map<Arm.ArmPreset, String> kArmPositionKeys =
-        Map.ofEntries(
-            Map.entry(Arm.ArmPreset.STOW_CONE, "kStowRotationCone"),
-            Map.entry(Arm.ArmPreset.STOW_CUBE, "kStowRotationCube"),
-            Map.entry(Arm.ArmPreset.ANY_PIECE_LOW, "kAnyPieceLowRotation"),
-            Map.entry(Arm.ArmPreset.CUBE_MID, "kCubeMidRotation"),
-            Map.entry(Arm.ArmPreset.CONE_MID, "kConeMidRotation"),
-            Map.entry(Arm.ArmPreset.CUBE_HIGH, "kCubeHighRotation"),
-            Map.entry(Arm.ArmPreset.CONE_HIGH, "kConeHighRotation"),
-            Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, "kCubeGroundIntakeRotation"),
-            Map.entry(Arm.ArmPreset.CONE_GROUND_INTAKE, "kConeGroundIntakeRotation"),
-            Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, "kDoubleSubstationCubeRotation"),
-            Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationConeRotation"));
-
-    public static final Map<Arm.ArmPreset, Rotation2d> kArmPositionDefaults =
-        Map.ofEntries(
-            Map.entry(Arm.ArmPreset.STOW_CONE, kStowRotationCone),
-            Map.entry(Arm.ArmPreset.STOW_CUBE, kStowRotationCube),
-            Map.entry(Arm.ArmPreset.ANY_PIECE_LOW, kAnyPieceLowRotation),
-            Map.entry(Arm.ArmPreset.CUBE_MID, kCubeMidRotation),
-            Map.entry(Arm.ArmPreset.CONE_MID, kConeMidRotation),
-            Map.entry(Arm.ArmPreset.CUBE_HIGH, kCubeHighRotation),
-            Map.entry(Arm.ArmPreset.CONE_HIGH, kConeHighRotation),
-            Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, kCubeGroundIntakeRotation),
-            Map.entry(Arm.ArmPreset.CONE_GROUND_INTAKE, kConeGroundIntakeRotation),
-            Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, kDoubleSubstationRotationCube),
-            Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, kDoubleSubstationRotationCone));
-
-    public static final String kPKey = "ArmkP";
-    public static final String kIKey = "ArmkI";
-    public static final String kDKey = "ArmkD";
-    public static final String kRelativeEncoderOffsetKey = "kRelativeEncoderOffset";
-    public static final String kAbsoluteEncoderOffsetKey = "kAbsoluteEncoderOffset";
-  }
-
   public static final int kArmMotorID = 6;
   public static final String kArmCanBus = "mani";
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
@@ -98,4 +62,40 @@ public final class ArmConstants {
   public static final Rotation2d kCubeGroundIntakeRotation = Rotation2d.fromDegrees(180);
 
   public static final double kManualArmVoltage = 2.5;
+
+  public static class ArmPreferencesKeys {
+    public static final Map<Arm.ArmPreset, String> kArmPositionKeys =
+        Map.ofEntries(
+            Map.entry(Arm.ArmPreset.STOW_CONE, "kStowRotationCone"),
+            Map.entry(Arm.ArmPreset.STOW_CUBE, "kStowRotationCube"),
+            Map.entry(Arm.ArmPreset.ANY_PIECE_LOW, "kAnyPieceLowRotation"),
+            Map.entry(Arm.ArmPreset.CUBE_MID, "kCubeMidRotation"),
+            Map.entry(Arm.ArmPreset.CONE_MID, "kConeMidRotation"),
+            Map.entry(Arm.ArmPreset.CUBE_HIGH, "kCubeHighRotation"),
+            Map.entry(Arm.ArmPreset.CONE_HIGH, "kConeHighRotation"),
+            Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, "kCubeGroundIntakeRotation"),
+            Map.entry(Arm.ArmPreset.CONE_GROUND_INTAKE, "kConeGroundIntakeRotation"),
+            Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, "kDoubleSubstationCubeRotation"),
+            Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationConeRotation"));
+
+    public static final Map<Arm.ArmPreset, Rotation2d> kArmPositionDefaults =
+        Map.ofEntries(
+            Map.entry(Arm.ArmPreset.STOW_CONE, kStowRotationCone),
+            Map.entry(Arm.ArmPreset.STOW_CUBE, kStowRotationCube),
+            Map.entry(Arm.ArmPreset.ANY_PIECE_LOW, kAnyPieceLowRotation),
+            Map.entry(Arm.ArmPreset.CUBE_MID, kCubeMidRotation),
+            Map.entry(Arm.ArmPreset.CONE_MID, kConeMidRotation),
+            Map.entry(Arm.ArmPreset.CUBE_HIGH, kCubeHighRotation),
+            Map.entry(Arm.ArmPreset.CONE_HIGH, kConeHighRotation),
+            Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, kCubeGroundIntakeRotation),
+            Map.entry(Arm.ArmPreset.CONE_GROUND_INTAKE, kConeGroundIntakeRotation),
+            Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, kDoubleSubstationRotationCube),
+            Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, kDoubleSubstationRotationCone));
+
+    public static final String kPKey = "ArmkP";
+    public static final String kIKey = "ArmkI";
+    public static final String kDKey = "ArmkD";
+    public static final String kRelativeEncoderOffsetKey = "kRelativeEncoderOffset";
+    public static final String kAbsoluteEncoderOffsetKey = "kAbsoluteEncoderOffset";
+  }
 }

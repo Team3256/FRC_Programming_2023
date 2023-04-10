@@ -157,13 +157,14 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(intakeSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
+
+    // TODO what are these numbers?
     intakePivot.setAngle(Units.radiansToDegrees(getArmPositionRads()) * (86.058 / 180) - 90);
   }
 
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber(
-        "Intake angle",
-        Units.radiansToDegrees(Units.radiansToDegrees(intakeSim.getAngularPositionRad())));
+        "Intake angle deg", Units.radiansToDegrees(intakeSim.getAngularPositionRad()));
     SmartDashboard.putNumber("Intake current draw", intakeMotor.getStatorCurrent());
     SmartDashboard.putNumber("Intake sim voltage", intakeMotor.getMotorOutputPercent());
   }

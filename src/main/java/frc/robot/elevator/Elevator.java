@@ -193,7 +193,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
         kDoubleSubstationPositionConeMeters);
   }
 
-  // Elevator Sim
   private final ElevatorSim elevatorSim =
       new ElevatorSim(
           DCMotor.getFalcon500(kNumElevatorMotors),
@@ -215,7 +214,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
             "Elevator",
             Units.inchesToMeters(8.582) + elevatorSim.getPositionMeters(),
             kElevatorAngleOffset,
-            10,
+            kElevatorLineWidth,
             new Color8Bit(Color.kRed));
   }
 
@@ -229,8 +228,9 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorSim.update(kSimulateDelta);
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    simulationOutputToDashboard();
     elevatorLigament.setLength(Units.inchesToMeters(8.582) + elevatorSim.getPositionMeters());
+
+    simulationOutputToDashboard();
   }
 
   private void simulationOutputToDashboard() {
