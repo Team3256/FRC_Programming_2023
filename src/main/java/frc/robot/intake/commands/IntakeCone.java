@@ -38,6 +38,7 @@ public class IntakeCone extends DebugCommandBase {
   public void initialize() {
     super.initialize();
     intakeSubsystem.intakeCone();
+    isCurrentSpiking.initialize();
   }
 
   @Override

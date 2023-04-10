@@ -35,8 +35,8 @@ public class OutakeCube extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
+    timer.restart();
     intakeSubsystem.intakeCone();
-    timer.start();
   }
 
   @Override
