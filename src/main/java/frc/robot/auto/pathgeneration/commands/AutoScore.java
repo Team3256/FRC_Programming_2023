@@ -187,7 +187,9 @@ public class AutoScore extends CommandBase {
         scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new SetEndEffectorState(
-                elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW);
+                elevatorSubsystem,
+                armSubsystem,
+                SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW);
     }
 
     if (DriverStation.getAlliance() == Alliance.Red) {
