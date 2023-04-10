@@ -27,18 +27,14 @@ public class GroundIntake extends CommandBase {
 
   private BooleanSupplier isCurrentPieceCone;
 
-  public GroundIntake(Elevator elevatorSubsystem, Arm armSubsystem, Intake intakeSubsystem) {
-    this.elevatorSubsystem = elevatorSubsystem;
-    this.armSubsystem = armSubsystem;
-    this.intakeSubsystem = intakeSubsystem;
-  }
-
   public GroundIntake(
       Elevator elevatorSubsystem,
       Arm armSubsystem,
       Intake intakeSubsystem,
       BooleanSupplier isCurrentPieceCone) {
-    this(elevatorSubsystem, armSubsystem, intakeSubsystem);
+    this.elevatorSubsystem = elevatorSubsystem;
+    this.armSubsystem = armSubsystem;
+    this.intakeSubsystem = intakeSubsystem;
     this.isCurrentPieceCone = isCurrentPieceCone;
   }
 
