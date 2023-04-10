@@ -17,14 +17,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
-import frc.robot.commands.SetLiftState;
+import frc.robot.commands.SetEffectorState;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -88,12 +85,16 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
               + isCurrentPieceCone.getAsBoolean());
       new ConditionalCommand(
               new ParallelCommandGroup(
-                  new SetLiftState(
-                          elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.DOUBLE_SUBSTATION_CONE),
+                  new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.DOUBLE_SUBSTATION_CONE),
                   new IntakeCone(intakeSubsystem, ledSubsystem)),
               new ParallelCommandGroup(
-                      new SetLiftState(
-                              elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.DOUBLE_SUBSTATION_CUBE),
+                  new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.DOUBLE_SUBSTATION_CUBE),
                   new IntakeCube(intakeSubsystem, ledSubsystem)),
               isCurrentPieceCone)
           .schedule();
@@ -141,10 +142,14 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new ConditionalCommand(
-                    new SetLiftState(
-                            elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.DOUBLE_SUBSTATION_CONE),
-                    new SetLiftState(
-                            elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.DOUBLE_SUBSTATION_CUBE),
+                new SetEffectorState(
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEffectorState.EffectorPreset.DOUBLE_SUBSTATION_CONE),
+                new SetEffectorState(
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEffectorState.EffectorPreset.DOUBLE_SUBSTATION_CUBE),
                 isCurrentPieceCone));
 
     Command runIntake =

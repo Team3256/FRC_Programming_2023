@@ -19,7 +19,7 @@ import frc.robot.arm.Arm;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
-import frc.robot.commands.SetLiftState;
+import frc.robot.commands.SetEffectorState;
 import frc.robot.elevator.Elevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
@@ -80,10 +80,10 @@ public class AutoScore extends CommandBase {
         case HIGH:
           Commands.parallel(
                   new ConditionalCommand(
-                      new SetLiftState(
-                          elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_CONE_HIGH),
-                      new SetLiftState(
-                          elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_CUBE_HIGH),
+                      new SetEffectorState(
+                          elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CONE_HIGH),
+                      new SetEffectorState(
+                          elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CUBE_HIGH),
                       isCurrentLEDPieceCone))
               .schedule();
           break;
@@ -91,10 +91,10 @@ public class AutoScore extends CommandBase {
         case MID:
           Commands.parallel(
                   new ConditionalCommand(
-                      new SetLiftState(
-                          elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_CONE_MID),
-                      new SetLiftState(
-                          elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_CUBE_MID),
+                      new SetEffectorState(
+                          elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CONE_MID),
+                      new SetEffectorState(
+                          elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CUBE_MID),
                       isCurrentLEDPieceCone))
               .schedule();
           ;
@@ -150,28 +150,28 @@ public class AutoScore extends CommandBase {
         scoringLocation = kHighBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ConditionalCommand(
-                new SetLiftState(
-                    elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_CONE_HIGH),
-                new SetLiftState(
-                    elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_CUBE_HIGH),
+                new SetEffectorState(
+                    elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CONE_HIGH),
+                new SetEffectorState(
+                    elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CUBE_HIGH),
                 isCurrentPieceCone);
         break;
       case MID:
         scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ConditionalCommand(
-                new SetLiftState(
-                    elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_CONE_MID),
-                new SetLiftState(
-                    elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_CUBE_MID),
+                new SetEffectorState(
+                    elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CONE_MID),
+                new SetEffectorState(
+                    elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CUBE_MID),
                 isCurrentPieceCone);
         break;
       case LOW:
       default:
         scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
-            new SetLiftState(
-                elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.SCORE_ANY_LOW);
+            new SetEffectorState(
+                elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_ANY_LOW);
     }
 
     if (DriverStation.getAlliance() == Alliance.Red) {
