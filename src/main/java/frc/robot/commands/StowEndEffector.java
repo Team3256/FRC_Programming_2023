@@ -13,15 +13,11 @@ import frc.robot.arm.Arm;
 import frc.robot.elevator.Elevator;
 import java.util.function.BooleanSupplier;
 
-public class StowEndEffector extends ParallelCommandGroup {
+public class StowEndEffector extends ConditionalCommand {
   public StowEndEffector(
       Elevator elevatorSubsystem, Arm armSubsystem, BooleanSupplier isCurrentPieceCone) {
-    addCommands(
-        new ConditionalCommand(
-            new SetEndEffectorState(
-                elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CONE),
-            new SetEndEffectorState(
-                elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CUBE),
-            isCurrentPieceCone));
+    super(new SetEndEffectorState(
+            elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CONE), new SetEndEffectorState(
+            elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CUBE), isCurrentPieceCone);
   }
 }
