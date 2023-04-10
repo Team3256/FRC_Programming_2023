@@ -1,0 +1,127 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.9,
+        "y": 2.75
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.586489223735324,
+        "y": 2.878735040415873
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.556858304556304,
+        "y": 2.3967177705347793
+      },
+      "prevControl": {
+        "x": 6.087713549472901,
+        "y": 3.008645711953013
+      },
+      "nextControl": {
+        "x": 6.087713549472901,
+        "y": 3.008645711953013
+      },
+      "holonomicAngle": 158.46,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.9,
+        "y": 2.75
+      },
+      "prevControl": {
+        "x": 3.7409543826721245,
+        "y": 2.774073334406211
+      },
+      "nextControl": {
+        "x": 3.7409543826721245,
+        "y": 2.774073334406211
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.966363352574034,
+        "y": 2.794470932453317
+      },
+      "prevControl": {
+        "x": 2.507935092206063,
+        "y": 2.774073334406211
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 12.5,
+  "maxAcceleration": 4.88,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "Outake preload"
+      ]
+    },
+    {
+      "position": 1.0,
+      "names": [
+        "Intake Ball2"
+      ]
+    },
+    {
+      "position": 2.0,
+      "names": [
+        "Outake Ball2"
+      ]
+    },
+    {
+      "position": 3.0,
+      "names": [
+        "AutoBalance"
+      ]
+    }
+  ]
+}
