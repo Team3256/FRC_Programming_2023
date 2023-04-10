@@ -19,7 +19,8 @@ public class SetArmElevatorStart extends ParallelCommandGroup {
   public SetArmElevatorStart(Elevator elevatorSubsystem, Arm armSubsystem) {
     addCommands(
         new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(180))
+            .withTimeout(1.5)
             .andThen(new ZeroElevator(elevatorSubsystem))
-            .andThen(new SetArmAngle(armSubsystem, ArmPreset.DEFAULT)));
+            .andThen(new SetArmAngle(armSubsystem, ArmPreset.DEFAULT).withTimeout(1.5)));
   }
 }

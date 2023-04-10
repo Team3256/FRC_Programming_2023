@@ -8,18 +8,19 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.FeatureFlags.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
@@ -72,7 +73,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
@@ -340,7 +340,7 @@ public class RobotContainer implements CANTestable, Loggable {
     Command autoPath = autoPaths.getSelectedPath();
     Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem);
+      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem).withTimeout(4);
 
       return Commands.sequence(
           setArmElevatorStart.asProxy(),
@@ -367,6 +367,19 @@ public class RobotContainer implements CANTestable, Loggable {
         || Math.abs(controller.getLeftY()) > kStickCancelDeadband
         || Math.abs(controller.getRightX()) > kStickCancelDeadband
         || Math.abs(controller.getRightY()) > kStickCancelDeadband;
+  }
+
+  // This command sets the correct gyro heading before the start of Teleop
+  public Command setTeleopGyro() {
+    if (swerveSubsystem != null) {
+      return new InstantCommand(
+          () ->
+              swerveSubsystem.setGyroYaw(
+                  (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
+                      .getDegrees()));
+    } else {
+      return new InstantCommand();
+    }
   }
 
   @Override
