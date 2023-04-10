@@ -9,10 +9,10 @@ package frc.robot.auto;
 
 import static frc.robot.auto.AutoConstants.*;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
@@ -25,6 +25,8 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
+import frc.robot.intake.commands.OutakeCone;
+import frc.robot.intake.commands.OutakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -59,6 +61,14 @@ public class AutoPaths {
 
     Supplier<Command> scorePreloadCone = () -> new InstantCommand();
     Supplier<Command> scorePreloadCube = () -> new InstantCommand();
+
+    autoEventMap.put(
+        "engage",
+        () ->
+            new AutoBalance(swerveSubsystem)
+                .andThen(new LockSwerveX(swerveSubsystem))
+                .asProxy()
+                .withName("engage"));
 
     if (swerveSubsystem != null
         && intakeSubsystem != null
@@ -175,14 +185,6 @@ public class AutoPaths {
 
       AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
 
-      autoEventMap.put(
-          "engage",
-          () ->
-              new AutoBalance(swerveSubsystem)
-                  .andThen(new LockSwerveX(swerveSubsystem))
-                  .asProxy()
-                  .withName("engage"));
-
       scorePreloadCube =
           () ->
               Commands.parallel(
@@ -190,7 +192,7 @@ public class AutoPaths {
                           elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
                   .withTimeout(2.25)
-                  .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
+                  .andThen(new OutakeCube(intakeSubsystem).withTimeout(1.5))
                   .asProxy()
                   .withName("scorePreloadCube");
 
@@ -201,7 +203,7 @@ public class AutoPaths {
                           elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
                   .withTimeout(2.25)
-                  .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
+                  .andThen(new OutakeCone(intakeSubsystem).withTimeout(1))
                   .asProxy()
                   .withName("scorePreloadCone");
     }
@@ -224,7 +226,10 @@ public class AutoPaths {
     ArrayList<Command> node5Engage =
         autoBuilder.createPaths("Node5-Engage", kEngagePathConstraints);
     AutoChooser.addPathGroup(
-        scorePreloadCube.get(), "Node5-Engage", node5Engage, new LockSwerveX(swerveSubsystem));
+        scorePreloadCube.get(),
+        "Node5-Engage",
+        node5Engage,
+        new AutoBalance(swerveSubsystem).andThen(new LockSwerveX(swerveSubsystem)));
 
     // Node8-Preload-Ready
     Command node8PreloadReady =
@@ -312,12 +317,6 @@ public class AutoPaths {
   }
 
   public Command getSelectedPath() {
-    Command zeroGyroTeleop =
-        new InstantCommand(
-            () ->
-                swerveSubsystem.setGyroYaw(
-                    (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
-                        .getDegrees()));
-    return AutoChooser.getCommand().finallyDo((interrupted) -> zeroGyroTeleop.schedule());
+    return AutoChooser.getCommand();
   }
 }

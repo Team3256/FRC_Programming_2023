@@ -42,14 +42,17 @@ public final class ArmConstants {
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(8, 4);
+
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
 
   // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
+
   public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(20);
   public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(30);
+  
   public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0);
   public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0);
   public static final Rotation2d kCubeMidRotation = new Rotation2d(0);

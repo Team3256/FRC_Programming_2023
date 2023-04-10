@@ -83,7 +83,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               backRightModule.getPosition()
             },
             new Pose2d(),
-            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.9, 0.9, 0.02), // Current state X, Y, theta.
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.5, 0.5, 0.02), // Current state X, Y, theta.
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.10, 0.10, 0.5));
 
     if (kDebugEnabled) {
@@ -219,6 +219,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       Pose2d limelightPose,
       double LimelightTranslationThresholdMeters,
       double LimelightRotationThreshold) {
+    if (limelightPose.getTranslation().getNorm() == 0) return false;
     Pose2d relativePose = limelightPose.relativeTo(poseEstimator.getEstimatedPosition());
     return Math.abs(relativePose.getTranslation().getNorm()) < LimelightTranslationThresholdMeters
         && Math.abs(relativePose.getRotation().getRadians()) < LimelightRotationThreshold;
@@ -232,6 +233,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       double LimelightRotationThreshold) {
     if (Limelight.hasValidTargets(networkTablesName)) {
       double[] visionBotPose;
+      if (!Limelight.hasValidTargets(networkTablesName)) return;
       if (FeatureFlags.kLocalizationUseWPIBlueOffset) {
         visionBotPose = Limelight.getBotpose_wpiBlue(networkTablesName);
       } else {
@@ -291,8 +293,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
         if (kDebugEnabled) {
           limelightLocalizationField.setRobotPose(limelightPose);
-          SmartDashboard.putNumber("Lime Light pose x", limelightPose.getX());
-          SmartDashboard.putNumber("Lime Light pose y", limelightPose.getY());
+          SmartDashboard.putNumber("Lime Light pose x " + networkTablesName, limelightPose.getX());
+          SmartDashboard.putNumber("Lime Light pose y " + networkTablesName, limelightPose.getY());
           SmartDashboard.putNumber(
               "Lime Light pose theta", limelightPose.getRotation().getDegrees());
         }
@@ -312,6 +314,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
+    SmartDashboard.putNumber("Pose X", poseEstimator.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Pose Y", poseEstimator.getEstimatedPosition().getY());
     field.setRobotPose(poseEstimator.getEstimatedPosition());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
