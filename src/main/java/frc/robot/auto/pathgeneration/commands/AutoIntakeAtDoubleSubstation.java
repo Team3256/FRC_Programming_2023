@@ -22,6 +22,7 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
+import frc.robot.commands.SetLiftState;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 import frc.robot.intake.Intake;
@@ -87,16 +88,12 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
               + isCurrentPieceCone.getAsBoolean());
       new ConditionalCommand(
               new ParallelCommandGroup(
-                  new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
-                      .beforeStarting(new WaitCommand(0.3)),
-                  new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+                  new SetLiftState(
+                          elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.DOUBLE_SUBSTATION_CONE),
                   new IntakeCone(intakeSubsystem, ledSubsystem)),
               new ParallelCommandGroup(
-                  new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
-                      .beforeStarting(new WaitCommand(0.3)),
-                  new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+                      new SetLiftState(
+                              elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.DOUBLE_SUBSTATION_CUBE),
                   new IntakeCube(intakeSubsystem, ledSubsystem)),
               isCurrentPieceCone)
           .schedule();
@@ -144,14 +141,10 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new ConditionalCommand(
-                new SetElevatorHeight(
-                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
-                new SetElevatorHeight(
-                    elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
-                isCurrentPieceCone),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+                    new SetLiftState(
+                            elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.DOUBLE_SUBSTATION_CONE),
+                    new SetLiftState(
+                            elevatorSubsystem, armSubsystem, SetLiftState.LiftPreset.DOUBLE_SUBSTATION_CUBE),
                 isCurrentPieceCone));
 
     Command runIntake =
