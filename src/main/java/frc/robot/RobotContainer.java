@@ -8,7 +8,6 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.FeatureFlags.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
@@ -41,8 +40,6 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
-import frc.robot.intake.commands.OutakeCone;
-import frc.robot.intake.commands.OutakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.*;
 import frc.robot.led.patterns.*;
@@ -76,8 +73,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-  private final CommandXboxController tester = new CommandXboxController(2);
-
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
@@ -129,7 +124,6 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
-    configureTests();
 
     modeChooser = new SendableChooser<>();
     if (FeatureFlags.kAutoScoreEnabled) {
@@ -342,11 +336,6 @@ public class RobotContainer implements CANTestable, Loggable {
         .toggleOnTrue(new InstantCommand(this::setPieceToCube));
   }
 
-  public void configureTests() {
-    tester.a().onTrue(new OutakeCube(intakeSubsystem, ledStrip));
-    tester.b().onTrue(new OutakeCone(intakeSubsystem, ledStrip));
-  }
-
   public Command getAutonomousCommand() {
     Command autoPath = autoPaths.getSelectedPath();
     Command setArmElevatorStart;
@@ -380,7 +369,8 @@ public class RobotContainer implements CANTestable, Loggable {
         || Math.abs(controller.getRightY()) > kStickCancelDeadband;
   }
 
-  public Command zeroGyroTeleop() {
+  // This command sets the correct gyro heading before the start of Teleop
+  public Command setTeleopGyro() {
     if (swerveSubsystem != null) {
       return new InstantCommand(
           () ->

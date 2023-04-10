@@ -22,7 +22,7 @@ public final class Constants {
   public static final boolean kDebugEnabled = true;
 
   public static final boolean kSwerveEnabled = true;
-  public static final boolean kClimbEnabled = true;
+  public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
   public static final boolean kArmEnabled = true;
@@ -332,7 +332,7 @@ public final class Constants {
                   new Rotation3d()));
     }
   }
-
+  // TODO: tune distance and rotation thresholds for all limelights
   public static class VisionConstants {
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
