@@ -320,7 +320,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     field.setRobotPose(poseEstimator.getEstimatedPosition());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
-    // if (!DriverStation.isAutonomous()) {
     this.localize(
         FrontConstants.kLimelightNetworkTablesName,
         FrontConstants.kFieldTranslationOffsetX,
@@ -339,7 +338,6 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
         BackConstants.kFieldTranslationOffsetY,
         BackConstants.kLimelightTranslationThresholdMeters,
         BackConstants.kLimelightTranslationThresholdMeters);
-    // }
 
     if (kDebugEnabled) {
       for (SwerveModule mod : swerveModules) {

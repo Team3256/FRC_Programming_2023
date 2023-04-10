@@ -117,7 +117,7 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    robotContainer.zeroGyroTeleop().schedule();
+    robotContainer.setTeleopGyro().schedule();
   }
 
   /** This function is called periodically during operator control. */
