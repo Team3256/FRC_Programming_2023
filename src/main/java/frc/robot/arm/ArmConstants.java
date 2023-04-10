@@ -52,7 +52,7 @@ public final class ArmConstants {
 
   public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(20);
   public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(30);
-  
+
   public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0);
   public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0);
   public static final Rotation2d kCubeMidRotation = new Rotation2d(0);

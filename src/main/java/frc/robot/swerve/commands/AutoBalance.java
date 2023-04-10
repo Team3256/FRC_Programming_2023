@@ -35,9 +35,9 @@ public class AutoBalance extends DebugCommandBase {
   @Override
   public void execute() {
     if (swerveDrive.isTiltedForward()) {
-      swerveDrive.drive(new Translation2d(-kXAutoBalanceVelocityMeters, 0), 0, true, true);
+      swerveDrive.drive(new Translation2d(kXAutoBalanceVelocity, 0), 0, true, true);
     } else if (swerveDrive.isTiltedBackward()) {
-      swerveDrive.drive(new Translation2d(kXAutoBalanceVelocityMeters, 0), 0, true, true);
+      swerveDrive.drive(new Translation2d(kXAutoBalanceVelocity, 0), 0, true, true);
     } else {
       swerveDrive.drive(new Translation2d(0, 0), 0, true, true);
     }
