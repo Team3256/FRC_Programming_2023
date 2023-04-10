@@ -165,7 +165,7 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
     Command stopIntake = new IntakeOff(intakeSubsystem);
     Command stowArmElevator =
-        new StowArmElevator(elevatorSubsystem, armSubsystem, 0, 1, isCurrentPieceCone);
+        new StowArmElevator(elevatorSubsystem, armSubsystem, isCurrentPieceCone);
     Command moveAwayFromSubstation =
         PathGeneration.createDynamicAbsolutePath(
             end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
@@ -184,10 +184,8 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
         Commands.sequence(
                 moveToWaypoint,
                 Commands.deadline(
-                    runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation)
-                //                Commands.deadline(moveAwayFromSubstation, stowArmElevator,
-                // stopIntake))
-                )
+                    runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
+                Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
             .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
             .finallyDo((interrupted) -> successLEDs.schedule())

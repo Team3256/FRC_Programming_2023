@@ -60,9 +60,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     }
   }
 
-  private static WPI_TalonFX armMotor;
+  private WPI_TalonFX armMotor;
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
-  protected static final DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
+  private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
 
   public Arm() {
     if (RobotBase.isReal()) {
@@ -119,7 +119,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     System.out.println("New arm offset" + ArmConstants.kRelativeFalconEncoderOffsetRadians);
   }
 
-  public static double getArmPositionRads() {
+  public double getArmPositionRads() {
     if (RobotBase.isReal()) {
       if (Constants.FeatureFlags.kArmAbsoluteEncoderEnabled) {
         double absoluteEncoderDistance =
@@ -227,8 +227,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         kDoubleSubstationRotationCube.getRadians());
   }
 
-  // sim
-  private static final SingleJointedArmSim armSim =
+  private final SingleJointedArmSim armSim =
       new SingleJointedArmSim(
           DCMotor.getFalcon500(kNumArmMotors),
           kArmGearing,

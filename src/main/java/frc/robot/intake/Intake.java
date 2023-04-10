@@ -10,7 +10,6 @@ package frc.robot.intake;
 import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
 import static frc.robot.Constants.ShuffleboardConstants.kIntakeLayoutName;
 import static frc.robot.Constants.kDebugEnabled;
-import static frc.robot.arm.Arm.getArmPositionRads;
 import static frc.robot.intake.IntakeConstants.*;
 import static frc.robot.simulation.SimulationConstants.*;
 
@@ -129,7 +128,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     return result;
   }
 
-  // sim
   private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 1);
   private MechanismLigament2d intakePivot;
 
@@ -145,9 +143,9 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
         new MechanismLigament2d(
             "Intake Wrist",
             Units.inchesToMeters(2.059),
-            Units.radiansToDegrees(getArmPositionRads()) * (86.058 / 180) - 90,
+            Units.radiansToDegrees(0) * (86.058 / 180) - 90,
             0,
-            new Color8Bit(Color.kBlack));
+            new Color8Bit(Color.kBrown));
   }
 
   @Override
@@ -159,7 +157,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     simulationOutputToDashboard();
 
     // TODO what are these numbers?
-    intakePivot.setAngle(Units.radiansToDegrees(getArmPositionRads()) * (86.058 / 180) - 90);
+    // intakePivot.setAngle(Units.radiansToDegrees(getArmPositionRads()) * (86.058 /
+    // 180) - 90);
   }
 
   private void simulationOutputToDashboard() {

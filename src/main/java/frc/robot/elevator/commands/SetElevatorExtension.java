@@ -11,7 +11,6 @@ import static frc.robot.elevator.ElevatorConstants.*;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
@@ -45,7 +44,6 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
     this.elevatorSubsystem = elevatorSubsystem;
 
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
-    SmartDashboard.putData("Elevator pid controller", getController());
     addRequirements(elevatorSubsystem);
   }
 

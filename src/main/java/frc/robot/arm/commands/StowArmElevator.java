@@ -10,7 +10,6 @@ package frc.robot.arm.commands;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorExtension;
@@ -28,31 +27,6 @@ public class StowArmElevator extends ParallelCommandGroup {
             Commands.parallel(
                 new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.STOW_CUBE),
                 new SetArmAngle(armSubsystem, Arm.ArmPreset.STOW_CUBE)),
-            isCurrentPieceCone));
-  }
-
-  public StowArmElevator(
-      Elevator elevatorSubsystem,
-      Arm armSubsystem,
-      double armWaitTime,
-      double elevatorWaitTime,
-      BooleanSupplier isCurrentPieceCone) {
-    addCommands(
-        new ConditionalCommand(
-            Commands.parallel(
-                new WaitCommand(elevatorWaitTime)
-                    .andThen(
-                        new SetElevatorExtension(
-                            elevatorSubsystem, Elevator.ElevatorPreset.STOW_CONE)),
-                new WaitCommand(armWaitTime)
-                    .andThen(new SetArmAngle(armSubsystem, Arm.ArmPreset.STOW_CONE))),
-            Commands.parallel(
-                new WaitCommand(elevatorWaitTime)
-                    .andThen(
-                        new SetElevatorExtension(
-                            elevatorSubsystem, Elevator.ElevatorPreset.STOW_CUBE)),
-                new WaitCommand(armWaitTime)
-                    .andThen(new SetArmAngle(armSubsystem, Arm.ArmPreset.STOW_CUBE))),
             isCurrentPieceCone));
   }
 }
