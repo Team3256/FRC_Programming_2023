@@ -18,10 +18,10 @@ public class StowEffector extends ParallelCommandGroup {
       Elevator elevatorSubsystem, Arm armSubsystem, BooleanSupplier isCurrentPieceCone) {
     addCommands(
         new ConditionalCommand(
-            new SetEffectorState(
-                elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.STOW_CONE),
-            new SetEffectorState(
-                elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.STOW_CUBE),
+            new SetEndEffectorState(
+                elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CONE),
+            new SetEndEffectorState(
+                elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CUBE),
             isCurrentPieceCone));
   }
 }

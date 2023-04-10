@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
-import frc.robot.commands.SetEffectorState;
+import frc.robot.commands.SetEndEffectorState;
 import frc.robot.elevator.Elevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
@@ -85,16 +85,16 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
               + isCurrentPieceCone.getAsBoolean());
       new ConditionalCommand(
               new ParallelCommandGroup(
-                  new SetEffectorState(
+                  new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEffectorState.EffectorPreset.DOUBLE_SUBSTATION_CONE),
+                      SetEndEffectorState.EndEffectorPreset.DOUBLE_SUBSTATION_CONE),
                   new IntakeCone(intakeSubsystem, ledSubsystem)),
               new ParallelCommandGroup(
-                  new SetEffectorState(
+                  new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEffectorState.EffectorPreset.DOUBLE_SUBSTATION_CUBE),
+                      SetEndEffectorState.EndEffectorPreset.DOUBLE_SUBSTATION_CUBE),
                   new IntakeCube(intakeSubsystem, ledSubsystem)),
               isCurrentPieceCone)
           .schedule();
@@ -142,14 +142,14 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new ConditionalCommand(
-                new SetEffectorState(
+                new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEffectorState.EffectorPreset.DOUBLE_SUBSTATION_CONE),
-                new SetEffectorState(
+                    SetEndEffectorState.EndEffectorPreset.DOUBLE_SUBSTATION_CONE),
+                new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEffectorState.EffectorPreset.DOUBLE_SUBSTATION_CUBE),
+                    SetEndEffectorState.EndEffectorPreset.DOUBLE_SUBSTATION_CUBE),
                 isCurrentPieceCone));
 
     Command runIntake =

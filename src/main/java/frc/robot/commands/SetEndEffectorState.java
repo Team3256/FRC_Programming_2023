@@ -14,8 +14,8 @@ import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 
-public class SetEffectorState extends ParallelCommandGroup {
-  public enum EffectorPreset {
+public class SetEndEffectorState extends ParallelCommandGroup {
+  public enum EndEffectorPreset{
     SCORE_CONE_HIGH(Arm.ArmPreset.CONE_HIGH, Elevator.ElevatorPreset.CONE_HIGH),
     SCORE_CONE_MID(Arm.ArmPreset.CONE_MID, Elevator.ElevatorPreset.ANY_PIECE_MID),
     SCORE_ANY_LOW(Arm.ArmPreset.ANY_PIECE_LOW, Elevator.ElevatorPreset.ANY_PIECE_LOW),
@@ -31,20 +31,20 @@ public class SetEffectorState extends ParallelCommandGroup {
     public final Arm.ArmPreset armPreset;
     public final Elevator.ElevatorPreset elevatorPreset;
 
-    EffectorPreset(Arm.ArmPreset armPreset, Elevator.ElevatorPreset elevatorPreset) {
+    EndEffectorPreset(Arm.ArmPreset armPreset,Elevator.ElevatorPreset elevatorPreset) {
       this.armPreset = armPreset;
       this.elevatorPreset = elevatorPreset;
     }
   }
 
-  public SetEffectorState(
-      Elevator elevatorSubsystem, Arm armSubsystem, EffectorPreset effectorPreset) {
+  public SetEndEffectorState(
+      Elevator elevatorSubsystem, Arm armSubsystem, EndEffectorPreset endEffectorPreset) {
     addCommands(
-        new SetElevatorHeight(elevatorSubsystem, effectorPreset.elevatorPreset),
-        new SetArmAngle(armSubsystem, effectorPreset.armPreset));
+        new SetElevatorHeight(elevatorSubsystem, endEffectorPreset.elevatorPreset),
+        new SetArmAngle(armSubsystem, endEffectorPreset.armPreset));
   }
 
-  public SetEffectorState(
+  public SetEndEffectorState(
       Elevator elevatorSubsystem, Arm armSubsystem, double elevatorExtension, Rotation2d armAngle) {
     addCommands(
         new SetElevatorHeight(elevatorSubsystem, elevatorExtension),
