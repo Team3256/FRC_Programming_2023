@@ -433,7 +433,8 @@ public class RobotContainer implements CANTestable, Loggable {
 
     MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", 0.5, 0);
     MechanismRoot2d elevatorRoot =
-        robotCanvas.getRoot("Elevator Root", 0.5, Units.inchesToMeters(2.773));
+        robotCanvas.getRoot(
+            "Elevator Root", 0.5 + Units.inchesToMeters(4.159), Units.inchesToMeters(2.773));
     MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * robotSimWindowWidth, 0);
 
     robotRoot.append(
@@ -443,6 +444,13 @@ public class RobotContainer implements CANTestable, Loggable {
             "Arm Pivot", Units.inchesToMeters(4.25), 90, 10, new Color8Bit(Color.kBlue));
 
     if (kElevatorEnabled) {
+      elevatorRoot.append(
+          new MechanismLigament2d(
+              "Initial Elevator Height",
+              Units.inchesToMeters(29),
+              kElevatorAngleOffset,
+              10,
+              new Color8Bit(Color.kRed)));
       elevatorRoot.append(elevatorSubsystem.getLigament());
 
       elevatorSubsystem

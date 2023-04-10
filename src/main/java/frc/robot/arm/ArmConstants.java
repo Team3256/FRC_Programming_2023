@@ -84,8 +84,8 @@ public final class ArmConstants {
   // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
-  public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(165);
-  public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(155);
+  public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(20);
+  public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(30);
   public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0);
   public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0);
   public static final Rotation2d kCubeMidRotation = new Rotation2d(0);
