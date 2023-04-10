@@ -10,20 +10,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
-import frc.robot.commands.SetEffectorState;
 import frc.robot.elevator.Elevator;
-
 import java.util.function.BooleanSupplier;
 
 public class StowEffector extends ParallelCommandGroup {
   public StowEffector(
       Elevator elevatorSubsystem, Arm armSubsystem, BooleanSupplier isCurrentPieceCone) {
     addCommands(
-            new ConditionalCommand(
-                    new SetEffectorState(
-                            elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.STOW_CONE),
-                    new SetEffectorState(
-                            elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.STOW_CUBE),
-                    isCurrentPieceCone));
+        new ConditionalCommand(
+            new SetEffectorState(
+                elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.STOW_CONE),
+            new SetEffectorState(
+                elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.STOW_CUBE),
+            isCurrentPieceCone));
   }
 }

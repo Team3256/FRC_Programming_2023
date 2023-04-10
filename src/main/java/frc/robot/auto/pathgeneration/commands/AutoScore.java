@@ -81,9 +81,13 @@ public class AutoScore extends CommandBase {
           Commands.parallel(
                   new ConditionalCommand(
                       new SetEffectorState(
-                          elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CONE_HIGH),
+                          elevatorSubsystem,
+                          armSubsystem,
+                          SetEffectorState.EffectorPreset.SCORE_CONE_HIGH),
                       new SetEffectorState(
-                          elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CUBE_HIGH),
+                          elevatorSubsystem,
+                          armSubsystem,
+                          SetEffectorState.EffectorPreset.SCORE_CUBE_HIGH),
                       isCurrentLEDPieceCone))
               .schedule();
           break;
@@ -92,9 +96,13 @@ public class AutoScore extends CommandBase {
           Commands.parallel(
                   new ConditionalCommand(
                       new SetEffectorState(
-                          elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CONE_MID),
+                          elevatorSubsystem,
+                          armSubsystem,
+                          SetEffectorState.EffectorPreset.SCORE_CONE_MID),
                       new SetEffectorState(
-                          elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CUBE_MID),
+                          elevatorSubsystem,
+                          armSubsystem,
+                          SetEffectorState.EffectorPreset.SCORE_CUBE_MID),
                       isCurrentLEDPieceCone))
               .schedule();
           ;
@@ -151,9 +159,13 @@ public class AutoScore extends CommandBase {
         moveArmElevatorToPreset =
             new ConditionalCommand(
                 new SetEffectorState(
-                    elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CONE_HIGH),
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEffectorState.EffectorPreset.SCORE_CONE_HIGH),
                 new SetEffectorState(
-                    elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CUBE_HIGH),
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEffectorState.EffectorPreset.SCORE_CUBE_HIGH),
                 isCurrentPieceCone);
         break;
       case MID:
@@ -161,9 +173,13 @@ public class AutoScore extends CommandBase {
         moveArmElevatorToPreset =
             new ConditionalCommand(
                 new SetEffectorState(
-                    elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CONE_MID),
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEffectorState.EffectorPreset.SCORE_CONE_MID),
                 new SetEffectorState(
-                    elevatorSubsystem, armSubsystem, SetEffectorState.EffectorPreset.SCORE_CUBE_MID),
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEffectorState.EffectorPreset.SCORE_CUBE_MID),
                 isCurrentPieceCone);
         break;
       case LOW:

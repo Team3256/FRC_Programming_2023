@@ -23,7 +23,6 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
 import frc.robot.arm.commands.SetArmVoltage;
-import frc.robot.commands.StowEffector;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.pathgeneration.commands.*;
@@ -31,6 +30,7 @@ import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.Subst
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
+import frc.robot.commands.StowEffector;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.intake.Intake;
@@ -340,8 +340,7 @@ public class RobotContainer implements CANTestable, Loggable {
       return Commands.sequence(
           autoPath,
           Commands.parallel(
-              new StowEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
-                  .asProxy(),
+              new StowEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone).asProxy(),
               new LockSwerveX(swerveSubsystem)
                   .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
                   .until(() -> isMovingJoystick(driver))));

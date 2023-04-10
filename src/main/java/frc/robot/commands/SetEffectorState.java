@@ -15,7 +15,7 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorHeight;
 
 public class SetEffectorState extends ParallelCommandGroup {
-  public enum EffectorPreset{
+  public enum EffectorPreset {
     SCORE_CONE_HIGH(Arm.ArmPreset.CONE_HIGH, Elevator.ElevatorPreset.CONE_HIGH),
     SCORE_CONE_MID(Arm.ArmPreset.CONE_MID, Elevator.ElevatorPreset.ANY_PIECE_MID),
     SCORE_ANY_LOW(Arm.ArmPreset.ANY_PIECE_LOW, Elevator.ElevatorPreset.ANY_PIECE_LOW),
@@ -31,13 +31,14 @@ public class SetEffectorState extends ParallelCommandGroup {
     public final Arm.ArmPreset armPreset;
     public final Elevator.ElevatorPreset elevatorPreset;
 
-    EffectorPreset(Arm.ArmPreset armPreset,Elevator.ElevatorPreset elevatorPreset) {
+    EffectorPreset(Arm.ArmPreset armPreset, Elevator.ElevatorPreset elevatorPreset) {
       this.armPreset = armPreset;
       this.elevatorPreset = elevatorPreset;
     }
   }
 
-  public SetEffectorState(Elevator elevatorSubsystem,Arm armSubsystem,EffectorPreset effectorPreset) {
+  public SetEffectorState(
+      Elevator elevatorSubsystem, Arm armSubsystem, EffectorPreset effectorPreset) {
     addCommands(
         new SetElevatorHeight(elevatorSubsystem, effectorPreset.elevatorPreset),
         new SetArmAngle(armSubsystem, effectorPreset.armPreset));

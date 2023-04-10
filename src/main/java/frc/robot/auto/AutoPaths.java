@@ -14,13 +14,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
+import frc.robot.commands.SetEffectorState;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
-import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -105,9 +102,10 @@ public class AutoPaths {
       autoEventMap.put(
           "cubeHigh",
           () ->
-              Commands.parallel(
-                      new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
-                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
+              new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.SCORE_CUBE_HIGH)
                   .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem))
                   .asProxy()
@@ -116,9 +114,10 @@ public class AutoPaths {
       autoEventMap.put(
           "coneHigh",
           () ->
-              Commands.parallel(
-                      new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
-                      new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
+              new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.SCORE_CONE_HIGH)
                   .withTimeout(2.25)
                   .andThen(new IntakeCube(intakeSubsystem))
                   .asProxy()
@@ -127,10 +126,10 @@ public class AutoPaths {
       autoEventMap.put(
           "cubeMid",
           () ->
-              Commands.parallel(
-                      new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
-                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID))
+              new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.SCORE_CUBE_MID)
                   .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem))
                   .asProxy()
@@ -139,10 +138,10 @@ public class AutoPaths {
       autoEventMap.put(
           "coneMid",
           () ->
-              Commands.parallel(
-                      new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
-                      new SetArmAngle(armSubsystem, ArmPreset.CONE_MID))
+              new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.SCORE_CONE_MID)
                   .withTimeout(2.25)
                   .andThen(new IntakeCube(intakeSubsystem))
                   .asProxy()
@@ -151,10 +150,10 @@ public class AutoPaths {
       autoEventMap.put(
           "cubeLow",
           () ->
-              Commands.parallel(
-                      new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
-                      new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+              new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.SCORE_ANY_LOW)
                   .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem))
                   .asProxy()
@@ -163,10 +162,10 @@ public class AutoPaths {
       autoEventMap.put(
           "coneLow",
           () ->
-              Commands.parallel(
-                      new SetElevatorHeight(
-                          elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
-                      new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+              new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.SCORE_ANY_LOW)
                   .withTimeout(2.25)
                   .andThen(new IntakeCube(intakeSubsystem))
                   .asProxy()
@@ -182,9 +181,10 @@ public class AutoPaths {
 
       scorePreloadCube =
           () ->
-              Commands.parallel(
-                      new ZeroElevator(elevatorSubsystem),
-                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
+              new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.SCORE_CUBE_HIGH)
                   .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
                   .asProxy()
@@ -192,9 +192,10 @@ public class AutoPaths {
 
       scorePreloadCone =
           () ->
-              Commands.parallel(
-                      new ZeroElevator(elevatorSubsystem),
-                      new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
+              new SetEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEffectorState.EffectorPreset.SCORE_CONE_HIGH)
                   .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem).withTimeout(1))
                   .asProxy()
