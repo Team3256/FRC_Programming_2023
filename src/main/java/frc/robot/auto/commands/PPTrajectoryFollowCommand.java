@@ -57,8 +57,7 @@ public class PPTrajectoryFollowCommand extends DebugCommandBase {
 
     this.trajectory = trajectory;
     this.trajectoryDuration = trajectory.getTotalTimeSeconds();
-    this.controller =
-        new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
+    this.controller = new SwerveDriveController(xTranslationController, yTranslationController, thetaController);
 
     this.swerveSubsystem = swerveSubsystem;
 
@@ -119,12 +118,10 @@ public class PPTrajectoryFollowCommand extends DebugCommandBase {
       this.alliance = DriverStation.getAlliance();
     } else {
       this.alliance = Alliance.Blue;
-      // No mirroring on blue alliance
     }
 
-    PathPlannerTrajectory.PathPlannerState start =
-        TrajectoryMirrorer.mirrorState(
-            (PathPlannerTrajectory.PathPlannerState) trajectory.sample(0.0), alliance);
+    PathPlannerTrajectory.PathPlannerState start = TrajectoryMirrorer.mirrorState(
+        (PathPlannerTrajectory.PathPlannerState) trajectory.getInitialState(), alliance);
     Rotation2d rotation = start.holonomicRotation;
     Translation2d translation = start.poseMeters.getTranslation();
     this.startPose = new Pose2d(translation, rotation);
@@ -134,7 +131,9 @@ public class PPTrajectoryFollowCommand extends DebugCommandBase {
       autoVisualization.getObject("traj").setTrajectory(trajectory);
       PathPlannerServer.sendActivePath(trajectory.getStates());
     }
-    if (isFirstSegment) { // use existing pose for more accuracy if it is the first path
+
+    if (isFirstSegment) { // use existing pose for more accuracy if it is not the first path
+      swerveSubsystem.setGyroYaw(trajectory.getInitialHolonomicPose().getRotation().getDegrees());
       swerveSubsystem.resetOdometry(this.startPose);
     }
 
@@ -147,11 +146,10 @@ public class PPTrajectoryFollowCommand extends DebugCommandBase {
   public void execute() {
     double now = timer.get();
 
-    PathPlannerTrajectory.PathPlannerState nonMirroredDesired =
-        (PathPlannerTrajectory.PathPlannerState) trajectory.sample(now);
+    PathPlannerTrajectory.PathPlannerState nonMirroredDesired = (PathPlannerTrajectory.PathPlannerState) trajectory
+        .sample(now);
 
-    PathPlannerTrajectory.PathPlannerState desired =
-        TrajectoryMirrorer.mirrorState(nonMirroredDesired, alliance);
+    PathPlannerTrajectory.PathPlannerState desired = TrajectoryMirrorer.mirrorState(nonMirroredDesired, alliance);
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d desiredPose = desired.poseMeters;
     double desiredLinearVelocity = desired.velocityMetersPerSecond;
@@ -218,9 +216,8 @@ public class PPTrajectoryFollowCommand extends DebugCommandBase {
     Pose2d currentPose = swerveSubsystem.getPose();
     Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
 
-    boolean reachedEndTolerance =
-        relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
-            && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance;
+    boolean reachedEndTolerance = relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
+        && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance;
 
     return reachedEndTolerance && now >= trajectoryDuration;
   }

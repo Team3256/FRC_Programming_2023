@@ -9,7 +9,6 @@ package frc.robot.auto;
 
 import static frc.robot.auto.AutoConstants.*;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -66,7 +65,7 @@ public class AutoPaths {
           () ->
               runParallelWithPath(
                   Commands.parallel(
-                          //                          new StowArmElevator(elevatorSubsystem,
+                          // new StowArmElevator(elevatorSubsystem,
                           // armSubsystem),
                           new IntakeOff(intakeSubsystem))
                       .asProxy()
@@ -78,10 +77,10 @@ public class AutoPaths {
               runParallelWithPath(
                       Commands.deadline(
                           new IntakeCone(intakeSubsystem)
-                          //                          new SetElevatorHeight(
-                          //                              elevatorSubsystem,
+                          // new SetElevatorHeight(
+                          // elevatorSubsystem,
                           // Elevator.ElevatorPreset.GROUND_INTAKE),
-                          //                          new SetArmAngle(armSubsystem,
+                          // new SetArmAngle(armSubsystem,
                           // ArmPreset.GROUND_INTAKE)
                           ))
                   .asProxy()
@@ -93,10 +92,10 @@ public class AutoPaths {
               runParallelWithPath(
                       Commands.deadline(
                           new IntakeCube(intakeSubsystem)
-                          //                          new SetElevatorHeight(
-                          //                              elevatorSubsystem,
+                          // new SetElevatorHeight(
+                          // elevatorSubsystem,
                           // Elevator.ElevatorPreset.GROUND_INTAKE),
-                          //                          new SetArmAngle(armSubsystem,
+                          // new SetArmAngle(armSubsystem,
                           // ArmPreset.GROUND_INTAKE)))
                           ))
                   .asProxy()
@@ -312,12 +311,6 @@ public class AutoPaths {
   }
 
   public Command getSelectedPath() {
-    Command zeroGyroTeleop =
-        new InstantCommand(
-            () ->
-                swerveSubsystem.setGyroYaw(
-                    (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
-                        .getDegrees()));
-    return AutoChooser.getCommand().finallyDo((interrupted) -> zeroGyroTeleop.schedule());
+    return AutoChooser.getCommand();
   }
 }
