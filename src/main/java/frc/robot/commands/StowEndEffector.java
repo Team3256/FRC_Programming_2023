@@ -8,7 +8,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.elevator.Elevator;
 import java.util.function.BooleanSupplier;
@@ -16,8 +15,11 @@ import java.util.function.BooleanSupplier;
 public class StowEndEffector extends ConditionalCommand {
   public StowEndEffector(
       Elevator elevatorSubsystem, Arm armSubsystem, BooleanSupplier isCurrentPieceCone) {
-    super(new SetEndEffectorState(
-            elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CONE), new SetEndEffectorState(
-            elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CUBE), isCurrentPieceCone);
+    super(
+        new SetEndEffectorState(
+            elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CONE),
+        new SetEndEffectorState(
+            elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CUBE),
+        isCurrentPieceCone);
   }
 }
