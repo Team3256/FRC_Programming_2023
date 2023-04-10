@@ -10,9 +10,18 @@ package frc.robot.simulation;
 public class SimulationConstants {
   public static final double kRobotSimWindowWidth = 2.5;
   public static final double kRobotSimWindowHeight = 2.5;
+  public static final double kGoalStationX = 0.9 * kRobotSimWindowWidth;
 
   public static final double kRootX = 0.5;
   public static final double kRootY = 0;
+
+  public static final double kConeTipHeight = 0.33; // official height
+  public static final double kConeTipLineWidth = 20;
+  public static final double kConeBaseHeight = 0.08;
+  public static final double kConeBaseLineWidth = 50;
+
+  public static final double kCubeBase = 0.24; // official height
+  public static final double kCubeLineWidth = 60;
 
   public static final double kElevatorLineWidth = 10;
   public static final double kArmLineWidth = 10;

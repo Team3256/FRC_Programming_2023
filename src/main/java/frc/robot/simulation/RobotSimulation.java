@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
 import frc.robot.elevator.Elevator;
 import frc.robot.intake.Intake;
@@ -27,6 +28,7 @@ public class RobotSimulation {
   private Intake intakeSubsystem;
   private Arm armSubsystem;
   private Elevator elevatorSubsystem;
+  private Mechanism2d robotCanvas;
 
   public RobotSimulation(
       SwerveDrive swerveSubsystem,
@@ -39,15 +41,14 @@ public class RobotSimulation {
     this.elevatorSubsystem = elevatorSubsystem;
   }
 
-  public void initialize() {
-    Mechanism2d robotCanvas = new Mechanism2d(kRobotSimWindowWidth, kRobotSimWindowHeight);
+  public void initializeRobot() {
+    robotCanvas = new Mechanism2d(kRobotSimWindowWidth, kRobotSimWindowHeight);
     SmartDashboard.putData("Robot Sim", robotCanvas);
 
     MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", kRootX, kRootY);
     MechanismRoot2d elevatorRoot =
         robotCanvas.getRoot(
             "Elevator Root", kRootX + Units.inchesToMeters(4.159), Units.inchesToMeters(2.773));
-    MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", 0.9 * kRobotSimWindowWidth, 0);
 
     robotRoot.append(
         new MechanismLigament2d("Drive Chassis", kRobotLength, 0, 20, new Color8Bit(235, 137, 52)));
@@ -115,13 +116,37 @@ public class RobotSimulation {
                     new Color8Bit(Color.kYellow)));
       }
     }
+  }
+
+  public void addDoubleSubstation(GamePiece gamePiece) {
+    MechanismRoot2d goalRoot = robotCanvas.getRoot("Goal Root", kGoalStationX, kRootY);
+    MechanismRoot2d gamePieceRoot =
+        robotCanvas.getRoot(
+            "Game Piece Root", kGoalStationX, FieldConstants.LoadingZone.kDoubleSubstationShelfZ);
 
     goalRoot.append(
         new MechanismLigament2d(
-            "Goal",
+            "Double Substation",
             FieldConstants.LoadingZone.kDoubleSubstationShelfZ,
             90,
-            5,
+            20,
             new Color8Bit((Color.kGreen))));
+
+    if (gamePiece == GamePiece.CONE) {
+      gamePieceRoot.append(
+          new MechanismLigament2d(
+              "Cone Tip", kConeTipHeight, 90, kConeTipLineWidth, new Color8Bit((Color.kYellow))));
+      gamePieceRoot.append(
+          new MechanismLigament2d(
+              "Cone Base",
+              kConeBaseHeight,
+              90,
+              kConeBaseLineWidth,
+              new Color8Bit((Color.kYellow))));
+    } else {
+      gamePieceRoot.append(
+          new MechanismLigament2d(
+              "Cube", kCubeBase, 90, kCubeLineWidth, new Color8Bit((Color.kPurple))));
+    }
   }
 }

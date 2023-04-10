@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.RobotContainer;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
@@ -31,6 +30,7 @@ import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class AutoPaths {
@@ -38,17 +38,20 @@ public class AutoPaths {
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
+  private BooleanSupplier isCurrentPieceCone;
   private HashMap<String, Supplier<Command>> autoEventMap = new HashMap<>();
 
   public AutoPaths(
       SwerveDrive swerveSubsystem,
       Intake intakeSubsystem,
       Elevator elevatorSubsystem,
-      Arm armSubsystem) {
+      Arm armSubsystem,
+      BooleanSupplier isCurrentPieceCone) {
     this.swerveSubsystem = swerveSubsystem;
     this.intakeSubsystem = intakeSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.armSubsystem = armSubsystem;
+    this.isCurrentPieceCone = isCurrentPieceCone;
   }
 
   public void sendCommandsToChooser() {
@@ -103,10 +106,7 @@ public class AutoPaths {
           () ->
               runParallelWithPath(
                   Commands.parallel(
-                          new StowArmElevator(
-                              elevatorSubsystem,
-                              armSubsystem,
-                              () -> new RobotContainer().isCurrentPieceCone()),
+                          new StowArmElevator(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
                           new IntakeOff(intakeSubsystem))
                       .asProxy()
                       .withName("defaultPosition")));
@@ -134,6 +134,7 @@ public class AutoPaths {
                           new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)))
                   .asProxy()
                   .withName("intakeCube"));
+
       autoEventMap.put(
           "cubeHigh",
           () ->

@@ -8,8 +8,6 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.FeatureFlags.*;
-import static frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
@@ -140,7 +138,13 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
 
-    autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
+    autoPaths =
+        new AutoPaths(
+            swerveSubsystem,
+            intakeSubsystem,
+            elevatorSubsystem,
+            armSubsystem,
+            this::isCurrentPieceCone);
     autoPaths.sendCommandsToChooser();
 
     if (AutoConstants.kAutoDebug) {
@@ -150,7 +154,8 @@ public class RobotContainer implements CANTestable, Loggable {
     if (RobotBase.isSimulation()) {
       robotSimulation =
           new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
-      robotSimulation.initialize();
+      robotSimulation.initializeRobot();
+      robotSimulation.addDoubleSubstation(GamePiece.CONE);
     }
   }
 
@@ -423,9 +428,5 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public SubstationLocation getSubstationLocation() {
     return this.doubleSubstationLocation;
-  }
-
-  public void simulateInit() {
-    // configure full robot simulation
   }
 }
