@@ -25,6 +25,7 @@ public final class ElevatorConstants {
   public static final boolean kElevatorInverted = true;
 
   public static final double kZeroThreshold = 0.02;
+
   public static final double kStowPositionCube = Units.inchesToMeters(9);
   public static final double kStowPositionCone = Units.inchesToMeters(8);
   public static final double kDoubleSubstationPositionCubeMeters = Units.inchesToMeters(47);

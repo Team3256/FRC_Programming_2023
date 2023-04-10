@@ -156,10 +156,12 @@ public class AutoScore extends CommandBase {
         scoringLocation = kHighBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new ConditionalCommand(
-                    new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
-                    new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
-                    isCurrentPieceCone),
+                new WaitCommand(0.5)
+                    .andThen(
+                        new ConditionalCommand(
+                            new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                            new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
+                            isCurrentPieceCone)),
                 new ConditionalCommand(
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
@@ -169,7 +171,9 @@ public class AutoScore extends CommandBase {
         scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
+                new WaitCommand(0.5)
+                    .andThen(
+                        new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID)),
                 new ConditionalCommand(
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),

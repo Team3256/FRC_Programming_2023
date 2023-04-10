@@ -33,7 +33,8 @@ public class AutoChooser {
       Command intitialCommand, String commandName, List<Command> commands, Command endingCommand) {
     List<Command> commandSequence = new ArrayList<>(commands);
     commandSequence.add(0, intitialCommand);
-    Command pathCommand = Commands.sequence(commandSequence.toArray(Command[]::new));
+    Command pathCommand =
+        Commands.sequence(commandSequence.toArray(Command[]::new)).andThen(endingCommand);
 
     autoChooser.addOption(commandName, pathCommand.withName(commandName));
   }
