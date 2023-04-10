@@ -42,15 +42,15 @@ import frc.robot.logging.Loggable;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPreset {
-    STOW_CONE(kStowPositionCone),
-    STOW_CUBE(kStowPositionCube),
-    CUBE_HIGH(kCubeHighPositionMeters),
-    CONE_HIGH(kConeHighPositionMeters),
-    ANY_PIECE_MID(kAnyPieceMidPositionMeters),
-    ANY_PIECE_LOW(kAnyPieceLowPositionMeters),
-    GROUND_INTAKE(kGroundIntakePositionMeters),
-    DOUBLE_SUBSTATION_CONE(kDoubleSubstationPositionConeMeters),
-    DOUBLE_SUBSTATION_CUBE(kDoubleSubstationPositionCubeMeters);
+    STOW_CONE(kConeStowPosition),
+    STOW_CUBE(kCubeStowPosition),
+    CUBE_HIGH(kCubeHighPosition),
+    CONE_HIGH(kConeHighPosition),
+    ANY_PIECE_MID(kAnyPieceMidPosition),
+    ANY_PIECE_LOW(kAnyPieceLowPosition),
+    GROUND_INTAKE(kGroundIntakePosition),
+    DOUBLE_SUBSTATION_CONE(kConeDoubleSubstationPosition),
+    DOUBLE_SUBSTATION_CUBE(kCubeDoubleSubstationPosition);
 
     public final double position;
 
@@ -165,32 +165,29 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   /** Populating elevator preferences on network tables */
   public static void loadElevatorPreferences() {
     // Elevator PID Preferences
-    Preferences.initDouble(ElevatorPreferencesKeys.kPKey, kP);
-    Preferences.initDouble(ElevatorPreferencesKeys.kIKey, kI);
-    Preferences.initDouble(ElevatorPreferencesKeys.kDKey, kD);
+    Preferences.initDouble(ElevatorPreferencesKeys.kPKey, kElevatorP);
+    Preferences.initDouble(ElevatorPreferencesKeys.kIKey, kElevatorI);
+    Preferences.initDouble(ElevatorPreferencesKeys.kDKey, kElevatorD);
     // Elevator Preset Preferences
-    Preferences.initDouble(kElevatorPositionKeys.get(ElevatorPreset.STOW_CONE), kStowPositionCone);
+    Preferences.initDouble(kElevatorPositionKeys.get(ElevatorPreset.STOW_CONE), kConeStowPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.STOW_CUBE), kStowPositionCube);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.STOW_CUBE), kCubeStowPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CUBE_HIGH), kCubeHighPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CUBE_HIGH), kCubeHighPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CONE_HIGH), kConeHighPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CONE_HIGH), kConeHighPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW),
-        kAnyPieceLowPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW), kAnyPieceLowPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_MID),
-        kAnyPieceMidPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_MID), kAnyPieceMidPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.GROUND_INTAKE),
-        kGroundIntakePositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.GROUND_INTAKE), kGroundIntakePosition);
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
-        kDoubleSubstationPositionCubeMeters);
+        kCubeDoubleSubstationPosition);
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
-        kDoubleSubstationPositionConeMeters);
+        kConeDoubleSubstationPosition);
   }
 
   private final ElevatorSim elevatorSim =
@@ -212,7 +209,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorLigament =
         new MechanismLigament2d(
             "Elevator",
-            Units.inchesToMeters(8.582) + elevatorSim.getPositionMeters(),
+            Units.inchesToMeters(kArmStartPosition) + elevatorSim.getPositionMeters(),
             kElevatorAngleOffset,
             kElevatorLineWidth,
             new Color8Bit(Color.kRed));
@@ -228,8 +225,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorSim.update(kSimulateDelta);
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    elevatorLigament.setLength(Units.inchesToMeters(8.582) + elevatorSim.getPositionMeters());
-
     simulationOutputToDashboard();
   }
 

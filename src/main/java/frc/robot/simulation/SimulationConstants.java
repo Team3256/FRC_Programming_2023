@@ -7,6 +7,8 @@
 
 package frc.robot.simulation;
 
+import edu.wpi.first.math.util.Units;
+
 public class SimulationConstants {
   public static final double kRobotSimWindowWidth = 2.5;
   public static final double kRobotSimWindowHeight = 2.5;
@@ -14,6 +16,8 @@ public class SimulationConstants {
 
   public static final double kRootX = 0.5;
   public static final double kRootY = 0;
+  public static final double kElevatorRootX = kRootX + Units.inchesToMeters(4.159);
+  public static final double kElevatorRootY = Units.inchesToMeters(2.773);
 
   public static final double kConeTipHeight = 0.33; // official height
   public static final double kConeTipLineWidth = 20;
@@ -31,4 +35,8 @@ public class SimulationConstants {
   public static final int kVoltage = 12;
   public static final double kElevatorAngleOffset = 35.4;
   public static final double kIntakeRadius = 0.1;
+
+  public static final double kArmStartPosition = 8.582;
+  public static final double kArmPivotHeight = 4.25;
+  public static final double kMinElevatorExtension = Units.inchesToMeters(29);
 }

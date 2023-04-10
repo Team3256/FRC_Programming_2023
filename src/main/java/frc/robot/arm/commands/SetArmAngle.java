@@ -33,9 +33,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
         new ProfiledPIDController(
-            Preferences.getDouble(ArmPreferencesKeys.kPKey, kP),
-            Preferences.getDouble(ArmPreferencesKeys.kIKey, kI),
-            Preferences.getDouble(ArmPreferencesKeys.kDKey, kD),
+            Preferences.getDouble(ArmPreferencesKeys.kPKey, kArmP),
+            Preferences.getDouble(ArmPreferencesKeys.kIKey, kArmI),
+            Preferences.getDouble(ArmPreferencesKeys.kDKey, kArmD),
             kArmProfileContraints),
         armSubsystem::getArmPositionRads,
         MathUtil.clamp(

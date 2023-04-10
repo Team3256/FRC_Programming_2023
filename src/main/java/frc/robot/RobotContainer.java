@@ -155,7 +155,7 @@ public class RobotContainer implements CANTestable, Loggable {
       robotSimulation =
           new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
       robotSimulation.initializeRobot();
-      robotSimulation.addDoubleSubstation(GamePiece.CONE);
+      robotSimulation.addDoubleSubstation(GamePiece.CUBE);
     }
   }
 
@@ -424,6 +424,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+  }
+
+  public void updateSimulation() {
+    robotSimulation.updateSubsystemPositions();
   }
 
   public SubstationLocation getSubstationLocation() {

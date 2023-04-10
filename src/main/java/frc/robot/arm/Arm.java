@@ -192,9 +192,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   /** Populating arm preferences on network tables */
   public static void loadArmPreferences() {
     // Arm PID Preferences
-    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kP);
-    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kIKey, ArmConstants.kI);
-    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kD);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kArmP);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kIKey, ArmConstants.kArmI);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kArmD);
 
     // Arm Encoder Offset
     Preferences.initDouble(
@@ -232,7 +232,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           DCMotor.getFalcon500(kNumArmMotors),
           kArmGearing,
           kArmInertia,
-          kArmLengthMeters,
+          kArmLength,
           kArmAngleMinConstraint.getRadians(),
           kArmAngleMaxConstraint.getRadians(),
           true);
@@ -252,7 +252,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armLigament =
         new MechanismLigament2d(
             "Arm",
-            kArmLengthMeters,
+            kArmLength,
             Units.radiansToDegrees(getArmPositionRads()) - 90,
             10,
             new Color8Bit(Color.kBlue));
@@ -265,7 +265,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
-    armLigament.setAngle(Units.radiansToDegrees(getArmPositionRads()) - 90);
   }
 
   private void simulationOutputToDashboard() {

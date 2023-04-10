@@ -26,7 +26,7 @@ public final class ArmConstants {
   public static final double kArmGearing = 16;
   public static double kRelativeFalconEncoderOffsetRadians =
       Constants.kCompetitionModeEnabled ? 4.2246340316 : Math.PI / 2;
-  public static final double kArmLengthMeters = 0.569075;
+  public static final double kArmLength = 0.569075;
   public static final double kArmInertia = 0.410;
   public static final double kArmMassKg = 7.5;
   public static final int kNumArmMotors = 1;
@@ -36,12 +36,12 @@ public final class ArmConstants {
   public static final double kArmG = 2.99;
   public static final double kArmV = 0.29;
   public static final double kArmA = 0.08;
-  public static final double kP = 11;
-  public static final double kI = 0;
-  public static final double kD = 2;
+  public static final double kArmP = 11;
+  public static final double kArmI = 0;
+  public static final double kArmD = 2;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
-      new TrapezoidProfile.Constraints(5, 2);
+      new TrapezoidProfile.Constraints(8, 4);
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
 

@@ -8,6 +8,7 @@
 package frc.robot.simulation;
 
 import static frc.robot.Constants.*;
+import static frc.robot.intake.IntakeConstants.kIntakeWristRatio;
 import static frc.robot.simulation.SimulationConstants.*;
 
 import edu.wpi.first.math.util.Units;
@@ -47,20 +48,23 @@ public class RobotSimulation {
 
     MechanismRoot2d robotRoot = robotCanvas.getRoot("Robot Root", kRootX, kRootY);
     MechanismRoot2d elevatorRoot =
-        robotCanvas.getRoot(
-            "Elevator Root", kRootX + Units.inchesToMeters(4.159), Units.inchesToMeters(2.773));
+        robotCanvas.getRoot("Elevator Root", kElevatorRootX, kElevatorRootY);
 
     robotRoot.append(
         new MechanismLigament2d("Drive Chassis", kRobotLength, 0, 20, new Color8Bit(235, 137, 52)));
     MechanismLigament2d armPivot =
         new MechanismLigament2d(
-            "Arm Pivot", Units.inchesToMeters(4.25), 90, kArmLineWidth, new Color8Bit(Color.kBlue));
+            "Arm Pivot",
+            Units.inchesToMeters(kArmPivotHeight),
+            90,
+            kArmLineWidth,
+            new Color8Bit(Color.kBlue));
 
     if (kElevatorEnabled) {
       elevatorRoot.append(
           new MechanismLigament2d(
               "Initial Elevator Height",
-              Units.inchesToMeters(29),
+              kMinElevatorExtension,
               kElevatorAngleOffset,
               kElevatorLineWidth,
               new Color8Bit(Color.kRed)));
@@ -116,6 +120,20 @@ public class RobotSimulation {
                     new Color8Bit(Color.kYellow)));
       }
     }
+  }
+
+  public void updateSubsystemPositions() {
+    elevatorSubsystem
+        .getLigament()
+        .setLength(
+            Units.inchesToMeters(kArmStartPosition) + elevatorSubsystem.getElevatorPosition());
+    armSubsystem
+        .getLigament()
+        .setAngle(Units.radiansToDegrees(armSubsystem.getArmPositionRads()) - 90);
+    intakeSubsystem
+        .getWrist()
+        .setAngle(
+            Units.radiansToDegrees(armSubsystem.getArmPositionRads()) * kIntakeWristRatio - 90);
   }
 
   public void addDoubleSubstation(GamePiece gamePiece) {

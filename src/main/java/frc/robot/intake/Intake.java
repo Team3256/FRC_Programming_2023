@@ -141,11 +141,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
     intakePivot =
         new MechanismLigament2d(
-            "Intake Wrist",
-            Units.inchesToMeters(2.059),
-            Units.radiansToDegrees(0) * (86.058 / 180) - 90,
-            0,
-            new Color8Bit(Color.kBrown));
+            "Intake Wrist", Units.inchesToMeters(2.059), -90, 0, new Color8Bit(Color.kBlack));
   }
 
   @Override
@@ -155,10 +151,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(intakeSim.getCurrentDrawAmps()));
     simulationOutputToDashboard();
-
-    // TODO what are these numbers?
-    // intakePivot.setAngle(Units.radiansToDegrees(getArmPositionRads()) * (86.058 /
-    // 180) - 90);
   }
 
   private void simulationOutputToDashboard() {

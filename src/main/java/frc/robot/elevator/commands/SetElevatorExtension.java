@@ -16,7 +16,7 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
 
 public class SetElevatorExtension extends ProfiledPIDCommand {
-  private double setpointPositionMeters;
+  private double setpointPosition;
   private Elevator elevatorSubsystem;
   private ElevatorPreset elevatorPreset;
 
@@ -24,23 +24,23 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
    * Constructor for setting the elevator to a setpoint in the parameters
    *
    * @param elevatorSubsystem
-   * @param setpointPositionMeters
+   * @param setpointPosition
    */
-  public SetElevatorExtension(Elevator elevatorSubsystem, double setpointPositionMeters) {
+  public SetElevatorExtension(Elevator elevatorSubsystem, double setpointPosition) {
     super(
         new ProfiledPIDController(
-            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kP),
-            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kI),
-            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kD),
-            kElevatorContraints),
+            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kElevatorP),
+            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kElevatorI),
+            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kElevatorD),
+            kElevatorConstraints),
         elevatorSubsystem::getElevatorPosition,
-        setpointPositionMeters,
+        setpointPosition,
         (output, setpoint) ->
             elevatorSubsystem.setInputVoltage(
                 output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
         elevatorSubsystem);
 
-    this.setpointPositionMeters = setpointPositionMeters;
+    this.setpointPosition = setpointPosition;
     this.elevatorSubsystem = elevatorSubsystem;
 
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
@@ -65,8 +65,8 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
 
     // update at runtime in case robot prefs changed
     if (elevatorPreset != null) {
-      setpointPositionMeters = elevatorSubsystem.getElevatorSetpoint(elevatorPreset);
-      getController().setGoal(setpointPositionMeters);
+      setpointPosition = elevatorSubsystem.getElevatorSetpoint(elevatorPreset);
+      getController().setGoal(setpointPosition);
     }
 
     System.out.println(
@@ -74,7 +74,7 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
             + " started (preset: "
             + this.elevatorPreset
             + ", height: "
-            + setpointPositionMeters
+            + setpointPosition
             + " meters)");
   }
 
@@ -86,7 +86,7 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
             + " finished (preset: "
             + this.elevatorPreset
             + ", height: "
-            + setpointPositionMeters
+            + setpointPosition
             + " meters)");
   }
 

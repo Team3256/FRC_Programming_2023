@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.elevator.ElevatorConstants.kElevatorStartingPositionMeters;
+import static frc.robot.elevator.ElevatorConstants.kElevatorStartingPosition;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -88,8 +88,7 @@ public class PitTestRoutine {
         new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW)
             .until(driver.b());
     Command setElevatorToStart =
-        new SetElevatorExtension(elevatorSubsystem, kElevatorStartingPositionMeters)
-            .until(driver.b());
+        new SetElevatorExtension(elevatorSubsystem, kElevatorStartingPosition).until(driver.b());
 
     return new SequentialCommandGroup(
         zeroElevator,
