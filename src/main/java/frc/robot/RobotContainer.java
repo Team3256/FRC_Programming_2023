@@ -40,11 +40,7 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
-import frc.robot.led.commands.*;
-import frc.robot.led.patterns.*;
-import frc.robot.led.patterns.Blink.ConePatternBlink;
-import frc.robot.led.patterns.Blink.CubePatternBlink;
-import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
+import frc.robot.led.commands.LimitedSwerveBlink;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -77,7 +73,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private Climb climbSubsystem;
-  private LED ledStrip;
+  private LED ledSubsystem;
   private GamePiece currentPiece = GamePiece.CUBE;
   private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
   private SendableChooser<Mode> modeChooser;
@@ -93,7 +89,7 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kElevatorEnabled) elevatorSubsystem = new Elevator();
     if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
     if (kClimbEnabled) climbSubsystem = new Climb();
-    if (kLedStripEnabled) ledStrip = new LED(kPort, new int[] {100});
+    if (kLedStripEnabled) ledSubsystem = new LED();
 
     if (kIntakeEnabled) {
       configureIntake();
@@ -121,7 +117,6 @@ public class RobotContainer implements CANTestable, Loggable {
     }
     if (kLedStripEnabled) {
       configureLEDStrip();
-      loggables.add(ledStrip);
     }
 
     modeChooser = new SendableChooser<>();
@@ -219,15 +214,13 @@ public class RobotContainer implements CANTestable, Loggable {
                     driver::getRightX,
                     kFieldRelative,
                     kOpenLoop)
-                .deadlineWith(
-                    new LEDSetAllSectionsPattern(
-                        ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
+                .deadlineWith(new LimitedSwerveBlink(this::isCurrentPieceCone)));
 
     driver
         .x()
         .onTrue(
             new LockSwerveX(swerveSubsystem)
-                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                .andThen(() -> LED.LEDSegment.MainStrip.setColor(kLockSwerve))
                 .until(() -> isMovingJoystick(driver)));
 
     if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
@@ -239,7 +232,7 @@ public class RobotContainer implements CANTestable, Loggable {
                   intakeSubsystem,
                   elevatorSubsystem,
                   armSubsystem,
-                  ledStrip,
+                  ledSubsystem,
                   () -> doubleSubstationLocation,
                   () -> isMovingJoystick(driver),
                   () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
@@ -253,7 +246,7 @@ public class RobotContainer implements CANTestable, Loggable {
                   intakeSubsystem,
                   elevatorSubsystem,
                   armSubsystem,
-                  ledStrip,
+                  ledSubsystem,
                   AutoScore.GridScoreHeight.HIGH,
                   this::isCurrentPieceCone,
                   () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
@@ -267,7 +260,7 @@ public class RobotContainer implements CANTestable, Loggable {
                   intakeSubsystem,
                   elevatorSubsystem,
                   armSubsystem,
-                  ledStrip,
+                  ledSubsystem,
                   AutoScore.GridScoreHeight.MID,
                   this::isCurrentPieceCone,
                   () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
@@ -323,16 +316,14 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledStrip.setDefaultCommand((new LEDSetAllSectionsPattern(ledStrip, new FIREPattern())));
-
     operator
         .rightBumper()
-        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new ConePatternBlink()))
-        .toggleOnTrue(new InstantCommand(this::setPieceToCone));
+        .toggleOnTrue(
+            new InstantCommand(this::setPieceToCone).andThen(ledSubsystem.setAllBlink(kCone)));
     operator
         .leftBumper()
-        .toggleOnTrue(new LEDSetAllSectionsPattern(ledStrip, new CubePatternBlink()))
-        .toggleOnTrue(new InstantCommand(this::setPieceToCube));
+        .toggleOnTrue(
+            new InstantCommand(this::setPieceToCube).andThen(ledSubsystem.setAllBlink(kCube)));
   }
 
   public Command getAutonomousCommand() {
@@ -344,7 +335,7 @@ public class RobotContainer implements CANTestable, Loggable {
               new StowArmElevator(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
                   .asProxy(),
               new LockSwerveX(swerveSubsystem)
-                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                  .andThen(() -> LED.LEDSegment.MainStrip.setColor(kLockSwerve))
                   .until(() -> isMovingJoystick(driver))));
     } else {
       return autoPath;

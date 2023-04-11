@@ -8,6 +8,7 @@
 package frc.robot.auto.pathgeneration.commands;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
+import static frc.robot.led.LEDConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,10 +29,6 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.*;
-import frc.robot.led.patterns.Blink.ErrorPatternBlink;
-import frc.robot.led.patterns.Blink.SuccessPatternBlink;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 
@@ -119,7 +116,7 @@ public class AutoScore extends CommandBase {
     }
     if (0 > locationId || locationId > 8) {
       System.out.println("locationId was invalid (" + locationId + ")");
-      new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink()).withTimeout(6).schedule();
+      ledSubsystem.setAllBlink(kError).withTimeout(6).schedule();
       return;
     }
 
@@ -197,16 +194,11 @@ public class AutoScore extends CommandBase {
         PathGeneration.createDynamicAbsolutePath(
             scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
 
-    // LED verbose
-    Command successLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPatternBlink()).withTimeout(5);
-    Command errorLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink()).withTimeout(5);
+    Command successLEDs = ledSubsystem.setAllBlink(kSuccess).withTimeout(5);
+    Command errorLEDs = ledSubsystem.setAllBlink(kError).withTimeout(5);
     Command runningLEDs =
         new ConditionalCommand(
-            new LEDSetAllSectionsPattern(ledSubsystem, new ConePattern()),
-            new LEDSetAllSectionsPattern(ledSubsystem, new CubePattern()),
-            isCurrentPieceCone);
+            ledSubsystem.setAllColor(kCone), ledSubsystem.setAllColor(kCube), isCurrentPieceCone);
 
     // schedule final composed command
     Command autoScore =

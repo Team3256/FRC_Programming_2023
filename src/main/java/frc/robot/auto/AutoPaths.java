@@ -24,8 +24,8 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
-import frc.robot.intake.commands.OutakeCone;
-import frc.robot.intake.commands.OutakeCube;
+import frc.robot.intake.commands.OuttakeCone;
+import frc.robot.intake.commands.OuttakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -118,7 +118,7 @@ public class AutoPaths {
                       new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCube(intakeSubsystem))
+                  .andThen(new OuttakeCube(intakeSubsystem))
                   .asProxy()
                   .withName("cubeHigh"));
 
@@ -129,7 +129,7 @@ public class AutoPaths {
                       new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCone(intakeSubsystem))
+                  .andThen(new OuttakeCone(intakeSubsystem))
                   .asProxy()
                   .withName("coneHigh"));
 
@@ -141,7 +141,7 @@ public class AutoPaths {
                           elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCube(intakeSubsystem))
+                  .andThen(new OuttakeCube(intakeSubsystem))
                   .asProxy()
                   .withName("cubeMid"));
 
@@ -153,7 +153,7 @@ public class AutoPaths {
                           elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_MID))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCone(intakeSubsystem))
+                  .andThen(new OuttakeCone(intakeSubsystem))
                   .asProxy()
                   .withName("coneMid"));
 
@@ -165,7 +165,7 @@ public class AutoPaths {
                           elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
                       new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCube(intakeSubsystem))
+                  .andThen(new OuttakeCube(intakeSubsystem))
                   .asProxy()
                   .withName("cubeLow"));
 
@@ -178,7 +178,7 @@ public class AutoPaths {
                           .beforeStarting(new WaitCommand(0.5)),
                       new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCone(intakeSubsystem).withTimeout(1.5))
+                  .andThen(new OuttakeCone(intakeSubsystem).withTimeout(1.5))
                   .asProxy()
                   .withName("coneLow"));
 
@@ -189,7 +189,7 @@ public class AutoPaths {
                           .beforeStarting(new WaitCommand(0.5)),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCube(intakeSubsystem).withTimeout(1.5))
+                  .andThen(new OuttakeCube(intakeSubsystem).withTimeout(1.5))
                   .asProxy()
                   .withName("scorePreloadCube");
 
@@ -199,7 +199,7 @@ public class AutoPaths {
                       new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CONE_HIGH),
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH))
                   .withTimeout(2.25)
-                  .andThen(new OutakeCone(intakeSubsystem).withTimeout(1))
+                  .andThen(new OuttakeCone(intakeSubsystem).withTimeout(1))
                   .asProxy()
                   .withName("scorePreloadCone");
     }

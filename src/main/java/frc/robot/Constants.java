@@ -66,7 +66,7 @@ public final class Constants {
     public static final String kSwerveLayoutName = "Swerve";
     public static final String kArmLayoutName = "Arm";
     public static final String kElevatorLayoutName = "Elevator";
-    public static final String kLEDLayoutName = "LED";
+    public static final String kLEDLayoutName = "LED_Old";
   }
 
   public enum RobotMode {

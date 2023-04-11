@@ -5,20 +5,21 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.led.patterns.Blink;
+package frc.robot.led.commands;
 
-import frc.robot.led.patternBases.BlinkingPattern;
-import frc.robot.led.patterns.ConePattern;
-import frc.robot.led.patterns.CubePattern;
+import static frc.robot.led.LEDConstants.kCone;
+import static frc.robot.led.LEDConstants.kCube;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.led.LED;
 import java.util.function.BooleanSupplier;
 
-public class LimitedSwerveBlink extends BlinkingPattern {
+public class LimitedSwerveBlink extends CommandBase {
   public LimitedSwerveBlink(BooleanSupplier isCurrentPieceCone) {
-    super(5, 5);
     if (isCurrentPieceCone.getAsBoolean()) {
-      setMainLEDPattern(new ConePattern());
+      LED.LEDSegment.MainStrip.setStrobeAnimation(kCone, 1);
     } else {
-      setMainLEDPattern(new CubePattern());
+      LED.LEDSegment.MainStrip.setStrobeAnimation(kCube, 1);
     }
   }
 }
