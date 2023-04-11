@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.commands.SetArmAngle;
+import frc.robot.arm.commands.SetArmAngleElevatorRelative;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
@@ -88,8 +88,8 @@ public class AutoScore extends CommandBase {
                           isCurrentLEDPieceCone)
                       .beforeStarting(new WaitCommand(0.5)),
                   new ConditionalCommand(
-                      new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
-                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
+                      new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CONE_HIGH),
+                      new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CUBE_HIGH),
                       isCurrentLEDPieceCone))
               .schedule();
           break;
@@ -97,15 +97,15 @@ public class AutoScore extends CommandBase {
           Commands.parallel(
                   new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
                   new ConditionalCommand(
-                      new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
-                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
+                      new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CONE_MID),
+                      new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CUBE_MID),
                       isCurrentLEDPieceCone))
               .schedule();
           break;
         case LOW:
           Commands.parallel(
                   new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
-                  new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+                  new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.ANY_PIECE_LOW))
               .schedule();
           break;
       }
@@ -163,8 +163,8 @@ public class AutoScore extends CommandBase {
                     new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
                     isCurrentPieceCone),
                 new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
+                    new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CONE_HIGH),
+                    new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CUBE_HIGH),
                     isCurrentPieceCone));
         break;
       case MID:
@@ -173,8 +173,8 @@ public class AutoScore extends CommandBase {
             new ParallelCommandGroup(
                 new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
                 new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
+                    new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CONE_MID),
+                    new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CUBE_MID),
                     isCurrentPieceCone));
         break;
       case LOW:
@@ -183,7 +183,7 @@ public class AutoScore extends CommandBase {
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
                 new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
-                new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW));
+                new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.ANY_PIECE_LOW));
     }
 
     if (DriverStation.getAlliance() == Alliance.Red) {

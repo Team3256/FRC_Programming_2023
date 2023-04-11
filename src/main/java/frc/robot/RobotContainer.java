@@ -36,6 +36,7 @@ import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.intake.Intake;
+import frc.robot.intake.commands.GroundIntake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
@@ -45,7 +46,6 @@ import frc.robot.led.patterns.*;
 import frc.robot.led.patterns.Blink.ConePatternBlink;
 import frc.robot.led.patterns.Blink.CubePatternBlink;
 import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
-import frc.robot.limelight.Limelight;
 import frc.robot.logging.Loggable;
 import frc.robot.simulation.RobotSimulation;
 import frc.robot.swerve.SwerveDrive;
@@ -352,6 +352,11 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
+    if (true) {
+      return new GroundIntake(
+          elevatorSubsystem, armSubsystem, intakeSubsystem, this::isCurrentPieceCone);
+    }
+
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(

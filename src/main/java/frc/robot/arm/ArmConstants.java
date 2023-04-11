@@ -9,6 +9,7 @@ package frc.robot.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.drivers.CanDeviceId;
 import java.util.Map;
@@ -45,6 +46,8 @@ public final class ArmConstants {
 
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
+
+  public static final double kArmMountOffsetToGroundRadians = Units.degreesToRadians(35.4);
 
   // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);

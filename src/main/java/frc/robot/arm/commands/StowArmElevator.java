@@ -23,10 +23,10 @@ public class StowArmElevator extends ParallelCommandGroup {
         new ConditionalCommand(
             Commands.parallel(
                 new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.STOW_CONE),
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.STOW_CONE)),
+                new SetArmAngleElevatorRelative(armSubsystem, Arm.ArmPreset.STOW_CONE)),
             Commands.parallel(
                 new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.STOW_CUBE),
-                new SetArmAngle(armSubsystem, Arm.ArmPreset.STOW_CUBE)),
+                new SetArmAngleElevatorRelative(armSubsystem, Arm.ArmPreset.STOW_CUBE)),
             isCurrentPieceCone));
   }
 }

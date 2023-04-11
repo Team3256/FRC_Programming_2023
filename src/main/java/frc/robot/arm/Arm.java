@@ -234,9 +234,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           kArmGearing,
           kArmInertia,
           kArmLength,
-          kArmAngleMinConstraint.getRadians(),
-          kArmAngleMaxConstraint.getRadians(),
+          kArmAngleMinConstraint.getRadians() + Units.degreesToRadians(kElevatorAngleOffset),
+          kArmAngleMaxConstraint.getRadians() + Units.degreesToRadians(kElevatorAngleOffset),
           true);
+
   private MechanismLigament2d armLigament;
 
   public MechanismLigament2d getLigament() {
@@ -254,9 +255,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         new MechanismLigament2d(
             "Arm",
             kArmLength,
-            Units.radiansToDegrees(getArmPositionRads()) - 90,
+            Units.radiansToDegrees(getArmPositionRads()) - 90 - kElevatorAngleOffset,
             10,
             new Color8Bit(Color.kBlue));
+
+    System.out.println(
+        kArmAngleMinConstraint.plus(Rotation2d.fromDegrees(kElevatorAngleOffset)).getDegrees());
+    System.out.println(
+        kArmAngleMaxConstraint.plus(Rotation2d.fromDegrees(kElevatorAngleOffset)).getDegrees());
   }
 
   @Override
@@ -269,7 +275,11 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
+    SmartDashboard.putNumber(
+        "Arm angle position ground relative",
+        Units.radiansToDegrees(getArmPositionRads() + kArmMountOffsetToGroundRadians));
+    SmartDashboard.putNumber(
+        "Arm angle position elevator relative", Units.radiansToDegrees(getArmPositionRads()));
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }

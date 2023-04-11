@@ -129,7 +129,8 @@ public class RobotSimulation {
             Units.inchesToMeters(kArmStartPosition) + elevatorSubsystem.getElevatorPosition());
     armSubsystem
         .getLigament()
-        .setAngle(Units.radiansToDegrees(armSubsystem.getArmPositionRads()) - 90);
+        .setAngle(
+            Units.radiansToDegrees(armSubsystem.getArmPositionRads()) - 90 - kElevatorAngleOffset);
     intakeSubsystem
         .getWrist()
         .setAngle(

@@ -19,7 +19,7 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.auto.AutoConstants;
 
-public class SetArmAngle extends ProfiledPIDCommand {
+public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
   private Arm armSubsystem;
   private Rotation2d angleRotation2d;
   private ArmPreset armPreset;
@@ -30,7 +30,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
    * @param armSubsystem
    * @param angleRotation2d
    */
-  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
+  public SetArmAngleElevatorRelative(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
         new ProfiledPIDController(
             Preferences.getDouble(ArmPreferencesKeys.kPKey, kArmP),
@@ -39,12 +39,12 @@ public class SetArmAngle extends ProfiledPIDCommand {
             kArmProfileContraints),
         armSubsystem::getArmPositionRads,
         MathUtil.clamp(
-            angleRotation2d.getRadians(),
-            kArmAngleMinConstraint.getRadians(),
-            kArmAngleMaxConstraint.getRadians()),
-        (output, setpoint) ->
-            armSubsystem.setInputVoltage(
-                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
+            angleRotation2d.getRadians() + kArmMountOffsetToGroundRadians,
+            kArmAngleMinConstraint.getRadians() + kArmMountOffsetToGroundRadians,
+            kArmAngleMaxConstraint.getRadians())
+            + kArmMountOffsetToGroundRadians,
+        (output, setpoint) -> armSubsystem.setInputVoltage(
+            output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
         armSubsystem);
 
     getController()
@@ -56,12 +56,13 @@ public class SetArmAngle extends ProfiledPIDCommand {
   }
 
   /**
-   * Constructor for setting the arm to a Rotation2d specified in the preferences hash map
+   * Constructor for setting the arm to a Rotation2d specified in the preferences
+   * hash map
    *
    * @param armSubsystem
    * @param armPreset
    */
-  public SetArmAngle(Arm armSubsystem, ArmPreset armPreset) {
+  public SetArmAngleElevatorRelative(Arm armSubsystem, ArmPreset armPreset) {
     this(armSubsystem, armSubsystem.getArmSetpoint(armPreset));
     this.armPreset = armPreset;
   }
