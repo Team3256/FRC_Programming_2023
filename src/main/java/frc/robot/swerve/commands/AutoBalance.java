@@ -7,21 +7,21 @@
 
 package frc.robot.swerve.commands;
 
-import static frc.robot.swerve.SwerveConstants.kXAutoBalanceVelocityMeters;
+import static frc.robot.swerve.SwerveConstants.kXAutoBalanceVelocity;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.helpers.DebugCommandBase;
+import frc.robot.helpers.TimedBoolean;
 import frc.robot.swerve.SwerveDrive;
 
 public class AutoBalance extends DebugCommandBase {
   private final SwerveDrive swerveDrive;
-  private Timer balancedTimer;
+  private TimedBoolean isBalanced;
 
   public AutoBalance(SwerveDrive swerveDrive) {
     this.swerveDrive = swerveDrive;
-    this.balancedTimer = new Timer();
+    this.isBalanced = new TimedBoolean(swerveDrive::isNotTilted, 3);
 
     addRequirements(swerveDrive);
   }
@@ -29,17 +29,15 @@ public class AutoBalance extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
-    balancedTimer.start();
+    isBalanced.initialize();
   }
 
   @Override
   public void execute() {
     if (swerveDrive.isTiltedForward()) {
-      balancedTimer.reset();
-      swerveDrive.drive(new Translation2d(-kXAutoBalanceVelocityMeters, 0), 0, true, true);
+      swerveDrive.drive(new Translation2d(kXAutoBalanceVelocity, 0), 0, true, true);
     } else if (swerveDrive.isTiltedBackward()) {
-      balancedTimer.reset();
-      swerveDrive.drive(new Translation2d(kXAutoBalanceVelocityMeters, 0), 0, true, true);
+      swerveDrive.drive(new Translation2d(kXAutoBalanceVelocity, 0), 0, true, true);
     } else {
       swerveDrive.drive(new Translation2d(0, 0), 0, true, true);
     }
@@ -53,6 +51,7 @@ public class AutoBalance extends DebugCommandBase {
 
   @Override
   public boolean isFinished() {
-    return swerveDrive.isNotTilted() && balancedTimer.get() >= 2;
+    isBalanced.update();
+    return isBalanced.hasBeenTrueForThreshold();
   }
 }

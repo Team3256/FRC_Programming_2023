@@ -66,8 +66,7 @@ public class DynamicPathFollower {
     }
 
     if (goalType != GoalType.DOUBLE_STATION_TOP && goalType != GoalType.DOUBLE_STATION_BOTTOM) {
-      // TODO CHANGE TO -1
-      int locationId = (int) SmartDashboard.getNumber("guiColumn", 7);
+      int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
       if (locationId == -1) {
         System.out.println("locationId was invalid");
         if (ledSubsystem != null) {
