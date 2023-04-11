@@ -219,7 +219,7 @@ public class PPTrajectoryFollowCommand extends DebugCommandBase {
     Pose2d relativePose = currentPose.relativeTo(trajectory.getEndState().poseMeters);
 
     boolean reachedEndTolerance =
-        relativePose.getTranslation().getNorm() < kTranslationToleranceMeters
+        relativePose.getTranslation().getNorm() < kTranslationTolerance
             && Math.abs(relativePose.getRotation().getRadians()) < kRotationTolerance;
 
     return reachedEndTolerance && now >= trajectoryDuration;

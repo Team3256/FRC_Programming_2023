@@ -23,7 +23,7 @@ import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -83,8 +83,8 @@ public class AutoScore extends CommandBase {
         case HIGH:
           Commands.parallel(
                   new ConditionalCommand(
-                          new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
-                          new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
+                          new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                          new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
                           isCurrentLEDPieceCone)
                       .beforeStarting(new WaitCommand(0.5)),
                   new ConditionalCommand(
@@ -92,18 +92,21 @@ public class AutoScore extends CommandBase {
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
                       isCurrentLEDPieceCone))
               .schedule();
-          ;
           break;
-        default:
         case MID:
           Commands.parallel(
-                  new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
+                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
                   new ConditionalCommand(
                       new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
                       new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
                       isCurrentLEDPieceCone))
               .schedule();
-          ;
+          break;
+        case LOW:
+          Commands.parallel(
+                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
+                  new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+              .schedule();
           break;
       }
 
@@ -146,7 +149,6 @@ public class AutoScore extends CommandBase {
             new IntakeCube(intakeSubsystem, ledSubsystem),
             new IntakeCone(intakeSubsystem, ledSubsystem),
             isCurrentPieceCone);
-    //    Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
     Command moveArmElevatorToPreset;
@@ -156,12 +158,10 @@ public class AutoScore extends CommandBase {
         scoringLocation = kHighBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new WaitCommand(0.5)
-                    .andThen(
-                        new ConditionalCommand(
-                            new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
-                            new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
-                            isCurrentPieceCone)),
+                new ConditionalCommand(
+                    new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                    new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
+                    isCurrentPieceCone),
                 new ConditionalCommand(
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
@@ -171,9 +171,7 @@ public class AutoScore extends CommandBase {
         scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new WaitCommand(0.5)
-                    .andThen(
-                        new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID)),
+                new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
                 new ConditionalCommand(
                     new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
                     new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
@@ -184,7 +182,7 @@ public class AutoScore extends CommandBase {
         scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ParallelCommandGroup(
-                new SetElevatorHeight(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
+                new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
                 new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW));
     }
 
