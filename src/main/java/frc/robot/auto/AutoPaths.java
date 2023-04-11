@@ -244,6 +244,14 @@ public class AutoPaths {
             .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node5-Mobility-Engage", node5MobilityEngage);
 
+    ArrayList<Command> node5x2Engage =
+        autoBuilder.createPaths("Node5x2-Engage", kEngagePathConstraints);
+    AutoChooser.addPathGroup(
+        scorePreloadCube.get(),
+        "Node5x2-Engage",
+        node5x2Engage,
+        new AutoBalance(swerveSubsystem).andThen(new LockSwerveX(swerveSubsystem)));
+
     // Node8x2
     Command node9x2 =
         autoBuilder
