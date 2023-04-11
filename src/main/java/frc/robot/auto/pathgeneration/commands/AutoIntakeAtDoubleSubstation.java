@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -25,6 +24,7 @@ import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorExtension;
+import frc.robot.helpers.ParentCommand;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -39,7 +39,7 @@ import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-public class AutoIntakeAtDoubleSubstation extends CommandBase {
+public class AutoIntakeAtDoubleSubstation extends ParentCommand {
   public enum SubstationLocation {
     // From driver's POV
     RIGHT_SIDE,
@@ -190,14 +190,13 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
                 Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
             .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
-            .finallyDo((interrupted) -> successLEDs.schedule())
+            .finallyDo(
+                (interrupted) -> {
+                  if (!interrupted) successLEDs.schedule();
+                })
             .handleInterrupt(() -> errorLEDs.schedule());
 
-    autoIntakeCommand.schedule();
-  }
-
-  @Override
-  public boolean isFinished() {
-    return true;
+    addChildCommands(autoIntakeCommand);
+    super.initialize();
   }
 }

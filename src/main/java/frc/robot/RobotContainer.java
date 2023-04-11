@@ -36,7 +36,6 @@ import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.GroundIntake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
@@ -157,7 +156,7 @@ public class RobotContainer implements CANTestable, Loggable {
       robotSimulation =
           new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
       robotSimulation.initializeRobot();
-      robotSimulation.addDoubleSubstation(GamePiece.CUBE);
+      robotSimulation.addDoubleSubstation(GamePiece.CONE);
     }
   }
 
@@ -352,11 +351,6 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    if (true) {
-      return new GroundIntake(
-          elevatorSubsystem, armSubsystem, intakeSubsystem, this::isCurrentPieceCone);
-    }
-
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(

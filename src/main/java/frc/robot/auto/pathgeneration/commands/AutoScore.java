@@ -24,6 +24,7 @@ import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
 import frc.robot.elevator.commands.SetElevatorExtension;
+import frc.robot.helpers.ParentCommand;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -35,7 +36,7 @@ import frc.robot.led.patterns.Blink.SuccessPatternBlink;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 
-public class AutoScore extends CommandBase {
+public class AutoScore extends ParentCommand {
   public enum GridScoreHeight {
     HIGH,
     MID,
@@ -190,12 +191,10 @@ public class AutoScore extends CommandBase {
       scoringLocation = PathUtil.flip(scoringLocation);
     }
 
-    // Move to scoring location
     Command moveToScoringLocation =
         PathGeneration.createDynamicAbsolutePath(
             scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
 
-    // LED verbose
     Command successLEDs =
         new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPatternBlink()).withTimeout(5);
     Command errorLEDs =
@@ -206,21 +205,18 @@ public class AutoScore extends CommandBase {
             new LEDSetAllSectionsPattern(ledSubsystem, new CubePattern()),
             isCurrentPieceCone);
 
-    // schedule final composed command
     Command autoScore =
         Commands.sequence(
                 moveToScoringWaypoint,
                 Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset))
             .deadlineWith(runningLEDs.asProxy())
-            .finallyDo((interrupted) -> successLEDs.schedule())
+            .finallyDo(
+                (interrupted) -> {
+                  if (!interrupted) successLEDs.schedule();
+                })
             .until(cancelCommand)
             .handleInterrupt(errorLEDs::schedule);
 
-    autoScore.schedule();
-  }
-
-  @Override
-  public boolean isFinished() {
-    return true;
+    addChildCommands(autoScore);
   }
 }

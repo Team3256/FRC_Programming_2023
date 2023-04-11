@@ -30,7 +30,7 @@ public final class Constants {
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final boolean kCompetitionModeEnabled = true;
   public static final RobotType kRobotType = RobotType.ALPHA;
-  public static final RobotMode kCurrentMode = RobotMode.REAL;
+  public static final RobotMode kCurrentMode = RobotMode.SIM;
 
   public static final double kStickDeadband = 0.05;
   public static final double kStickCancelDeadband = 0.50;
@@ -48,9 +48,10 @@ public final class Constants {
     public static final boolean kArmAbsoluteEncoderEnabled = true;
     public static final boolean kLocalizationEnabled = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
-    public static final boolean kGamePieceDetection = true;
     public static final boolean kLocalizationUseWPIBlueOffset = true;
     public static final boolean kLocalizationStdDistanceBased = true;
+
+    public static final boolean kGamePieceDetection = false;
     public static final boolean kUsePrefs = false;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
@@ -331,6 +332,7 @@ public final class Constants {
                   new Rotation3d()));
     }
   }
+
   // TODO: tune distance and rotation thresholds for all limelights
   public static class VisionConstants {
     // TODO: set the indexes

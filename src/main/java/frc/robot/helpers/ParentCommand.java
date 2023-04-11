@@ -16,13 +16,6 @@ public class ParentCommand extends DebugCommandBase {
 
   protected void addChildCommands(Command... commands) {
     childCommands.addAll(Arrays.asList(commands));
-
-    // add child command while parent command is running
-    if (this.isScheduled()) {
-      for (Command command : commands) {
-        command.schedule();
-      }
-    }
   }
 
   @Override
@@ -37,6 +30,7 @@ public class ParentCommand extends DebugCommandBase {
   public void end(boolean interrupted) {
     super.end(interrupted);
     for (Command childCommand : childCommands) {
+      System.out.println("Parent killing child " + childCommand.getName());
       childCommand.cancel();
     }
   }

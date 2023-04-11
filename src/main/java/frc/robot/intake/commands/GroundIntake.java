@@ -64,5 +64,6 @@ public class GroundIntake extends ParentCommand {
   @Override
   public void end(boolean interrupted) {
     Limelight.setPipelineIndex(FrontConstants.kLimelightNetworkTablesName, kDefaultPipeline);
+    super.end(interrupted);
   }
 }

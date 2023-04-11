@@ -129,12 +129,13 @@ public class RobotSimulation {
             Units.inchesToMeters(kArmStartPosition) + elevatorSubsystem.getElevatorPosition());
     armSubsystem
         .getLigament()
-        .setAngle(
-            Units.radiansToDegrees(armSubsystem.getArmPositionRads()) - 90 - kElevatorAngleOffset);
+        .setAngle(Units.radiansToDegrees(armSubsystem.getArmPositionRadsElevatorRelative()) - 90);
     intakeSubsystem
         .getWrist()
         .setAngle(
-            Units.radiansToDegrees(armSubsystem.getArmPositionRads()) * kIntakeWristRatio - 90);
+            Units.radiansToDegrees(armSubsystem.getArmPositionRadsGroundRelative())
+                    * kIntakeWristRatio
+                - 90);
   }
 
   public void addDoubleSubstation(GamePiece gamePiece) {

@@ -50,7 +50,7 @@ public class ArmTests extends UnitTestBase {
     runScheduler(3, setAngleCommand, armSubsystem);
     assertEquals(
         angle.getRadians(),
-        armSubsystem.getArmPositionRads(),
+        armSubsystem.getArmPositionRadsGroundRelative(),
         DELTA,
         "Set angle to " + angle.getRadians() + " radians");
     armSubsystem.off();
