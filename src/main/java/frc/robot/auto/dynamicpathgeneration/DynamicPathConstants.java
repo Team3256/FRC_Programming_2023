@@ -77,7 +77,7 @@ public final class DynamicPathConstants {
   public static final double kIntakeWidthOffset = Units.inchesToMeters(0); // Operator skill issue
 
   // Our arm is bent :)
-  public static final Rotation2d kArmFckConstant = Rotation2d.fromDegrees(-1);
+  public static final Rotation2d kArmFckConstant = Rotation2d.fromDegrees(3);
 
   // x value offset for distance between the robots bumper and the blue tape
   // to determine the scoring waypoint of the robot given the scoring location

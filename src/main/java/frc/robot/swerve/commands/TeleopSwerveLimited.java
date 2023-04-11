@@ -10,11 +10,11 @@ package frc.robot.swerve.commands;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.DoubleSupplier;
 
-public class TeleopSwerveLimited extends CommandBase {
+public class TeleopSwerveLimited extends DebugCommandBase {
   private double rotation;
   private Translation2d translation;
   private boolean fieldRelative;
@@ -41,11 +41,6 @@ public class TeleopSwerveLimited extends CommandBase {
     this.rotationAxis = rotationAxis;
     this.fieldRelative = fieldRelative;
     this.openLoop = openLoop;
-  }
-
-  @Override
-  public void initialize() {
-    System.out.println("TeleopSwerveLimited started");
   }
 
   @Override

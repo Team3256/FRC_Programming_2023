@@ -10,6 +10,7 @@ package frc.robot.arm;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.*;
+import static frc.robot.simulation.SimulationConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -24,12 +25,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.simulation.*;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -44,19 +41,21 @@ import frc.robot.swerve.helpers.Conversions;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public enum ArmPreset {
-    DEFAULT(ArmConstants.kDefaultArmAngle),
-    ANY_PIECE_LOW(ArmConstants.kAnyPieceLowRotation),
-    CUBE_MID(ArmConstants.kCubeMidRotation),
-    CONE_MID(ArmConstants.kConeMidRotation),
-    CUBE_HIGH(ArmConstants.kCubeHighRotation),
-    CONE_HIGH(ArmConstants.kConeHighRotation),
-    GROUND_INTAKE(ArmConstants.kGroundIntakeRotation),
-    DOUBLE_SUBSTATION_CUBE(ArmConstants.kDoubleSubstationRotationCube),
-    DOUBLE_SUBSTATION_CONE(ArmConstants.kDoubleSubstationRotationCone);
+    STOW_CUBE(kStowRotationCube),
+    STOW_CONE(kStowRotationCone),
+    ANY_PIECE_LOW(kAnyPieceLowRotation),
+    CUBE_MID(kCubeMidRotation),
+    CONE_MID(kConeMidRotation),
+    CUBE_HIGH(kCubeHighRotation),
+    CONE_HIGH(kConeHighRotation),
+    CONE_GROUND_INTAKE(kConeGroundIntakeRotation),
+    CUBE_GROUND_INTAKE(kCubeGroundIntakeRotation),
+    DOUBLE_SUBSTATION_CUBE(kDoubleSubstationRotationCube),
+    DOUBLE_SUBSTATION_CONE(kDoubleSubstationRotationCone);
 
-    public Rotation2d rotation;
+    public final Rotation2d rotation;
 
-    private ArmPreset(Rotation2d rotation) {
+    ArmPreset(Rotation2d rotation) {
       this.rotation = rotation;
     }
   }
@@ -64,29 +63,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private WPI_TalonFX armMotor;
   private final ArmFeedforward armFeedforward = new ArmFeedforward(kArmS, kArmG, kArmV, kArmA);
   private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(kArmEncoderDIOPort);
-
-  private static final SingleJointedArmSim armSim =
-      new SingleJointedArmSim(
-          DCMotor.getFalcon500(kNumArmMotors),
-          kArmGearing,
-          kArmInertia,
-          kArmLengthMeters,
-          kArmAngleMinConstraint.getRadians(),
-          kArmAngleMaxConstraint.getRadians(),
-          true);
-
-  private final Mechanism2d mechanism2d = new Mechanism2d(60, 60);
-  private final MechanismRoot2d armPivot = mechanism2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d armTower =
-      armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
-  private final MechanismLigament2d arm =
-      armPivot.append(
-          new MechanismLigament2d(
-              "Arm",
-              30,
-              Units.radiansToDegrees(armSim.getAngleRads()),
-              6,
-              new Color8Bit(Color.kYellow)));
 
   public Arm() {
     if (RobotBase.isReal()) {
@@ -97,12 +73,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
     System.out.println("Arm initialized");
     off();
-  }
-
-  private void configureSimHardware() {
-    armMotor = new WPI_TalonFX(kArmSimulationID);
-    SmartDashboard.putData("Arm Sim", mechanism2d);
-    armTower.setColor(new Color8Bit(Color.kBlue));
   }
 
   private void configureRealHardware() {
@@ -144,7 +114,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public void resetOffset(Rotation2d currentAbsolutePosition) {
     ArmConstants.kRelativeFalconEncoderOffsetRadians =
         ArmConstants.kRelativeFalconEncoderOffsetRadians
-            + (currentAbsolutePosition.getRadians() - this.getArmPositionRads());
+            + (currentAbsolutePosition.getRadians() - getArmPositionRads());
 
     System.out.println("New arm offset" + ArmConstants.kRelativeFalconEncoderOffsetRadians);
   }
@@ -178,30 +148,13 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
       SmartDashboard.putNumber(
           "Arm Raw Relative Encoder value", armMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Arm Raw Absolute Encoder value", armEncoder.getDistance());
-      SmartDashboard.putNumber("Arm angle", Units.radiansToDegrees(getArmPositionRads()));
+      SmartDashboard.putNumber("Arm angle deg", Units.radiansToDegrees(getArmPositionRads()));
+      SmartDashboard.putNumber("Arm angle rad", getArmPositionRads());
       SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
       SmartDashboard.putNumber(
           "Arm motor open loop voltage", armMotor.getMotorOutputPercent() * 12);
       SmartDashboard.putBoolean("Arm encoder connected", armEncoder.isConnected());
     }
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    armSim.setInput(armMotor.getMotorOutputPercent() * 12);
-    armSim.update(0.020);
-
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
-    arm.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
-
-    simulationOutputToDashboard();
-  }
-
-  private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
-    SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
-    SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }
 
   @Override
@@ -240,18 +193,19 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   /** Populating arm preferences on network tables */
   public static void loadArmPreferences() {
     // Arm PID Preferences
-    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kP);
-    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kIKey, ArmConstants.kI);
-    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kD);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kPKey, ArmConstants.kArmP);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kIKey, ArmConstants.kArmI);
+    Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kArmD);
 
     // Arm Encoder Offset
     Preferences.initDouble(
         ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
     Preferences.initDouble(
         ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
-    // Arm Preset Preferences
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.DEFAULT), kDefaultArmAngle.getRadians());
+        kArmPositionKeys.get(ArmPreset.STOW_CONE), kStowRotationCone.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(ArmPreset.STOW_CUBE), kStowRotationCube.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
     Preferences.initDouble(
@@ -263,12 +217,60 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.CONE_HIGH), kConeHighRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.GROUND_INTAKE), kGroundIntakeRotation.getRadians());
+        kArmPositionKeys.get(ArmPreset.CONE_GROUND_INTAKE), kConeGroundIntakeRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(ArmPreset.CUBE_GROUND_INTAKE), kCubeGroundIntakeRotation.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
         kDoubleSubstationRotationCone.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
         kDoubleSubstationRotationCube.getRadians());
+  }
+
+  private final SingleJointedArmSim armSim =
+      new SingleJointedArmSim(
+          DCMotor.getFalcon500(kNumArmMotors),
+          kArmGearing,
+          kArmInertia,
+          kArmLength,
+          kArmAngleMinConstraint.getRadians(),
+          kArmAngleMaxConstraint.getRadians(),
+          true);
+  private MechanismLigament2d armLigament;
+
+  public MechanismLigament2d getLigament() {
+    return armLigament;
+  }
+
+  private void configureSimHardware() {
+    armMotor = new WPI_TalonFX(kArmSimulationID);
+    armMotor.setInverted(true);
+
+    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.setSelectedSensorPosition(0);
+
+    armLigament =
+        new MechanismLigament2d(
+            "Arm",
+            kArmLength,
+            Units.radiansToDegrees(getArmPositionRads()) - 90,
+            10,
+            new Color8Bit(Color.kBlue));
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    armSim.setInput(armMotor.getMotorOutputPercent() * kVoltage);
+    armSim.update(kSimulateDelta);
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    simulationOutputToDashboard();
+  }
+
+  private void simulationOutputToDashboard() {
+    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
+    SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
+    SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }
 }

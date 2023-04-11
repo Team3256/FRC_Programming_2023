@@ -7,10 +7,10 @@
 
 package frc.robot.elevator.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.elevator.Elevator;
+import frc.robot.helpers.DebugCommandBase;
 
-public class KeepElevatorAtPosition extends CommandBase {
+public class KeepElevatorAtPosition extends DebugCommandBase {
   private Elevator elevatorSubsystem;
 
   public KeepElevatorAtPosition(Elevator elevatorSubsystem) {
@@ -20,7 +20,8 @@ public class KeepElevatorAtPosition extends CommandBase {
 
   @Override
   public void initialize() {
-    new SetElevatorHeight(elevatorSubsystem, elevatorSubsystem.getElevatorPosition())
+    super.initialize();
+    new SetElevatorExtension(elevatorSubsystem, elevatorSubsystem.getElevatorPosition())
         .repeatedly()
         .schedule();
   }

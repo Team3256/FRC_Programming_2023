@@ -14,8 +14,8 @@ import frc.robot.UnitTestBase;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
+import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 public class IntakeTests extends UnitTestBase {
   public final double DELTA = 0.05;

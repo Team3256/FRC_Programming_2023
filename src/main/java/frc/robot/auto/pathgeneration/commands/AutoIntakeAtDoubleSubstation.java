@@ -24,7 +24,7 @@ import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
@@ -88,15 +88,15 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
               + isCurrentPieceCone.getAsBoolean());
       new ConditionalCommand(
               new ParallelCommandGroup(
-                  new SetElevatorHeight(
+                  new SetElevatorExtension(
                           elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
-                      .beforeStarting(new WaitCommand(0.3)),
+                      .beforeStarting(new WaitCommand(0.45)),
                   new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
                   new IntakeCone(intakeSubsystem, ledSubsystem)),
               new ParallelCommandGroup(
-                  new SetElevatorHeight(
+                  new SetElevatorExtension(
                           elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
-                      .beforeStarting(new WaitCommand(0.3)),
+                      .beforeStarting(new WaitCommand(0.45)),
                   new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
                   new IntakeCube(intakeSubsystem, ledSubsystem)),
               isCurrentPieceCone)
@@ -145,9 +145,9 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
             new ConditionalCommand(
-                new SetElevatorHeight(
+                new SetElevatorExtension(
                     elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
-                new SetElevatorHeight(
+                new SetElevatorExtension(
                     elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
                 isCurrentPieceCone),
             new ConditionalCommand(
@@ -164,7 +164,8 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
         PathGeneration.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
     Command stopIntake = new IntakeOff(intakeSubsystem);
-    Command stowArmElevator = new StowArmElevator(elevatorSubsystem, armSubsystem, 0, 1);
+    Command stowArmElevator =
+        new StowArmElevator(elevatorSubsystem, armSubsystem, isCurrentPieceCone);
     Command moveAwayFromSubstation =
         PathGeneration.createDynamicAbsolutePath(
             end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);

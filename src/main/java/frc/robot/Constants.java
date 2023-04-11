@@ -19,8 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebugEnabled = false;
-
+  public static final boolean kDebugEnabled = true;
   public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;
@@ -44,15 +43,15 @@ public final class Constants {
   public static final Field2d swerveViewer = new Field2d();
 
   public static final class FeatureFlags {
-    public static final boolean kAutoScoreEnabled = false;
+    public static final boolean kAutoScoreEnabled = true;
     public static final boolean kOperatorManualArmControlEnabled = true;
     public static final boolean kArmAbsoluteEncoderEnabled = true;
     public static final boolean kLocalizationEnabled = true;
-    public static final boolean kLocalizationStdDistanceBased = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
     public static final boolean kGamePieceDetection = true;
+    public static final boolean kLocalizationUseWPIBlueOffset = true;
+    public static final boolean kLocalizationStdDistanceBased = true;
     public static final boolean kUsePrefs = false;
-    public static final boolean kLocalizationUseWPIBlueOffset = false;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;
@@ -75,8 +74,8 @@ public final class Constants {
     REPLAY
   }
 
-  public static final double kRobotLength = 0.9271;
-  public static final double kRobotWidth = 0.9271;
+  public static final double kRobotLength = Units.inchesToMeters(32.625);
+  public static final double kRobotWidth = Units.inchesToMeters(32.625);
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);
@@ -332,7 +331,7 @@ public final class Constants {
                   new Rotation3d()));
     }
   }
-
+  // TODO: tune distance and rotation thresholds for all limelights
   public static class VisionConstants {
     // TODO: set the indexes
     public static final int kDefaultPipeline = 0;
@@ -341,7 +340,7 @@ public final class Constants {
 
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
-      public static final double kLimelightTranslationThresholdMeters = 30;
+      public static final double kLimelightTranslationThreshold = 300;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -350,7 +349,7 @@ public final class Constants {
 
     public static class BackConstants {
       public static final String kLimelightNetworkTablesName = "limelight-back";
-      public static final double kLimelightTranslationThresholdMeters = 30;
+      public static final double kLimelightTranslationThreshold = 300;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -359,7 +358,7 @@ public final class Constants {
 
     public static class SideConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
-      public static final double kLimelightTranslationThresholdMeters = 30;
+      public static final double kLimelightTranslationThreshold = 300;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;

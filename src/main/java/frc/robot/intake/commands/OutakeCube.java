@@ -7,38 +7,41 @@
 
 package frc.robot.intake.commands;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessPattern;
 
-public class OutakeCube extends CommandBase {
+public class OutakeCube extends DebugCommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
-  private WPI_TalonFX intakeMotor;
+  private Timer timer;
 
   public OutakeCube(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-
+    this.timer = new Timer();
     addRequirements(intakeSubsystem);
   }
 
   public OutakeCube(Intake intakeSubsystem, LED ledSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
     this.ledSubsystem = ledSubsystem;
-
+    this.timer = new Timer();
     addRequirements(intakeSubsystem);
   }
 
   @Override
   public void initialize() {
+    super.initialize();
+    timer.restart();
     intakeSubsystem.intakeCone();
   }
 
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
       new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
@@ -47,6 +50,6 @@ public class OutakeCube extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return intakeMotor.getSelectedSensorPosition() > 1000;
+    return timer.hasElapsed(1.5);
   }
 }
