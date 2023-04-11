@@ -10,7 +10,7 @@ package frc.robot.led;
 import java.awt.Color;
 
 public class LEDConstants {
-  public static final int kPort = 8;
+  public static final int kLedID = 0;
   public static final Color kCone = new Color(1.0f, 0.84313726f, 0.0f);
   public static final Color kCube = new Color(0.5411765f, 0.16862746f, 0.8862745f);
   public static final Color kLockSwerve = Color.green;

@@ -23,4 +23,9 @@ public class SetAllColor extends CommandBase {
   public void initialize() {
     LED.LEDSegment.MainStrip.setColor(color);
   }
+
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
+  }
 }

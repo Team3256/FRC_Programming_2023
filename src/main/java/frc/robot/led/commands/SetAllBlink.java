@@ -13,7 +13,7 @@ import java.awt.Color;
 
 public class SetAllBlink extends CommandBase {
   Color color;
-  double speed = 5;
+  double speed = 0.5;
 
   public SetAllBlink(LED ledSubsystem, Color color) {
     this.color = color;
@@ -28,5 +28,10 @@ public class SetAllBlink extends CommandBase {
   @Override
   public void initialize() {
     LED.LEDSegment.MainStrip.setStrobeAnimation(color, speed);
+  }
+
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
   }
 }
