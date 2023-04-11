@@ -15,10 +15,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
-import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
 import frc.robot.commands.SetEndEffectorState;
+import frc.robot.commands.StowEndEffector;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.intake.Intake;
@@ -82,7 +82,6 @@ public class AutoPaths {
                       elevatorSubsystem,
                       armSubsystem,
                       SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH)
-
                   .withTimeout(2.25)
                   .andThen(new IntakeCube(intakeSubsystem))
                   .asProxy()
@@ -95,7 +94,6 @@ public class AutoPaths {
                       elevatorSubsystem,
                       armSubsystem,
                       SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID)
-
                   .withTimeout(2.25)
                   .andThen(new IntakeCone(intakeSubsystem))
                   .asProxy()
@@ -118,7 +116,7 @@ public class AutoPaths {
           () ->
               runParallelWithPath(
                   Commands.parallel(
-                          new StowArmElevator(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
+                          new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
                           new IntakeOff(intakeSubsystem))
                       .asProxy()
                       .withName("defaultPosition")));
@@ -160,13 +158,11 @@ public class AutoPaths {
       autoEventMap.put(
           "cubeLow",
           () ->
-
               new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
                       SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW)
                   .withTimeout(2.25)
-
                   .andThen(new IntakeCone(intakeSubsystem))
                   .asProxy()
                   .withName("cubeLow"));
@@ -197,7 +193,6 @@ public class AutoPaths {
                       elevatorSubsystem,
                       armSubsystem,
                       SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH)
-
                   .withTimeout(2.25)
                   .andThen(new OutakeCube(intakeSubsystem).withTimeout(1.5))
                   .asProxy()
@@ -205,12 +200,10 @@ public class AutoPaths {
 
       scorePreloadCone =
           () ->
-
               new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
                       SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH)
-
                   .withTimeout(2.25)
                   .andThen(new OutakeCone(intakeSubsystem).withTimeout(1))
                   .asProxy()

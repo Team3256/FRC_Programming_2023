@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.SetElevatorExtension;
 
 public class SetEndEffectorState extends ParallelCommandGroup {
   public enum EndEffectorPreset {
@@ -40,14 +40,14 @@ public class SetEndEffectorState extends ParallelCommandGroup {
   public SetEndEffectorState(
       Elevator elevatorSubsystem, Arm armSubsystem, EndEffectorPreset endEffectorPreset) {
     addCommands(
-        new SetElevatorHeight(elevatorSubsystem, endEffectorPreset.elevatorPreset),
+        new SetElevatorExtension(elevatorSubsystem, endEffectorPreset.elevatorPreset),
         new SetArmAngle(armSubsystem, endEffectorPreset.armPreset));
   }
 
   public SetEndEffectorState(
       Elevator elevatorSubsystem, Arm armSubsystem, double elevatorExtension, Rotation2d armAngle) {
     addCommands(
-        new SetElevatorHeight(elevatorSubsystem, elevatorExtension),
+        new SetElevatorExtension(elevatorSubsystem, elevatorExtension),
         new SetArmAngle(armSubsystem, armAngle));
   }
 }
