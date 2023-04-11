@@ -63,6 +63,7 @@ dependencies {
     implementation 'org.apache.commons:commons-io:1.3.2'
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
+    testImplementation 'junit:junit:4.13.1'
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)

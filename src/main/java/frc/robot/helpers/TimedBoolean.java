@@ -20,6 +20,11 @@ public class TimedBoolean {
     this.triggerThreshold = triggerThreshold;
   }
 
+  public void initialize() {
+    timer.stop();
+    timer.reset();
+  }
+
   public void update() {
     if (condition.getAsBoolean()) {
       timer.start();

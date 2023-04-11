@@ -216,6 +216,8 @@ build/
 local.properties
 
 *.wpilog
+networktables.json
+networktables.json.bck
 
 # AdvantageKit
 /src/main/java/frc/robot/BuildConstants.java

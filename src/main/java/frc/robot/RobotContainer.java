@@ -9,16 +9,18 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.led.LEDConstants.*;
-import static frc.robot.swerve.SwerveConstants.kFieldRelative;
-import static frc.robot.swerve.SwerveConstants.kOpenLoop;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
@@ -44,6 +46,7 @@ import frc.robot.led.patterns.Blink.ConePatternBlink;
 import frc.robot.led.patterns.Blink.CubePatternBlink;
 import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
 import frc.robot.logging.Loggable;
+import frc.robot.simulation.RobotSimulation;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
 import frc.robot.swerve.commands.TeleopSwerve;
@@ -70,6 +73,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  private final CommandXboxController tester = new CommandXboxController(2);
 
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
@@ -79,6 +83,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
   private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+  private RobotSimulation robotSimulation;
   private SendableChooser<Mode> modeChooser;
 
   private AutoPaths autoPaths;
@@ -132,16 +137,28 @@ public class RobotContainer implements CANTestable, Loggable {
       modeChooser.addOption("Auto Score", Mode.AUTO_SCORE);
     }
     SmartDashboard.putData("Auto Score Toggle", modeChooser);
+    SmartDashboard.putString(
+        "Current Double Substation Location", doubleSubstationLocation.toString());
 
-    autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
+    autoPaths =
+        new AutoPaths(
+            swerveSubsystem,
+            intakeSubsystem,
+            elevatorSubsystem,
+            armSubsystem,
+            this::isCurrentPieceCone);
     autoPaths.sendCommandsToChooser();
 
     if (AutoConstants.kAutoDebug) {
       PathPlannerServer.startServer(5811);
     }
 
-    SmartDashboard.putString(
-        "Current Double Substation Location", doubleSubstationLocation.toString());
+    if (RobotBase.isSimulation()) {
+      robotSimulation =
+          new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
+      robotSimulation.initializeRobot();
+      robotSimulation.addDoubleSubstation(GamePiece.CUBE);
+    }
   }
 
   private void configureSwerve() {
@@ -364,6 +381,19 @@ public class RobotContainer implements CANTestable, Loggable {
         || Math.abs(controller.getRightY()) > kStickCancelDeadband;
   }
 
+  // This command sets the correct gyro heading before the start of Teleop
+  public Command setTeleopGyro() {
+    if (swerveSubsystem != null) {
+      return new InstantCommand(
+          () ->
+              swerveSubsystem.setGyroYaw(
+                  (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
+                      .getDegrees()));
+    } else {
+      return new InstantCommand();
+    }
+  }
+
   @Override
   public ShuffleboardLayout getLayout(String tab) {
     return null;
@@ -409,6 +439,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+  }
+
+  public void updateSimulation() {
+    robotSimulation.updateSubsystemPositions();
   }
 
   public SubstationLocation getSubstationLocation() {

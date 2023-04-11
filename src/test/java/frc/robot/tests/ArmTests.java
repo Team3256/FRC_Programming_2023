@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
-import org.junit.jupiter.api.BeforeAll;
 
 public class ArmTests extends UnitTestBase {
 
@@ -23,7 +22,7 @@ public class ArmTests extends UnitTestBase {
 
   private static Arm armSubsystem;
 
-  @BeforeAll
+  // @BeforeAll
   public static void setup() {
     UnitTestBase.setup();
     armSubsystem = new Arm();
