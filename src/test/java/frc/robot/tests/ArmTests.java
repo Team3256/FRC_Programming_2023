@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.SetArmAngleElevatorRelative;
+import frc.robot.arm.commands.SetArmAngle;
 
 public class ArmTests extends UnitTestBase {
 
@@ -46,11 +46,11 @@ public class ArmTests extends UnitTestBase {
   // }
 
   public void testArmAngle(Rotation2d angle) {
-    Command setAngleCommand = new SetArmAngleElevatorRelative(armSubsystem, angle);
+    Command setAngleCommand = new SetArmAngle(armSubsystem, angle);
     runScheduler(3, setAngleCommand, armSubsystem);
     assertEquals(
         angle.getRadians(),
-        armSubsystem.getArmPositionRadsGroundRelative(),
+        armSubsystem.getArmPositionGroundRelative(),
         DELTA,
         "Set angle to " + angle.getRadians() + " radians");
     armSubsystem.off();

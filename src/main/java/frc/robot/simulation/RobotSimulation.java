@@ -8,6 +8,7 @@
 package frc.robot.simulation;
 
 import static frc.robot.Constants.*;
+import static frc.robot.elevator.ElevatorConstants.kElevatorAngleOffset;
 import static frc.robot.intake.IntakeConstants.kIntakeWristRatio;
 import static frc.robot.simulation.SimulationConstants.*;
 
@@ -65,7 +66,7 @@ public class RobotSimulation {
           new MechanismLigament2d(
               "Initial Elevator Height",
               kMinElevatorExtension,
-              kElevatorAngleOffset,
+              Units.radiansToDegrees(kElevatorAngleOffset),
               kElevatorLineWidth,
               new Color8Bit(Color.kRed)));
       elevatorRoot.append(elevatorSubsystem.getLigament());
@@ -129,12 +130,11 @@ public class RobotSimulation {
             Units.inchesToMeters(kArmStartPosition) + elevatorSubsystem.getElevatorPosition());
     armSubsystem
         .getLigament()
-        .setAngle(Units.radiansToDegrees(armSubsystem.getArmPositionRadsElevatorRelative()) - 90);
+        .setAngle(Units.radiansToDegrees(armSubsystem.getArmPositionElevatorRelative()) - 90);
     intakeSubsystem
         .getWrist()
         .setAngle(
-            Units.radiansToDegrees(armSubsystem.getArmPositionRadsGroundRelative())
-                    * kIntakeWristRatio
+            Units.radiansToDegrees(armSubsystem.getArmPositionGroundRelative()) * kIntakeWristRatio
                 - 90);
   }
 

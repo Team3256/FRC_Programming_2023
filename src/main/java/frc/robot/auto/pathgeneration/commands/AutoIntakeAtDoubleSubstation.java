@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.SetArmAngleElevatorRelative;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
@@ -91,15 +91,13 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
                   new SetElevatorExtension(
                           elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE)
                       .beforeStarting(new WaitCommand(0.45)),
-                  new SetArmAngleElevatorRelative(
-                      armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+                  new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
                   new IntakeCone(intakeSubsystem, ledSubsystem)),
               new ParallelCommandGroup(
                   new SetElevatorExtension(
                           elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE)
                       .beforeStarting(new WaitCommand(0.45)),
-                  new SetArmAngleElevatorRelative(
-                      armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+                  new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
                   new IntakeCube(intakeSubsystem, ledSubsystem)),
               isCurrentPieceCone)
           .schedule();
@@ -153,8 +151,8 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
                     elevatorSubsystem, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
                 isCurrentPieceCone),
             new ConditionalCommand(
-                new SetArmAngleElevatorRelative(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
-                new SetArmAngleElevatorRelative(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+                new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+                new SetArmAngle(armSubsystem, Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
                 isCurrentPieceCone));
 
     Command runIntake =
@@ -182,6 +180,7 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
     Command errorLEDs =
         new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink()).withTimeout(5);
 
+    // Automatically intake at the double substation
     Command autoIntakeCommand =
         Commands.sequence(
                 moveToWaypoint,

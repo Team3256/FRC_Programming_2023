@@ -8,6 +8,7 @@
 package frc.robot.arm.commands;
 
 import static frc.robot.arm.ArmConstants.*;
+import static frc.robot.elevator.ElevatorConstants.kElevatorAngleOffset;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -19,29 +20,30 @@ import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.auto.AutoConstants;
 
-public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
+public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
-  private double angleRotationRad;
+  private double angleRotation;
   private ArmPreset armPreset;
 
   /**
-   * Constructor for setting arm to arbitrary angle in radians
+   * Constructor for setting arm to arbitrary angle in radians. This command is RELATIVE to the
+   * Elevator Angle!
    *
    * @param armSubsystem
    * @param angleRotation2d
    */
-  public SetArmAngleElevatorRelative(Arm armSubsystem, Rotation2d angleRotation2d) {
+  public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
         new ProfiledPIDController(
             Preferences.getDouble(ArmPreferencesKeys.kPKey, kArmP),
             Preferences.getDouble(ArmPreferencesKeys.kIKey, kArmI),
             Preferences.getDouble(ArmPreferencesKeys.kDKey, kArmD),
             kArmProfileContraints),
-        armSubsystem::getArmPositionRadsGroundRelative,
+        armSubsystem::getArmPositionGroundRelative,
         MathUtil.clamp(
-            angleRotation2d.getRadians() + kArmMountOffsetToGroundRadians,
-            kArmAngleMinConstraint.getRadians() + kArmMountOffsetToGroundRadians,
-            kArmAngleMaxConstraint.getRadians() + kArmMountOffsetToGroundRadians),
+            angleRotation2d.getRadians() + kElevatorAngleOffset,
+            kArmAngleMinConstraint.getRadians() + kElevatorAngleOffset,
+            kArmAngleMaxConstraint.getRadians() + kElevatorAngleOffset),
         (output, setpoint) ->
             armSubsystem.setInputVoltage(
                 output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
@@ -50,7 +52,7 @@ public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
     getController()
         .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
 
-    this.angleRotationRad = angleRotation2d.getRadians();
+    this.angleRotation = angleRotation2d.getRadians();
     this.armSubsystem = armSubsystem;
     addRequirements(armSubsystem);
   }
@@ -61,7 +63,7 @@ public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
    * @param armSubsystem
    * @param armPreset
    */
-  public SetArmAngleElevatorRelative(Arm armSubsystem, ArmPreset armPreset) {
+  public SetArmAngle(Arm armSubsystem, ArmPreset armPreset) {
     this(armSubsystem, armSubsystem.getArmSetpoint(armPreset));
     this.armPreset = armPreset;
   }
@@ -72,8 +74,8 @@ public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
 
     // update at runtime in case robot prefs changed
     if (armPreset != null) {
-      angleRotationRad = armSubsystem.getArmSetpoint(armPreset).getRadians();
-      getController().setGoal(angleRotationRad + kArmMountOffsetToGroundRadians);
+      angleRotation = armSubsystem.getArmSetpoint(armPreset).getRadians();
+      getController().setGoal(angleRotation + kElevatorAngleOffset);
     }
 
     if (AutoConstants.kAutoDebug) {
@@ -82,10 +84,10 @@ public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
               + " started (preset: "
               + armPreset
               + ", setpoint rotation elevator relative: "
-              + Units.radiansToDegrees(angleRotationRad)
+              + Units.radiansToDegrees(angleRotation)
               + " deg)"
               + ", current arm rotation elevator relative: "
-              + Units.radiansToDegrees(armSubsystem.getArmPositionRadsElevatorRelative())
+              + Units.radiansToDegrees(armSubsystem.getArmPositionElevatorRelative())
               + " deg)");
     }
   }
@@ -100,7 +102,7 @@ public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
               + " ended (preset: "
               + armPreset
               + ", rotation: "
-              + Units.radiansToDegrees(angleRotationRad)
+              + Units.radiansToDegrees(angleRotation)
               + " deg)");
     }
   }

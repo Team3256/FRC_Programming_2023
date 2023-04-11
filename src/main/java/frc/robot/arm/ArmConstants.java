@@ -9,7 +9,6 @@ package frc.robot.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.drivers.CanDeviceId;
 import java.util.Map;
@@ -47,8 +46,6 @@ public final class ArmConstants {
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
 
-  public static final double kArmMountOffsetToGroundRadians = Units.degreesToRadians(35.4);
-
   // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
@@ -64,8 +61,8 @@ public final class ArmConstants {
   public static final Rotation2d kConeHighRotation = new Rotation2d(0);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(150);
 
-  public static final Rotation2d kConeGroundIntakeRotation = Rotation2d.fromDegrees(180);
-  public static final Rotation2d kCubeGroundIntakeRotation = Rotation2d.fromDegrees(150);
+  public static final Rotation2d kConeGroundIntakeRotation = Rotation2d.fromDegrees(150);
+  public static final Rotation2d kCubeGroundIntakeRotation = Rotation2d.fromDegrees(180);
 
   public static final double kManualArmVoltage = 2.5;
 

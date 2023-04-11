@@ -13,7 +13,7 @@ import static frc.robot.Constants.VisionConstants.*;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.commands.SetArmAngleElevatorRelative;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.helpers.ParentCommand;
@@ -52,8 +52,8 @@ public class GroundIntake extends ParentCommand {
     addChildCommands(
         new ZeroElevator(elevatorSubsystem),
         new ConditionalCommand(
-            new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CONE_GROUND_INTAKE),
-            new SetArmAngleElevatorRelative(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
+            new SetArmAngle(armSubsystem, ArmPreset.CONE_GROUND_INTAKE),
+            new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
             isCurrentPieceCone),
         new ConditionalCommand(
             new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone));

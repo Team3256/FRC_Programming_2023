@@ -10,6 +10,7 @@ package frc.robot.arm;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.*;
+import static frc.robot.elevator.ElevatorConstants.kElevatorAngleOffset;
 import static frc.robot.simulation.SimulationConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -114,12 +115,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public void resetOffset(Rotation2d currentAbsolutePosition) {
     ArmConstants.kRelativeFalconEncoderOffsetRadians =
         ArmConstants.kRelativeFalconEncoderOffsetRadians
-            + (currentAbsolutePosition.getRadians() - getArmPositionRadsGroundRelative());
+            + (currentAbsolutePosition.getRadians() - getArmPositionGroundRelative());
 
     System.out.println("New arm offset" + ArmConstants.kRelativeFalconEncoderOffsetRadians);
   }
 
-  public double getArmPositionRadsGroundRelative() {
+  public double getArmPositionGroundRelative() {
     if (RobotBase.isReal()) {
       if (Constants.FeatureFlags.kArmAbsoluteEncoderEnabled) {
         double absoluteEncoderDistance =
@@ -138,8 +139,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     } else return armSim.getAngleRads();
   }
 
-  public double getArmPositionRadsElevatorRelative() {
-    return getArmPositionRadsGroundRelative() - kArmMountOffsetToGroundRadians;
+  public double getArmPositionElevatorRelative() {
+    return getArmPositionGroundRelative() - kElevatorAngleOffset;
   }
 
   public void off() {
@@ -153,8 +154,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           "Arm Raw Relative Encoder value", armMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Arm Raw Absolute Encoder value", armEncoder.getDistance());
       SmartDashboard.putNumber(
-          "Arm angle deg", Units.radiansToDegrees(getArmPositionRadsGroundRelative()));
-      SmartDashboard.putNumber("Arm angle rad", getArmPositionRadsGroundRelative());
+          "Arm angle deg", Units.radiansToDegrees(getArmPositionGroundRelative()));
+      SmartDashboard.putNumber("Arm angle rad", getArmPositionGroundRelative());
       SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
       SmartDashboard.putNumber(
           "Arm motor open loop voltage", armMotor.getMotorOutputPercent() * 12);
@@ -177,7 +178,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     getLayout(kDriverTabName)
         .add(
             "Angle",
-            new DoubleSendable(() -> Math.toDegrees(getArmPositionRadsGroundRelative()), "Gyro"));
+            new DoubleSendable(() -> Math.toDegrees(getArmPositionGroundRelative()), "Gyro"));
     getLayout(kDriverTabName).add(armMotor);
   }
 
@@ -241,8 +242,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           kArmGearing,
           kArmInertia,
           kArmLength,
-          kArmAngleMinConstraint.getRadians() + Units.degreesToRadians(kElevatorAngleOffset),
-          kArmAngleMaxConstraint.getRadians() + Units.degreesToRadians(kElevatorAngleOffset),
+          kArmAngleMinConstraint.getRadians() + kElevatorAngleOffset,
+          kArmAngleMaxConstraint.getRadians() + kElevatorAngleOffset,
           true);
 
   private MechanismLigament2d armLigament;
@@ -262,14 +263,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         new MechanismLigament2d(
             "Arm",
             kArmLength,
-            Units.radiansToDegrees(getArmPositionRadsGroundRelative()) - 90 - kElevatorAngleOffset,
+            Units.radiansToDegrees(getArmPositionElevatorRelative()) - 90,
             10,
             new Color8Bit(Color.kBlue));
-
-    System.out.println(
-        kArmAngleMinConstraint.plus(Rotation2d.fromDegrees(kElevatorAngleOffset)).getDegrees());
-    System.out.println(
-        kArmAngleMaxConstraint.plus(Rotation2d.fromDegrees(kElevatorAngleOffset)).getDegrees());
   }
 
   @Override
@@ -284,10 +280,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   private void simulationOutputToDashboard() {
     SmartDashboard.putNumber(
         "Arm angle position ground relative",
-        Units.radiansToDegrees(getArmPositionRadsGroundRelative()));
+        Units.radiansToDegrees(getArmPositionGroundRelative()));
     SmartDashboard.putNumber(
         "Arm angle position elevator relative",
-        Units.radiansToDegrees(getArmPositionRadsElevatorRelative()));
+        Units.radiansToDegrees(getArmPositionElevatorRelative()));
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }

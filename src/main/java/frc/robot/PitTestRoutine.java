@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
-import frc.robot.arm.commands.SetArmAngleElevatorRelative;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.ZeroElevator;
@@ -110,11 +110,11 @@ public class PitTestRoutine {
 
   public Command armCommands() {
     Command setArmAngleHorizontal =
-        new SetArmAngleElevatorRelative(armSubsystem, Rotation2d.fromDegrees(0)).until(driver.b());
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(0)).until(driver.b());
     Command setArmAngleHalfway =
-        new SetArmAngleElevatorRelative(armSubsystem, Rotation2d.fromDegrees(45)).until(driver.b());
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(45)).until(driver.b());
     Command setArmAngleVertical =
-        new SetArmAngleElevatorRelative(armSubsystem, Rotation2d.fromDegrees(90)).until(driver.b());
+        new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90)).until(driver.b());
 
     return new SequentialCommandGroup(
         setArmAngleHorizontal, setArmAngleHalfway, setArmAngleVertical);
