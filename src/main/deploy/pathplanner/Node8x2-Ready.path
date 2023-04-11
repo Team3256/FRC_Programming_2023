@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8947000015727387,
-        "y": 4.402510869332448
+        "x": 1.9,
+        "y": 4.45
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2461140231724817,
-        "y": 4.448989501002276
+        "x": 2.9,
+        "y": 4.45
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -16,9 +16,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "defaultPosition"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -26,18 +24,18 @@
     },
     {
       "anchorPoint": {
-        "x": 6.5145767242489345,
-        "y": 4.581361684017856
+        "x": 6.6894426918624825,
+        "y": 3.773555638714332
       },
       "prevControl": {
-        "x": 5.392708969988252,
-        "y": 5.297155588085591
+        "x": 6.036719554355139,
+        "y": 5.058604315681915
       },
       "nextControl": {
-        "x": 5.392708969988252,
-        "y": 5.297155588085591
+        "x": 6.036719554355139,
+        "y": 5.058604315681915
       },
-      "holonomicAngle": 0.1,
+      "holonomicAngle": 136.63657704161668,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -51,45 +49,67 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9021614155267061,
-        "y": 4.412513254071686
+        "x": 1.9,
+        "y": 4.45
       },
       "prevControl": {
-        "x": 1.8935329175871043,
-        "y": 4.408489719404075
+        "x": 2.9,
+        "y": 4.45
       },
       "nextControl": {
-        "x": 1.9107899134663067,
-        "y": 4.416536788739297
+        "x": 2.9,
+        "y": 4.45
       },
       "holonomicAngle": 180.0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "cubeMid",
-          "defaultPosition"
-        ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "deadline",
-        "waitTime": 3.0
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 7.689674710539743,
-        "y": 6.739176019740658
+        "x": 6.505864309438542,
+        "y": 4.803634340093108
       },
       "prevControl": {
-        "x": 7.012702388740282,
-        "y": 5.015281988381902
+        "x": 4.822141014350677,
+        "y": 4.910199105604999
+      },
+      "nextControl": {
+        "x": 8.117274555159797,
+        "y": 4.701646349857585
+      },
+      "holonomicAngle": 161.87813975209866,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.750117790311917,
+        "y": 6.812797747732901
+      },
+      "prevControl": {
+        "x": 7.76031658933547,
+        "y": 6.251863801437528
       },
       "nextControl": null,
-      "holonomicAngle": 0.4209528817631246,
+      "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": 3.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -100,20 +120,29 @@
       }
     }
   ],
-  "maxVelocity": 5.0,
-  "maxAcceleration": 7.0,
-  "isReversed": null,
   "markers": [
     {
-      "position": 0.504245827414773,
+      "position": 0.0,
       "names": [
-        "intakeCube"
+        "Outake preload"
       ]
     },
     {
-      "position": 1.2779080477627869,
+      "position": 1.0,
       "names": [
-        "defaultPosition"
+        "Intake Ball2"
+      ]
+    },
+    {
+      "position": 2.0,
+      "names": [
+        "Outake Ball2"
+      ]
+    },
+    {
+      "position": 3.0,
+      "names": [
+        "Intake teleop preload"
       ]
     }
   ]

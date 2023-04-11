@@ -209,19 +209,37 @@ public class AutoPaths {
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
 
-    Command node8Mobility =
-        autoBuilder
-            .createPath("Node8-Mobility", kEngagePathConstraints, true)
-            .beforeStarting(scorePreloadCube.get());
-    AutoChooser.createSinglePath("Node8-Mobility", node8Mobility);
-
+    // NODE 2 Paths
     Command node2Mobility =
         autoBuilder
             .createPath("Node2-Mobility", kEngagePathConstraints, true)
             .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node2-Mobility", node2Mobility);
 
-    // Node5-Engage
+    Command node2PreloadEngage =
+        autoBuilder
+            .createPath("Node2-Preload-Engage", kEngagePathConstraints, true)
+            .beforeStarting(scorePreloadCube.get());
+    AutoChooser.createSinglePath("Node2-Preload-Engage", node2PreloadEngage);
+
+    ArrayList<Command> node2x2Engage =
+        autoBuilder.createPaths("Node2x2-Engage", kSafePathConstraints, kEngagePathConstraints);
+    AutoChooser.addPathGroup(
+        scorePreloadCube.get(), "Node2x2-Engage", node2x2Engage, new LockSwerveX(swerveSubsystem));
+
+    Command node2PreloadReady =
+        autoBuilder
+            .createPath("Node2-Preload-Ready", kSafePathConstraints, true)
+            .beforeStarting(scorePreloadCube.get());
+    AutoChooser.createSinglePath("Node2-Preload-Ready", node2PreloadReady);
+
+    Command node2Engage =
+        autoBuilder
+            .createPath("Node2-Engage", kEngagePathConstraints, true)
+            .beforeStarting(scorePreloadCube.get());
+    AutoChooser.createSinglePath("Node2-Engage", node2Engage);
+
+    // NODE 5 Paths
     ArrayList<Command> node5Engage =
         autoBuilder.createPaths("Node5-Engage", kEngagePathConstraints);
     AutoChooser.addPathGroup(
@@ -230,14 +248,6 @@ public class AutoPaths {
         node5Engage,
         new AutoBalance(swerveSubsystem).andThen(new LockSwerveX(swerveSubsystem)));
 
-    // Node8-Preload-Ready
-    Command node8PreloadReady =
-        autoBuilder
-            .createPath("Node8-Preload-Ready", kSafePathConstraints, true)
-            .beforeStarting(scorePreloadCube.get());
-    AutoChooser.createSinglePath("Node8-Preload-Ready", node8PreloadReady);
-
-    // Node5-Mobility-Engage
     Command node5MobilityEngage =
         autoBuilder
             .createPath("Node5-Mobility-Engage", kEngagePathConstraints, true)
@@ -252,34 +262,42 @@ public class AutoPaths {
         node5x2Engage,
         new AutoBalance(swerveSubsystem).andThen(new LockSwerveX(swerveSubsystem)));
 
-    // Node8x2
-    Command node9x2 =
+    // NODE 8 Paths
+    Command node8Mobility =
         autoBuilder
-            .createPath("Node9x2", kFastPathConstraints, true)
-            .beforeStarting(scorePreloadCone.get().asProxy());
-    AutoChooser.createSinglePath("Node9x2", node9x2);
-
-    // Node2x2-Engage
-    ArrayList<Command> node2x2Engage =
-        autoBuilder.createPaths("Node2x2-Engage", kSafePathConstraints, kEngagePathConstraints);
-    AutoChooser.addPathGroup(
-        scorePreloadCube.get(), "Node2x2-Engage", node2x2Engage, new LockSwerveX(swerveSubsystem));
-
-    // Node2-Preload-Ready
-    Command node2PreloadReady =
-        autoBuilder
-            .createPath("Node2-Preload-Ready", kSafePathConstraints, true)
+            .createPath("Node8-Mobility", kEngagePathConstraints, true)
             .beforeStarting(scorePreloadCube.get());
-    AutoChooser.createSinglePath("Node2-Preload-Ready", node2PreloadReady);
+    AutoChooser.createSinglePath("Node8-Mobility", node8Mobility);
 
-    // Node8-Preload-Engage
+    Command node8PreloadReady =
+        autoBuilder
+            .createPath("Node8-Preload-Ready", kSafePathConstraints, true)
+            .beforeStarting(scorePreloadCube.get());
+    AutoChooser.createSinglePath("Node8-Preload-Ready", node8PreloadReady);
+
     Command node8PreloadEngage =
         autoBuilder
             .createPath("Node8-Preload-Engage", kEngagePathConstraints, true)
             .beforeStarting(scorePreloadCube.get());
     AutoChooser.createSinglePath("Node8-Preload-Engage", node8PreloadEngage);
 
-    // Node8x3-Engage
+    Command node8MobilityEngage =
+        autoBuilder
+            .createPath("Node8-Mobility-Engage", kEngagePathConstraints, true)
+            .beforeStarting(scorePreloadCube.get());
+    AutoChooser.createSinglePath("Node8-Mobility-Engage", node8MobilityEngage);
+
+    ArrayList<Command> node8x2Ready =
+        autoBuilder.createPaths("Node8x2-Ready", kSafePathConstraints);
+    AutoChooser.addPathGroup(scorePreloadCube.get(), "Node8x2-Ready", node8x2Ready);
+
+    // NODE 9 Paths
+    Command node9x2 =
+        autoBuilder
+            .createPath("Node9x2", kFastPathConstraints, true)
+            .beforeStarting(scorePreloadCone.get().asProxy());
+    AutoChooser.createSinglePath("Node9x2", node9x2);
+
     ArrayList<Command> node9x2Engage =
         autoBuilder.createPaths(
             "Node9x2+1-Engage",
@@ -289,32 +307,6 @@ public class AutoPaths {
             kGroundIntakeConstraints,
             kEngagePathConstraints);
     AutoChooser.addPathGroup(scorePreloadCone.get(), "Node9x2+1-Engage", node9x2Engage);
-
-    // Node8-Mobility-Engage
-    Command node8MobilityEngage =
-        autoBuilder
-            .createPath("Node8-Mobility-Engage", kEngagePathConstraints, true)
-            .beforeStarting(scorePreloadCube.get());
-    AutoChooser.createSinglePath("Node8-Mobility-Engage", node8MobilityEngage);
-
-    // Node2-Preload-Engage
-    Command node2PreloadEngage =
-        autoBuilder
-            .createPath("Node2-Preload-Engage", kEngagePathConstraints, true)
-            .beforeStarting(scorePreloadCube.get());
-    AutoChooser.createSinglePath("Node2-Preload-Engage", node2PreloadEngage);
-
-    // Node8x2-Ready
-    ArrayList<Command> node8x2Ready =
-        autoBuilder.createPaths("Node8x2-Ready", kSafePathConstraints);
-    AutoChooser.addPathGroup(scorePreloadCube.get(), "Node8x2-Ready", node8x2Ready);
-
-    // Node2-Engage
-    Command node2Engage =
-        autoBuilder
-            .createPath("Node2-Engage", kEngagePathConstraints, true)
-            .beforeStarting(scorePreloadCube.get());
-    AutoChooser.createSinglePath("Node2-Engage", node2Engage);
 
     AutoChooser.sendChooserToDashboard("Auto Chooser");
   }
