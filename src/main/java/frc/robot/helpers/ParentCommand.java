@@ -44,8 +44,7 @@ public class ParentCommand extends DebugCommandBase {
   @Override
   public boolean isFinished() {
     for (Command childCommand : childCommands) {
-      if (!childCommand.isFinished())
-        return false;
+      if (!childCommand.isFinished()) return false;
     }
     return true;
   }

@@ -39,12 +39,13 @@ public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
             kArmProfileContraints),
         armSubsystem::getArmPositionRads,
         MathUtil.clamp(
-            angleRotation2d.getRadians() + kArmMountOffsetToGroundRadians,
-            kArmAngleMinConstraint.getRadians() + kArmMountOffsetToGroundRadians,
-            kArmAngleMaxConstraint.getRadians())
+                angleRotation2d.getRadians() + kArmMountOffsetToGroundRadians,
+                kArmAngleMinConstraint.getRadians() + kArmMountOffsetToGroundRadians,
+                kArmAngleMaxConstraint.getRadians())
             + kArmMountOffsetToGroundRadians,
-        (output, setpoint) -> armSubsystem.setInputVoltage(
-            output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
+        (output, setpoint) ->
+            armSubsystem.setInputVoltage(
+                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
         armSubsystem);
 
     getController()
@@ -56,8 +57,7 @@ public class SetArmAngleElevatorRelative extends ProfiledPIDCommand {
   }
 
   /**
-   * Constructor for setting the arm to a Rotation2d specified in the preferences
-   * hash map
+   * Constructor for setting the arm to a Rotation2d specified in the preferences hash map
    *
    * @param armSubsystem
    * @param armPreset
