@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.9,
-        "y": 4.45
+        "x": 1.8960834419522439,
+        "y": 4.985385643175258
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.639484088128482,
-        "y": 4.885224732281526
+        "x": 4.62852992485712,
+        "y": 4.925412648284491
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -16,26 +16,29 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "coneHigh",
+          "outtakeCube"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.597653500650512,
-        "y": 3.7123628445730184
+        "x": 6.468324976735519,
+        "y": 4.659433794314017
       },
       "prevControl": {
-        "x": 5.985725559237378,
-        "y": 4.77303794302245
+        "x": 4.827118500360106,
+        "y": 4.617373225653666
       },
       "nextControl": {
-        "x": 5.985725559237378,
-        "y": 4.77303794302245
+        "x": 4.827118500360106,
+        "y": 4.617373225653666
       },
-      "holonomicAngle": 142.12501634890182,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -74,18 +77,18 @@
     },
     {
       "anchorPoint": {
-        "x": 6.505864309438542,
-        "y": 4.589459560598511
+        "x": 6.5401384335251,
+        "y": 3.598537647391224
       },
       "prevControl": {
-        "x": 4.200935730115735,
-        "y": 4.997411521540601
+        "x": 5.180674181873034,
+        "y": 4.913229659542699
       },
       "nextControl": {
-        "x": 4.200935730115735,
-        "y": 4.997411521540601
+        "x": 5.180674181873034,
+        "y": 4.913229659542699
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 145.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -145,38 +148,68 @@
       }
     }
   ],
-  "maxVelocity": 12.5,
+  "maxVelocity": 7.0,
   "maxAcceleration": 4.88,
   "isReversed": null,
   "markers": [
     {
-      "position": 0.0,
+      "position": 0.01,
       "names": [
-        "Outake preload"
+        "stow"
       ]
     },
     {
-      "position": 1.0,
+      "position": 0.6,
       "names": [
-        "Intake Ball2"
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 1.05,
+      "names": [
+        "stow"
+      ]
+    },
+    {
+      "position": 1.7,
+      "names": [
+        "cubeHigh"
       ]
     },
     {
       "position": 2.0,
       "names": [
-        "Outake Ball2"
+        "outtakeCube"
       ]
     },
     {
-      "position": 3.0,
+      "position": 2.05,
       "names": [
-        "Intake Ball3"
+        "stow"
       ]
     },
     {
-      "position": 4.0,
+      "position": 2.6,
       "names": [
-        "Outake Ball3"
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 3.05,
+      "names": [
+        "stow"
+      ]
+    },
+    {
+      "position": 3.7,
+      "names": [
+        "cubeHigh"
+      ]
+    },
+    {
+      "position": 4.05,
+      "names": [
+        "stow"
       ]
     }
   ]

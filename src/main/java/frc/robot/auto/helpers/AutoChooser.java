@@ -24,6 +24,15 @@ public class AutoChooser {
     autoChooser.addOption(commandName, command.withName(commandName));
   }
 
+  public static void addPathGroup(String commandName, List<Command> commands) {
+    addPathGroup(new InstantCommand(), commandName, commands, new InstantCommand());
+  }
+
+  public static void addPathGroup(
+      String commandName, List<Command> commands, Command endingCommand) {
+    addPathGroup(new InstantCommand(), commandName, commands, endingCommand);
+  }
+
   public static void addPathGroup(
       Command intitialCommand, String commandName, List<Command> commands) {
     addPathGroup(intitialCommand, commandName, commands, new InstantCommand());
