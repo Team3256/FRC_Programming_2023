@@ -19,8 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
-  public static final boolean kDebugEnabled = false;
-
+  public static final boolean kDebugEnabled = true;
   public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;
@@ -336,7 +335,7 @@ public final class Constants {
   public static class VisionConstants {
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
-      public static final double kLimelightTranslationThresholdMeters = 300;
+      public static final double kLimelightTranslationThreshold = 300;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -345,7 +344,7 @@ public final class Constants {
 
     public static class BackConstants {
       public static final String kLimelightNetworkTablesName = "limelight-back";
-      public static final double kLimelightTranslationThresholdMeters = 300;
+      public static final double kLimelightTranslationThreshold = 300;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
@@ -354,7 +353,7 @@ public final class Constants {
 
     public static class SideConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
-      public static final double kLimelightTranslationThresholdMeters = 300;
+      public static final double kLimelightTranslationThreshold = 300;
       public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
       public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
       public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;

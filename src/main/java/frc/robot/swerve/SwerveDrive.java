@@ -21,7 +21,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -324,20 +323,20 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
         FrontConstants.kLimelightNetworkTablesName,
         FrontConstants.kFieldTranslationOffsetX,
         FrontConstants.kFieldTranslationOffsetY,
-        FrontConstants.kLimelightTranslationThresholdMeters,
+        FrontConstants.kLimelightTranslationThreshold,
         FrontConstants.kLimelightRotationThreshold);
     this.localize(
         SideConstants.kLimelightNetworkTablesName,
         SideConstants.kFieldTranslationOffsetX,
         SideConstants.kFieldTranslationOffsetY,
-        SideConstants.kLimelightTranslationThresholdMeters,
+        SideConstants.kLimelightTranslationThreshold,
         SideConstants.kLimelightRotationThreshold);
     this.localize(
         BackConstants.kLimelightNetworkTablesName,
         BackConstants.kFieldTranslationOffsetX,
         BackConstants.kFieldTranslationOffsetY,
-        BackConstants.kLimelightTranslationThresholdMeters,
-        BackConstants.kLimelightTranslationThresholdMeters);
+        BackConstants.kLimelightTranslationThreshold,
+        BackConstants.kLimelightTranslationThreshold);
 
     if (kDebugEnabled) {
       for (SwerveModule mod : swerveModules) {

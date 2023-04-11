@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.elevator.ElevatorConstants.kElevatorStartingPositionMeters;
+import static frc.robot.elevator.ElevatorConstants.kElevatorStartingPosition;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
@@ -79,16 +79,16 @@ public class PitTestRoutine {
   private Command elevatorCommands() {
     Command zeroElevator = new ZeroElevator(elevatorSubsystem).until(driver.b());
     Command setElevatorHeightHIGH =
-        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH)
+        new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH)
             .until(driver.b());
     Command setElevatorHeightMID =
-        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID)
+        new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID)
             .until(driver.b());
     Command setElevatorHeightLOW =
-        new SetElevatorHeight(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW)
+        new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW)
             .until(driver.b());
     Command setElevatorToStart =
-        new SetElevatorHeight(elevatorSubsystem, kElevatorStartingPositionMeters).until(driver.b());
+        new SetElevatorExtension(elevatorSubsystem, kElevatorStartingPosition).until(driver.b());
 
     return new SequentialCommandGroup(
         zeroElevator,
