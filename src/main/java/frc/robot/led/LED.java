@@ -14,7 +14,6 @@ import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.awt.Color;
 
@@ -29,20 +28,6 @@ public class LED extends SubsystemBase {
     candleConfiguration.brightnessScalar = 1.0;
     candleConfiguration.vBatOutputMode = VBatOutputMode.Modulated;
     candle.configAllSettings(candleConfiguration, 100);
-
-    setDefaultCommand(DefaultAnimation());
-  }
-
-  public Command DefaultAnimation() {
-    return runOnce(LEDSegment.MainStrip::setFireAnimation);
-  }
-
-  public Command setAllBlink(Color color) {
-    return runOnce(() -> LEDSegment.MainStrip.setStrobeAnimation(color, 5));
-  }
-
-  public Command setAllColor(Color color) {
-    return runOnce(() -> LEDSegment.MainStrip.setColor(color));
   }
 
   public void setBrightness(double percent) {

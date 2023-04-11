@@ -14,12 +14,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.led.LED;
 import java.util.function.BooleanSupplier;
 
-public class LimitedSwerveBlink extends CommandBase {
-  public LimitedSwerveBlink(BooleanSupplier isCurrentPieceCone) {
+public class LimitedSwervePattern extends CommandBase {
+  public LimitedSwervePattern(LED ledSubsystem, BooleanSupplier isCurrentPieceCone) {
     if (isCurrentPieceCone.getAsBoolean()) {
       LED.LEDSegment.MainStrip.setStrobeAnimation(kCone, 1);
     } else {
       LED.LEDSegment.MainStrip.setStrobeAnimation(kCube, 1);
     }
+    addRequirements(ledSubsystem);
   }
 }

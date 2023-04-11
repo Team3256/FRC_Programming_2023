@@ -13,6 +13,7 @@ import frc.robot.helpers.DebugCommandBase;
 import frc.robot.helpers.TimedBoolean;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
+import frc.robot.led.commands.SetAllColor;
 
 public class IntakeCone extends DebugCommandBase {
   private Intake intakeSubsystem;
@@ -46,7 +47,7 @@ public class IntakeCone extends DebugCommandBase {
     super.end(interrupted);
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
-      ledSubsystem.setAllBlink(kSuccess).withTimeout(1).schedule();
+      new SetAllColor(ledSubsystem, kSuccess).withTimeout(1).schedule();
     }
   }
 

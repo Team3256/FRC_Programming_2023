@@ -7,8 +7,6 @@
 
 package frc.robot.intake.commands;
 
-import static frc.robot.led.LEDConstants.kSuccess;
-
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
@@ -43,9 +41,6 @@ public class OuttakeCube extends DebugCommandBase {
   public void end(boolean interrupted) {
     super.end(interrupted);
     intakeSubsystem.off();
-    if (!interrupted && ledSubsystem != null) {
-      ledSubsystem.setAllColor(kSuccess).withTimeout(1).schedule();
-    }
   }
 
   @Override

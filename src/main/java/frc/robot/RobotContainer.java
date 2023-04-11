@@ -40,7 +40,9 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LimitedSwerveBlink;
+import frc.robot.led.commands.FirePattern;
+import frc.robot.led.commands.LimitedSwervePattern;
+import frc.robot.led.commands.SetAllBlink;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -91,6 +93,9 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kClimbEnabled) climbSubsystem = new Climb();
     if (kLedStripEnabled) ledSubsystem = new LED();
 
+    if (kLedStripEnabled) {
+      configureLEDStrip();
+    }
     if (kIntakeEnabled) {
       configureIntake();
       canBusTestables.add(intakeSubsystem);
@@ -114,9 +119,6 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kClimbEnabled) {
       configureClimb();
       canBusTestables.add(climbSubsystem);
-    }
-    if (kLedStripEnabled) {
-      configureLEDStrip();
     }
 
     modeChooser = new SendableChooser<>();
@@ -214,7 +216,7 @@ public class RobotContainer implements CANTestable, Loggable {
                     driver::getRightX,
                     kFieldRelative,
                     kOpenLoop)
-                .deadlineWith(new LimitedSwerveBlink(this::isCurrentPieceCone)));
+                .deadlineWith(new LimitedSwervePattern(ledSubsystem, this::isCurrentPieceCone)));
 
     driver
         .x()
@@ -316,14 +318,16 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
+    ledSubsystem.setDefaultCommand(new FirePattern(ledSubsystem));
+
     operator
         .rightBumper()
         .toggleOnTrue(
-            new InstantCommand(this::setPieceToCone).andThen(ledSubsystem.setAllBlink(kCone)));
+            new InstantCommand(this::setPieceToCone).andThen(new SetAllBlink(ledSubsystem, kCone)));
     operator
         .leftBumper()
         .toggleOnTrue(
-            new InstantCommand(this::setPieceToCube).andThen(ledSubsystem.setAllBlink(kCube)));
+            new InstantCommand(this::setPieceToCube).andThen(new SetAllBlink(ledSubsystem, kCube)));
   }
 
   public Command getAutonomousCommand() {

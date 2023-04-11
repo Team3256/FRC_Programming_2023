@@ -29,6 +29,8 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.led.LED;
+import frc.robot.led.commands.SetAllBlink;
+import frc.robot.led.commands.SetAllColor;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 
@@ -116,7 +118,7 @@ public class AutoScore extends CommandBase {
     }
     if (0 > locationId || locationId > 8) {
       System.out.println("locationId was invalid (" + locationId + ")");
-      ledSubsystem.setAllBlink(kError).withTimeout(6).schedule();
+      new SetAllBlink(ledSubsystem, kError).withTimeout(6).schedule();
       return;
     }
 
@@ -194,11 +196,14 @@ public class AutoScore extends CommandBase {
         PathGeneration.createDynamicAbsolutePath(
             scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
 
-    Command successLEDs = ledSubsystem.setAllBlink(kSuccess).withTimeout(5);
-    Command errorLEDs = ledSubsystem.setAllBlink(kError).withTimeout(5);
+    Command successLEDs = new SetAllBlink(ledSubsystem, kSuccess).withTimeout(5);
+
+    Command errorLEDs = new SetAllBlink(ledSubsystem, kError).withTimeout(5);
     Command runningLEDs =
         new ConditionalCommand(
-            ledSubsystem.setAllColor(kCone), ledSubsystem.setAllColor(kCube), isCurrentPieceCone);
+            new SetAllColor(ledSubsystem, kCone),
+            new SetAllColor(ledSubsystem, kCube),
+            isCurrentPieceCone);
 
     // schedule final composed command
     Command autoScore =

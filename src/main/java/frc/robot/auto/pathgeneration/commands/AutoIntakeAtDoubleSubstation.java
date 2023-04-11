@@ -30,6 +30,8 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.led.LED;
+import frc.robot.led.commands.SetAllBlink;
+import frc.robot.led.commands.SetAllColor;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -167,9 +169,11 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
 
     Command runningLEDs =
         new ConditionalCommand(
-            ledSubsystem.setAllColor(kCone), ledSubsystem.setAllColor(kCone), isCurrentPieceCone);
-    Command successLEDs = ledSubsystem.setAllBlink(kSuccess);
-    Command errorLEDs = ledSubsystem.setAllBlink(kError);
+            new SetAllColor(ledSubsystem, kCone),
+            new SetAllColor(ledSubsystem, kCube),
+            isCurrentPieceCone);
+    Command successLEDs = new SetAllBlink(ledSubsystem, kSuccess);
+    Command errorLEDs = new SetAllBlink(ledSubsystem, kError);
 
     Command autoIntakeCommand =
         Commands.sequence(

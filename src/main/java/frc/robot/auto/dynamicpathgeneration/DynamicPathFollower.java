@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.led.LED;
+import frc.robot.led.commands.SetAllBlink;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.Supplier;
 
@@ -68,7 +69,7 @@ public class DynamicPathFollower {
       if (locationId == -1) {
         System.out.println("locationId was invalid");
         if (ledSubsystem != null) {
-          ledSubsystem.setAllBlink(kError);
+          new SetAllBlink(ledSubsystem, kError);
         } else {
           return new InstantCommand();
         }
@@ -95,7 +96,7 @@ public class DynamicPathFollower {
     // handle invalid trajectory
     if (dynamicPathGenTrajectory == null) {
       System.out.println("No trajectory was found.");
-      return ledSubsystem.setAllBlink(kError);
+      return new SetAllBlink(ledSubsystem, kError);
     } else {
       System.out.println("Trajectory was found.");
     }
@@ -142,6 +143,6 @@ public class DynamicPathFollower {
     }
 
     return Commands.sequence(
-        dynamicPathGenTrajectoryCommand, finalTrajectory, ledSubsystem.setAllBlink(kSuccess));
+        dynamicPathGenTrajectoryCommand, finalTrajectory, new SetAllBlink(ledSubsystem, kSuccess));
   }
 }
