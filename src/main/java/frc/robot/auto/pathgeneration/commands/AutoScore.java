@@ -17,14 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPreset;
-import frc.robot.elevator.commands.SetElevatorExtension;
+import frc.robot.elevator.commands.SetEndEffectorState;
 import frc.robot.helpers.ParentCommand;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
@@ -83,29 +80,37 @@ public class AutoScore extends ParentCommand {
         case HIGH:
           Commands.parallel(
                   new ConditionalCommand(
-                          new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
-                          new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
-                          isCurrentLEDPieceCone)
-                      .beforeStarting(new WaitCommand(0.5)),
-                  new ConditionalCommand(
-                      new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
-                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
+                      new SetEndEffectorState(
+                          elevatorSubsystem,
+                          armSubsystem,
+                          SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH),
+                      new SetEndEffectorState(
+                          elevatorSubsystem,
+                          armSubsystem,
+                          SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
                       isCurrentLEDPieceCone))
               .schedule();
           break;
+        default:
         case MID:
           Commands.parallel(
-                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
                   new ConditionalCommand(
-                      new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
-                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
+                      new SetEndEffectorState(
+                          elevatorSubsystem,
+                          armSubsystem,
+                          SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID),
+                      new SetEndEffectorState(
+                          elevatorSubsystem,
+                          armSubsystem,
+                          SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
                       isCurrentLEDPieceCone))
               .schedule();
           break;
         case LOW:
-          Commands.parallel(
-                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
-                  new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+          new SetEndEffectorState(
+                  elevatorSubsystem,
+                  armSubsystem,
+                  SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW)
               .schedule();
           break;
       }
@@ -149,6 +154,7 @@ public class AutoScore extends ParentCommand {
             new IntakeCube(intakeSubsystem, ledSubsystem),
             new IntakeCone(intakeSubsystem, ledSubsystem),
             isCurrentPieceCone);
+    // Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
     Command moveArmElevatorToPreset;
@@ -157,33 +163,39 @@ public class AutoScore extends ParentCommand {
       case HIGH:
         scoringLocation = kHighBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
-            new ParallelCommandGroup(
-                new ConditionalCommand(
-                    new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
-                    new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
-                    isCurrentPieceCone),
-                new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
-                    isCurrentPieceCone));
+            new ConditionalCommand(
+                new SetEndEffectorState(
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH),
+                new SetEndEffectorState(
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
+                isCurrentPieceCone);
         break;
       case MID:
         scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
-            new ParallelCommandGroup(
-                new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
-                new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
-                    isCurrentPieceCone));
+            new ConditionalCommand(
+                new SetEndEffectorState(
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID),
+                new SetEndEffectorState(
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
+                isCurrentPieceCone);
         break;
       case LOW:
       default:
         scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
-            new ParallelCommandGroup(
-                new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
-                new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW));
+            new SetEndEffectorState(
+                elevatorSubsystem,
+                armSubsystem,
+                SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW);
     }
 
     if (DriverStation.getAlliance() == Alliance.Red) {
