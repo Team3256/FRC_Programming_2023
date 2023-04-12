@@ -82,30 +82,30 @@ public class AutoScore extends ParentCommand {
       switch (gridScoreHeight) {
         case HIGH:
           Commands.parallel(
-              new ConditionalCommand(
-                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
-                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
-                  isCurrentLEDPieceCone)
-                  .beforeStarting(new WaitCommand(0.5)),
-              new ConditionalCommand(
-                  new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
-                  new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
-                  isCurrentLEDPieceCone))
+                  new ConditionalCommand(
+                          new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                          new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
+                          isCurrentLEDPieceCone)
+                      .beforeStarting(new WaitCommand(0.5)),
+                  new ConditionalCommand(
+                      new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
+                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
+                      isCurrentLEDPieceCone))
               .schedule();
           break;
         case MID:
           Commands.parallel(
-              new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
-              new ConditionalCommand(
-                  new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
-                  new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
-                  isCurrentLEDPieceCone))
+                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
+                  new ConditionalCommand(
+                      new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
+                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
+                      isCurrentLEDPieceCone))
               .schedule();
           break;
         case LOW:
           Commands.parallel(
-              new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
-              new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+                  new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
+                  new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
               .schedule();
           break;
       }
@@ -139,14 +139,16 @@ public class AutoScore extends ParentCommand {
       DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint, swerveSubsystem);
       moveToScoringWaypoint = gen.getCommand();
     } else
-      moveToScoringWaypoint = PathGeneration.createDynamicAbsolutePath(
-          start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
+      moveToScoringWaypoint =
+          PathGeneration.createDynamicAbsolutePath(
+              start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
 
     BooleanSupplier isCurrentPieceCone = () -> scoringGamePiece.equals(GamePiece.CONE);
-    Command runOuttake = new ConditionalCommand(
-        new IntakeCube(intakeSubsystem, ledSubsystem),
-        new IntakeCone(intakeSubsystem, ledSubsystem),
-        isCurrentPieceCone);
+    Command runOuttake =
+        new ConditionalCommand(
+            new IntakeCube(intakeSubsystem, ledSubsystem),
+            new IntakeCone(intakeSubsystem, ledSubsystem),
+            isCurrentPieceCone);
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
     Command moveArmElevatorToPreset;
@@ -154,59 +156,64 @@ public class AutoScore extends ParentCommand {
     switch (gridScoreHeight) {
       case HIGH:
         scoringLocation = kHighBlueScoringPoses[locationId];
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new ConditionalCommand(
-                new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
-                new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
-                isCurrentPieceCone),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
-                new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
-                isCurrentPieceCone));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new ConditionalCommand(
+                    new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH),
+                    new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CUBE_HIGH),
+                    isCurrentPieceCone),
+                new ConditionalCommand(
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_HIGH),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH),
+                    isCurrentPieceCone));
         break;
       case MID:
         scoringLocation = kMidBlueScoringPoses[locationId];
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
-                new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
-                isCurrentPieceCone));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_MID),
+                new ConditionalCommand(
+                    new SetArmAngle(armSubsystem, ArmPreset.CONE_MID),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_MID),
+                    isCurrentPieceCone));
         break;
       case LOW:
       default:
         scoringLocation = kBottomBlueScoringPoses[locationId];
-        moveArmElevatorToPreset = new ParallelCommandGroup(
-            new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
-            new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW));
+        moveArmElevatorToPreset =
+            new ParallelCommandGroup(
+                new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW),
+                new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW));
     }
 
     if (DriverStation.getAlliance() == Alliance.Red) {
       scoringLocation = PathUtil.flip(scoringLocation);
     }
 
-    Command moveToScoringLocation = PathGeneration.createDynamicAbsolutePath(
-        scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
+    Command moveToScoringLocation =
+        PathGeneration.createDynamicAbsolutePath(
+            scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
 
     Command successLEDs = new SetAllBlink(ledSubsystem, kSuccess).withTimeout(5);
 
     Command errorLEDs = new SetAllBlink(ledSubsystem, kError).withTimeout(5);
-    Command runningLEDs = new ConditionalCommand(
-        new SetAllColor(ledSubsystem, kCone),
-        new SetAllColor(ledSubsystem, kCube),
-        isCurrentPieceCone);
+    Command runningLEDs =
+        new ConditionalCommand(
+            new SetAllColor(ledSubsystem, kCone),
+            new SetAllColor(ledSubsystem, kCube),
+            isCurrentPieceCone);
 
-    Command autoScore = Commands.sequence(
-        moveToScoringWaypoint,
-        Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset))
-        .deadlineWith(runningLEDs.asProxy())
-        .finallyDo(
-            (interrupted) -> {
-              if (!interrupted)
-                successLEDs.schedule();
-            })
-        .until(cancelCommand)
-        .handleInterrupt(errorLEDs::schedule);
+    Command autoScore =
+        Commands.sequence(
+                moveToScoringWaypoint,
+                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset))
+            .deadlineWith(runningLEDs.asProxy())
+            .finallyDo(
+                (interrupted) -> {
+                  if (!interrupted) successLEDs.schedule();
+                })
+            .until(cancelCommand)
+            .handleInterrupt(errorLEDs::schedule);
 
     addChildCommands(autoScore);
   }

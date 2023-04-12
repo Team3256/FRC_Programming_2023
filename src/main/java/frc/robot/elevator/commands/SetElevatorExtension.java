@@ -35,8 +35,9 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
             kElevatorConstraints),
         elevatorSubsystem::getElevatorPosition,
         setpointPosition,
-        (output, setpoint) -> elevatorSubsystem.setInputVoltage(
-            output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
+        (output, setpoint) ->
+            elevatorSubsystem.setInputVoltage(
+                output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
         elevatorSubsystem);
 
     this.setpointPosition = setpointPosition;
@@ -47,8 +48,7 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
   }
 
   /**
-   * Constructor for setting elevator height for the levels specified in the
-   * elevator preferences
+   * Constructor for setting elevator height for the levels specified in the elevator preferences
    * hash map
    *
    * @param elevatorSubsystem
