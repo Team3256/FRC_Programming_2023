@@ -36,6 +36,7 @@ public class LED extends SubsystemBase {
 
   public enum LEDSegment {
     MainStrip(0, 100, 0);
+
     public final int startIndex;
     public final int segmentSize;
     public final int animationSlot;
@@ -79,6 +80,10 @@ public class LED extends SubsystemBase {
               segmentSize,
               Direction.Forward,
               startIndex));
+    }
+
+    public void setColorFlowAnimation(Color color) {
+      setAnimation(new ColorFlowAnimation(color.getRed(), color.getGreen(), color.getBlue()));
     }
 
     public void setFireAnimation() {

@@ -12,8 +12,8 @@ import frc.robot.led.LED;
 import java.awt.Color;
 
 public class SetAllBlink extends CommandBase {
-  Color color;
-  double speed = 0.5;
+  private Color color;
+  private double speed = 0.5;
 
   public SetAllBlink(LED ledSubsystem, Color color) {
     this.color = color;

@@ -9,23 +9,21 @@ package frc.robot.led.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.led.LED;
-import java.awt.Color;
+import frc.robot.led.LEDConstants;
 
-public class SetAllColor extends CommandBase {
-  private Color color;
+public class ColorFlowPattern extends CommandBase {
 
-  public SetAllColor(LED ledSubsystem, Color color) {
-    this.color = color;
+  public ColorFlowPattern(LED ledSubsystem) {
     addRequirements(ledSubsystem);
   }
 
   @Override
   public void initialize() {
-    LED.LEDSegment.MainStrip.setColor(color);
+    LED.LEDSegment.MainStrip.setColorFlowAnimation(LEDConstants.kDefault);
   }
 
   @Override
-  public boolean runsWhenDisabled() {
-    return true;
+  public boolean isFinished() {
+    return false;
   }
 }

@@ -40,7 +40,7 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
-import frc.robot.led.commands.FirePattern;
+import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
 import frc.robot.led.commands.SetAllBlink;
 import frc.robot.logging.Loggable;
@@ -318,7 +318,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledSubsystem.setDefaultCommand(new FirePattern(ledSubsystem));
+    ledSubsystem.setDefaultCommand(new ColorFlowPattern(ledSubsystem));
 
     operator
         .rightBumper()
