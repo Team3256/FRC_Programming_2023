@@ -124,18 +124,25 @@ public class RobotSimulation {
   }
 
   public void updateSubsystemPositions() {
-    elevatorSubsystem
-        .getLigament()
-        .setLength(
-            Units.inchesToMeters(kArmStartPosition) + elevatorSubsystem.getElevatorPosition());
-    armSubsystem
-        .getLigament()
-        .setAngle(Units.radiansToDegrees(armSubsystem.getArmPositionElevatorRelative()) - 90);
-    intakeSubsystem
-        .getWrist()
-        .setAngle(
-            Units.radiansToDegrees(armSubsystem.getArmPositionGroundRelative()) * kIntakeWristRatio
-                - 90);
+    if (kElevatorEnabled) {
+      elevatorSubsystem
+          .getLigament()
+          .setLength(
+              Units.inchesToMeters(kArmStartPosition) + elevatorSubsystem.getElevatorPosition());
+    }
+    if (kArmEnabled) {
+      armSubsystem
+          .getLigament()
+          .setAngle(Units.radiansToDegrees(armSubsystem.getArmPositionElevatorRelative()) - 90);
+    }
+    if (kIntakeEnabled) {
+      intakeSubsystem
+          .getWrist()
+          .setAngle(
+              Units.radiansToDegrees(armSubsystem.getArmPositionGroundRelative())
+                      * kIntakeWristRatio
+                  - 90);
+    }
   }
 
   public void addDoubleSubstation(GamePiece gamePiece) {

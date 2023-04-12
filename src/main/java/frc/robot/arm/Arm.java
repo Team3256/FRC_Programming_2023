@@ -102,8 +102,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public boolean isSafeFromElevator() {
-    return (Math.toDegrees(getArmPositionElevatorRelative()) <= kMaxSafeRotation
-        && Math.toDegrees(getArmPositionElevatorRelative()) >= kMinSafeRotation);
+    return (Units.radiansToDegrees(getArmPositionElevatorRelative()) <= kMaxSafeRotation
+        && Units.radiansToDegrees(getArmPositionElevatorRelative()) >= kMinSafeRotation);
   }
 
   public void zeroEncoder() {
