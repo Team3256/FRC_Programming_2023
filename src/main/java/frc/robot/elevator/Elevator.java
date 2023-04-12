@@ -210,7 +210,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
         new MechanismLigament2d(
             "Elevator",
             Units.inchesToMeters(kArmStartPosition) + elevatorSim.getPositionMeters(),
-            kElevatorAngleOffset,
+            Units.radiansToDegrees(kElevatorAngleOffset),
             kElevatorLineWidth,
             new Color8Bit(Color.kRed));
   }

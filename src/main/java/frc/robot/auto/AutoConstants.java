@@ -13,7 +13,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 
 public final class AutoConstants {
-  public static final boolean kAutoDebug = true && Constants.kDebugEnabled;
+  public static final boolean kAutoDebug = false && Constants.kDebugEnabled;
   public static final boolean changeAutosBasedOnAlliance = true;
   public static final double kCommandMarkerThreshold = 0.05; // meters
 
