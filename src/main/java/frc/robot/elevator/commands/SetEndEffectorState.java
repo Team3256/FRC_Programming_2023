@@ -5,14 +5,14 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.elevator.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorExtension;
 
 public class SetEndEffectorState extends ParallelCommandGroup {
   public enum EndEffectorPreset {
@@ -40,14 +40,16 @@ public class SetEndEffectorState extends ParallelCommandGroup {
   public SetEndEffectorState(
       Elevator elevatorSubsystem, Arm armSubsystem, EndEffectorPreset endEffectorPreset) {
     addCommands(
-        new SetElevatorExtension(elevatorSubsystem, endEffectorPreset.elevatorPreset),
+        new SetElevatorExtension(elevatorSubsystem, endEffectorPreset.elevatorPreset)
+            .beforeStarting(new WaitUntilCommand(armSubsystem::isSafe)),
         new SetArmAngle(armSubsystem, endEffectorPreset.armPreset));
   }
 
   public SetEndEffectorState(
       Elevator elevatorSubsystem, Arm armSubsystem, double elevatorExtension, Rotation2d armAngle) {
     addCommands(
-        new SetElevatorExtension(elevatorSubsystem, elevatorExtension),
+        new SetElevatorExtension(elevatorSubsystem, elevatorExtension)
+            .beforeStarting(new WaitUntilCommand(armSubsystem::isSafe)),
         new SetArmAngle(armSubsystem, armAngle));
   }
 }

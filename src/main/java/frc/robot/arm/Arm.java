@@ -100,6 +100,11 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
+  public boolean isSafe() {
+    return (Math.toDegrees(getArmPositionRads()) <= 130
+        && Math.toDegrees(getArmPositionRads()) >= 45);
+  }
+
   public void zeroEncoder() {
     armMotor.setSelectedSensorPosition(0);
   }
@@ -207,24 +212,22 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(
         kArmPositionKeys.get(ArmPreset.STOW_CUBE), kStowRotationCube.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
+        kArmPositionKeys.get(ArmPreset.ANY_PIECE_LOW), kAnyPieceLowRotation.getRadians());
+    Preferences.initDouble(kArmPositionKeys.get(ArmPreset.CUBE_MID), kCubeMidRotation.getRadians());
+    Preferences.initDouble(kArmPositionKeys.get(ArmPreset.CONE_MID), kConeMidRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.CUBE_MID), kCubeMidRotation.getRadians());
+        kArmPositionKeys.get(ArmPreset.CUBE_HIGH), kCubeHighRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.CONE_MID), kConeMidRotation.getRadians());
-    Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.CUBE_HIGH), kCubeHighRotation.getRadians());
-    Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.CONE_HIGH), kConeHighRotation.getRadians());
+        kArmPositionKeys.get(ArmPreset.CONE_HIGH), kConeHighRotation.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(ArmPreset.CONE_GROUND_INTAKE), kConeGroundIntakeRotation.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(ArmPreset.CUBE_GROUND_INTAKE), kCubeGroundIntakeRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE),
+        kArmPositionKeys.get(ArmPreset.DOUBLE_SUBSTATION_CONE),
         kDoubleSubstationRotationCone.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE),
+        kArmPositionKeys.get(ArmPreset.DOUBLE_SUBSTATION_CUBE),
         kDoubleSubstationRotationCube.getRadians());
   }
 

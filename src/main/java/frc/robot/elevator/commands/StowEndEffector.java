@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.elevator.commands;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.arm.Arm;
