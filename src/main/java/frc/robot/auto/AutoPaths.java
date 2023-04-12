@@ -88,30 +88,30 @@ public class AutoPaths {
       autoEventMap.put(
           "coneMid",
           () ->
-              Commands.parallel(
-                      new SetElevatorExtension(
-                          elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID),
-                      new SetArmAngle(armSubsystem, ArmPreset.CONE_MID))
+              new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID)
                   .asProxy()
                   .withName("coneMid"));
 
       autoEventMap.put(
           "coneLow",
           () ->
-              Commands.parallel(
-                      new SetElevatorExtension(
-                          elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW),
-                      new SetArmAngle(armSubsystem, ArmPreset.ANY_PIECE_LOW))
+              new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW)
                   .asProxy()
                   .withName("coneLow"));
 
       autoEventMap.put(
           "cubeHigh",
           () ->
-              Commands.parallel(
-                      new SetElevatorExtension(
-                          elevatorSubsystem, Elevator.ElevatorPreset.CUBE_HIGH),
-                      new SetArmAngle(armSubsystem, ArmPreset.CUBE_HIGH))
+              new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH)
                   .asProxy()
                   .withName("cubeHigh"));
 
@@ -131,7 +131,7 @@ public class AutoPaths {
               new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID)
+                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW)
                   .asProxy()
                   .withName("cubeLow"));
 
@@ -150,7 +150,7 @@ public class AutoPaths {
           () ->
               runParallelWithPath(
                   Commands.parallel(
-                          new StowArmElevator(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
+                          new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
                           new IntakeOff(intakeSubsystem))
                       .asProxy()
                       .withName("stow")));
