@@ -17,8 +17,8 @@ public final class AutoConstants {
   public static final boolean changeAutosBasedOnAlliance = true;
   public static final double kCommandMarkerThreshold = 0.05; // meters
 
-  public static final double kMaxSpeedMetersPerSecond = 5;
-  public static final double kMaxAccelerationMetersPerSecondSquared = 7.5;
+  public static final double kMaxSpeed = 5; // meters per second
+  public static final double kMaxAcceleration = 7.5; // meters per second squared
   public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
   public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2 * Math.PI;
 
@@ -47,14 +47,13 @@ public final class AutoConstants {
           AutoConstants.kMaxAngularSpeedRadiansPerSecond,
           AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
 
-  public static final double kTranslationToleranceMeters = 0.5;
+  public static final double kTranslationTolerance = 0.5; // meters
   public static final double kAutoMarkerTimeThreshold = 0.1; // seconds
   public static final double kAutoMarkerTimeout = 0.5; // seconds
   public static final double kRotationTolerance = Units.degreesToRadians(5);
   public static final double kAutoTrajectoryTimeoutSeconds = 0.1;
 
-  public static final PathConstraints kFastPathConstraints =
-      new PathConstraints(7, kMaxAccelerationMetersPerSecondSquared);
+  public static final PathConstraints kFastPathConstraints = new PathConstraints(7, 5);
   public static final PathConstraints kSafePathConstraints = new PathConstraints(5, 5);
   public static final PathConstraints kEngagePathConstraints = new PathConstraints(3, 3);
   public static final PathConstraints kGroundIntakeConstraints = new PathConstraints(1.5, 1.5);

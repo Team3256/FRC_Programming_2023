@@ -8,6 +8,7 @@
 package frc.robot.arm.commands;
 
 import static frc.robot.arm.ArmConstants.*;
+import static frc.robot.elevator.ElevatorConstants.kElevatorAngleOffset;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -17,16 +18,16 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.ArmConstants;
 import frc.robot.auto.AutoConstants;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
-  private Rotation2d angleRotation2d;
+  private double angleRotation;
   private ArmPreset armPreset;
 
   /**
-   * Constructor for setting arm to arbitrary angle in radians
+   * Constructor for setting arm to arbitrary angle in radians. This command is RELATIVE to the
+   * Elevator Angle!
    *
    * @param armSubsystem
    * @param angleRotation2d
@@ -34,15 +35,15 @@ public class SetArmAngle extends ProfiledPIDCommand {
   public SetArmAngle(Arm armSubsystem, Rotation2d angleRotation2d) {
     super(
         new ProfiledPIDController(
-            Preferences.getDouble(ArmPreferencesKeys.kPKey, ArmConstants.kP),
-            Preferences.getDouble(ArmPreferencesKeys.kIKey, ArmConstants.kI),
-            Preferences.getDouble(ArmPreferencesKeys.kDKey, ArmConstants.kD),
+            Preferences.getDouble(ArmPreferencesKeys.kPKey, kArmP),
+            Preferences.getDouble(ArmPreferencesKeys.kIKey, kArmI),
+            Preferences.getDouble(ArmPreferencesKeys.kDKey, kArmD),
             kArmProfileContraints),
-        armSubsystem::getArmPositionRads,
+        armSubsystem::getArmPositionGroundRelative,
         MathUtil.clamp(
-            angleRotation2d.getRadians(),
-            kArmAngleMinConstraint.getRadians(),
-            kArmAngleMaxConstraint.getRadians()),
+            angleRotation2d.getRadians() + kElevatorAngleOffset,
+            kArmAngleMinConstraint.getRadians() + kElevatorAngleOffset,
+            kArmAngleMaxConstraint.getRadians() + kElevatorAngleOffset),
         (output, setpoint) ->
             armSubsystem.setInputVoltage(
                 output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
@@ -51,7 +52,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
     getController()
         .setTolerance(kArmToleranceAngle.getRadians(), kArmToleranceAngularVelocity.getRadians());
 
-    this.angleRotation2d = angleRotation2d;
+    this.angleRotation = angleRotation2d.getRadians();
     this.armSubsystem = armSubsystem;
     addRequirements(armSubsystem);
   }
@@ -73,8 +74,8 @@ public class SetArmAngle extends ProfiledPIDCommand {
 
     // update at runtime in case robot prefs changed
     if (armPreset != null) {
-      angleRotation2d = armSubsystem.getArmSetpoint(armPreset);
-      getController().setGoal(angleRotation2d.getRadians());
+      angleRotation = armSubsystem.getArmSetpoint(armPreset).getRadians();
+      getController().setGoal(angleRotation + kElevatorAngleOffset);
     }
 
     if (AutoConstants.kAutoDebug) {
@@ -82,11 +83,11 @@ public class SetArmAngle extends ProfiledPIDCommand {
           this.getName()
               + " started (preset: "
               + armPreset
-              + ", setpoint rotation: "
-              + angleRotation2d.getDegrees()
+              + ", setpoint rotation elevator relative: "
+              + Units.radiansToDegrees(angleRotation)
               + " deg)"
-              + ", current arm rotation: "
-              + Units.radiansToDegrees(armSubsystem.getArmPositionRads())
+              + ", current arm rotation elevator relative: "
+              + Units.radiansToDegrees(armSubsystem.getArmPositionElevatorRelative())
               + " deg)");
     }
   }
@@ -101,7 +102,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
               + " ended (preset: "
               + armPreset
               + ", rotation: "
-              + angleRotation2d.getDegrees()
+              + Units.radiansToDegrees(angleRotation)
               + " deg)");
     }
   }

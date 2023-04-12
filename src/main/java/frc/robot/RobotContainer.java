@@ -9,11 +9,11 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.led.LEDConstants.*;
-import static frc.robot.swerve.SwerveConstants.kFieldRelative;
-import static frc.robot.swerve.SwerveConstants.kOpenLoop;
+import static frc.robot.swerve.SwerveConstants.*;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,6 +44,7 @@ import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
 import frc.robot.led.commands.SetAllBlink;
 import frc.robot.logging.Loggable;
+import frc.robot.simulation.RobotSimulation;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
 import frc.robot.swerve.commands.TeleopSwerve;
@@ -70,6 +71,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
@@ -78,6 +80,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private LED ledSubsystem;
   private GamePiece currentPiece = GamePiece.CUBE;
   private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+  private RobotSimulation robotSimulation;
   private SendableChooser<Mode> modeChooser;
 
   private AutoPaths autoPaths;
@@ -130,16 +133,34 @@ public class RobotContainer implements CANTestable, Loggable {
       modeChooser.addOption("Auto Score", Mode.AUTO_SCORE);
     }
     SmartDashboard.putData("Auto Score Toggle", modeChooser);
+    SmartDashboard.putString(
+        "Current Double Substation Location", doubleSubstationLocation.toString());
 
-    autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
+    autoPaths =
+        new AutoPaths(
+            swerveSubsystem,
+            intakeSubsystem,
+            elevatorSubsystem,
+            armSubsystem,
+            this::isCurrentPieceCone);
     autoPaths.sendCommandsToChooser();
 
     if (AutoConstants.kAutoDebug) {
       PathPlannerServer.startServer(5811);
     }
 
-    SmartDashboard.putString(
-        "Current Double Substation Location", doubleSubstationLocation.toString());
+    if (Constants.kDebugEnabled && FeatureFlags.kShuffleboardLayoutEnabled) {
+      for (Loggable loggable : loggables) {
+        loggable.logInit();
+      }
+    }
+
+    if (RobotBase.isSimulation()) {
+      robotSimulation =
+          new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
+      robotSimulation.initializeRobot();
+      robotSimulation.addDoubleSubstation(GamePiece.CONE);
+    }
   }
 
   private void configureSwerve() {
@@ -418,6 +439,10 @@ public class RobotContainer implements CANTestable, Loggable {
 
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+  }
+
+  public void updateSimulation() {
+    robotSimulation.updateSubsystemPositions();
   }
 
   public SubstationLocation getSubstationLocation() {

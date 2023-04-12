@@ -22,7 +22,7 @@ public class KeepArmAtPosition extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
-    new SetArmAngle(armSubsystem, new Rotation2d(armSubsystem.getArmPositionRads()))
+    new SetArmAngle(armSubsystem, new Rotation2d(armSubsystem.getArmPositionElevatorRelative()))
         .repeatedly()
         .schedule();
   }

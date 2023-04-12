@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
 
-public class SetElevatorHeight extends ProfiledPIDCommand {
-  private double setpointPositionMeters;
+public class SetElevatorExtension extends ProfiledPIDCommand {
+  private double setpointPosition;
   private Elevator elevatorSubsystem;
   private ElevatorPreset elevatorPreset;
 
@@ -24,23 +24,22 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
    * Constructor for setting the elevator to a setpoint in the parameters
    *
    * @param elevatorSubsystem
-   * @param setpointPositionMeters
+   * @param setpointPosition
    */
-  public SetElevatorHeight(Elevator elevatorSubsystem, double setpointPositionMeters) {
+  public SetElevatorExtension(Elevator elevatorSubsystem, double setpointPosition) {
     super(
         new ProfiledPIDController(
-            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kP),
-            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kI),
-            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kD),
-            kElevatorContraints),
+            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kElevatorP),
+            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kElevatorI),
+            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kElevatorD),
+            kElevatorConstraints),
         elevatorSubsystem::getElevatorPosition,
-        setpointPositionMeters,
-        (output, setpoint) ->
-            elevatorSubsystem.setInputVoltage(
-                output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
+        setpointPosition,
+        (output, setpoint) -> elevatorSubsystem.setInputVoltage(
+            output + elevatorSubsystem.calculateFeedForward(setpoint.velocity)),
         elevatorSubsystem);
 
-    this.setpointPositionMeters = setpointPositionMeters;
+    this.setpointPosition = setpointPosition;
     this.elevatorSubsystem = elevatorSubsystem;
 
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
@@ -48,13 +47,14 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
   }
 
   /**
-   * Constructor for setting elevator height for the levels specified in the elevator preferences
+   * Constructor for setting elevator height for the levels specified in the
+   * elevator preferences
    * hash map
    *
    * @param elevatorSubsystem
    * @param elevatorPreset
    */
-  public SetElevatorHeight(Elevator elevatorSubsystem, ElevatorPreset elevatorPreset) {
+  public SetElevatorExtension(Elevator elevatorSubsystem, ElevatorPreset elevatorPreset) {
     this(elevatorSubsystem, elevatorSubsystem.getElevatorSetpoint(elevatorPreset));
     this.elevatorPreset = elevatorPreset;
   }
@@ -65,8 +65,8 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
 
     // update at runtime in case robot prefs changed
     if (elevatorPreset != null) {
-      setpointPositionMeters = elevatorSubsystem.getElevatorSetpoint(elevatorPreset);
-      getController().setGoal(setpointPositionMeters);
+      setpointPosition = elevatorSubsystem.getElevatorSetpoint(elevatorPreset);
+      getController().setGoal(setpointPosition);
     }
 
     System.out.println(
@@ -74,7 +74,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
             + " started (preset: "
             + this.elevatorPreset
             + ", height: "
-            + setpointPositionMeters
+            + setpointPosition
             + " meters)");
   }
 
@@ -86,7 +86,7 @@ public class SetElevatorHeight extends ProfiledPIDCommand {
             + " finished (preset: "
             + this.elevatorPreset
             + ", height: "
-            + setpointPositionMeters
+            + setpointPosition
             + " meters)");
   }
 
