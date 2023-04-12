@@ -105,7 +105,13 @@ public class AutoScore extends CommandBase {
                           SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
                       isCurrentLEDPieceCone))
               .schedule();
-          ;
+          break;
+        case LOW:
+          new SetEndEffectorState(
+                  elevatorSubsystem,
+                  armSubsystem,
+                  SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW)
+              .schedule();
           break;
       }
 

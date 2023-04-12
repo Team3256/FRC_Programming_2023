@@ -41,7 +41,7 @@ public class SetEndEffectorState extends ParallelCommandGroup {
       Elevator elevatorSubsystem, Arm armSubsystem, EndEffectorPreset endEffectorPreset) {
     addCommands(
         new SetElevatorExtension(elevatorSubsystem, endEffectorPreset.elevatorPreset)
-            .beforeStarting(new WaitUntilCommand(armSubsystem::isSafe)),
+            .beforeStarting(new WaitUntilCommand(armSubsystem::isSafeFromElevator)),
         new SetArmAngle(armSubsystem, endEffectorPreset.armPreset));
   }
 
@@ -49,7 +49,7 @@ public class SetEndEffectorState extends ParallelCommandGroup {
       Elevator elevatorSubsystem, Arm armSubsystem, double elevatorExtension, Rotation2d armAngle) {
     addCommands(
         new SetElevatorExtension(elevatorSubsystem, elevatorExtension)
-            .beforeStarting(new WaitUntilCommand(armSubsystem::isSafe)),
+            .beforeStarting(new WaitUntilCommand(armSubsystem::isSafeFromElevator)),
         new SetArmAngle(armSubsystem, armAngle));
   }
 }

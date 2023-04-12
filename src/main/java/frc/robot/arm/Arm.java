@@ -100,9 +100,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
   }
 
-  public boolean isSafe() {
-    return (Math.toDegrees(getArmPositionRads()) <= 130
-        && Math.toDegrees(getArmPositionRads()) >= 45);
+  public boolean isSafeFromElevator() {
+    return (Math.toDegrees(getArmPositionRads()) <= kMaxSafeRotation
+        && Math.toDegrees(getArmPositionRads()) >= kMinSafeRotation);
   }
 
   public void zeroEncoder() {

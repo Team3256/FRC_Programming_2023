@@ -65,6 +65,9 @@ public final class ArmConstants {
   public static final Rotation2d kCubeGroundIntakeRotation = Rotation2d.fromDegrees(180);
 
   public static final double kManualArmVoltage = 2.5;
+  public static final double kMinSafeRotation = 40;
+
+  public static final double kMaxSafeRotation = 130;
 
   public static class ArmPreferencesKeys {
     public static final Map<Arm.ArmPreset, String> kArmPositionKeys =
