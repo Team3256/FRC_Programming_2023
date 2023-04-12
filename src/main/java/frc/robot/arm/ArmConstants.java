@@ -41,7 +41,7 @@ public final class ArmConstants {
   public static final double kArmD = 2;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
-      new TrapezoidProfile.Constraints(8, 4);
+      new TrapezoidProfile.Constraints(8, 8);
 
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);

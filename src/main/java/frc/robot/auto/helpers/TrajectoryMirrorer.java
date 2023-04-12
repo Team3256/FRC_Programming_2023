@@ -24,10 +24,11 @@ public class TrajectoryMirrorer {
         new Pose2d(
             FieldConstants.kFieldLength - state.poseMeters.getX(),
             state.poseMeters.getY(),
-            state.poseMeters.getRotation().times(-1));
+            state.poseMeters.getRotation().unaryMinus());
 
     mirroredState.poseMeters = mirroredPose;
-    mirroredState.holonomicRotation = state.holonomicRotation.plus(Rotation2d.fromDegrees(180));
+    mirroredState.holonomicRotation =
+        state.holonomicRotation.plus(Rotation2d.fromDegrees(180)).unaryMinus();
     mirroredState.timeSeconds = state.timeSeconds;
     mirroredState.velocityMetersPerSecond = state.velocityMetersPerSecond;
     mirroredState.accelerationMetersPerSecondSq = state.accelerationMetersPerSecondSq;
