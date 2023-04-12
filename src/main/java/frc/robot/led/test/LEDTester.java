@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * Simple bare-bones LED class to test if your Addressable LED is working Call turnOn in robotInit
- * and turnOff in robotDisabled
+ * Simple bare-bones LED_Old class to test if your Addressable LED_Old is working Call turnOn in
+ * robotInit and turnOff in robotDisabled
  */
 public class LEDTester extends SubsystemBase {
   private final AddressableLED LED;

@@ -78,9 +78,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.getSimCollection().setBusVoltage(kIntakeConeSpeed);
   }
 
-  public void outakeCone() {
-    System.out.println("Outake cone");
-    intakeMotor.set(ControlMode.PercentOutput, kOutakeConeSpeed);
+  public void outtakeCone() {
+    intakeMotor.set(ControlMode.PercentOutput, kOuttakeConeSpeed);
   }
 
   public void intakeCube() {
@@ -88,9 +87,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.getSimCollection().setBusVoltage(kIntakeCubeSpeed);
   }
 
-  public void outakeCube() {
-    System.out.println("Outake cube");
-    intakeMotor.set(ControlMode.PercentOutput, kOutakeCubeSpeed);
+  public void outtakeCube() {
+    intakeMotor.set(ControlMode.PercentOutput, kOuttakeCubeSpeed);
   }
 
   public boolean isCurrentSpiking() {

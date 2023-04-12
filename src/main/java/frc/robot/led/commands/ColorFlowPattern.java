@@ -9,22 +9,21 @@ package frc.robot.led.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.led.LED;
+import frc.robot.led.LEDConstants;
 
-public class LEDToggleGamePieceDisplay extends CommandBase {
-  private final LED ledStrip;
+public class ColorFlowPattern extends CommandBase {
 
-  public LEDToggleGamePieceDisplay(LED ledStrip) {
-    addRequirements(ledStrip);
-    this.ledStrip = ledStrip;
+  public ColorFlowPattern(LED ledSubsystem) {
+    addRequirements(ledSubsystem);
   }
 
   @Override
   public void initialize() {
-    ledStrip.toggleGamePiece();
+    LED.LEDSegment.MainStrip.setColorFlowAnimation(LEDConstants.kDefault);
   }
 
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

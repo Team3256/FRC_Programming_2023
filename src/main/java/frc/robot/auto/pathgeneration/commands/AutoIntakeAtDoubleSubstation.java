@@ -8,6 +8,7 @@
 package frc.robot.auto.pathgeneration.commands;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
+import static frc.robot.led.LEDConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,11 +31,8 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.Blink.ErrorPatternBlink;
-import frc.robot.led.patterns.Blink.SuccessPatternBlink;
-import frc.robot.led.patterns.ConePattern;
-import frc.robot.led.patterns.CubePattern;
+import frc.robot.led.commands.SetAllBlink;
+import frc.robot.led.commands.SetAllColor;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -172,13 +170,11 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
 
     Command runningLEDs =
         new ConditionalCommand(
-            new LEDSetAllSectionsPattern(ledSubsystem, new ConePattern()),
-            new LEDSetAllSectionsPattern(ledSubsystem, new CubePattern()),
+            new SetAllColor(ledSubsystem, kCone),
+            new SetAllColor(ledSubsystem, kCube),
             isCurrentPieceCone);
-    Command successLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPatternBlink()).withTimeout(5);
-    Command errorLEDs =
-        new LEDSetAllSectionsPattern(ledSubsystem, new ErrorPatternBlink()).withTimeout(5);
+    Command successLEDs = new SetAllBlink(ledSubsystem, kSuccess);
+    Command errorLEDs = new SetAllBlink(ledSubsystem, kError);
 
     // Automatically intake at the double substation
     Command autoIntakeCommand =

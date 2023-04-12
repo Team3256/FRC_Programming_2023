@@ -24,8 +24,8 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.IntakeOff;
-import frc.robot.intake.commands.OutakeCone;
-import frc.robot.intake.commands.OutakeCube;
+import frc.robot.intake.commands.OuttakeCone;
+import frc.robot.intake.commands.OuttakeCube;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -57,9 +57,6 @@ public class AutoPaths {
   public void sendCommandsToChooser() {
     AutoChooser.createSingleDefaultPath("Do Nothing", new InstantCommand());
 
-    Supplier<Command> scorePreloadCone = () -> new InstantCommand();
-    Supplier<Command> scorePreloadCube = () -> new InstantCommand();
-
     autoEventMap.put(
         "engage",
         () ->
@@ -73,9 +70,9 @@ public class AutoPaths {
         && armSubsystem != null
         && elevatorSubsystem != null) {
 
-      autoEventMap.put("outtakeCube", () -> new OutakeCube(intakeSubsystem).asProxy());
+      autoEventMap.put("outtakeCube", () -> new OuttakeCube(intakeSubsystem).asProxy());
 
-      autoEventMap.put("outtakeCone", () -> new OutakeCone(intakeSubsystem).asProxy());
+      autoEventMap.put("outtakeCone", () -> new OuttakeCone(intakeSubsystem).asProxy());
 
       autoEventMap.put(
           "coneHigh",
