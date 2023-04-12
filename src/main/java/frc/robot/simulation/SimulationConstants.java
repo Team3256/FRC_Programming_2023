@@ -33,7 +33,6 @@ public class SimulationConstants {
 
   public static final double kSimulateDelta = 0.020;
   public static final int kVoltage = 12;
-  public static final double kElevatorAngleOffset = 35.4;
   public static final double kIntakeRadius = 0.1;
 
   public static final double kArmStartPosition = 8.582;

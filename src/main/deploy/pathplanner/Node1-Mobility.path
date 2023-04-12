@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.9199012638137583,
-        "y": 1.015550611626939
+        "x": 1.867545923191299,
+        "y": 0.5057429728652227
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9200593641142643,
-        "y": 0.5609866936257538
+        "x": 2.7625766388123645,
+        "y": 0.6182900823762948
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,24 +17,25 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "defaultPosition"
+          "coneHigh",
+          "outtakeCone"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.5226714814866265,
-        "y": 0.9361332141989364
+        "x": 6.235615660603066,
+        "y": 1.0545473532353316
       },
       "prevControl": {
-        "x": 6.302666538081388,
-        "y": 0.9183091640109057
+        "x": 4.983319839211836,
+        "y": 0.6179614146880197
       },
       "nextControl": null,
-      "holonomicAngle": 0.1,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -49,9 +50,9 @@
   ],
   "markers": [
     {
-      "position": 0.566812966086648,
+      "position": 0.01,
       "names": [
-        "intakeCube"
+        "stow"
       ]
     }
   ]

@@ -22,9 +22,9 @@ public final class Constants {
   public static final boolean kDebugEnabled = true;
   public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = false;
-  public static final boolean kIntakeEnabled = true;
-  public static final boolean kElevatorEnabled = true;
-  public static final boolean kArmEnabled = true;
+  public static final boolean kIntakeEnabled = false;
+  public static final boolean kElevatorEnabled = false;
+  public static final boolean kArmEnabled = false;
   public static final boolean kLedStripEnabled = true;
 
   public static final boolean kAdvantageKitReplayEnabled = false;
@@ -51,6 +51,8 @@ public final class Constants {
     public static final boolean kLocalizationUseWPIBlueOffset = true;
     public static final boolean kLocalizationStdDistanceBased = true;
 
+    public static final boolean kShuffleboardLayoutEnabled = false;
+    public static final boolean kGamePieceDetection = false;
     public static final boolean kUsePrefs = false;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;
@@ -65,7 +67,7 @@ public final class Constants {
     public static final String kSwerveLayoutName = "Swerve";
     public static final String kArmLayoutName = "Arm";
     public static final String kElevatorLayoutName = "Elevator";
-    public static final String kLEDLayoutName = "LED";
+    public static final String kLEDLayoutName = "LED_Old";
   }
 
   public enum RobotMode {
@@ -331,8 +333,14 @@ public final class Constants {
                   new Rotation3d()));
     }
   }
+
   // TODO: tune distance and rotation thresholds for all limelights
   public static class VisionConstants {
+    // TODO: set the indexes
+    public static final int kDefaultPipeline = 0;
+
+    public static final int kDetectorPipelineIndex = 1;
+
     public static class FrontConstants {
       public static final String kLimelightNetworkTablesName = "limelight-front";
       public static final double kLimelightTranslationThreshold = 300;

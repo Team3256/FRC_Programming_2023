@@ -7,96 +7,129 @@
 
 package frc.robot.led;
 
-import static frc.robot.Constants.ShuffleboardConstants.kDriverTabName;
-import static frc.robot.Constants.ShuffleboardConstants.kLEDLayoutName;
+import static frc.robot.led.LEDConstants.*;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import com.ctre.phoenix.led.*;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
+import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.led.commands.LEDToggleGamePieceDisplay;
-import frc.robot.led.patternBases.LEDPattern;
-import frc.robot.led.patterns.Blink.ConePatternBlink;
-import frc.robot.led.patterns.Blink.CubePatternBlink;
-import frc.robot.logging.Loggable;
-import java.util.Arrays;
+import java.awt.Color;
 
-public class LED extends SubsystemBase implements Loggable {
-  private final int length;
-  private final int sections;
-  private final LEDSection[] LEDSections;
-  private final AddressableLED addressableLED;
-  private final AddressableLEDBuffer buffer;
+public class LED extends SubsystemBase {
+  private static final CANdle candle = new CANdle(kLedID);
 
-  /**
-   * Addressable LED strip controller.
-   *
-   * @param port PWM port on the RoboRio
-   * @param LEDSectionLengths An array of LED section lengths
-   */
-  public LED(int port, int[] LEDSectionLengths) {
-    // initialize object
-    length = Arrays.stream(LEDSectionLengths).sum();
-    sections = LEDSectionLengths.length;
-    LEDSections = new LEDSection[sections];
-    addressableLED = new AddressableLED(port);
-    addressableLED.setLength(length);
-    buffer = new AddressableLEDBuffer(length);
+  public LED() {
+    CANdleConfiguration candleConfiguration = new CANdleConfiguration();
+    candleConfiguration.statusLedOffWhenActive = true;
+    candleConfiguration.disableWhenLOS = false;
+    candleConfiguration.stripType = LEDStripType.RGB;
+    candleConfiguration.brightnessScalar = 1.0;
+    candleConfiguration.vBatOutputMode = VBatOutputMode.Modulated;
+    candle.configAllSettings(candleConfiguration, 100);
+  }
 
-    // initialize LED sections
-    int cur = 0;
-    for (int i = 0; i < sections; i++) {
-      LEDSections[i] = new LEDSection(cur, cur + LEDSectionLengths[i] - 1);
-      cur += LEDSectionLengths[i];
+  public void setBrightness(double percent) {
+    candle.configBrightnessScalar(percent, 100);
+  }
+
+  public enum LEDSegment {
+    MainStrip(0, 100, 0);
+
+    public final int startIndex;
+    public final int segmentSize;
+    public final int animationSlot;
+
+    LEDSegment(int startIndex, int segmentSize, int animationSlot) {
+      this.startIndex = startIndex;
+      this.segmentSize = segmentSize;
+      this.animationSlot = animationSlot;
     }
 
-    // start the LEDs
-    addressableLED.start();
-    addressableLED.setData(buffer);
-  }
-
-  // set a specific section's buffer to a LEDPattern
-  public void set(int sectionId, LEDPattern ledPattern) {
-    LEDSections[sectionId].setLEDPattern(ledPattern);
-  }
-
-  // set each section's buffer to the same LEDPattern
-  public void setAll(LEDPattern ledPattern) {
-    for (int i = 0; i < sections; i++) {
-      set(i, ledPattern);
+    public void setColor(Color color) {
+      clearAnimation();
+      candle.setLEDs(color.getRed(), color.getGreen(), color.getBlue(), 0, startIndex, segmentSize);
     }
-  }
 
-  /** set each container's display to the pattern in it's buffer */
-  public void periodic() {
-    for (LEDSection section : LEDSections) {
-      section.writeToBuffer(buffer);
+    private void setAnimation(Animation animation) {
+      candle.animate(animation, animationSlot);
     }
-    addressableLED.setData(buffer);
-  }
 
-  private boolean isCubePiece = true;
-
-  /** Toggle whether a cone or cube pattern will be displayed */
-  public void toggleGamePiece() {
-    if (isCubePiece) {
-      setAll(new CubePatternBlink());
-    } else {
-      setAll(new ConePatternBlink());
+    public void fullClear() {
+      clearAnimation();
+      disableLEDs();
     }
-    isCubePiece = !isCubePiece;
-  }
 
-  @Override
-  public void logInit() {
-    getLayout(kDriverTabName).add(this);
-    getLayout(kDriverTabName).add(new LEDToggleGamePieceDisplay(this));
-  }
+    public void clearAnimation() {
+      candle.clearAnimation(animationSlot);
+    }
 
-  @Override
-  public ShuffleboardLayout getLayout(String tab) {
-    return Shuffleboard.getTab(tab).getLayout(kLEDLayoutName, BuiltInLayouts.kList).withSize(2, 2);
+    public void disableLEDs() {
+      setColor(Color.black);
+    }
+
+    public void setFlowAnimation(Color color, double speed) {
+      setAnimation(
+          new ColorFlowAnimation(
+              color.getRed(),
+              color.getGreen(),
+              color.getBlue(),
+              0,
+              speed,
+              segmentSize,
+              Direction.Forward,
+              startIndex));
+    }
+
+    public void setColorFlowAnimation(Color color) {
+      setAnimation(new ColorFlowAnimation(color.getRed(), color.getGreen(), color.getBlue()));
+    }
+
+    public void setFireAnimation() {
+      setAnimation(new FireAnimation());
+    }
+
+    public void setFadeAnimation(Color color, double speed) {
+      setAnimation(
+          new SingleFadeAnimation(
+              color.getRed(),
+              color.getGreen(),
+              color.getBlue(),
+              0,
+              speed,
+              segmentSize,
+              startIndex));
+    }
+
+    public void setBandAnimation(Color color, double speed) {
+      setAnimation(
+          new LarsonAnimation(
+              color.getRed(),
+              color.getGreen(),
+              color.getRGB(),
+              0,
+              speed,
+              segmentSize,
+              BounceMode.Front,
+              3,
+              startIndex));
+    }
+
+    public void setStrobeAnimation(Color color, double speed) {
+      setAnimation(
+          new StrobeAnimation(
+              color.getRed(),
+              color.getGreen(),
+              color.getBlue(),
+              0,
+              speed,
+              segmentSize,
+              startIndex));
+    }
+
+    public void setRainbowAnimation(double speed) {
+      setAnimation(new RainbowAnimation(1, speed, segmentSize, false, startIndex));
+    }
   }
 }

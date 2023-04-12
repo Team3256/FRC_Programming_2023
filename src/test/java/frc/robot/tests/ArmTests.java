@@ -30,7 +30,7 @@ public class ArmTests extends UnitTestBase {
 
   // Arm Sim is setting to minimum angle. Tests don't really work
   // Test in simulateJava, gravity is weird in tests
-  //  @Test
+  // @Test
   public void testArmAngleVertical() {
     testArmAngle(Rotation2d.fromDegrees(90));
   }
@@ -50,7 +50,7 @@ public class ArmTests extends UnitTestBase {
     runScheduler(3, setAngleCommand, armSubsystem);
     assertEquals(
         angle.getRadians(),
-        armSubsystem.getArmPositionRads(),
+        armSubsystem.getArmPositionGroundRelative(),
         DELTA,
         "Set angle to " + angle.getRadians() + " radians");
     armSubsystem.off();

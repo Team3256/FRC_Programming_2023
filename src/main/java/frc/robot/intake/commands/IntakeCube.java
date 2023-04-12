@@ -7,11 +7,12 @@
 
 package frc.robot.intake.commands;
 
+import static frc.robot.led.LEDConstants.kSuccess;
+
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.SuccessPattern;
+import frc.robot.led.commands.SetAllBlink;
 
 public class IntakeCube extends DebugCommandBase {
   private Intake intakeSubsystem;
@@ -39,7 +40,7 @@ public class IntakeCube extends DebugCommandBase {
     super.end(interrupted);
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
-      new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
+      new SetAllBlink(ledSubsystem, kSuccess).withTimeout(1).schedule();
     }
   }
 

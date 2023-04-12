@@ -17,7 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "defaultPosition"
+          "cubeHigh",
+          "outtakeCube"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -26,16 +27,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.336144137240532,
-        "y": 2.729498864108405
+        "x": 6.345868899881245,
+        "y": 2.6894482088389084
       },
       "prevControl": {
-        "x": 5.625490775504121,
-        "y": 2.708959346331236
+        "x": 5.635215538144834,
+        "y": 2.6689086910617394
       },
       "nextControl": {
-        "x": 5.625490775504121,
-        "y": 2.708959346331236
+        "x": 5.635215538144834,
+        "y": 2.6689086910617394
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -51,12 +52,12 @@
     },
     {
       "anchorPoint": {
-        "x": 4.445060614784858,
-        "y": 2.6925954149352958
+        "x": 3.797452388576885,
+        "y": 2.6805480560598403
       },
       "prevControl": {
-        "x": 4.926659709764733,
-        "y": 2.6700725276043644
+        "x": 4.27905148355676,
+        "y": 2.658025168728909
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -77,5 +78,12 @@
   "maxVelocity": 3.0,
   "maxAcceleration": null,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

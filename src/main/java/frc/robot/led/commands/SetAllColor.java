@@ -9,26 +9,19 @@ package frc.robot.led.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.led.LED;
-import frc.robot.led.patternBases.LEDPattern;
+import java.awt.Color;
 
-public class LEDSetAllSectionsPattern extends CommandBase {
-  private final LED led;
-  private final LEDPattern ledPattern;
+public class SetAllColor extends CommandBase {
+  private Color color;
 
-  public LEDSetAllSectionsPattern(LED led, LEDPattern ledPattern) {
-    this.led = led;
-    this.ledPattern = ledPattern;
-    addRequirements(led);
+  public SetAllColor(LED ledSubsystem, Color color) {
+    this.color = color;
+    addRequirements(ledSubsystem);
   }
 
   @Override
   public void initialize() {
-    led.setAll(ledPattern);
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
+    LED.LEDSegment.MainStrip.setColor(color);
   }
 
   @Override

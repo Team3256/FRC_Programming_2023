@@ -10,6 +10,7 @@ package frc.robot.arm;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.*;
+import static frc.robot.elevator.ElevatorConstants.kElevatorAngleOffset;
 import static frc.robot.simulation.SimulationConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -119,12 +120,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public void resetOffset(Rotation2d currentAbsolutePosition) {
     ArmConstants.kRelativeFalconEncoderOffsetRadians =
         ArmConstants.kRelativeFalconEncoderOffsetRadians
-            + (currentAbsolutePosition.getRadians() - getArmPositionRads());
+            + (currentAbsolutePosition.getRadians() - getArmPositionGroundRelative());
 
     System.out.println("New arm offset" + ArmConstants.kRelativeFalconEncoderOffsetRadians);
   }
 
-  public double getArmPositionRads() {
+  public double getArmPositionGroundRelative() {
     if (RobotBase.isReal()) {
       if (Constants.FeatureFlags.kArmAbsoluteEncoderEnabled) {
         double absoluteEncoderDistance =
@@ -143,6 +144,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     } else return armSim.getAngleRads();
   }
 
+  public double getArmPositionElevatorRelative() {
+    return getArmPositionGroundRelative() - kElevatorAngleOffset;
+  }
+
   public void off() {
     armMotor.neutralOutput();
   }
@@ -153,8 +158,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
       SmartDashboard.putNumber(
           "Arm Raw Relative Encoder value", armMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Arm Raw Absolute Encoder value", armEncoder.getDistance());
-      SmartDashboard.putNumber("Arm angle deg", Units.radiansToDegrees(getArmPositionRads()));
-      SmartDashboard.putNumber("Arm angle rad", getArmPositionRads());
+      SmartDashboard.putNumber(
+          "Arm angle deg", Units.radiansToDegrees(getArmPositionGroundRelative()));
+      SmartDashboard.putNumber("Arm angle rad", getArmPositionGroundRelative());
       SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
       SmartDashboard.putNumber(
           "Arm motor open loop voltage", armMotor.getMotorOutputPercent() * 12);
@@ -175,7 +181,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public void logInit() {
     getLayout(kDriverTabName).add(this);
     getLayout(kDriverTabName)
-        .add("Angle", new DoubleSendable(() -> Math.toDegrees(getArmPositionRads()), "Gyro"));
+        .add(
+            "Angle",
+            new DoubleSendable(() -> Math.toDegrees(getArmPositionGroundRelative()), "Gyro"));
     getLayout(kDriverTabName).add(armMotor);
   }
 
@@ -237,9 +245,10 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
           kArmGearing,
           kArmInertia,
           kArmLength,
-          kArmAngleMinConstraint.getRadians(),
-          kArmAngleMaxConstraint.getRadians(),
+          kArmAngleMinConstraint.getRadians() + kElevatorAngleOffset,
+          kArmAngleMaxConstraint.getRadians() + kElevatorAngleOffset,
           true);
+
   private MechanismLigament2d armLigament;
 
   public MechanismLigament2d getLigament() {
@@ -257,7 +266,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         new MechanismLigament2d(
             "Arm",
             kArmLength,
-            Units.radiansToDegrees(getArmPositionRads()) - 90,
+            Units.radiansToDegrees(getArmPositionElevatorRelative()) - 90,
             10,
             new Color8Bit(Color.kBlue));
   }
@@ -272,7 +281,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Arm angle position", Units.radiansToDegrees(getArmPositionRads()));
+    SmartDashboard.putNumber(
+        "Arm angle position ground relative",
+        Units.radiansToDegrees(getArmPositionGroundRelative()));
+    SmartDashboard.putNumber(
+        "Arm angle position elevator relative",
+        Units.radiansToDegrees(getArmPositionElevatorRelative()));
     SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
     SmartDashboard.putNumber("Arm Sim Voltage", armMotor.getMotorOutputPercent() * 12);
   }

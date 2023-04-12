@@ -11,21 +11,19 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
-import frc.robot.led.patterns.SuccessPattern;
 
-public class OutakeCube extends DebugCommandBase {
+public class OuttakeCone extends DebugCommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
   private Timer timer;
 
-  public OutakeCube(Intake intakeSubsystem) {
+  public OuttakeCone(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
     this.timer = new Timer();
     addRequirements(intakeSubsystem);
   }
 
-  public OutakeCube(Intake intakeSubsystem, LED ledSubsystem) {
+  public OuttakeCone(Intake intakeSubsystem, LED ledSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
     this.ledSubsystem = ledSubsystem;
     this.timer = new Timer();
@@ -35,21 +33,18 @@ public class OutakeCube extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
+    intakeSubsystem.outtakeCone();
     timer.restart();
-    intakeSubsystem.intakeCone();
   }
 
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
     intakeSubsystem.off();
-    if (!interrupted && ledSubsystem != null) {
-      new LEDSetAllSectionsPattern(ledSubsystem, new SuccessPattern()).withTimeout(1).schedule();
-    }
   }
 
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(1.5);
+    return timer.hasElapsed(1.0);
   }
 }
