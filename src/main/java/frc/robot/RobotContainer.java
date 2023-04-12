@@ -26,6 +26,7 @@ import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.arm.commands.StowArmElevator;
+import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
@@ -148,8 +149,9 @@ public class RobotContainer implements CANTestable, Loggable {
             this::isCurrentPieceCone);
     autoPaths.sendCommandsToChooser();
 
-    // TODO only run when in auto debug
-    PathPlannerServer.startServer(5811);
+    if (AutoConstants.kAutoDebug) {
+      PathPlannerServer.startServer(5811);
+    }
 
     if (RobotBase.isSimulation()) {
       robotSimulation =

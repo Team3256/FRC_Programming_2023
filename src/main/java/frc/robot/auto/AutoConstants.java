@@ -53,8 +53,7 @@ public final class AutoConstants {
   public static final double kRotationTolerance = Units.degreesToRadians(5);
   public static final double kAutoTrajectoryTimeoutSeconds = 0.1;
 
-  public static final PathConstraints kFastPathConstraints =
-      new PathConstraints(7, kMaxAcceleration);
+  public static final PathConstraints kFastPathConstraints = new PathConstraints(7, 5);
   public static final PathConstraints kSafePathConstraints = new PathConstraints(5, 5);
   public static final PathConstraints kEngagePathConstraints = new PathConstraints(3, 3);
   public static final PathConstraints kGroundIntakeConstraints = new PathConstraints(1.5, 1.5);
