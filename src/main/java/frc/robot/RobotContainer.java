@@ -179,24 +179,9 @@ public class RobotContainer implements CANTestable, Loggable {
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     armMotor.setNeutralMode(NeutralMode.Brake);
 
-    // tester.x().whileTrue(new StartEndCommand(() -> elevatorMotor.set(0.30), () ->
-    // elevatorMotor.neutralOutput()));
-    // tester.b().whileTrue(new StartEndCommand(() -> elevatorMotor.set(-0.30), ()
-    // -> elevatorMotor.neutralOutput()));
-    tester
-        .povUp()
-        .whileTrue(new StartEndCommand(() -> armMotor.set(0.30), () -> armMotor.neutralOutput()));
-    tester
-        .povDown()
-        .whileTrue(new StartEndCommand(() -> armMotor.set(-0.30), () -> armMotor.neutralOutput()));
-    tester
-        .a()
-        .whileTrue(
-            new StartEndCommand(() -> intakeMotor.set(0.90), () -> intakeMotor.neutralOutput()));
-    tester
-        .y()
-        .whileTrue(
-            new StartEndCommand(() -> intakeMotor.set(-0.90), () -> intakeMotor.neutralOutput()));
+    SmartDashboard.putData("Elevator motor", elevatorMotor);
+    SmartDashboard.putData("Arm motor", armMotor);
+    SmartDashboard.putData("Intake motor", intakeMotor);
   }
 
   public void sendCurrent() {
