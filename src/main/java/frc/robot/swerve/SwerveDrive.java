@@ -28,6 +28,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -212,6 +213,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
   }
 
+  public void resetOdometryAuto(Pose2d pose, double yaw) {
+    poseEstimator.resetPosition(Rotation2d.fromDegrees(yaw), getModulePositions(), pose);
+  }
+
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] states = new SwerveModulePosition[4];
     for (SwerveModule mod : swerveModules) {
@@ -265,6 +270,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
 
     double[] aprilTagLocation = Limelight.getTargetPose_RobotSpace(networkTablesName);
+    if (aprilTagLocation.length == 0) return;
+
     double aprilTagDistance = new Translation2d(aprilTagLocation[0], aprilTagLocation[2]).getNorm();
     if (FeatureFlags.kLocalizationDataCollectionMode) {
       distanceData.add(aprilTagDistance);
@@ -312,9 +319,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     field.setRobotPose(poseEstimator.getEstimatedPosition());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
-    this.localize(FrontConstants.kLimelightNetworkTablesName);
-    this.localize(SideConstants.kLimelightNetworkTablesName);
-    this.localize(BackConstants.kLimelightNetworkTablesName);
+    if (!DriverStation.isAutonomous()) {
+      this.localize(FrontConstants.kLimelightNetworkTablesName);
+      this.localize(SideConstants.kLimelightNetworkTablesName);
+      this.localize(BackConstants.kLimelightNetworkTablesName);
+    }
 
     if (kDebugEnabled) {
       for (SwerveModule mod : swerveModules) {

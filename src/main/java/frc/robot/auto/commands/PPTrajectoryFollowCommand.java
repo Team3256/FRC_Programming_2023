@@ -136,7 +136,8 @@ public class PPTrajectoryFollowCommand extends DebugCommandBase {
 
     if (isFirstSegment) { // use existing pose for more accuracy if it is not the first path
       swerveSubsystem.setGyroYaw(trajectory.getInitialHolonomicPose().getRotation().getDegrees());
-      swerveSubsystem.resetOdometry(this.startPose);
+      swerveSubsystem.resetOdometryAuto(
+          this.startPose, trajectory.getInitialHolonomicPose().getRotation().getDegrees());
     }
 
     this.controller.reset();
