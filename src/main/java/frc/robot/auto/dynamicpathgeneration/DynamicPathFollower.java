@@ -57,11 +57,11 @@ public class DynamicPathFollower {
     Pose2d dynamicPathGenSink = new Pose2d();
 
     if (goalType == GoalType.DOUBLE_STATION_BOTTOM) {
-      dynamicPathGenSink = kBlueBottomDoubleSubstationPose.transformBy(kSubstationPreSink);
-      finalSink = kBlueBottomDoubleSubstationPose;
+      dynamicPathGenSink = kBlueInnerDoubleSubstationPose.transformBy(kSubstationPreSink);
+      finalSink = kBlueInnerDoubleSubstationPose;
     } else if (goalType == GoalType.DOUBLE_STATION_TOP) {
-      dynamicPathGenSink = kBlueTopDoubleSubstationPose.transformBy(kSubstationPreSink);
-      finalSink = kBlueTopDoubleSubstationPose;
+      dynamicPathGenSink = kBlueOuterDoubleSubstationPose.transformBy(kSubstationPreSink);
+      finalSink = kBlueOuterDoubleSubstationPose;
     }
 
     if (goalType != GoalType.DOUBLE_STATION_TOP && goalType != GoalType.DOUBLE_STATION_BOTTOM) {

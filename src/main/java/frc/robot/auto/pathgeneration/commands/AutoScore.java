@@ -7,6 +7,7 @@
 
 package frc.robot.auto.pathgeneration.commands;
 
+import static frc.robot.Constants.FeatureFlags.kAutoOuttakeEnabled;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 import static frc.robot.led.LEDConstants.*;
 
@@ -26,10 +27,11 @@ import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.auto.pathgeneration.PathGeneration;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetEndEffectorState;
+import frc.robot.elevator.commands.StowEndEffector;
 import frc.robot.helpers.ParentCommand;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.OuttakeCone;
+import frc.robot.intake.commands.OuttakeCube;
 import frc.robot.led.LED;
 import frc.robot.led.commands.SetAllBlink;
 import frc.robot.led.commands.SetAllColor;
@@ -155,8 +157,8 @@ public class AutoScore extends ParentCommand {
     BooleanSupplier isCurrentPieceCone = () -> scoringGamePiece.equals(GamePiece.CONE);
     Command runOuttake =
         new ConditionalCommand(
-            new IntakeCube(intakeSubsystem, ledSubsystem),
-            new IntakeCone(intakeSubsystem, ledSubsystem),
+            new OuttakeCone(intakeSubsystem, ledSubsystem),
+            new OuttakeCube(intakeSubsystem, ledSubsystem),
             isCurrentPieceCone);
     // Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
     // Set arm and elevator command and end pose based on node type and height
@@ -226,10 +228,17 @@ public class AutoScore extends ParentCommand {
             new SetAllColor(ledSubsystem, kCube),
             isCurrentPieceCone);
 
+    Command stowArmElevator =
+        new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone);
+
     Command autoScore =
         Commands.sequence(
                 moveToScoringWaypoint,
-                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset))
+                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset),
+                Commands.either(
+                    Commands.sequence(runOuttake, stowArmElevator),
+                    Commands.none(),
+                    () -> kAutoOuttakeEnabled))
             .deadlineWith(runningLEDs.asProxy())
             .finallyDo(
                 (interrupted) -> {
@@ -239,5 +248,6 @@ public class AutoScore extends ParentCommand {
             .handleInterrupt(errorLEDs::schedule);
 
     addChildCommands(autoScore);
+    super.initialize();
   }
 }

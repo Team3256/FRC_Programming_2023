@@ -27,7 +27,6 @@ import frc.robot.helpers.ParentCommand;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
-import frc.robot.intake.commands.IntakeOff;
 import frc.robot.led.LED;
 import frc.robot.led.commands.SetAllBlink;
 import frc.robot.led.commands.SetAllColor;
@@ -107,15 +106,15 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
     if (substationLocation.get().equals(SubstationLocation.RIGHT_SIDE)) {
       // Left and right are different depending on alliance
       if (alliance == Alliance.Red) {
-        end = kBlueTopDoubleSubstationPose;
+        end = kBlueOuterDoubleSubstationPose;
       } else {
-        end = kBlueBottomDoubleSubstationPose;
+        end = kBlueInnerDoubleSubstationPose;
       }
     } else {
       if (alliance == Alliance.Red) {
-        end = kBlueBottomDoubleSubstationPose;
+        end = kBlueInnerDoubleSubstationPose;
       } else {
-        end = kBlueTopDoubleSubstationPose;
+        end = kBlueOuterDoubleSubstationPose;
       }
     }
 
@@ -159,12 +158,9 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
     Command moveToSubstation =
         PathGeneration.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
-    Command stopIntake = new IntakeOff(intakeSubsystem);
+
     Command stowArmElevator =
         new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone);
-    Command moveAwayFromSubstation =
-        PathGeneration.createDynamicAbsolutePath(
-            end, substationWaypoint, swerveSubsystem, kPathToDestinationConstraints);
 
     Command runningLEDs =
         new ConditionalCommand(
@@ -180,7 +176,7 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
                 moveToWaypoint,
                 Commands.deadline(
                     runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
-                Commands.deadline(moveAwayFromSubstation, stowArmElevator, stopIntake))
+                stowArmElevator)
             .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
             .finallyDo(
