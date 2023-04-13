@@ -38,7 +38,6 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
-import frc.robot.swerve.helpers.Conversions;
 
 public class Arm extends SubsystemBase implements CANTestable, Loggable {
   public enum ArmPreset {
@@ -81,7 +80,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setInverted(true);
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
 
-    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.setNeutralMode(NeutralMode.Coast);
     armMotor.setSelectedSensorPosition(0);
   }
 
@@ -127,20 +126,15 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public double getArmPositionGroundRelative() {
     if (RobotBase.isReal()) {
-      if (Constants.FeatureFlags.kArmAbsoluteEncoderEnabled) {
-        double absoluteEncoderDistance =
-            armEncoder.getDistance()
-                + Preferences.getDouble(
-                    ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
-        if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
-          return absoluteEncoderDistance + Math.PI * 2;
-        } else {
-          return absoluteEncoderDistance;
-        }
-      } else
-        return Conversions.falconToRadians(armMotor.getSelectedSensorPosition(), kArmGearing)
-            + Preferences.getDouble(
-                ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
+      double absoluteEncoderDistance =
+          armEncoder.getDistance()
+              + Preferences.getDouble(
+                  ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+      if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
+        return absoluteEncoderDistance + Math.PI * 2;
+      } else {
+        return absoluteEncoderDistance;
+      }
     } else return armSim.getAngleRads();
   }
 
@@ -158,13 +152,18 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
       SmartDashboard.putNumber(
           "Arm Raw Relative Encoder value", armMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Arm Raw Absolute Encoder value", armEncoder.getDistance());
-      SmartDashboard.putNumber(
-          "Arm angle deg", Units.radiansToDegrees(getArmPositionGroundRelative()));
-      SmartDashboard.putNumber("Arm angle rad", getArmPositionGroundRelative());
+      SmartDashboard.putNumber("Arm angle ground relative rad", getArmPositionGroundRelative());
+      SmartDashboard.putNumber("Arm angle elevator relative rad", getArmPositionElevatorRelative());
       SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());
       SmartDashboard.putNumber(
           "Arm motor open loop voltage", armMotor.getMotorOutputPercent() * 12);
       SmartDashboard.putBoolean("Arm encoder connected", armEncoder.isConnected());
+      SmartDashboard.putNumber(
+          "Arm angle position ground relative",
+          Units.radiansToDegrees(getArmPositionGroundRelative()));
+      SmartDashboard.putNumber(
+          "Arm angle position elevator relative",
+          Units.radiansToDegrees(getArmPositionElevatorRelative()));
     }
   }
 
