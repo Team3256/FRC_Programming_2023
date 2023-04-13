@@ -7,38 +7,36 @@
 
 package frc.robot.intake.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.helpers.DebugCommandBase;
-import frc.robot.helpers.TimedBoolean;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.LEDSetAllSectionsPattern;
 import frc.robot.led.patterns.SuccessPattern;
 
-public class IntakeCone extends DebugCommandBase {
+public class OutakeCone extends DebugCommandBase {
   private Intake intakeSubsystem;
   private LED ledSubsystem;
-  private TimedBoolean isCurrentSpiking;
+  private Timer timer;
 
-  public IntakeCone(Intake intakeSubsystem) {
+  public OutakeCone(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 3);
-
+    this.timer = new Timer();
     addRequirements(intakeSubsystem);
   }
 
-  public IntakeCone(Intake intakeSubsystem, LED ledSubsystem) {
+  public OutakeCone(Intake intakeSubsystem, LED ledSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
     this.ledSubsystem = ledSubsystem;
-    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 3);
-
+    this.timer = new Timer();
     addRequirements(intakeSubsystem);
   }
 
   @Override
   public void initialize() {
     super.initialize();
-    intakeSubsystem.intakeCone();
-    isCurrentSpiking.initialize();
+    intakeSubsystem.intakeCube();
+    timer.restart();
   }
 
   @Override
@@ -52,7 +50,6 @@ public class IntakeCone extends DebugCommandBase {
 
   @Override
   public boolean isFinished() {
-    isCurrentSpiking.update();
-    return isCurrentSpiking.hasBeenTrueForThreshold();
+    return timer.hasElapsed(1.5);
   }
 }

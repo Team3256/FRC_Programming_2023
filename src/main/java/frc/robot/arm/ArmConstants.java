@@ -17,7 +17,7 @@ public final class ArmConstants {
   public static class ArmPreferencesKeys {
     public static final Map<Arm.ArmPreset, String> kArmPositionKeys =
         Map.of(
-            Arm.ArmPreset.DEFAULT, "kDefaultArmAngle",
+            Arm.ArmPreset.DEFAULT, "kDefaultArmRotation",
             Arm.ArmPreset.ANY_PIECE_LOW, "kAnyPieceLowRotation",
             Arm.ArmPreset.CUBE_MID, "kCubeMidRotation",
             Arm.ArmPreset.CONE_MID, "kConeMidRotation",
@@ -42,7 +42,7 @@ public final class ArmConstants {
     public static final String kPKey = "ArmkP";
     public static final String kIKey = "ArmkI";
     public static final String kDKey = "ArmkD";
-    public static final String kEncoderOffsetKey = "kEncoderOffset";
+    public static final String kRelativeEncoderOffsetKey = "kRelativeEncoderOffset";
     public static final String kAbsoluteEncoderOffsetKey = "kAbsoluteEncoderOffset";
   }
 
@@ -53,7 +53,7 @@ public final class ArmConstants {
   public static final int kArmEncoderDIOPort = 8;
 
   public static final double kArmRadiansPerAbsoluteEncoderRotation = 2 * Math.PI;
-  public static final double kAbsoluteEncoderOffsetRadians = -1.293487;
+  public static final double kAbsoluteEncoderOffsetRadians = -1.666789;
 
   public static final double kArmGearing = 240;
   public static double kRelativeFalconEncoderOffsetRadians =
@@ -64,6 +64,7 @@ public final class ArmConstants {
   public static final boolean kArmSimGravity = true;
   public static final int kNumArmMotors = 1;
 
+  // CONSTANTS FOR GAS SHOCK BELOW:
   public static final double kArmS = 0.16924;
   public static final double kArmG = 0.15542;
   public static final double kArmV = 4.1445;
@@ -72,25 +73,40 @@ public final class ArmConstants {
   public static final double kI = 0;
   public static final double kD = 7.0262;
 
+  // CONSTANTS FOR NO GAS SHOCK BELOW:
+
+  //  public static final double kArmS = 0.91487;
+  //  public static final double kArmG = 0.98236;
+  //  public static final double kArmV = 2.9364;
+  //  public static final double kArmA = 0.18338;
+  //  public static final double kP = 10.608;
+  //  public static final double kI = 0;
+  //  public static final double kD = 7.8777;
+
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
-      new TrapezoidProfile.Constraints(5, 3);
+      new TrapezoidProfile.Constraints(5, 2);
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
 
   // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(-35);
-  public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(150);
+  public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
 
-  public static final Rotation2d kDefaultArmAngle =
-      Constants.kCompetitionModeEnabled ? Rotation2d.fromDegrees(72) : Rotation2d.fromDegrees(90);
-  public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0.07);
-  public static final Rotation2d kDoubleSubstationRotationCone = new Rotation2d(0.01);
+  public static final Rotation2d kDefaultArmAngle = Rotation2d.fromDegrees(85);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(-30.5);
-  public static final Rotation2d kCubeMidRotation = new Rotation2d(0.32);
-  public static final Rotation2d kConeMidRotation = new Rotation2d(0.18);
-  public static final Rotation2d kCubeHighRotation = new Rotation2d(0.6);
-  public static final Rotation2d kConeHighRotation = new Rotation2d(0.23);
   public static final Rotation2d kGroundIntakeRotation = Rotation2d.fromDegrees(-10);
 
-  public static final double kManualArmVoltage = 2;
+  // CUBE
+  public static final Rotation2d kDoubleSubstationRotationCube = Rotation2d.fromDegrees(17.318706);
+  public static final Rotation2d kCubeMidRotation = new Rotation2d(0.32);
+  public static final Rotation2d kCubeHighRotation = Rotation2d.fromDegrees(27.818361);
+
+  // CONE
+  public static final Rotation2d kDoubleSubstationRotationCone = Rotation2d.fromDegrees(17.318706);
+  public static final Rotation2d kConeMidRotation = new Rotation2d(0.32);
+  public static final Rotation2d kConeHighRotation = Rotation2d.fromDegrees(20.404575);
+
+  // CONE DOUBLE SUBSTATION: Elevator=0in, Arm=35.541792deg
+
+  public static final double kManualArmVoltage = 2.5;
 }

@@ -10,13 +10,23 @@ package frc.robot.climb;
 import frc.robot.drivers.CanDeviceId;
 
 public final class ClimbConstants {
-  // TODO: Check CAN ID and tune position before merging
-
   public static final int kClimbMotorID = 7;
   public static final String kClimbCANBus = "mani";
 
   public static final CanDeviceId kClimbCANDevice = new CanDeviceId(kClimbMotorID, kClimbCANBus);
-  public static final double kClimbDeployPosition = 2048 * 125 * 1.68 * 2;
 
-  public static final double kClimbRetractPosition = 0;
+  public static final double kClimbGearing = 125;
+  public static final double kClimbEncoderTicksPerRotation = 2048;
+
+  public static class ClimbPreferencesKeys {
+    public static final String kClimbDeployRotationKey = "kClimbDeployRotation";
+    public static final String kClimbRetractRotationKey = "kClimbRetractRotation";
+    public static final String kClimbDeploySpeedKey = "kClimbDeploySpeed";
+    public static final String kClimbRetractSpeedKey = "kClimbRetractSpeed";
+  }
+
+  public static final double kClimbDeployRotation = 1.68;
+  public static final double kClimbRetractRotation = kClimbDeployRotation * 2;
+  public static final double kClimbDeploySpeed = 0.9;
+  public static final double kClimbRetractSpeed = -1.0;
 }

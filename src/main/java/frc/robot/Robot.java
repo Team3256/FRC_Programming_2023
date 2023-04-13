@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.arm.Arm.loadArmPreferences;
 import static frc.robot.elevator.Elevator.loadElevatorPreferences;
 
@@ -61,7 +60,7 @@ public class Robot extends LoggedRobot {
         break;
       case SIM:
         DriverStation.silenceJoystickConnectionWarning(true);
-        // logger.addDataReceiver(new WPILOGWriter(""));
+        logger.addDataReceiver(new WPILOGWriter(""));
         logger.addDataReceiver(new NT4Publisher());
         break;
       case REPLAY:
@@ -78,14 +77,11 @@ public class Robot extends LoggedRobot {
 
     logger.start(); // Start advkit logger
 
-    if (kDebugEnabled) {
+    if (FeatureFlags.kUsePrefs) {
       loadArmPreferences();
       loadElevatorPreferences();
     }
     robotContainer = new RobotContainer();
-    if (kDebugEnabled) {
-      robotContainer.logInit();
-    }
   }
 
   @Override
@@ -117,13 +113,11 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    robotContainer.setTeleopGyro().schedule();
   }
 
   /** This function is called periodically during operator control. */

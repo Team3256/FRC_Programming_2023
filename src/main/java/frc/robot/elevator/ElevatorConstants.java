@@ -23,13 +23,17 @@ public final class ElevatorConstants {
 
   public static final double kZeroThreshold = 0.02;
 
-  public static final double kDoubleSubstationPositionCubeMeters = 0.455;
-  public static final double kDoubleSubstationPositionConeMeters = 0.55;
-  public static final double kCubeHighPositionMeters = 0.2;
-  public static final double kConeHighPositionMeters = 0.43;
   public static final double kAnyPieceMidPositionMeters = 0.16;
   public static final double kAnyPieceLowPositionMeters = Units.inchesToMeters(31);
   public static final double kGroundIntakePositionMeters = Units.inchesToMeters(0);
+
+  // CONE
+  public static final double kDoubleSubstationPositionCubeMeters = 0.530;
+  public static final double kCubeHighPositionMeters = 0.4;
+
+  // CONE
+  public static final double kDoubleSubstationPositionConeMeters = 0.54;
+  public static final double kConeHighPositionMeters = 0.43;
 
   public static class ElevatorPreferencesKeys {
     public static final Map<Elevator.ElevatorPreset, String> kElevatorPositionKeys =

@@ -16,7 +16,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -24,13 +23,13 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.auto.helpers.AutoCommandRunner;
 import frc.robot.auto.helpers.SwerveDriveController;
 import frc.robot.auto.helpers.TrajectoryMirrorer;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.swerve.SwerveDrive;
 
-public class PPTrajectoryFollowCommand extends CommandBase {
+public class PPTrajectoryFollowCommand extends DebugCommandBase {
   private static Field2d autoVisualization = new Field2d();
   private final Timer timer = new Timer();
   private PathPlannerTrajectory trajectory;
@@ -115,6 +114,7 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public void initialize() {
+    super.initialize();
     if (this.useAllianceColor) {
       this.alliance = DriverStation.getAlliance();
     } else {
@@ -191,8 +191,9 @@ public class PPTrajectoryFollowCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    swerveSubsystem.drive(new ChassisSpeeds(), false);
+    super.end(interrupted);
 
+    swerveSubsystem.stop();
     if (autoCommandRunner != null) {
       autoCommandRunner.end();
     }

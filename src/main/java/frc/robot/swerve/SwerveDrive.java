@@ -9,10 +9,13 @@ package frc.robot.swerve;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.Constants.VisionConstants.*;
+import static frc.robot.Constants.kDebugEnabled;
 import static frc.robot.swerve.SwerveConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,7 +35,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
@@ -64,6 +66,8 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   private final Pigeon2 gyro;
 
+  private boolean isLocalized;
+
   public SwerveDrive() {
     gyro = new Pigeon2(kPigeonID, kPigeonCanBus);
     gyro.configFactoryDefault();
@@ -79,9 +83,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
               backLeftModule.getPosition(),
               backRightModule.getPosition()
             },
-            new Pose2d());
+            new Pose2d(),
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.5, 0.5, 0.02), // Current state X, Y, theta.
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.10, 0.10, 0.5));
 
-    if (Constants.kDebugEnabled) {
+    if (kDebugEnabled) {
       SmartDashboard.putData("Limelight Localization Field", limelightLocalizationField);
       SmartDashboard.putData("Field", field);
     }
@@ -98,6 +104,16 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     for (SwerveModule mod : swerveModules) {
       mod.resetToAbsolute();
     }
+  }
+
+  public void stop() {
+    SwerveModuleState[] swerveModuleStates =
+        kSwerveKinematics.toSwerveModuleStates(new ChassisSpeeds());
+
+    for (SwerveModule mod : swerveModules) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
+    }
+    Logger.getInstance().recordOutput("SwerveModuleStates", swerveModuleStates);
   }
 
   public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
@@ -135,7 +151,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     ChassisSpeeds swerveChassisSpeed =
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getPose().getRotation())
+                translation.getX(), translation.getY(), rotation, getYaw())
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     drive(swerveChassisSpeed, isOpenLoop);
@@ -174,9 +190,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
 
   public void zeroGyroYaw() {
     gyro.setYaw(0);
+    if (kDebugEnabled) System.out.println("Resetting Gyro");
   }
 
   public void setGyroYaw(double yawDegrees) {
+    if (kDebugEnabled) System.out.println("Setting gyro yaw to: " + yawDegrees);
     gyro.setYaw(yawDegrees);
   }
 
@@ -202,6 +220,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       Pose2d limelightPose,
       double LimelightTranslationThresholdMeters,
       double LimelightRotationThreshold) {
+    if (limelightPose.getTranslation().getNorm() == 0) return false;
     Pose2d relativePose = limelightPose.relativeTo(poseEstimator.getEstimatedPosition());
     return Math.abs(relativePose.getTranslation().getNorm()) < LimelightTranslationThresholdMeters
         && Math.abs(relativePose.getRotation().getRadians()) < LimelightRotationThreshold;
@@ -215,6 +234,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
       double LimelightRotationThreshold) {
     if (Limelight.hasValidTargets(networkTablesName)) {
       double[] visionBotPose;
+      if (!Limelight.hasValidTargets(networkTablesName)) return;
       if (FeatureFlags.kLocalizationUseWPIBlueOffset) {
         visionBotPose = Limelight.getBotpose_wpiBlue(networkTablesName);
       } else {
@@ -239,19 +259,43 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
         double rz = ((visionBotPose[5] + 360) % 360);
 
         double tl = Limelight.getLatency_Pipeline(networkTablesName);
-
         Pose2d limelightPose = new Pose2d(new Translation2d(tx, ty), Rotation2d.fromDegrees(rz));
+
+        isLocalized =
+            shouldAddVisionMeasurement(
+                    limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)
+                || isLocalized;
 
         if (shouldAddVisionMeasurement(
             limelightPose, LimelightTranslationThresholdMeters, LimelightRotationThreshold)) {
-          poseEstimator.addVisionMeasurement(
-              limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+
+          if (FeatureFlags.kLocalizationStdDistanceBased) {
+            double[] aprilTagLocation = Limelight.getTargetPose_RobotSpace(networkTablesName);
+            double aprilTagDistance =
+                new Translation2d(aprilTagLocation[0], aprilTagLocation[1]).getNorm();
+
+            if (kDebugEnabled) {
+              SmartDashboard.putNumber("April Tag Distance", aprilTagDistance);
+            }
+
+            poseEstimator.addVisionMeasurement(
+                limelightPose,
+                Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl),
+                new MatBuilder<>(Nat.N3(), Nat.N1())
+                    .fill(
+                        aprilTagDistanceToStd(aprilTagDistance),
+                        aprilTagDistanceToStd(aprilTagDistance),
+                        0.5));
+          } else {
+            poseEstimator.addVisionMeasurement(
+                limelightPose, Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl));
+          }
         }
 
-        if (Constants.kDebugEnabled) {
+        if (kDebugEnabled) {
           limelightLocalizationField.setRobotPose(limelightPose);
-          SmartDashboard.putNumber("Lime Light pose x", limelightPose.getX());
-          SmartDashboard.putNumber("Lime Light pose y", limelightPose.getY());
+          SmartDashboard.putNumber("Lime Light pose x " + networkTablesName, limelightPose.getX());
+          SmartDashboard.putNumber("Lime Light pose y " + networkTablesName, limelightPose.getY());
           SmartDashboard.putNumber(
               "Lime Light pose theta", limelightPose.getRotation().getDegrees());
         }
@@ -259,15 +303,43 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     }
   }
 
+  private double aprilTagDistanceToStd(double distance) {
+    // Looked good on desmos
+    return Math.pow(distance, 2) / 3;
+  }
+
   @Override
   public void periodic() {
+    isLocalized = false;
+
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
-    if (Constants.kDebugEnabled) {
-      field.setRobotPose(poseEstimator.getEstimatedPosition());
-      Logger.getInstance().recordOutput("Odometry", getPose());
+    SmartDashboard.putNumber("Pose X", poseEstimator.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Pose Y", poseEstimator.getEstimatedPosition().getY());
+    field.setRobotPose(poseEstimator.getEstimatedPosition());
+    Logger.getInstance().recordOutput("Odometry", getPose());
 
+    this.localize(
+        FrontConstants.kLimelightNetworkTablesName,
+        FrontConstants.kFieldTranslationOffsetX,
+        FrontConstants.kFieldTranslationOffsetY,
+        FrontConstants.kLimelightTranslationThresholdMeters,
+        FrontConstants.kLimelightRotationThreshold);
+    this.localize(
+        SideConstants.kLimelightNetworkTablesName,
+        SideConstants.kFieldTranslationOffsetX,
+        SideConstants.kFieldTranslationOffsetY,
+        SideConstants.kLimelightTranslationThresholdMeters,
+        SideConstants.kLimelightRotationThreshold);
+    this.localize(
+        BackConstants.kLimelightNetworkTablesName,
+        BackConstants.kFieldTranslationOffsetX,
+        BackConstants.kFieldTranslationOffsetY,
+        BackConstants.kLimelightTranslationThresholdMeters,
+        BackConstants.kLimelightTranslationThresholdMeters);
+
+    if (kDebugEnabled) {
       for (SwerveModule mod : swerveModules) {
         SmartDashboard.putNumber(
             "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
@@ -275,27 +347,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
             "Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
       }
     }
-
-    if (FeatureFlags.kLocalizationEnabled) {
-      this.localize(
-          FrontConstants.kLimelightNetworkTablesName,
-          FrontConstants.kFieldTranslationOffsetX,
-          FrontConstants.kFieldTranslationOffsetY,
-          FrontConstants.kLimelightTranslationThresholdMeters,
-          FrontConstants.kLimelightRotationThreshold);
-      this.localize(
-          SideConstants.kLimelightNetworkTablesName,
-          SideConstants.kFieldTranslationOffsetX,
-          SideConstants.kFieldTranslationOffsetY,
-          SideConstants.kLimelightTranslationThresholdMeters,
-          SideConstants.kLimelightRotationThreshold);
-      this.localize(
-          BackConstants.kLimelightNetworkTablesName,
-          BackConstants.kFieldTranslationOffsetX,
-          BackConstants.kFieldTranslationOffsetY,
-          BackConstants.kLimelightTranslationThresholdMeters,
-          BackConstants.kLimelightTranslationThresholdMeters);
-    }
+    SmartDashboard.putBoolean("Is Localized", isLocalized);
   }
 
   public void setTrajectory(Trajectory trajectory) {

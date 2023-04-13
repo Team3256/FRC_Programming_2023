@@ -7,11 +7,10 @@
 
 package frc.robot.climb.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.climb.Climb;
+import frc.robot.helpers.DebugCommandBase;
 
-public class DeployClimb extends CommandBase {
+public class DeployClimb extends DebugCommandBase {
   private final Climb climbSubsystem;
 
   public DeployClimb(Climb climbSubsystem) {
@@ -22,14 +21,13 @@ public class DeployClimb extends CommandBase {
 
   @Override
   public void initialize() {
-    if (Constants.kDebugEnabled) {
-      System.out.println(this.getName() + " started");
-    }
+    super.initialize();
     climbSubsystem.deployClimb();
   }
 
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     climbSubsystem.off();
   }
 

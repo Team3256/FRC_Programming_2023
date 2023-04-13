@@ -8,18 +8,19 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
-import static frc.robot.auto.dynamicpathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.LEFT_SIDE;
-import static frc.robot.auto.dynamicpathgeneration.commands.AutoIntakeAtSubstation.SubstationLocation.RIGHT_SIDE;
-import static frc.robot.led.LEDConstants.kPort;
+import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.kFieldRelative;
 import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArmAtPosition;
@@ -28,10 +29,8 @@ import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathConstants;
-import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
-import frc.robot.auto.dynamicpathgeneration.commands.AutoIntakeAtSubstation;
-import frc.robot.auto.dynamicpathgeneration.commands.AutoScore;
+import frc.robot.auto.pathgeneration.commands.*;
+import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
@@ -42,12 +41,11 @@ import frc.robot.intake.commands.IntakeCone;
 import frc.robot.intake.commands.IntakeCube;
 import frc.robot.intake.commands.LatchGamePiece;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LEDSetAllSectionsPattern;
+import frc.robot.led.commands.*;
+import frc.robot.led.patterns.*;
 import frc.robot.led.patterns.Blink.ConePatternBlink;
 import frc.robot.led.patterns.Blink.CubePatternBlink;
 import frc.robot.led.patterns.Blink.LimitedSwerveBlink;
-import frc.robot.led.patterns.FIREPattern;
-import frc.robot.led.patterns.LockSwervePattern;
 import frc.robot.logging.Loggable;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
@@ -68,10 +66,13 @@ public class RobotContainer implements CANTestable, Loggable {
     CONE
   }
 
+  public enum Mode {
+    AUTO_SCORE,
+    PRESET
+  }
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-  private final CommandXboxController tester = new CommandXboxController(2);
-
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
@@ -79,7 +80,8 @@ public class RobotContainer implements CANTestable, Loggable {
   private Climb climbSubsystem;
   private LED ledStrip;
   private GamePiece currentPiece = GamePiece.CUBE;
-  private AutoIntakeAtSubstation.SubstationLocation doubleSubstationLocation = RIGHT_SIDE;
+  private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+  private SendableChooser<Mode> modeChooser;
 
   private AutoPaths autoPaths;
 
@@ -122,6 +124,16 @@ public class RobotContainer implements CANTestable, Loggable {
       configureLEDStrip();
       loggables.add(ledStrip);
     }
+
+    modeChooser = new SendableChooser<>();
+    if (FeatureFlags.kAutoScoreEnabled) {
+      modeChooser.setDefaultOption("Auto Score", Mode.AUTO_SCORE);
+      modeChooser.addOption("Presets", Mode.PRESET);
+    } else {
+      modeChooser.setDefaultOption("Presets", Mode.PRESET);
+      modeChooser.addOption("Auto Score", Mode.AUTO_SCORE);
+    }
+    SmartDashboard.putData("Auto Score Toggle", modeChooser);
 
     autoPaths = new AutoPaths(swerveSubsystem, intakeSubsystem, elevatorSubsystem, armSubsystem);
     autoPaths.sendCommandsToChooser();
@@ -208,45 +220,62 @@ public class RobotContainer implements CANTestable, Loggable {
                     driver::getRightX,
                     kFieldRelative,
                     kOpenLoop)
-                .andThen(
+                .deadlineWith(
                     new LEDSetAllSectionsPattern(
                         ledStrip, new LimitedSwerveBlink(this::isCurrentPieceCone))));
-    tester
-        .a()
-        .onTrue(
-            new InstantCommand(
-                () ->
-                    new DynamicPathGenerator(
-                            DynamicPathConstants.kBlueBottomDoubleSubstationPose,
-                            DynamicPathConstants.kHighBlueScoringPoses[(int) (Math.random() * 9)])
-                        .getCommand(
-                            swerveSubsystem, DynamicPathConstants.kPathToDestinationConstraints)
-                        .schedule()));
-    tester.b().onTrue(new InstantCommand(() -> System.out.println("HEY")));
 
     driver
         .x()
         .onTrue(
             new LockSwerveX(swerveSubsystem)
-                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern())));
+                .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                .until(() -> isMovingJoystick(driver)));
 
-    driver
-        .leftTrigger()
-        .onTrue(
-            new AutoIntakeAtSubstation( // TODO: Rename to clarify that this is for double
-                // substation
-                swerveSubsystem,
-                intakeSubsystem,
-                elevatorSubsystem,
-                armSubsystem,
-                ledStrip,
-                () -> RIGHT_SIDE,
-                //                () -> doubleSubstationLocation, // Change to LEFT_SIDE for testing
-                () -> isMovingJoystick(driver),
-                this::isCurrentPieceCone));
+    if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
+      driver
+          .leftTrigger()
+          .onTrue(
+              new AutoIntakeAtDoubleSubstation(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledStrip,
+                  () -> doubleSubstationLocation,
+                  () -> isMovingJoystick(driver),
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  this::isCurrentPieceCone));
 
-    operator.a().toggleOnTrue(new InstantCommand(() -> setDoubleSubstationLocation(RIGHT_SIDE)));
-    operator.a().toggleOnFalse(new InstantCommand(() -> setDoubleSubstationLocation(LEFT_SIDE)));
+      driver
+          .rightTrigger()
+          .onTrue(
+              new AutoScore(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledStrip,
+                  AutoScore.GridScoreHeight.HIGH,
+                  this::isCurrentPieceCone,
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  () -> isMovingJoystick(driver)));
+
+      driver
+          .rightBumper()
+          .onTrue(
+              new AutoScore(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledStrip,
+                  AutoScore.GridScoreHeight.MID,
+                  this::isCurrentPieceCone,
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  () -> isMovingJoystick(driver)));
+    }
+
+    operator.a().toggleOnTrue(new InstantCommand(this::toggleSubstationLocation));
   }
 
   private void configureIntake() {
@@ -263,32 +292,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureElevator() {
-    if (kArmEnabled && kIntakeEnabled) {
-      if (kLedStripEnabled) {
-        driver
-            .rightTrigger()
-            .onTrue(
-                new AutoScore(
-                    swerveSubsystem,
-                    intakeSubsystem,
-                    elevatorSubsystem,
-                    armSubsystem,
-                    ledStrip,
-                    AutoScore.GridScoreHeight.HIGH,
-                    () -> isMovingJoystick(driver)));
-        driver
-            .rightBumper()
-            .onTrue(
-                new AutoScore(
-                    swerveSubsystem,
-                    intakeSubsystem,
-                    elevatorSubsystem,
-                    armSubsystem,
-                    ledStrip,
-                    AutoScore.GridScoreHeight.MID,
-                    () -> isMovingJoystick(driver)));
-      }
-
+    if (kArmEnabled) {
       driver
           .y()
           .or(operator.leftTrigger())
@@ -315,8 +319,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureClimb() {
-    operator.povUp().onTrue(new RetractClimb(climbSubsystem));
-    operator.povDown().whileTrue(new DeployClimb(climbSubsystem));
+    operator.start().whileTrue(new DeployClimb(climbSubsystem));
+    operator.back().whileTrue(new RetractClimb(climbSubsystem));
   }
 
   public void configureLEDStrip() {
@@ -334,16 +338,18 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     Command autoPath = autoPaths.getSelectedPath();
-    Command setArmElevatorOnRightSide;
+    Command setArmElevatorStart;
     if (kElevatorEnabled && kArmEnabled) {
-      setArmElevatorOnRightSide =
-          new ParallelRaceGroup(
-              new WaitCommand(1.5), new SetArmElevatorStart(elevatorSubsystem, armSubsystem));
+      setArmElevatorStart = new SetArmElevatorStart(elevatorSubsystem, armSubsystem).withTimeout(4);
 
       return Commands.sequence(
-          setArmElevatorOnRightSide.asProxy(),
+          setArmElevatorStart.asProxy(),
           autoPath,
-          new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy());
+          Commands.parallel(
+              new StowArmElevator(elevatorSubsystem, armSubsystem).asProxy(),
+              new LockSwerveX(swerveSubsystem)
+                  .andThen(new LEDSetAllSectionsPattern(ledStrip, new LockSwervePattern()))
+                  .until(() -> isMovingJoystick(driver))));
     } else {
       return autoPath;
     }
@@ -361,6 +367,19 @@ public class RobotContainer implements CANTestable, Loggable {
         || Math.abs(controller.getLeftY()) > kStickCancelDeadband
         || Math.abs(controller.getRightX()) > kStickCancelDeadband
         || Math.abs(controller.getRightY()) > kStickCancelDeadband;
+  }
+
+  // This command sets the correct gyro heading before the start of Teleop
+  public Command setTeleopGyro() {
+    if (swerveSubsystem != null) {
+      return new InstantCommand(
+          () ->
+              swerveSubsystem.setGyroYaw(
+                  (swerveSubsystem.getYaw().times(-1).plus(Rotation2d.fromDegrees(180)))
+                      .getDegrees()));
+    } else {
+      return new InstantCommand();
+    }
   }
 
   @Override
@@ -395,9 +414,18 @@ public class RobotContainer implements CANTestable, Loggable {
     currentPiece = GamePiece.CUBE;
   }
 
-  public void setDoubleSubstationLocation(AutoIntakeAtSubstation.SubstationLocation location) {
-    doubleSubstationLocation = location;
+  public void toggleSubstationLocation() {
+    if (doubleSubstationLocation == SubstationLocation.LEFT_SIDE) {
+      doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
+    } else {
+      doubleSubstationLocation = SubstationLocation.LEFT_SIDE;
+    }
+
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+  }
+
+  public SubstationLocation getSubstationLocation() {
+    return this.doubleSubstationLocation;
   }
 }
