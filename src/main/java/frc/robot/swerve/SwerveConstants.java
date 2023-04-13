@@ -16,8 +16,28 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.COTSFalconSwerveConstants;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
+import frc.robot.swerve.helpers.TrainingDataPoint;
+import java.util.List;
 
 public final class SwerveConstants {
+
+  public static final List<TrainingDataPoint> kSwervePoseEstimatorStdData =
+      List.of(
+          new TrainingDataPoint(0.804213, 6.29097, 2.53362, 0.157388), // impossible location
+          new TrainingDataPoint(1.093281, 7.31220, 2.61135, 0.167762), // 1 foot
+          new TrainingDataPoint(1.431827, 3.73348, 1.64643, 0.130962), // 2 foot
+          new TrainingDataPoint(1.743492, 5.39049, 2.59746, 0.158225), // 3 foot
+          new TrainingDataPoint(2.028354, 4.85496, 2.56895, 0.171350), // 4 foot
+          new TrainingDataPoint(2.336431, 5.27342, 2.61965, 0.166477), // 5 foot
+          new TrainingDataPoint(2.665142, 5.69164, 3.03846, 0.167438), // 6 foot
+          new TrainingDataPoint(2.953581, 5.93528, 3.14825, 0.159327), // 7 foot
+          new TrainingDataPoint(3.282424, 5.25938, 2.93677, 0.161348), // 8 foot
+          new TrainingDataPoint(3.560149, 5.37223, 4.21739, 0.186038),
+          new TrainingDataPoint(7.128826, 12.82671, 24.68447, 0.505372)); // 9 foot
+
+  public static final double kSwervePoseEstimatorMinValue = 0.804213;
+  public static final double kSwervePoseEstimatorMaxValue = 7.128826;
+
   public static final int kPigeonID = 1;
   public static final String kPigeonCanBus = "mani";
 
@@ -127,10 +147,10 @@ public final class SwerveConstants {
   public static final double kAzimuthI = 0.00;
   public static final double kAzimuthD = 0.01;
   public static final Rotation2d[] kAlphaOffsets = {
-    Rotation2d.fromDegrees(268.4179), // Front Left - 0
-    Rotation2d.fromDegrees(314.9192), // Front Right - 1
-    Rotation2d.fromDegrees(77.6953), // Back Left - 2
-    Rotation2d.fromDegrees(280.7226) // Back Right - 3
+    Rotation2d.fromDegrees(265.2539), // Front Left - 0
+    Rotation2d.fromDegrees(348.0469), // Front Right - 1
+    Rotation2d.fromDegrees(78.4863), // Back Left - 2
+    Rotation2d.fromDegrees(281.8652) // Back Right - 3
   };
 
   public static final Rotation2d[] kZiptideOffsets = {

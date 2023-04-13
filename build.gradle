@@ -83,6 +83,9 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:2.0.0"
+
+    //Apache Commons Math - For Curve Fitting
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 }
 
 test {
