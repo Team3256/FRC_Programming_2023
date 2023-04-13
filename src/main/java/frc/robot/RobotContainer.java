@@ -36,9 +36,7 @@ import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.StowEndEffector;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
-import frc.robot.intake.commands.LatchGamePiece;
+import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
 import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
@@ -301,8 +299,8 @@ public class RobotContainer implements CANTestable, Loggable {
         .or(driver.b())
         .whileTrue(
             new ConditionalCommand(
-                new IntakeCube(intakeSubsystem),
-                new IntakeCone(intakeSubsystem),
+                new OuttakeCone(intakeSubsystem),
+                new OuttakeCube(intakeSubsystem),
                 this::isCurrentPieceCone));
   }
 
