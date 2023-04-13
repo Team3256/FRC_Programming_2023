@@ -9,7 +9,6 @@ package frc.robot.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.Constants;
 import frc.robot.drivers.CanDeviceId;
 import java.util.Map;
 
@@ -24,8 +23,6 @@ public final class ArmConstants {
   public static final double kAbsoluteEncoderOffsetRadians = -5.37602984951422;
 
   public static final double kArmGearing = 16;
-  public static double kRelativeFalconEncoderOffsetRadians =
-      Constants.kCompetitionModeEnabled ? 4.2246340316 : Math.PI / 2;
   public static final double kArmLength = 0.569075;
   public static final double kArmInertia = 0.410;
   public static final double kArmMassKg = 7.5;

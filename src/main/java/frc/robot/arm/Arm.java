@@ -109,21 +109,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setSelectedSensorPosition(0);
   }
 
-  /**
-   * Reset encoder offset. Use when you know where the arm actually is in space but the relative
-   * encoder is off. Useful when the gear skips and you need to change the offset
-   *
-   * @param currentAbsolutePosition The actual position of the arm in space that you want the
-   *     current relative encoder value to reflect. This will change all setpoint for the arm.
-   */
-  public void resetOffset(Rotation2d currentAbsolutePosition) {
-    ArmConstants.kRelativeFalconEncoderOffsetRadians =
-        ArmConstants.kRelativeFalconEncoderOffsetRadians
-            + (currentAbsolutePosition.getRadians() - getArmPositionGroundRelative());
-
-    System.out.println("New arm offset" + ArmConstants.kRelativeFalconEncoderOffsetRadians);
-  }
-
   public double getArmPositionGroundRelative() {
     if (RobotBase.isReal()) {
       double absoluteEncoderDistance =
@@ -210,8 +195,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(ArmConstants.ArmPreferencesKeys.kDKey, ArmConstants.kArmD);
 
     // Arm Encoder Offset
-    Preferences.initDouble(
-        ArmPreferencesKeys.kRelativeEncoderOffsetKey, kRelativeFalconEncoderOffsetRadians);
     Preferences.initDouble(
         ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
     Preferences.initDouble(
