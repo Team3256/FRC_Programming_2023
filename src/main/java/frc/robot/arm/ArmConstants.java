@@ -18,10 +18,10 @@ public final class ArmConstants {
   public static final String kArmCanBus = "mani";
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
   public static final int kArmSimulationID = 16;
-  public static final int kArmEncoderDIOPort = 8;
+  public static final int kArmEncoderDIOPort = 9;
 
-  public static final double kArmRadiansPerAbsoluteEncoderRotation = 2 * Math.PI;
-  public static final double kAbsoluteEncoderOffsetRadians = -1.666789;
+  public static final double kArmRadiansPerAbsoluteEncoderRotation = -1 * Math.PI;
+  public static final double kAbsoluteEncoderOffsetRadians = -5.37602984951422;
 
   public static final double kArmGearing = 16;
   public static double kRelativeFalconEncoderOffsetRadians =
