@@ -11,10 +11,14 @@ import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 import static frc.robot.led.LEDConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
 import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
@@ -196,6 +200,13 @@ public class AutoScore extends ParentCommand {
                 elevatorSubsystem,
                 armSubsystem,
                 SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW);
+    }
+
+    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {
+      scoringLocation =
+          scoringLocation.plus(
+              new Transform2d(
+                  new Translation2d(0, intakeSubsystem.getGamePieceOffset()), new Rotation2d()));
     }
 
     if (DriverStation.getAlliance() == Alliance.Red) {

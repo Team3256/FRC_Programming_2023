@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -38,6 +39,11 @@ import frc.robot.logging.Loggable;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private WPI_TalonFX intakeMotor;
+  private TimeOfFlight leftDistanceSensor;
+  private TimeOfFlight rightDistanceSensor;
+
+  private double leftDistance;
+  private double rightDistance;
 
   public Intake() {
     if (RobotBase.isReal()) {
@@ -52,6 +58,22 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private void configureRealHardware() {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
+
+    leftDistanceSensor = new TimeOfFlight(kLeftDistanceSensorID);
+    rightDistanceSensor = new TimeOfFlight(kRightDistanceSensorID);
+
+    leftDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+    rightDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+  }
+
+  public double getGamePieceOffset() {
+    validateSensorDistances();
+    return (rightDistance - leftDistance) / 2;
+  }
+
+  public void validateSensorDistances() {
+    if (leftDistanceSensor.isRangeValid()) leftDistance = leftDistanceSensor.getRange() / 1000;
+    if (rightDistanceSensor.isRangeValid()) rightDistance = leftDistanceSensor.getRange() / 1000;
   }
 
   public double getIntakeSpeed() {
