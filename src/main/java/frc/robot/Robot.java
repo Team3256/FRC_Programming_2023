@@ -89,6 +89,7 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     if (RobotBase.isSimulation()) robotContainer.updateSimulation();
+    robotContainer.sendCurrent();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

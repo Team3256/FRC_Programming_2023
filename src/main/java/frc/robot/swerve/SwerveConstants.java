@@ -56,7 +56,7 @@ public final class SwerveConstants {
   public static double kAutoEngageLimitVelocity = 1;
 
   public static final COTSFalconSwerveConstants kChosenModule =
-      COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
+      COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L3);
 
   /* Drivetrain Constants */
   public static final double kTrackWidth = Units.inchesToMeters(20.75);

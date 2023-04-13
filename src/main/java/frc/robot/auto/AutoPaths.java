@@ -58,6 +58,11 @@ public class AutoPaths {
   public void sendCommandsToChooser() {
     AutoChooser.createSingleDefaultPath("Do Nothing", new InstantCommand());
 
+    if (swerveSubsystem == null) {
+      AutoChooser.sendChooserToDashboard("Auto Chooser");
+      return;
+    }
+
     autoEventMap.put(
         "engage",
         () ->
