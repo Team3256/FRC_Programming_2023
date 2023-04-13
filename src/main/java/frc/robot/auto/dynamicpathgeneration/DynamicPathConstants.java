@@ -89,9 +89,9 @@ public final class DynamicPathConstants {
 
   // (lowest y location to highest y location)
   public static final double kSubstationWaypointOffset = Units.feetToMeters(5);
-  public static final Pose2d kBlueTopDoubleSubstationPose =
+  public static final Pose2d kBlueOuterDoubleSubstationPose =
       new Pose2d(15.45, 7.35, Rotation2d.fromDegrees(0));
-  public static final Pose2d kBlueBottomDoubleSubstationPose =
+  public static final Pose2d kBlueInnerDoubleSubstationPose =
       new Pose2d(15.45, 6.10, Rotation2d.fromDegrees(0));
   public static final Transform2d kSubstationPreSink =
       new Transform2d(new Translation2d(-kSubstationWaypointOffset, 0), new Rotation2d());
