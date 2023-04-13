@@ -22,12 +22,11 @@ public class TalonFXFactory {
     // factory default
     public double NEUTRAL_DEADBAND = 0.04;
 
-    public SensorInitializationStrategy SENSOR_INITIALIZATION_STRATEGY =
-        SensorInitializationStrategy.BootToZero;
+    public SensorInitializationStrategy SENSOR_INITIALIZATION_STRATEGY = SensorInitializationStrategy.BootToZero;
     public double SENSOR_OFFSET_DEGREES = 0;
 
-    public boolean ENABLE_SUPPLY_CURRENT_LIMIT = false;
-    public boolean ENABLE_STATOR_CURRENT_LIMIT = false;
+    public boolean ENABLE_SUPPLY_CURRENT_LIMIT = true;
+    public boolean ENABLE_STATOR_CURRENT_LIMIT = true;
 
     public boolean ENABLE_SOFT_LIMIT = false;
     public boolean ENABLE_LIMIT_SWITCH = false;
@@ -46,8 +45,7 @@ public class TalonFXFactory {
     public int ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 1000;
     public int PULSE_WIDTH_STATUS_FRAME_RATE_MS = 1000;
 
-    public SensorVelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD =
-        SensorVelocityMeasPeriod.Period_100Ms;
+    public SensorVelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD = SensorVelocityMeasPeriod.Period_100Ms;
     public int VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW = 64;
 
     public double OPEN_LOOP_RAMP_RATE = 0.0;
@@ -141,10 +139,10 @@ public class TalonFXFactory {
     talon.enableVoltageCompensation(false);
 
     talon.configSupplyCurrentLimit(
-        new SupplyCurrentLimitConfiguration(config.ENABLE_SUPPLY_CURRENT_LIMIT, 20, 60, .2),
+        new SupplyCurrentLimitConfiguration(config.ENABLE_SUPPLY_CURRENT_LIMIT, 30, 60, .2),
         kTimeoutMs);
     talon.configStatorCurrentLimit(
-        new StatorCurrentLimitConfiguration(config.ENABLE_STATOR_CURRENT_LIMIT, 20, 60, .2),
+        new StatorCurrentLimitConfiguration(config.ENABLE_STATOR_CURRENT_LIMIT, 30, 60, .2),
         kTimeoutMs);
 
     talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, kTimeoutMs);
