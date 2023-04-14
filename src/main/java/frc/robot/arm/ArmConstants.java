@@ -101,7 +101,6 @@ public final class ArmConstants {
     public static final String kPKey = "ArmkP";
     public static final String kIKey = "ArmkI";
     public static final String kDKey = "ArmkD";
-    public static final String kRelativeEncoderOffsetKey = "kRelativeEncoderOffset";
     public static final String kAbsoluteEncoderOffsetKey = "kAbsoluteEncoderOffset";
   }
 }
