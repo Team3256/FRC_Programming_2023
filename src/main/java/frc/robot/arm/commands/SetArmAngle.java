@@ -16,9 +16,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import frc.robot.Constants;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.auto.AutoConstants;
 
 public class SetArmAngle extends ProfiledPIDCommand {
   private Arm armSubsystem;
@@ -78,7 +78,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
       getController().setGoal(angleRotation + kElevatorAngleOffset);
     }
 
-    if (AutoConstants.kAutoDebug) {
+    if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
               + " started (preset: "
@@ -96,7 +96,7 @@ public class SetArmAngle extends ProfiledPIDCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
     armSubsystem.off();
-    if (AutoConstants.kAutoDebug) {
+    if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
               + " ended (preset: "

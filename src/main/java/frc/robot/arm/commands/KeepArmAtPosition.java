@@ -7,14 +7,40 @@
 
 package frc.robot.arm.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import static frc.robot.arm.ArmConstants.*;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import frc.robot.Constants;
 import frc.robot.arm.Arm;
-import frc.robot.helpers.DebugCommandBase;
 
-public class KeepArmAtPosition extends DebugCommandBase {
+public class KeepArmAtPosition extends ProfiledPIDCommand {
   private Arm armSubsystem;
+  private double armPosition = 0;
 
+  /**
+   * Constructor for setting arm to arbitrary angle in radians. This command is RELATIVE to the
+   * Elevator Angle!
+   *
+   * @param armSubsystem
+   * @param angleRotation2d
+   */
   public KeepArmAtPosition(Arm armSubsystem) {
+    super(
+        new ProfiledPIDController(
+            Preferences.getDouble(ArmPreferencesKeys.kPKey, kArmP),
+            Preferences.getDouble(ArmPreferencesKeys.kIKey, kArmI),
+            Preferences.getDouble(ArmPreferencesKeys.kDKey, kArmD),
+            kArmProfileContraints),
+        armSubsystem::getArmPositionGroundRelative,
+        0,
+        (output, setpoint) ->
+            armSubsystem.setInputVoltage(
+                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
+        armSubsystem);
+
     this.armSubsystem = armSubsystem;
     addRequirements(armSubsystem);
   }
@@ -22,13 +48,29 @@ public class KeepArmAtPosition extends DebugCommandBase {
   @Override
   public void initialize() {
     super.initialize();
-    new SetArmAngle(armSubsystem, new Rotation2d(armSubsystem.getArmPositionElevatorRelative()))
-        .repeatedly()
-        .schedule();
+    armPosition = armSubsystem.getArmPositionGroundRelative();
+    getController().setGoal(armPosition);
+
+    if (Constants.kDebugEnabled) {
+      System.out.println(
+          "Keeping arm at position (position: " + Units.radiansToDegrees(armPosition) + " deg)");
+    }
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    if (Constants.kDebugEnabled) {
+      System.out.println(
+          "Keeping arm at position ended (position: "
+              + Units.radiansToDegrees(armPosition)
+              + " deg)");
+    }
+    super.end(interrupted);
+    armSubsystem.off();
   }
 
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

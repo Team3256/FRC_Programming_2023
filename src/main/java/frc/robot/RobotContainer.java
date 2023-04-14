@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
-import frc.robot.arm.commands.KeepArmAtPosition;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.auto.AutoConstants;
@@ -341,7 +340,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureArm() {
-    armSubsystem.setDefaultCommand(new KeepArmAtPosition(armSubsystem));
+    // armSubsystem.setDefaultCommand(new KeepArmAtPosition(armSubsystem));
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
       operator
