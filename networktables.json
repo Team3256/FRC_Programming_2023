@@ -1,1 +1,218 @@
-[]
+[
+  {
+    "name": "/Preferences/ArmkP",
+    "type": "double",
+    "value": 0.33289,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ArmkI",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ArmkD",
+    "type": "double",
+    "value": 0.10387,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kAbsoluteEncoderOffset",
+    "type": "double",
+    "value": -5.37602984951422,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kStowRotationCone",
+    "type": "double",
+    "value": 0.5235987755982988,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kStowRotationCube",
+    "type": "double",
+    "value": 0.3490658503988659,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kAnyPieceLowRotation",
+    "type": "double",
+    "value": 2.6179938779914944,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kCubeMidRotation",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kConeMidRotation",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kCubeHighRotation",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kConeHighRotation",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kConeGroundIntakeRotation",
+    "type": "double",
+    "value": 2.6179938779914944,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kCubeGroundIntakeRotation",
+    "type": "double",
+    "value": 3.141592653589793,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDoubleSubstationConeRotation",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDoubleSubstationCubeRotation",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ElevatorkP",
+    "type": "double",
+    "value": 200.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ElevatorkI",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ElevatorkD",
+    "type": "double",
+    "value": 5.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kStowPositionCone",
+    "type": "double",
+    "value": 0.2032,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kStowPositionCube",
+    "type": "double",
+    "value": 0.2286,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kCubeHighPositionMeters",
+    "type": "double",
+    "value": 1.4478,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kConeHighPositionMeters",
+    "type": "double",
+    "value": 1.4478,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kAnyPieceLowPositionMeters",
+    "type": "double",
+    "value": 0.15239999999999998,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kAnyPieceMidPositionMeters",
+    "type": "double",
+    "value": 0.9144,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kGroundIntakePositionMeters",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDoubleSubstationPositionCubeMeters",
+    "type": "double",
+    "value": 1.1938,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDoubleSubstationPositionConeMeters",
+    "type": "double",
+    "value": 1.1938,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

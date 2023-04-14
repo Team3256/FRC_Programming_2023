@@ -49,7 +49,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     CONE_MID(kConeMidRotation),
     CUBE_HIGH(kCubeHighRotation),
     CONE_HIGH(kConeHighRotation),
-    CONE_GROUND_INTAKE(kConeGroundIntakeRotation),
+    STANDING_CONE_GROUND_INTAKE(kStandingConeGroundIntakeRotation),
+    TIPPED_CONE_GROUND_INTAKE(kTippedConeGroundIntakeRotation),
     CUBE_GROUND_INTAKE(kCubeGroundIntakeRotation),
     DOUBLE_SUBSTATION_CUBE(kDoubleSubstationRotationCube),
     DOUBLE_SUBSTATION_CONE(kDoubleSubstationRotationCone);
@@ -211,7 +212,11 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(
         kArmPositionKeys.get(ArmPreset.CONE_HIGH), kConeHighRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(ArmPreset.CONE_GROUND_INTAKE), kConeGroundIntakeRotation.getRadians());
+        kArmPositionKeys.get(ArmPreset.STANDING_CONE_GROUND_INTAKE),
+        kStandingConeGroundIntakeRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(ArmPreset.TIPPED_CONE_GROUND_INTAKE),
+        kTippedConeGroundIntakeRotation.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(ArmPreset.CUBE_GROUND_INTAKE), kCubeGroundIntakeRotation.getRadians());
     Preferences.initDouble(

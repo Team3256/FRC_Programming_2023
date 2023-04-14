@@ -168,7 +168,7 @@ public class AutoPaths {
                           new IntakeCone(intakeSubsystem),
                           new SetElevatorExtension(
                               elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.CONE_GROUND_INTAKE)))
+                          new SetArmAngle(armSubsystem, ArmPreset.STANDING_CONE_GROUND_INTAKE)))
                   .asProxy()
                   .withName("intakeCone"));
 

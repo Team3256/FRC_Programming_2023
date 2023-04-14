@@ -52,7 +52,7 @@ public class GroundIntake extends ParentCommand {
     addChildCommands(
         new ZeroElevator(elevatorSubsystem),
         new ConditionalCommand(
-            new SetArmAngle(armSubsystem, ArmPreset.CONE_GROUND_INTAKE),
+            new SetArmAngle(armSubsystem, ArmPreset.TIPPED_CONE_GROUND_INTAKE),
             new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
             isCurrentPieceCone),
         new ConditionalCommand(

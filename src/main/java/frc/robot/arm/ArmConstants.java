@@ -57,7 +57,8 @@ public final class ArmConstants {
   public static final Rotation2d kConeHighRotation = new Rotation2d(0);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(150);
 
-  public static final Rotation2d kConeGroundIntakeRotation = Rotation2d.fromDegrees(150);
+  public static final Rotation2d kStandingConeGroundIntakeRotation = Rotation2d.fromDegrees(150);
+  public static final Rotation2d kTippedConeGroundIntakeRotation = Rotation2d.fromDegrees(180);
   public static final Rotation2d kCubeGroundIntakeRotation = Rotation2d.fromDegrees(180);
 
   public static final double kManualArmVoltage = 2.5;
@@ -76,7 +77,9 @@ public final class ArmConstants {
             Map.entry(Arm.ArmPreset.CUBE_HIGH, "kCubeHighRotation"),
             Map.entry(Arm.ArmPreset.CONE_HIGH, "kConeHighRotation"),
             Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, "kCubeGroundIntakeRotation"),
-            Map.entry(Arm.ArmPreset.CONE_GROUND_INTAKE, "kConeGroundIntakeRotation"),
+            Map.entry(
+                Arm.ArmPreset.STANDING_CONE_GROUND_INTAKE, "kStandingConeGroundIntakeRotation"),
+            Map.entry(Arm.ArmPreset.TIPPED_CONE_GROUND_INTAKE, "kTippedConeGroundIntakeRotation"),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, "kDoubleSubstationCubeRotation"),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationConeRotation"));
 
@@ -90,7 +93,8 @@ public final class ArmConstants {
             Map.entry(Arm.ArmPreset.CUBE_HIGH, kCubeHighRotation),
             Map.entry(Arm.ArmPreset.CONE_HIGH, kConeHighRotation),
             Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, kCubeGroundIntakeRotation),
-            Map.entry(Arm.ArmPreset.CONE_GROUND_INTAKE, kConeGroundIntakeRotation),
+            Map.entry(Arm.ArmPreset.STANDING_CONE_GROUND_INTAKE, kStandingConeGroundIntakeRotation),
+            Map.entry(Arm.ArmPreset.TIPPED_CONE_GROUND_INTAKE, kTippedConeGroundIntakeRotation),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, kDoubleSubstationRotationCube),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, kDoubleSubstationRotationCone));
 
