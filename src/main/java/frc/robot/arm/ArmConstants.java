@@ -22,19 +22,19 @@ public final class ArmConstants {
   public static final double kArmRadiansPerAbsoluteEncoderRotation = -1 * Math.PI;
   public static final double kAbsoluteEncoderOffsetRadians = -5.37602984951422;
 
-  public static final double kArmGearing = 16;
+  public static final double kArmGearing = 60;
   public static final double kArmLength = 0.569075;
   public static final double kArmInertia = 0.410;
   public static final double kArmMassKg = 7.5;
   public static final int kNumArmMotors = 1;
 
-  public static final double kArmS = 0.58564;
-  public static final double kArmG = 0.081379;
-  public static final double kArmV = 0.23503;
-  public static final double kArmA = 0.0039147;
-  public static final double kArmP = 0.33289;
+  public static final double kArmS = 0.41305;
+  public static final double kArmV = 1.281;
+  public static final double kArmA = 0.011292;
+  public static final double kArmG = 0.32163;
+  public static final double kArmP = 1.4146;
   public static final double kArmI = 0;
-  public static final double kArmD = 0.10387;
+  public static final double kArmD = 0.15699;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(16, 16);
