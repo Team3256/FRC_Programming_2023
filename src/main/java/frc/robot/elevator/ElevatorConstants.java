@@ -34,14 +34,13 @@ public final class ElevatorConstants {
   public static final double kAnyPieceLowPosition = Units.inchesToMeters(6);
   public static final double kGroundIntakePosition = Units.inchesToMeters(0);
 
-  // https://www.reca.lc/linear
-  public static final double kElevatorS = 0;
-  public static final double kElevatorG = 0.79013;
-  public static final double kElevatorV = 6.04;
-  public static final double kElevatorA = 0.11;
-  public static final double kElevatorP = 200;
+  public static final double kElevatorS = 0.15005;
+  public static final double kElevatorV = 6.1259;
+  public static final double kElevatorA = 0.11421;
+  public static final double kElevatorG = 0.11123;
+  public static final double kElevatorP = 9.2167;
   public static final double kElevatorI = 0;
-  public static final double kElevatorD = 5;
+  public static final double kElevatorD = 3.2598;
 
   public static final TrapezoidProfile.Constraints kElevatorConstraints =
       new TrapezoidProfile.Constraints(5, 5);
