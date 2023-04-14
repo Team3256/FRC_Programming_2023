@@ -28,20 +28,19 @@ public final class ArmConstants {
   public static final double kArmMassKg = 7.5;
   public static final int kNumArmMotors = 1;
 
-  // https://www.reca.lc/arm
-  public static final double kArmS = 0.27;
-  public static final double kArmG = 2.99;
-  public static final double kArmV = 0.29;
-  public static final double kArmA = 0.08;
-  public static final double kArmP = 11;
+  public static final double kArmS = 0.58564;
+  public static final double kArmG = 0.081379;
+  public static final double kArmV = 0.23503;
+  public static final double kArmA = 0.0039147;
+  public static final double kArmP = 0.33289;
   public static final double kArmI = 0;
-  public static final double kArmD = 2;
+  public static final double kArmD = 0.10387;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(8, 8);
 
-  public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(0.5);
-  public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(0.5);
+  public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(2);
+  public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(2);
 
   // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);

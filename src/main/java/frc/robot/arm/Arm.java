@@ -14,6 +14,7 @@ import static frc.robot.elevator.ElevatorConstants.kElevatorAngleOffset;
 import static frc.robot.simulation.SimulationConstants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -77,7 +78,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   private void configureRealHardware() {
     armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
-    armMotor.setInverted(true);
+    armMotor.setInverted(TalonFXInvertType.CounterClockwise);
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
 
     armMotor.setNeutralMode(NeutralMode.Coast);

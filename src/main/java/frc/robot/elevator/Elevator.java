@@ -13,6 +13,7 @@ import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.*;
 import static frc.robot.simulation.SimulationConstants.*;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
@@ -82,6 +83,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
     elevatorFollowerMotor =
         TalonFXFactory.createPermanentFollowerTalon(kElevatorFollowerCANDevice, kElevatorCANDevice);
+    elevatorFollowerMotor.setInverted(InvertType.FollowMaster);
     elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
   }
 
