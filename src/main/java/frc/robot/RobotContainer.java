@@ -29,8 +29,12 @@ import frc.robot.arm.commands.StowArmElevator;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.commands.SetArmElevatorStart;
-import frc.robot.auto.pathgeneration.commands.*;
-import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathConstants;
+import frc.robot.auto.dynamicpathgeneration.DynamicPathGenerator;
+import frc.robot.auto.dynamicpathgeneration.commands.AutoIntakeAtDoubleSubstation;
+import frc.robot.auto.dynamicpathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
+import frc.robot.auto.dynamicpathgeneration.commands.AutoScore;
+import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
@@ -73,6 +77,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  private final CommandXboxController tester = new CommandXboxController(2);
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
@@ -276,6 +281,29 @@ public class RobotContainer implements CANTestable, Loggable {
     }
 
     operator.a().toggleOnTrue(new InstantCommand(this::toggleSubstationLocation));
+
+    tester
+        .a()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    new DynamicPathGenerator(
+                            DynamicPathConstants.kBlueBottomDoubleSubstationPose,
+                            DynamicPathConstants.kHighBlueScoringPoses[(int) (Math.random() * 9)])
+                        .getCommand(
+                            swerveSubsystem, DynamicPathConstants.kPathToDestinationConstraints)
+                        .schedule()));
+    tester
+        .b()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    new DynamicPathGenerator(
+                            PathUtil.flip(DynamicPathConstants.kBlueBottomDoubleSubstationPose),
+                            DynamicPathConstants.kHighBlueScoringPoses[(int) (Math.random() * 9)])
+                        .getCommand(
+                            swerveSubsystem, DynamicPathConstants.kPathToDestinationConstraints)
+                        .schedule()));
   }
 
   private void configureIntake() {
