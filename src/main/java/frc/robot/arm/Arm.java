@@ -7,6 +7,7 @@
 
 package frc.robot.arm;
 
+import static frc.robot.Constants.FeatureFlags.kUsePrefs;
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.arm.ArmConstants.*;
 import static frc.robot.arm.ArmConstants.ArmPreferencesKeys.*;
@@ -113,10 +114,15 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public double getArmPositionGroundRelative() {
     if (RobotBase.isReal()) {
-      double absoluteEncoderDistance =
-          armEncoder.getDistance()
-              + Preferences.getDouble(
-                  ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+      double absoluteEncoderDistance;
+      if (kUsePrefs) {
+        absoluteEncoderDistance =
+            armEncoder.getDistance()
+                + Preferences.getDouble(
+                    ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+      } else {
+        absoluteEncoderDistance = armEncoder.getDistance() + kAbsoluteEncoderOffsetRadians;
+      }
       if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
         return absoluteEncoderDistance + Math.PI * 2;
       } else {
@@ -179,7 +185,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public Rotation2d getArmSetpoint(Arm.ArmPreset setpoint) {
-    if (Constants.FeatureFlags.kUsePrefs) {
+    if (kUsePrefs) {
       return new Rotation2d(
           Preferences.getDouble(
               ArmPreferencesKeys.kArmPositionKeys.get(setpoint),

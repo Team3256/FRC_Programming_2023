@@ -11,7 +11,6 @@ import static frc.robot.arm.ArmConstants.*;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
@@ -25,15 +24,10 @@ public class KeepArmAtPosition extends ProfiledPIDCommand {
    * Elevator Angle!
    *
    * @param armSubsystem
-   * @param angleRotation2d
    */
   public KeepArmAtPosition(Arm armSubsystem) {
     super(
-        new ProfiledPIDController(
-            Preferences.getDouble(ArmPreferencesKeys.kPKey, kArmP),
-            Preferences.getDouble(ArmPreferencesKeys.kIKey, kArmI),
-            Preferences.getDouble(ArmPreferencesKeys.kDKey, kArmD),
-            kArmProfileContraints),
+        new ProfiledPIDController(kArmP, kArmI, kArmD, kArmProfileContraints),
         armSubsystem::getArmPositionGroundRelative,
         0,
         (output, setpoint) ->

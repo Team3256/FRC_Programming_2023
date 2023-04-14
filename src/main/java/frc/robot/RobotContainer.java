@@ -27,9 +27,6 @@ import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
-import frc.robot.climb.Climb;
-import frc.robot.climb.commands.DeployClimb;
-import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.StowEndEffector;
@@ -74,7 +71,6 @@ public class RobotContainer implements CANTestable, Loggable {
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
-  private Climb climbSubsystem;
   private LED ledSubsystem;
   private GamePiece currentPiece = GamePiece.CUBE;
   private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
@@ -91,7 +87,6 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kIntakeEnabled) intakeSubsystem = new Intake();
     if (kElevatorEnabled) elevatorSubsystem = new Elevator();
     if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
-    if (kClimbEnabled) climbSubsystem = new Climb();
     if (kLedStripEnabled) ledSubsystem = new LED();
 
     if (kLedStripEnabled) {
@@ -116,10 +111,6 @@ public class RobotContainer implements CANTestable, Loggable {
       configureSwerve();
       canBusTestables.add(swerveSubsystem);
       loggables.add(swerveSubsystem);
-    }
-    if (kClimbEnabled) {
-      configureClimb();
-      canBusTestables.add(climbSubsystem);
     }
 
     modeChooser = new SendableChooser<>();
@@ -329,11 +320,6 @@ public class RobotContainer implements CANTestable, Loggable {
                   new IntakeCube(intakeSubsystem),
                   this::isCurrentPieceCone));
     }
-  }
-
-  public void configureClimb() {
-    operator.start().whileTrue(new DeployClimb(climbSubsystem));
-    operator.back().whileTrue(new RetractClimb(climbSubsystem));
   }
 
   public void configureLEDStrip() {
