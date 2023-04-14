@@ -10,7 +10,8 @@ package frc.robot.elevator.commands;
 import static frc.robot.elevator.ElevatorConstants.*;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
@@ -28,11 +29,7 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
    */
   public SetElevatorExtension(Elevator elevatorSubsystem, double setpointPosition) {
     super(
-        new ProfiledPIDController(
-            Preferences.getDouble(ElevatorPreferencesKeys.kPKey, kElevatorP),
-            Preferences.getDouble(ElevatorPreferencesKeys.kIKey, kElevatorI),
-            Preferences.getDouble(ElevatorPreferencesKeys.kDKey, kElevatorD),
-            kElevatorConstraints),
+        new ProfiledPIDController(kElevatorP, kElevatorI, kElevatorD, kElevatorConstraints),
         elevatorSubsystem::getElevatorPosition,
         setpointPosition,
         (output, setpoint) ->
@@ -76,6 +73,15 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
             + ", height: "
             + setpointPosition
             + " meters)");
+  }
+
+  @Override
+  public void execute() {
+    SmartDashboard.putNumber(
+        "Elevator desired position", Units.metersToInches(getController().getSetpoint().position));
+    SmartDashboard.putNumber(
+        "Elevator desired velocity", Units.metersToInches(getController().getSetpoint().velocity));
+    super.execute();
   }
 
   @Override

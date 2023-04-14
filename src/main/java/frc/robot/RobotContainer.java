@@ -11,11 +11,7 @@ import static frc.robot.Constants.*;
 import static frc.robot.led.LEDConstants.*;
 import static frc.robot.swerve.SwerveConstants.*;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -26,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
@@ -36,10 +31,9 @@ import frc.robot.climb.Climb;
 import frc.robot.climb.commands.DeployClimb;
 import frc.robot.climb.commands.RetractClimb;
 import frc.robot.drivers.CANTestable;
-import frc.robot.drivers.CanDeviceId;
-import frc.robot.drivers.TalonFXFactory;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.StowEndEffector;
+import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
@@ -91,13 +85,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final ArrayList<CANTestable> canBusTestables = new ArrayList<CANTestable>();
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
-
-  private WPI_TalonFX armMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(6, "mani"));
-  private WPI_TalonFX intakeMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(4, "mani"));
-  private WPI_TalonFX elevatorMotor = TalonFXFactory.createDefaultTalon(new CanDeviceId(5, "mani"));
-  private WPI_TalonFX elevatorFollowerMotor =
-      TalonFXFactory.createPermanentFollowerTalon(
-          new CanDeviceId(14, "mani"), new CanDeviceId(5, "mani"));
 
   public RobotContainer() {
     if (kArmEnabled) armSubsystem = new Arm();
@@ -172,19 +159,6 @@ public class RobotContainer implements CANTestable, Loggable {
       robotSimulation.initializeRobot();
       robotSimulation.addDoubleSubstation(GamePiece.CONE);
     }
-
-    elevatorMotor.setInverted(true);
-    elevatorFollowerMotor.setInverted(InvertType.FollowMaster);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
-    armMotor.setNeutralMode(NeutralMode.Brake);
-
-    SmartDashboard.putData("Elevator motor", elevatorMotor);
-    SmartDashboard.putData("Arm motor", armMotor);
-    SmartDashboard.putData("Intake motor", intakeMotor);
-  }
-
-  public void sendCurrent() {
-    SmartDashboard.putNumber("Intake Current", elevatorMotor.getSupplyCurrent());
   }
 
   private void configureSwerve() {
@@ -377,7 +351,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     if (true) {
-      return new SetArmAngle(armSubsystem, Rotation2d.fromDegrees(90));
+      return new ZeroElevator(elevatorSubsystem);
     }
 
     Command autoPath = autoPaths.getSelectedPath();

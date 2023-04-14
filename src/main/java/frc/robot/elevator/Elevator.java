@@ -20,6 +20,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -64,6 +65,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private WPI_TalonFX elevatorFollowerMotor;
   private ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
+  DigitalInput zeroLimitSwitch;
 
   public Elevator() {
     if (RobotBase.isReal()) {
@@ -85,6 +87,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
         TalonFXFactory.createPermanentFollowerTalon(kElevatorFollowerCANDevice, kElevatorCANDevice);
     elevatorFollowerMotor.setInverted(InvertType.FollowMaster);
     elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
+    SmartDashboard.putData("Elevator motor", elevatorMotor);
+    zeroElevator();
+
+    zeroLimitSwitch = new DigitalInput(kElevatorLimitSwitchDIO);
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -93,6 +99,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     } else {
       return elevatorSim.getCurrentDrawAmps() >= kElevatorCurrentThreshold;
     }
+  }
+
+  public boolean isZeroLimitSwitchTriggered() {
+    return !zeroLimitSwitch.get();
   }
 
   public double calculateFeedForward(double velocity) {
@@ -129,6 +139,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
+    SmartDashboard.putBoolean("Elevator limit switch", zeroLimitSwitch.get());
   }
 
   public void logInit() {

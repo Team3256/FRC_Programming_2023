@@ -15,6 +15,7 @@ import java.util.Map;
 public final class ElevatorConstants {
   public static final int kElevatorMasterID = 5;
   public static final int kElevatorFollowerID = 14;
+  public static final int kElevatorLimitSwitchDIO = 8;
   public static final double kElevatorStartingPosition = 0.5;
   public static final double kElevatorAngleOffset = Units.degreesToRadians(35.4);
 
@@ -28,34 +29,34 @@ public final class ElevatorConstants {
   public static final double kConeStowPosition = Units.inchesToMeters(8);
   public static final double kCubeDoubleSubstationPosition = Units.inchesToMeters(47);
   public static final double kConeDoubleSubstationPosition = Units.inchesToMeters(47);
-  public static final double kCubeHighPosition = Units.inchesToMeters(57);
-  public static final double kConeHighPosition = Units.inchesToMeters(57);
+  public static final double kCubeHighPosition = Units.inchesToMeters(59);
+  public static final double kConeHighPosition = Units.inchesToMeters(59);
   public static final double kAnyPieceMidPosition = Units.inchesToMeters(36);
   public static final double kAnyPieceLowPosition = Units.inchesToMeters(6);
   public static final double kGroundIntakePosition = Units.inchesToMeters(0);
 
-  public static final double kElevatorS = 0.15005;
-  public static final double kElevatorV = 6.1259;
-  public static final double kElevatorA = 0.11421;
-  public static final double kElevatorG = 0.11123;
-  public static final double kElevatorP = 9.2167;
+  public static final double kElevatorS = 0.15;
+  public static final double kElevatorV = 9.00;
+  public static final double kElevatorA = 0.01;
+  public static final double kElevatorG = 0.00;
+  public static final double kElevatorP = 5;
   public static final double kElevatorI = 0;
-  public static final double kElevatorD = 3.2598;
+  public static final double kElevatorD = 0;
 
   public static final TrapezoidProfile.Constraints kElevatorConstraints =
-      new TrapezoidProfile.Constraints(5, 5);
+      new TrapezoidProfile.Constraints(1, 2);
 
-  public static final double kDownSpeedVolts = -8.0;
+  public static final double kDownSpeedVolts = -9.0;
+  public static final double kElevatorCurrentThreshold = 64; // amps
 
-  public static final double kDrumRadius = Units.inchesToMeters(1.88);
+  public static final double kDrumRadius = Units.inchesToMeters(0.94);
   public static final double kMinExtension = Units.inchesToMeters(0);
-  public static final double kMaxExtension = Units.inchesToMeters(57);
-  public static final double kElevatorGearing = 15.5;
+  public static final double kMaxExtension = Units.inchesToMeters(59);
+  public static final double kElevatorGearing = 527 / 45;
   public static final double kCarriageMass = 9; // kg
   public static final double kTolerancePosition = Units.inchesToMeters(1);
   public static final double kToleranceVelocity = Units.inchesToMeters(1);
   public static final double kRateLimiting = 0.05;
-  public static final double kElevatorCurrentThreshold = 30; // amps
 
   public static class ElevatorPreferencesKeys {
     public static final Map<Elevator.ElevatorPreset, String> kElevatorPositionKeys =

@@ -20,8 +20,8 @@ public final class Constants {
   public static final boolean kSwerveEnabled = false;
   public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = false;
-  public static final boolean kElevatorEnabled = false;
-  public static final boolean kArmEnabled = true;
+  public static final boolean kElevatorEnabled = true;
+  public static final boolean kArmEnabled = false;
   public static final boolean kLedStripEnabled = true;
 
   public static final boolean kAdvantageKitReplayEnabled = false;
@@ -38,7 +38,7 @@ public final class Constants {
   public static final Field2d swerveViewer = new Field2d();
 
   public static final class FeatureFlags {
-    public static final boolean kUsePrefs = true;
+    public static final boolean kUsePrefs = false;
     public static final boolean kAutoScoreEnabled = true;
     public static final boolean kAutoOuttakeEnabled = true;
     public static final boolean kOperatorManualArmControlEnabled = true;
