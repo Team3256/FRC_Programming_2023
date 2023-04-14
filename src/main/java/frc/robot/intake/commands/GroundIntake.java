@@ -31,7 +31,7 @@ public class GroundIntake extends ParentCommand {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private Intake intakeSubsystem;
-  private ConeOrientation coneOrientation = ConeOrientation.TIPPED_CONE;
+  private ConeOrientation coneOrientation = ConeOrientation.STANDING_CONE;
 
   private BooleanSupplier isCurrentPieceCone;
 
