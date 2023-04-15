@@ -93,10 +93,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   public void updateSensorDistances() {
     double leftMeasurement = leftDistanceSensor.getRange() / 1000;
     double rightMeasurement = rightDistanceSensor.getRange() / 1000;
-    if (leftDistanceSensor.isRangeValid())
-      leftDistance = leftMeasurement;
-    if (rightDistanceSensor.isRangeValid())
-      rightDistance = rightMeasurement;
+    if (leftDistanceSensor.isRangeValid()) leftDistance = leftMeasurement;
+    if (rightDistanceSensor.isRangeValid()) rightDistance = rightMeasurement;
   }
 
   public double getIntakeSpeed() {
@@ -112,8 +110,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void configureLatchCurrentLimit(boolean enabled) {
-    if (kDebugEnabled)
-      System.out.println("Setting Current Limit Configuration: " + enabled);
+    if (kDebugEnabled) System.out.println("Setting Current Limit Configuration: " + enabled);
     intakeMotor.configStatorCurrentLimit(
         new StatorCurrentLimitConfiguration(
             enabled, kGamePieceMaxCurrent, kIntakeMaxCurrent, kTriggerThresholdTime));
@@ -185,8 +182,9 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor = new WPI_TalonFX(kIntakeMotorID);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
 
-    intakePivot = new MechanismLigament2d(
-        "Intake Wrist", Units.inchesToMeters(2.059), -90, 0, new Color8Bit(Color.kBlack));
+    intakePivot =
+        new MechanismLigament2d(
+            "Intake Wrist", Units.inchesToMeters(2.059), -90, 0, new Color8Bit(Color.kBlack));
   }
 
   @Override
