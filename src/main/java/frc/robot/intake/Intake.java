@@ -80,13 +80,15 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public double getGamePieceOffset() {
-    validateSensorDistances();
+    updateSensorDistances();
     return (rightDistance - leftDistance) / 2;
   }
 
-  public void validateSensorDistances() {
-    if (leftDistanceSensor.isRangeValid()) leftDistance = leftDistanceSensor.getRange() / 1000;
-    if (rightDistanceSensor.isRangeValid()) rightDistance = leftDistanceSensor.getRange() / 1000;
+  public void updateSensorDistances() {
+    double leftMeasurement = leftDistanceSensor.getRange() / 1000;
+    double rightMeasurement = rightDistanceSensor.getRange() / 1000;
+    if (leftDistanceSensor.isRangeValid()) leftDistance = leftMeasurement;
+    if (rightDistanceSensor.isRangeValid()) rightDistance = rightMeasurement;
   }
 
   public double getIntakeSpeed() {
@@ -136,8 +138,14 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Intake supply current", intakeMotor.getSupplyCurrent());
-    SmartDashboard.putNumber("Intake stator current", intakeMotor.getStatorCurrent());
+    if (Constants.kDebugEnabled) {
+      SmartDashboard.putNumber("Intake supply current", intakeMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Intake stator current", intakeMotor.getStatorCurrent());
+
+      updateSensorDistances();
+      SmartDashboard.putNumber("Left distance sensor measurement", leftDistance);
+      SmartDashboard.putNumber("Right distance sensor measurement", rightDistance);
+    }
   }
 
   public void logInit() {

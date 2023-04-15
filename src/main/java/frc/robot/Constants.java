@@ -19,7 +19,7 @@ public final class Constants {
   public static final boolean kDebugEnabled = true;
   public static final boolean kCommandDebugLogEnabled = true;
 
-  public static final boolean kSwerveEnabled = false;
+  public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;
   public static final boolean kElevatorEnabled = true;
@@ -46,6 +46,7 @@ public final class Constants {
     public static final boolean kOperatorManualArmControlEnabled = true;
     public static final boolean kSwerveAccelerationLimitingEnabled = true;
     public static final boolean kLocalizationStdDistanceBased = true;
+    public static final boolean kLocalizeDuringAuto = true;
 
     public static final boolean kLocalizationDataCollectionMode = false;
     public static final boolean kIntakeAutoScoreDistanceSensorOffset = true;
@@ -334,19 +335,19 @@ public final class Constants {
   public static class VisionConstants {
     // TODO: set the indexes
     public static final int kDefaultPipeline = 0;
-
     public static final int kDetectorPipelineIndex = 1;
+    public static final double kMaxValidDistanceFromAprilTag = 3.5;
 
-    public static class FrontConstants {
-      public static final String kLimelightNetworkTablesName = "limelight-front";
-    }
-
-    public static class BackConstants {
-      public static final String kLimelightNetworkTablesName = "limelight-back";
-    }
-
-    public static class SideConstants {
+    public static class RightConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
+    }
+
+    public static class LeftConstants {
+      public static final String kLimelightNetworkTablesName = "limelight-left";
+    }
+
+    public static class MiddleConstants {
+      public static final String kLimelightNetworkTablesName = "limelight-middle";
     }
   }
 }

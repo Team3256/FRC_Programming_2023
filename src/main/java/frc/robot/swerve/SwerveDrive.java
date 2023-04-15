@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeatureFlags;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.helpers.StatisticsHelper;
@@ -273,12 +274,18 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     if (aprilTagLocation.length == 0) return;
 
     double aprilTagDistance = new Translation2d(aprilTagLocation[0], aprilTagLocation[2]).getNorm();
+
     if (FeatureFlags.kLocalizationDataCollectionMode) {
       distanceData.add(aprilTagDistance);
       poseXData.add(limelightPose.getX());
       poseYData.add(limelightPose.getY());
       poseThetaData.add(limelightPose.getRotation().getRadians());
     }
+
+    if (kDebugEnabled) {
+      SmartDashboard.putNumber("April Tag Distance", aprilTagDistance);
+    }
+    if (aprilTagDistance > VisionConstants.kMaxValidDistanceFromAprilTag) return;
 
     if (FeatureFlags.kLocalizationStdDistanceBased) {
       if (kDebugEnabled) {
@@ -319,10 +326,10 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     field.setRobotPose(poseEstimator.getEstimatedPosition());
     Logger.getInstance().recordOutput("Odometry", getPose());
 
-    if (!DriverStation.isAutonomous()) {
-      this.localize(FrontConstants.kLimelightNetworkTablesName);
-      this.localize(SideConstants.kLimelightNetworkTablesName);
-      this.localize(BackConstants.kLimelightNetworkTablesName);
+    if (!DriverStation.isAutonomous() || FeatureFlags.kLocalizeDuringAuto) {
+      this.localize(RightConstants.kLimelightNetworkTablesName);
+      this.localize(MiddleConstants.kLimelightNetworkTablesName);
+      this.localize(LeftConstants.kLimelightNetworkTablesName);
     }
 
     if (kDebugEnabled) {

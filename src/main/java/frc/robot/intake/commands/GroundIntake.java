@@ -59,9 +59,9 @@ public class GroundIntake extends ParentCommand {
   public void initialize() {
     if (kGamePieceDetection) {
       Limelight.setPipelineIndex(
-          FrontConstants.kLimelightNetworkTablesName, kDetectorPipelineIndex);
+          RightConstants.kLimelightNetworkTablesName, kDetectorPipelineIndex);
       isCurrentPieceCone =
-          () -> Limelight.isConeDetected(FrontConstants.kLimelightNetworkTablesName);
+          () -> Limelight.isConeDetected(RightConstants.kLimelightNetworkTablesName);
     }
 
     ArmPreset coneArmPreset =
@@ -95,7 +95,7 @@ public class GroundIntake extends ParentCommand {
 
   @Override
   public void end(boolean interrupted) {
-    Limelight.setPipelineIndex(FrontConstants.kLimelightNetworkTablesName, kDefaultPipeline);
+    Limelight.setPipelineIndex(RightConstants.kLimelightNetworkTablesName, kDefaultPipeline);
     super.end(interrupted);
   }
 }
