@@ -19,10 +19,12 @@ public final class ArmConstants {
   public static final int kArmSimulationID = 16;
   public static final int kArmEncoderDIOPort = 9;
 
-  public static final double kArmRadiansPerAbsoluteEncoderRotation = -1 * Math.PI;
-  public static final double kAbsoluteEncoderOffsetRadians = -5.37602984951422;
+  public static final double kArmEncoderGearRatio = 2 / 1;
+  public static final double kArmRadiansPerAbsoluteEncoderRotation =
+      -(2 / kArmEncoderGearRatio) * Math.PI;
+  public static final double kAbsoluteEncoderOffsetRadians = 3.748531;
 
-  public static final double kArmGearing = 60;
+  public static final double kArmGearing = 80;
   public static final double kArmLength = 0.569075;
   public static final double kArmInertia = 0.410;
   public static final double kArmMassKg = 7.5;
@@ -31,7 +33,7 @@ public final class ArmConstants {
   public static final double kArmS = 0.41305;
   public static final double kArmV = 1.281;
   public static final double kArmA = 0.011292;
-  public static final double kArmG = 0.32163;
+  public static final double kArmG = 0.62163;
   public static final double kArmP = 1.4146;
   public static final double kArmI = 0;
   public static final double kArmD = 0.15699;

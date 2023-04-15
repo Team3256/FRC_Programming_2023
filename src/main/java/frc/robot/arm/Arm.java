@@ -82,8 +82,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor = TalonFXFactory.createDefaultTalon(kArmCANDevice);
     armMotor.setInverted(TalonFXInvertType.CounterClockwise);
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
+    armEncoder.reset();
 
-    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.setNeutralMode(NeutralMode.Coast);
     armMotor.setSelectedSensorPosition(0);
   }
 
@@ -112,22 +113,27 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setSelectedSensorPosition(0);
   }
 
+  public double getEncoderDistanceRad() {
+    return armEncoder.getAbsolutePosition() * kArmRadiansPerAbsoluteEncoderRotation;
+  }
+
   public double getArmPositionGroundRelative() {
     if (RobotBase.isReal()) {
       double absoluteEncoderDistance;
       if (kUsePrefs) {
         absoluteEncoderDistance =
-            armEncoder.getDistance()
+            getEncoderDistanceRad()
                 + Preferences.getDouble(
                     ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
       } else {
-        absoluteEncoderDistance = armEncoder.getDistance() + kAbsoluteEncoderOffsetRadians;
+        absoluteEncoderDistance = getEncoderDistanceRad() + kAbsoluteEncoderOffsetRadians;
       }
-      if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
-        return absoluteEncoderDistance + Math.PI * 2;
-      } else {
-        return absoluteEncoderDistance;
-      }
+      // if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
+      // return absoluteEncoderDistance + Math.PI * 2;
+      // } else {
+      // return absoluteEncoderDistance;
+      // }
+      return absoluteEncoderDistance;
     } else return armSim.getAngleRads();
   }
 
@@ -144,7 +150,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     if (Constants.kDebugEnabled) {
       SmartDashboard.putNumber(
           "Arm Raw Relative Encoder value", armMotor.getSelectedSensorPosition());
-      SmartDashboard.putNumber("Arm Raw Absolute Encoder value", armEncoder.getDistance());
+      SmartDashboard.putNumber("Arm Raw Absolute Encoder value", armEncoder.getAbsolutePosition());
+      SmartDashboard.putNumber("Arm Raw Absolute Encoder distance", getEncoderDistanceRad());
       SmartDashboard.putNumber("Arm angle ground relative rad", getArmPositionGroundRelative());
       SmartDashboard.putNumber("Arm angle elevator relative rad", getArmPositionElevatorRelative());
       SmartDashboard.putNumber("Current Draw", armSim.getCurrentDrawAmps());

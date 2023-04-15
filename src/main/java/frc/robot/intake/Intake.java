@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
@@ -59,16 +60,21 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
 
-    leftDistanceSensor = new TimeOfFlight(kLeftDistanceSensorID);
-    rightDistanceSensor = new TimeOfFlight(kRightDistanceSensorID);
+    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {
+      leftDistanceSensor = new TimeOfFlight(kLeftDistanceSensorID);
+      rightDistanceSensor = new TimeOfFlight(kRightDistanceSensorID);
 
-    leftDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
-    rightDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+      leftDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+      rightDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+    }
   }
 
   public double getGamePieceOffset() {
-    validateSensorDistances();
-    return (rightDistance - leftDistance) / 2;
+    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {
+      validateSensorDistances();
+      return (rightDistance - leftDistance) / 2;
+    }
+    return 0;
   }
 
   public void validateSensorDistances() {

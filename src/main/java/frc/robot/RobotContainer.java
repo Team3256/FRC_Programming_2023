@@ -21,7 +21,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
+import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
+import frc.robot.arm.commands.KeepArm;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
@@ -30,7 +33,6 @@ import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.Subst
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.StowEndEffector;
-import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.led.LED;
@@ -305,7 +307,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureArm() {
-    // armSubsystem.setDefaultCommand(new KeepArmAtPosition(armSubsystem));
+    armSubsystem.setDefaultCommand(new KeepArm(armSubsystem));
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
       operator
@@ -337,7 +339,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     if (true) {
-      return new ZeroElevator(elevatorSubsystem);
+      return new SetArmAngle(armSubsystem, ArmPreset.STANDING_CONE_GROUND_INTAKE);
     }
 
     Command autoPath = autoPaths.getSelectedPath();
