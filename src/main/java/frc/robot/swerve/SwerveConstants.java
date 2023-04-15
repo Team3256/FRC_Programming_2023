@@ -20,6 +20,7 @@ import frc.robot.swerve.helpers.TrainingDataPoint;
 import java.util.List;
 
 public final class SwerveConstants {
+  public static final String kSwerveCANBus = "mani";
 
   public static final List<TrainingDataPoint> kSwervePoseEstimatorStdData =
       List.of(

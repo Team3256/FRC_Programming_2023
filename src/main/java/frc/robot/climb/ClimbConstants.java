@@ -11,7 +11,7 @@ import frc.robot.drivers.CanDeviceId;
 
 public final class ClimbConstants {
   public static final int kClimbMotorID = 7;
-  public static final String kClimbCANBus = "mani";
+  public static final String kClimbCANBus = "rio";
 
   public static final CanDeviceId kClimbCANDevice = new CanDeviceId(kClimbMotorID, kClimbCANBus);
 
