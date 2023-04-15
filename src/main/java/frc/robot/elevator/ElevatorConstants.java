@@ -25,8 +25,8 @@ public final class ElevatorConstants {
   public static final CanDeviceId kElevatorFollowerCANDevice =
       new CanDeviceId(kElevatorFollowerID, kElevatorCANBus);
   public static final int kNumElevatorMotors = 2;
-  public static final double kCubeStowPosition = Units.inchesToMeters(9);
-  public static final double kConeStowPosition = Units.inchesToMeters(8);
+  public static final double kCubeStowPosition = Units.inchesToMeters(0);
+  public static final double kConeStowPosition = Units.inchesToMeters(0);
   public static final double kCubeDoubleSubstationPosition = Units.inchesToMeters(47);
   public static final double kConeDoubleSubstationPosition = Units.inchesToMeters(47);
   public static final double kCubeHighPosition = Units.inchesToMeters(59);

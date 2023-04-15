@@ -16,7 +16,6 @@ import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.StowEndEffector;
-import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.helpers.ParentCommand;
 import frc.robot.intake.Intake;
 import frc.robot.limelight.Limelight;
@@ -24,7 +23,7 @@ import java.util.function.BooleanSupplier;
 
 public class GroundIntake extends ParentCommand {
   public enum ConeOrientation {
-    TIPPED_CONE,
+    SITTING_CONE,
     STANDING_CONE,
   }
 
@@ -52,11 +51,8 @@ public class GroundIntake extends ParentCommand {
       Intake intakeSubsystem,
       ConeOrientation coneOrientation,
       BooleanSupplier isCurrentPieceCone) {
-    this.elevatorSubsystem = elevatorSubsystem;
-    this.armSubsystem = armSubsystem;
-    this.intakeSubsystem = intakeSubsystem;
+    this(elevatorSubsystem, armSubsystem, intakeSubsystem, isCurrentPieceCone);
     this.coneOrientation = coneOrientation;
-    this.isCurrentPieceCone = isCurrentPieceCone;
   }
 
   @Override
@@ -69,12 +65,12 @@ public class GroundIntake extends ParentCommand {
     }
 
     ArmPreset coneArmPreset =
-        coneOrientation == ConeOrientation.TIPPED_CONE
-            ? ArmPreset.TIPPED_CONE_GROUND_INTAKE
+        coneOrientation == ConeOrientation.SITTING_CONE
+            ? ArmPreset.SITTING_CONE_GROUND_INTAKE
             : ArmPreset.STANDING_CONE_GROUND_INTAKE;
 
     addChildCommands(
-        new ZeroElevator(elevatorSubsystem),
+        // new ZeroElevator(elevatorSubsystem),
         new ConditionalCommand(
             new SetArmAngle(armSubsystem, coneArmPreset),
             new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
@@ -85,11 +81,14 @@ public class GroundIntake extends ParentCommand {
                 isCurrentPieceCone)
             .andThen(
                 Commands.deadline(
-                    new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
+                    new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone)
+                        .asProxy(),
                     new ConditionalCommand(
-                        new IntakeCone(intakeSubsystem),
-                        new IntakeCube(intakeSubsystem),
-                        isCurrentPieceCone))));
+                            new IntakeCone(intakeSubsystem)
+                                .andThen(new LatchGamePiece(intakeSubsystem, true)),
+                            new LatchGamePiece(intakeSubsystem, false),
+                            isCurrentPieceCone)
+                        .asProxy())));
 
     super.initialize();
   }

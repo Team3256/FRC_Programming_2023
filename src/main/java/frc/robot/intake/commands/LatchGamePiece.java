@@ -21,10 +21,14 @@ public class LatchGamePiece extends DebugCommandBase {
     addRequirements(intakeSubsystem);
   }
 
+  public LatchGamePiece(Intake intakeSubsystem, boolean isCurrentPieceCone) {
+    this(intakeSubsystem, () -> isCurrentPieceCone);
+  }
+
   @Override
   public void initialize() {
     super.initialize();
-    intakeSubsystem.configureCurrentLimit(true);
+    intakeSubsystem.configureLatchCurrentLimit(true);
   }
 
   @Override
@@ -39,7 +43,7 @@ public class LatchGamePiece extends DebugCommandBase {
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
-    intakeSubsystem.configureCurrentLimit(false);
+    intakeSubsystem.configureLatchCurrentLimit(false);
     intakeSubsystem.off();
   }
 

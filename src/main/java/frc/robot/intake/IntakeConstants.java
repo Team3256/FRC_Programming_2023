@@ -16,14 +16,16 @@ public final class IntakeConstants {
   public static int kLeftDistanceSensorID = -1;
   public static int kRightDistanceSensorID = -1;
   public static final double kIntakeWristRatio = (86.058 / 180);
+
   public static final double kIntakeConeSpeed = 0.9;
-  public static final double kIntakeCubeSpeed = -0.9;
+  public static final double kIntakeCubeSpeed = -0.65;
   public static final double kOuttakeConeSpeed = -0.9;
   public static final double kOuttakeCubeSpeed = 0.9;
   public static final double kLatchConeSpeed = 0.15;
   public static final double kLatchCubeSpeed = -0.15;
-  public static final double kGamePieceMaxCurrent = 7.5;
-  public static final double kIntakeMaxCurrent = 80;
+
+  public static final double kGamePieceMaxCurrent = 10;
+  public static final double kIntakeMaxCurrent = 50;
   public static final double kTriggerThresholdTime = 0;
   public static final double kTriggerThresholdTimeCone = 0.5;
 }

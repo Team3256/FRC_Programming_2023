@@ -31,10 +31,10 @@ public final class ArmConstants {
   public static final int kNumArmMotors = 1;
 
   public static final double kArmS = 0.41305;
-  public static final double kArmV = 1.281;
+  public static final double kArmV = 1.30;
   public static final double kArmA = 0.011292;
-  public static final double kArmG = 0.62163;
-  public static final double kArmP = 1.4146;
+  public static final double kArmG = 0.72163;
+  public static final double kArmP = 10.0;
   public static final double kArmI = 0;
   public static final double kArmD = 0.15699;
 
@@ -44,11 +44,10 @@ public final class ArmConstants {
   public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(2);
   public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(2);
 
-  // TODO Tune later
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
 
-  public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(20);
+  public static final Rotation2d kStowRotationCube = Rotation2d.fromDegrees(30);
   public static final Rotation2d kStowRotationCone = Rotation2d.fromDegrees(30);
 
   public static final Rotation2d kDoubleSubstationRotationCube = new Rotation2d(0);
@@ -59,7 +58,8 @@ public final class ArmConstants {
   public static final Rotation2d kConeHighRotation = new Rotation2d(0);
   public static final Rotation2d kAnyPieceLowRotation = Rotation2d.fromDegrees(150);
 
-  public static final Rotation2d kStandingConeGroundIntakeRotation = Rotation2d.fromDegrees(150);
+  public static final Rotation2d kStandingConeGroundIntakeRotation =
+      Rotation2d.fromDegrees(145.644);
   public static final Rotation2d kTippedConeGroundIntakeRotation = Rotation2d.fromDegrees(180);
   public static final Rotation2d kCubeGroundIntakeRotation = Rotation2d.fromDegrees(180);
 
@@ -81,7 +81,7 @@ public final class ArmConstants {
             Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, "kCubeGroundIntakeRotation"),
             Map.entry(
                 Arm.ArmPreset.STANDING_CONE_GROUND_INTAKE, "kStandingConeGroundIntakeRotation"),
-            Map.entry(Arm.ArmPreset.TIPPED_CONE_GROUND_INTAKE, "kTippedConeGroundIntakeRotation"),
+            Map.entry(Arm.ArmPreset.SITTING_CONE_GROUND_INTAKE, "kTippedConeGroundIntakeRotation"),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, "kDoubleSubstationCubeRotation"),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationConeRotation"));
 
@@ -96,7 +96,7 @@ public final class ArmConstants {
             Map.entry(Arm.ArmPreset.CONE_HIGH, kConeHighRotation),
             Map.entry(Arm.ArmPreset.CUBE_GROUND_INTAKE, kCubeGroundIntakeRotation),
             Map.entry(Arm.ArmPreset.STANDING_CONE_GROUND_INTAKE, kStandingConeGroundIntakeRotation),
-            Map.entry(Arm.ArmPreset.TIPPED_CONE_GROUND_INTAKE, kTippedConeGroundIntakeRotation),
+            Map.entry(Arm.ArmPreset.SITTING_CONE_GROUND_INTAKE, kTippedConeGroundIntakeRotation),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, kDoubleSubstationRotationCube),
             Map.entry(Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, kDoubleSubstationRotationCone));
 

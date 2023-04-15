@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
@@ -51,7 +52,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     CUBE_HIGH(kCubeHighRotation),
     CONE_HIGH(kConeHighRotation),
     STANDING_CONE_GROUND_INTAKE(kStandingConeGroundIntakeRotation),
-    TIPPED_CONE_GROUND_INTAKE(kTippedConeGroundIntakeRotation),
+    SITTING_CONE_GROUND_INTAKE(kTippedConeGroundIntakeRotation),
     CUBE_GROUND_INTAKE(kCubeGroundIntakeRotation),
     DOUBLE_SUBSTATION_CUBE(kDoubleSubstationRotationCube),
     DOUBLE_SUBSTATION_CONE(kDoubleSubstationRotationCone);
@@ -84,8 +85,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
     armEncoder.reset();
 
-    armMotor.setNeutralMode(NeutralMode.Coast);
+    armMotor.setNeutralMode(NeutralMode.Brake);
     armMotor.setSelectedSensorPosition(0);
+
+    if (Constants.kDebugEnabled) {
+      SmartDashboard.putData("Arm motor", armMotor);
+    }
   }
 
   public void setCoast() {
@@ -184,6 +189,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
             "Angle",
             new DoubleSendable(() -> Math.toDegrees(getArmPositionGroundRelative()), "Gyro"));
     getLayout(kDriverTabName).add(armMotor);
+    getLayout(kDriverTabName).add(new SetArmAngle(this, ArmPreset.STANDING_CONE_GROUND_INTAKE));
   }
 
   @Override
@@ -228,7 +234,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         kArmPositionKeys.get(ArmPreset.STANDING_CONE_GROUND_INTAKE),
         kStandingConeGroundIntakeRotation.getRadians());
     Preferences.initDouble(
-        kArmPositionKeys.get(ArmPreset.TIPPED_CONE_GROUND_INTAKE),
+        kArmPositionKeys.get(ArmPreset.SITTING_CONE_GROUND_INTAKE),
         kTippedConeGroundIntakeRotation.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(ArmPreset.CUBE_GROUND_INTAKE), kCubeGroundIntakeRotation.getRadians());

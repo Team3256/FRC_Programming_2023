@@ -10,28 +10,36 @@ package frc.robot.intake.commands;
 import static frc.robot.led.LEDConstants.kSuccess;
 
 import frc.robot.helpers.DebugCommandBase;
+import frc.robot.helpers.TimedBoolean;
 import frc.robot.intake.Intake;
 import frc.robot.led.LED;
 import frc.robot.led.commands.SetAllBlink;
 
 public class IntakeCube extends DebugCommandBase {
   private Intake intakeSubsystem;
+  private TimedBoolean isCurrentSpiking;
   private LED ledSubsystem;
 
   public IntakeCube(Intake intakeSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
-    addRequirements(intakeSubsystem);
+    this(intakeSubsystem, 0.04);
   }
 
   public IntakeCube(Intake intakeSubsystem, LED ledSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
+    this(intakeSubsystem);
     this.ledSubsystem = ledSubsystem;
-    addRequirements(intakeSubsystem);
+  }
+
+  public IntakeCube(Intake intakeSubsystem, double triggerTime) {
+    this.intakeSubsystem = intakeSubsystem;
+    this.isCurrentSpiking = new TimedBoolean(() -> intakeSubsystem.isCurrentSpiking(), triggerTime);
+    this.addRequirements(intakeSubsystem);
   }
 
   @Override
   public void initialize() {
     super.initialize();
+    isCurrentSpiking.initialize();
+    intakeSubsystem.configIntakeCurrentLimit();
     intakeSubsystem.intakeCube();
   }
 
@@ -42,10 +50,14 @@ public class IntakeCube extends DebugCommandBase {
     if (!interrupted && ledSubsystem != null) {
       new SetAllBlink(ledSubsystem, kSuccess).withTimeout(1).schedule();
     }
+    if (!interrupted) {
+      new LatchGamePiece(intakeSubsystem, false).schedule();
+    }
   }
 
   @Override
   public boolean isFinished() {
-    return intakeSubsystem.isCurrentSpiking();
+    isCurrentSpiking.update();
+    return isCurrentSpiking.hasBeenTrueForThreshold();
   }
 }

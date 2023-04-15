@@ -18,13 +18,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.KeepArm;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
@@ -35,6 +32,7 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.StowEndEffector;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
+import frc.robot.intake.commands.GroundIntake.ConeOrientation;
 import frc.robot.led.LED;
 import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
@@ -74,7 +72,7 @@ public class RobotContainer implements CANTestable, Loggable {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private LED ledSubsystem;
-  private GamePiece currentPiece = GamePiece.CUBE;
+  private GamePiece currentPiece = GamePiece.CONE;
   private SubstationLocation doubleSubstationLocation = SubstationLocation.RIGHT_SIDE;
   private RobotSimulation robotSimulation;
   private SendableChooser<Mode> modeChooser;
@@ -285,9 +283,6 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    new Trigger(intakeSubsystem::isCurrentSpiking)
-        .onTrue(new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
-
     (operator.rightTrigger())
         .or(driver.b())
         .whileTrue(
@@ -339,7 +334,12 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     if (true) {
-      return new SetArmAngle(armSubsystem, ArmPreset.STANDING_CONE_GROUND_INTAKE);
+      return new GroundIntake(
+          elevatorSubsystem,
+          armSubsystem,
+          intakeSubsystem,
+          ConeOrientation.SITTING_CONE,
+          () -> true);
     }
 
     Command autoPath = autoPaths.getSelectedPath();

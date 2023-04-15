@@ -16,6 +16,7 @@ import static frc.robot.simulation.SimulationConstants.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -59,6 +60,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private void configureRealHardware() {
     intakeMotor = TalonFXFactory.createDefaultTalon(kIntakeCANDevice);
     intakeMotor.setNeutralMode(NeutralMode.Brake);
+    configIntakeCurrentLimit();
 
     if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {
       leftDistanceSensor = new TimeOfFlight(kLeftDistanceSensorID);
@@ -67,6 +69,10 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
       leftDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
       rightDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
     }
+  }
+
+  public void configIntakeCurrentLimit() {
+    intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(false, 60, 60, 0.2));
   }
 
   public double getGamePieceOffset() {
@@ -94,7 +100,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.set(ControlMode.PercentOutput, kLatchCubeSpeed);
   }
 
-  public void configureCurrentLimit(boolean enabled) {
+  public void configureLatchCurrentLimit(boolean enabled) {
     if (kDebugEnabled) System.out.println("Setting Current Limit Configuration: " + enabled);
     intakeMotor.configStatorCurrentLimit(
         new StatorCurrentLimitConfiguration(
@@ -120,7 +126,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public boolean isCurrentSpiking() {
-    return intakeMotor.getStatorCurrent() > kIntakeMaxCurrent;
+    return intakeMotor.getSupplyCurrent() > kIntakeMaxCurrent;
   }
 
   public void off() {

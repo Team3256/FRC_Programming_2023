@@ -14,6 +14,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants;
 import frc.robot.arm.Arm;
@@ -85,6 +86,15 @@ public class SetArmAngle extends ProfiledPIDCommand {
               + Units.radiansToDegrees(armSubsystem.getArmPositionElevatorRelative())
               + " deg)");
     }
+  }
+
+  @Override
+  public void execute() {
+    super.execute();
+    SmartDashboard.putNumber(
+        "Arm setpoint", Units.radiansToDegrees(getController().getSetpoint().position));
+    SmartDashboard.putNumber(
+        "Arm position", Units.radiansToDegrees(armSubsystem.getArmPositionGroundRelative()));
   }
 
   @Override

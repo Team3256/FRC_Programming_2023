@@ -22,7 +22,7 @@ public class IntakeCone extends DebugCommandBase {
 
   public IntakeCone(Intake intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 3);
+    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, 0.2);
 
     addRequirements(intakeSubsystem);
   }
@@ -30,15 +30,14 @@ public class IntakeCone extends DebugCommandBase {
   public IntakeCone(Intake intakeSubsystem, LED ledSubsystem) {
     this(intakeSubsystem);
     this.ledSubsystem = ledSubsystem;
-
-    addRequirements(intakeSubsystem);
   }
 
   @Override
   public void initialize() {
     super.initialize();
-    intakeSubsystem.intakeCone();
     isCurrentSpiking.initialize();
+    intakeSubsystem.configIntakeCurrentLimit();
+    intakeSubsystem.intakeCone();
   }
 
   @Override
@@ -47,6 +46,9 @@ public class IntakeCone extends DebugCommandBase {
     intakeSubsystem.off();
     if (!interrupted && ledSubsystem != null) {
       new SetAllColor(ledSubsystem, kSuccess).withTimeout(1).schedule();
+    }
+    if (!interrupted) {
+      new LatchGamePiece(intakeSubsystem, true).schedule();
     }
   }
 
