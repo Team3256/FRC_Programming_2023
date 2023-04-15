@@ -65,7 +65,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   private WPI_TalonFX elevatorFollowerMotor;
   private ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
-  DigitalInput zeroLimitSwitch;
+  private DigitalInput zeroLimitSwitch;
 
   public Elevator() {
     if (RobotBase.isReal()) {
@@ -139,7 +139,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
-    SmartDashboard.putBoolean("Elevator limit switch", zeroLimitSwitch.get());
+    SmartDashboard.putBoolean("Elevator limit switch", isZeroLimitSwitchTriggered());
   }
 
   public void logInit() {

@@ -122,7 +122,7 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
         new Pose2d(
             end.getX() - kSubstationWaypointOffset,
             end.getY(),
-            end.getRotation().plus(kArmFckConstant));
+            end.getRotation().plus(kElevatorFckConstant));
 
     if (alliance == Alliance.Red) {
       end = PathUtil.flip(end);

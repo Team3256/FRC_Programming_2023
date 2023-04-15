@@ -7,7 +7,6 @@
 
 package frc.robot.arm.commands;
 
-import static frc.robot.arm.ArmConstants.kZeroArmStatorCurrentThreshold;
 import static frc.robot.arm.ArmConstants.kZeroArmVoltage;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -33,6 +32,6 @@ public class ZeroArm extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return armSubsystem.getStatorCurrent() > kZeroArmStatorCurrentThreshold;
+    return armSubsystem.isMotorCurrentSpiking();
   }
 }

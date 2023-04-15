@@ -141,6 +141,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     return getArmPositionGroundRelative() - kElevatorAngleOffset;
   }
 
+  public void zeroThroughboreEncoder() {
+    armEncoder.reset();
+  }
+
+  public boolean isMotorCurrentSpiking() {
+    return armMotor.getSupplyCurrent() > kZeroArmCurrentThreshold;
+  }
+
   public void off() {
     armMotor.neutralOutput();
   }

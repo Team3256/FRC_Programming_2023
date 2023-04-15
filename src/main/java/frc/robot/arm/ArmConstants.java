@@ -108,5 +108,5 @@ public final class ArmConstants {
 
   // Zero Arm
   public static final double kZeroArmVoltage = -5.0;
-  public static final double kZeroArmStatorCurrentThreshold = 20.0;
+  public static final double kZeroArmCurrentThreshold = 60.0;
 }
