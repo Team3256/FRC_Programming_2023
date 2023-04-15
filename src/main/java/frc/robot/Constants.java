@@ -17,6 +17,8 @@ import java.util.Map;
 
 public final class Constants {
   public static final boolean kDebugEnabled = true;
+  public static final boolean kCommandDebugLogEnabled = true;
+
   public static final boolean kSwerveEnabled = false;
   public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;

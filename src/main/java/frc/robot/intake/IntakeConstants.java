@@ -13,8 +13,8 @@ public final class IntakeConstants {
   public static final int kIntakeMotorID = 4;
   public static final String kIntakeCANBus = "mani";
   public static final CanDeviceId kIntakeCANDevice = new CanDeviceId(kIntakeMotorID, kIntakeCANBus);
-  public static int kLeftDistanceSensorID = -1;
-  public static int kRightDistanceSensorID = -1;
+  public static int kLeftDistanceSensorID = 20;
+  public static int kRightDistanceSensorID = 21;
   public static final double kIntakeWristRatio = (86.058 / 180);
 
   public static final double kIntakeConeSpeed = 0.9;

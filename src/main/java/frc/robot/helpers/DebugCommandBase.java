@@ -14,7 +14,7 @@ import frc.robot.Constants;
 public abstract class DebugCommandBase extends CommandBase {
   @Override
   public void initialize() {
-    if (Constants.kDebugEnabled) {
+    if (Constants.kCommandDebugLogEnabled) {
       System.out.println(
           "Command Started: " + this.getName() + ", Timestamp: " + Timer.getFPGATimestamp());
     }
@@ -22,7 +22,7 @@ public abstract class DebugCommandBase extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    if (Constants.kDebugEnabled) {
+    if (Constants.kCommandDebugLogEnabled) {
       System.out.println(
           "Command Ended: "
               + this.getName()
