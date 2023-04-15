@@ -84,32 +84,33 @@ public class AutoScore extends ParentCommand {
     if (!isAutoScoreMode.getAsBoolean()) {
       switch (gridScoreHeight) {
         case HIGH:
-          Commands.parallel(
-                  new ConditionalCommand(
-                      new SetEndEffectorState(
-                          elevatorSubsystem,
-                          armSubsystem,
-                          SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH),
-                      new SetEndEffectorState(
-                          elevatorSubsystem,
-                          armSubsystem,
-                          SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
-                      isCurrentLEDPieceCone))
+          new ConditionalCommand(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH,
+                      true),
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH,
+                      true),
+                  isCurrentLEDPieceCone)
               .schedule();
           break;
-        default:
         case MID:
-          Commands.parallel(
-                  new ConditionalCommand(
-                      new SetEndEffectorState(
-                          elevatorSubsystem,
-                          armSubsystem,
-                          SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID),
-                      new SetEndEffectorState(
-                          elevatorSubsystem,
-                          armSubsystem,
-                          SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
-                      isCurrentLEDPieceCone))
+          new ConditionalCommand(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID,
+                      true),
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID,
+                      true),
+                  isCurrentLEDPieceCone)
               .schedule();
           break;
         case LOW:
@@ -173,11 +174,13 @@ public class AutoScore extends ParentCommand {
                 new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH),
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH,
+                    true),
                 new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH,
+                    true),
                 isCurrentPieceCone);
         break;
       case MID:
@@ -187,14 +190,17 @@ public class AutoScore extends ParentCommand {
                 new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID),
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID,
+                    true),
                 new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID,
+                    true),
                 isCurrentPieceCone);
         break;
-      case LOW:
+
+        // case LOW
       default:
         scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
@@ -202,6 +208,7 @@ public class AutoScore extends ParentCommand {
                 elevatorSubsystem,
                 armSubsystem,
                 SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW);
+        break;
     }
 
     if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {

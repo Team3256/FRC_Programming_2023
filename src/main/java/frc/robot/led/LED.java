@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.awt.Color;
 
 public class LED extends SubsystemBase {
-  private static final CANdle candle = new CANdle(kLedID);
+  private static final CANdle candle = new CANdle(kLedID, kLEDCanbus);
 
   public LED() {
     CANdleConfiguration candleConfiguration = new CANdleConfiguration();

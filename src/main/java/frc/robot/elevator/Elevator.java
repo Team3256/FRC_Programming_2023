@@ -106,6 +106,17 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     return !zeroLimitSwitch.get();
   }
 
+  public boolean isMoving() {
+    return Math.abs(elevatorMotor.getSelectedSensorVelocity()) >= 75;
+  }
+
+  public boolean isStopping(boolean hasStarted) {
+    if (hasStarted) {
+      return !isMoving();
+    }
+    return false;
+  }
+
   public double calculateFeedForward(double velocity) {
     return elevatorFeedforward.calculate(velocity);
   }
@@ -135,13 +146,21 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     System.out.println("Elevator off");
   }
 
+  boolean hasStarted = false;
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
-    SmartDashboard.putBoolean("Elevator limit switch triggered", isZeroLimitSwitchTriggered());
-    SmartDashboard.putBoolean("Elevator limit switch raw value", zeroLimitSwitch.get());
+    SmartDashboard.putBoolean("Elevator limit switch (closed is false)", zeroLimitSwitch.get());
+    SmartDashboard.putBoolean("Is Motor Moving", isMoving());
+    SmartDashboard.putNumber(
+        "Elevator motor su speed: ", elevatorMotor.getSelectedSensorVelocity());
+
+    if (this.isMoving()) hasStarted = true;
+    SmartDashboard.putBoolean("HAS ELEVATOR ZERO MOTOR STOPPED", isStopping(hasStarted));
+    if (isStopping(hasStarted)) hasStarted = false;
   }
 
   public void logInit() {

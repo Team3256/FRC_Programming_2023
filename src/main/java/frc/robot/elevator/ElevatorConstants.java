@@ -18,7 +18,6 @@ public final class ElevatorConstants {
   public static final int kElevatorLimitSwitchDIO = 8;
   public static final double kElevatorStartingPosition = 0.5;
   public static final double kElevatorAngleOffset = Units.degreesToRadians(35.4);
-
   public static final String kElevatorCANBus = "rio";
   public static final CanDeviceId kElevatorCANDevice =
       new CanDeviceId(kElevatorMasterID, kElevatorCANBus);
@@ -44,9 +43,9 @@ public final class ElevatorConstants {
   public static final double kElevatorD = 0;
 
   public static final TrapezoidProfile.Constraints kElevatorConstraints =
-      new TrapezoidProfile.Constraints(3, 3);
+      new TrapezoidProfile.Constraints(0.5, 0.5); // 3 and 3
 
-  public static final double kDownSpeedVolts = -9.0;
+  public static final double kDownSpeedVolts = -7; // -9
   public static final double kElevatorCurrentThreshold = 64; // amps
 
   public static final double kDrumRadius = Units.inchesToMeters(0.94);

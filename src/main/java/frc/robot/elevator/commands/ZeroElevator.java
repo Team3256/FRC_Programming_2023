@@ -14,6 +14,7 @@ import frc.robot.helpers.DebugCommandBase;
 
 public class ZeroElevator extends DebugCommandBase {
   Elevator elevatorSubsystem;
+  boolean hasStarted = false;
 
   public ZeroElevator(Elevator elevatorSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
@@ -22,6 +23,7 @@ public class ZeroElevator extends DebugCommandBase {
 
   @Override
   public void initialize() {
+    hasStarted = false;
     super.initialize();
     elevatorSubsystem.setInputVoltage(kDownSpeedVolts);
   }
@@ -35,7 +37,8 @@ public class ZeroElevator extends DebugCommandBase {
 
   @Override
   public boolean isFinished() {
-    return elevatorSubsystem.isZeroLimitSwitchTriggered();
-    // return elevatorSubsystem.isMotorCurrentSpiking();
+    if (elevatorSubsystem.isMoving()) hasStarted = true;
+    return elevatorSubsystem.isStopping(hasStarted);
+    //    return elevatorSubsystem.isZeroLimitSwitchTriggered();
   }
 }

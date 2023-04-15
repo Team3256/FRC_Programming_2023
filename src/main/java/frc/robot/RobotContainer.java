@@ -29,11 +29,10 @@ import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPreset;
-import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.SetEndEffectorState;
 import frc.robot.elevator.commands.SetEndEffectorState.EndEffectorPreset;
 import frc.robot.elevator.commands.StowEndEffector;
+import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.GroundIntake.ConeOrientation;
@@ -350,7 +349,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     if (true) {
-      return new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.ANY_PIECE_LOW);
+      return new ZeroElevator(elevatorSubsystem);
       // return new GroundIntake(
       // elevatorSubsystem,
       // armSubsystem,

@@ -143,8 +143,8 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
       SmartDashboard.putNumber("Intake stator current", intakeMotor.getStatorCurrent());
 
       updateSensorDistances();
-      SmartDashboard.putNumber("Left distance sensor measurement", leftDistance);
-      SmartDashboard.putNumber("Right distance sensor measurement", rightDistance);
+      //      SmartDashboard.putNumber("Left distance sensor measurement", leftDistance);
+      //      SmartDashboard.putNumber("Right distance sensor measurement", rightDistance);
     }
   }
 
