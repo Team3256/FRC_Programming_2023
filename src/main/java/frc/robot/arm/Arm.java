@@ -126,20 +126,15 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     if (RobotBase.isReal()) {
       double absoluteEncoderDistance;
       if (kUsePrefs) {
-        absoluteEncoderDistance =
-            getEncoderDistanceRad()
-                + Preferences.getDouble(
-                    ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
+        absoluteEncoderDistance = getEncoderDistanceRad()
+            + Preferences.getDouble(
+                ArmPreferencesKeys.kAbsoluteEncoderOffsetKey, kAbsoluteEncoderOffsetRadians);
       } else {
         absoluteEncoderDistance = getEncoderDistanceRad() + kAbsoluteEncoderOffsetRadians;
       }
-      // if (absoluteEncoderDistance < kArmAngleMinConstraint.getRadians()) {
-      // return absoluteEncoderDistance + Math.PI * 2;
-      // } else {
-      // return absoluteEncoderDistance;
-      // }
       return absoluteEncoderDistance;
-    } else return armSim.getAngleRads();
+    } else
+      return armSim.getAngleRads();
   }
 
   public double getArmPositionElevatorRelative() {
@@ -246,15 +241,14 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         kDoubleSubstationRotationCube.getRadians());
   }
 
-  private final SingleJointedArmSim armSim =
-      new SingleJointedArmSim(
-          DCMotor.getFalcon500(kNumArmMotors),
-          kArmGearing,
-          kArmInertia,
-          kArmLength,
-          kArmAngleMinConstraint.getRadians() + kElevatorAngleOffset,
-          kArmAngleMaxConstraint.getRadians() + kElevatorAngleOffset,
-          true);
+  private final SingleJointedArmSim armSim = new SingleJointedArmSim(
+      DCMotor.getFalcon500(kNumArmMotors),
+      kArmGearing,
+      kArmInertia,
+      kArmLength,
+      kArmAngleMinConstraint.getRadians() + kElevatorAngleOffset,
+      kArmAngleMaxConstraint.getRadians() + kElevatorAngleOffset,
+      true);
 
   private MechanismLigament2d armLigament;
 
@@ -269,13 +263,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setNeutralMode(NeutralMode.Brake);
     armMotor.setSelectedSensorPosition(0);
 
-    armLigament =
-        new MechanismLigament2d(
-            "Arm",
-            kArmLength,
-            Units.radiansToDegrees(getArmPositionElevatorRelative()) - 90,
-            10,
-            new Color8Bit(Color.kBlue));
+    armLigament = new MechanismLigament2d(
+        "Arm",
+        kArmLength,
+        Units.radiansToDegrees(getArmPositionElevatorRelative()) - 90,
+        10,
+        new Color8Bit(Color.kBlue));
   }
 
   @Override
