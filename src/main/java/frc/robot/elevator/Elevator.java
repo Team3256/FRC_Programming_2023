@@ -38,6 +38,7 @@ import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
@@ -139,7 +140,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
-    SmartDashboard.putBoolean("Elevator limit switch", isZeroLimitSwitchTriggered());
+    SmartDashboard.putBoolean("Elevator limit switch triggered", isZeroLimitSwitchTriggered());
+    SmartDashboard.putBoolean("Elevator limit switch raw value", zeroLimitSwitch.get());
   }
 
   public void logInit() {
@@ -147,6 +149,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     getLayout(kDriverTabName).add(new ZeroElevator(this));
     getLayout(kDriverTabName).add("Position", new DoubleSendable(this::getElevatorPosition));
     getLayout(kDriverTabName).add(elevatorMotor);
+    getLayout(kDriverTabName).add(new SetElevatorExtension(this, 0));
   }
 
   @Override

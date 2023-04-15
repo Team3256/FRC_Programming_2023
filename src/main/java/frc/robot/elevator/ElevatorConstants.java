@@ -31,20 +31,20 @@ public final class ElevatorConstants {
   public static final double kConeDoubleSubstationPosition = Units.inchesToMeters(47);
   public static final double kCubeHighPosition = Units.inchesToMeters(59);
   public static final double kConeHighPosition = Units.inchesToMeters(59);
-  public static final double kAnyPieceMidPosition = Units.inchesToMeters(36);
+  public static final double kAnyPieceMidPosition = Units.inchesToMeters(37);
   public static final double kAnyPieceLowPosition = Units.inchesToMeters(18);
   public static final double kGroundIntakePosition = Units.inchesToMeters(0);
 
-  public static final double kElevatorS = 0.15;
-  public static final double kElevatorV = 9.00;
+  public static final double kElevatorS = 0.45;
+  public static final double kElevatorV = 7.00;
   public static final double kElevatorA = 0.01;
   public static final double kElevatorG = 0.00;
-  public static final double kElevatorP = 5;
+  public static final double kElevatorP = 7;
   public static final double kElevatorI = 0;
   public static final double kElevatorD = 0;
 
   public static final TrapezoidProfile.Constraints kElevatorConstraints =
-      new TrapezoidProfile.Constraints(1, 2);
+      new TrapezoidProfile.Constraints(3, 3);
 
   public static final double kDownSpeedVolts = -9.0;
   public static final double kElevatorCurrentThreshold = 64; // amps
