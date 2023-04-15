@@ -105,8 +105,16 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         && Units.radiansToDegrees(getArmPositionElevatorRelative()) >= kMinSafeRotation);
   }
 
-  public void zeroEncoder() {
+  public void zeroMotorEncoder() {
     armMotor.setSelectedSensorPosition(0);
+  }
+
+  public void zeroThroughboreEncoder() {
+    armEncoder.reset();
+  }
+
+  public double getStatorCurrent() {
+    return armMotor.getStatorCurrent();
   }
 
   /**

@@ -104,4 +104,8 @@ public final class ArmConstants {
     public static final String kRelativeEncoderOffsetKey = "kRelativeEncoderOffset";
     public static final String kAbsoluteEncoderOffsetKey = "kAbsoluteEncoderOffset";
   }
+
+  // Zero Arm
+  public static final double kZeroArmVoltage = -5.0;
+  public static final double kZeroArmStatorCurrentThreshold = 20.0;
 }
