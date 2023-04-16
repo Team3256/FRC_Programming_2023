@@ -152,9 +152,7 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
 
     Command runIntake =
         new ConditionalCommand(
-            new IntakeCone(intakeSubsystem),
-            new IntakeCube(intakeSubsystem),
-            isCurrentPieceCone);
+            new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
     Command moveToSubstation =
         PathGeneration.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);

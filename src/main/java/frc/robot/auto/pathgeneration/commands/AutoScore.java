@@ -154,9 +154,7 @@ public class AutoScore extends ParentCommand {
     BooleanSupplier isCurrentPieceCone = () -> scoringGamePiece.equals(GamePiece.CONE);
     Command runOuttake =
         new ConditionalCommand(
-            new OuttakeCone(intakeSubsystem),
-            new OuttakeCube(intakeSubsystem),
-            isCurrentPieceCone);
+            new OuttakeCone(intakeSubsystem), new OuttakeCube(intakeSubsystem), isCurrentPieceCone);
     // Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
