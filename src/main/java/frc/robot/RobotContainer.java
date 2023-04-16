@@ -30,8 +30,6 @@ import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.Subst
 import frc.robot.auto.pathgeneration.commands.AutoScore.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPreset;
-import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.StowEndEffector;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
@@ -318,15 +316,6 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    driver
-        .rightBumper()
-        .onTrue(
-            new GroundIntake(
-                elevatorSubsystem,
-                armSubsystem,
-                intakeSubsystem,
-                ConeOrientation.SITTING_CONE,
-                () -> true));
     operator
         .rightTrigger()
         .whileTrue(
@@ -374,18 +363,6 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public Command getAutonomousCommand() {
-    if (true) {
-      return new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH);
-      // return Commands.deadline(new WaitCommand(2), new GroundIntake(
-      // elevatorSubsystem,
-      // armSubsystem,
-      // intakeSubsystem,
-      // ConeOrientation.STANDING_CONE,
-      // () -> false))
-      // .andThen(new SetEndEffectorState(elevatorSubsystem, armSubsystem,
-      // EndEffectorPreset.DOUBLE_SUBSTATION_CONE));
-    }
-
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(
@@ -445,6 +422,7 @@ public class RobotContainer implements CANTestable, Loggable {
     } else {
       currentPiece = GamePiece.CONE;
     }
+    System.out.println("Current game piece: " + currentPiece);
   }
 
   public void updateGamePieceLEDs() {
@@ -466,6 +444,7 @@ public class RobotContainer implements CANTestable, Loggable {
       doubleSubstationLocation = SubstationLocation.LEFT_SIDE;
     }
 
+    System.out.println("Current Double Substation Location: " + doubleSubstationLocation);
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
   }
