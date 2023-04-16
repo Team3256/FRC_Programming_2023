@@ -40,7 +40,6 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
         elevatorSubsystem);
 
     this.elevatorSubsystem = elevatorSubsystem;
-    SmartDashboard.getNumber("Elevator testing setpoint position", 0);
 
     getController().setTolerance(kTolerancePosition, kToleranceVelocity);
     addRequirements(elevatorSubsystem);

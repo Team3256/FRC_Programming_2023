@@ -29,6 +29,8 @@ import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.Elevator.ElevatorPreset;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.SetEndEffectorState;
 import frc.robot.elevator.commands.SetEndEffectorState.EndEffectorPreset;
 import frc.robot.elevator.commands.StowEndEffector;
@@ -128,6 +130,7 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("Auto Score Toggle", modeChooser);
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
+    SmartDashboard.putNumber("Elevator testing setpoint position", 0);
 
     autoPaths =
         new AutoPaths(
@@ -351,6 +354,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void configureLEDStrip() {
     ledSubsystem.setDefaultCommand(new SetAllColor(ledSubsystem, kCube));
+
     operator
         .leftBumper()
         .toggleOnTrue(
@@ -360,14 +364,15 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     if (true) {
-      return new SetEndEffectorState(
-          elevatorSubsystem, armSubsystem, EndEffectorPreset.DOUBLE_SUBSTATION_CONE);
-      // return new GroundIntake(
+      return new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.CONE_HIGH);
+      // return Commands.deadline(new WaitCommand(2), new GroundIntake(
       // elevatorSubsystem,
       // armSubsystem,
       // intakeSubsystem,
       // ConeOrientation.STANDING_CONE,
-      // () -> false);
+      // () -> false))
+      // .andThen(new SetEndEffectorState(elevatorSubsystem, armSubsystem,
+      // EndEffectorPreset.DOUBLE_SUBSTATION_CONE));
     }
 
     Command autoPath = autoPaths.getSelectedPath();

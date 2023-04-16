@@ -18,6 +18,7 @@ import java.util.Map;
 public final class Constants {
   public static final boolean kDebugEnabled = true;
   public static final boolean kCommandDebugLogEnabled = true;
+
   public static final boolean kSwerveEnabled = false;
   public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = false;
@@ -27,7 +28,7 @@ public final class Constants {
 
   public static final boolean kAdvantageKitReplayEnabled = false;
   public static final RobotType kRobotType = RobotType.FINAL;
-  public static final RobotMode kCurrentMode = RobotMode.REAL;
+  public static final RobotMode kCurrentMode = RobotMode.SIM;
 
   public static final double kStickDeadband = 0.05;
   public static final double kStickCancelDeadband = 0.50;
@@ -46,7 +47,7 @@ public final class Constants {
     public static final boolean kOperatorManualArmControlEnabled = false;
     public static final boolean kLocalizationStdDistanceBased = true;
     public static final boolean kLocalizeDuringAuto = true;
-    public static final boolean kIntakeAutoScoreDistanceSensorOffset = true;
+    public static final boolean kIntakeAutoScoreDistanceSensorOffset = false;
 
     public static final boolean kSwerveAccelerationLimitingEnabled = false;
     public static final boolean kLocalizationDataCollectionMode = false;

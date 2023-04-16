@@ -21,7 +21,9 @@ public class ParentCommand extends DebugCommandBase {
   @Override
   public void initialize() {
     for (Command childCommand : childCommands) {
-      childCommand.schedule();
+      if (childCommand != null) {
+        childCommand.schedule();
+      }
     }
     super.initialize();
   }
@@ -30,15 +32,19 @@ public class ParentCommand extends DebugCommandBase {
   public void end(boolean interrupted) {
     super.end(interrupted);
     for (Command childCommand : childCommands) {
-      System.out.println("Parent killing child " + childCommand.getName());
-      childCommand.cancel();
+      if (childCommand != null) {
+        System.out.println("Parent killing child " + childCommand.getName());
+        childCommand.cancel();
+      }
     }
   }
 
   @Override
   public boolean isFinished() {
     for (Command childCommand : childCommands) {
-      if (!childCommand.isFinished()) return false;
+      if (childCommand != null) {
+        if (!childCommand.isFinished()) return false;
+      }
     }
     return true;
   }
