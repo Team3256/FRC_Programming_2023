@@ -32,7 +32,6 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetEndEffectorState;
 import frc.robot.elevator.commands.SetEndEffectorState.EndEffectorPreset;
 import frc.robot.elevator.commands.StowEndEffector;
-import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.GroundIntake.ConeOrientation;
@@ -40,6 +39,7 @@ import frc.robot.led.LED;
 import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
 import frc.robot.led.commands.SetAllBlink;
+import frc.robot.led.commands.SetAllColor;
 import frc.robot.logging.Loggable;
 import frc.robot.simulation.RobotSimulation;
 import frc.robot.swerve.SwerveDrive;
@@ -307,6 +307,10 @@ public class RobotContainer implements CANTestable, Loggable {
                 new OuttakeCone(intakeSubsystem),
                 new OuttakeCube(intakeSubsystem),
                 this::isCurrentPieceCone));
+    (operator.rightTrigger())
+            .or(driver.b())
+            .onFalse(
+                    new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
   }
 
   public void configureElevator() {
@@ -349,7 +353,8 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     if (true) {
-      return new ZeroElevator(elevatorSubsystem);
+      return new SetEndEffectorState(
+          elevatorSubsystem, armSubsystem, EndEffectorPreset.DOUBLE_SUBSTATION_CONE);
       // return new GroundIntake(
       // elevatorSubsystem,
       // armSubsystem,
@@ -366,7 +371,7 @@ public class RobotContainer implements CANTestable, Loggable {
               new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
                   .asProxy(),
               new LockSwerveX(swerveSubsystem)
-                  .andThen(() -> LED.LEDSegment.MainStrip.setColor(kLockSwerve))
+                  .andThen(new SetAllColor(ledSubsystem, kLockSwerve))
                   .until(() -> isMovingJoystick(driver))));
     } else {
       return autoPath;

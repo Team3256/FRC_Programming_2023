@@ -18,7 +18,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.playingwithfusion.TimeOfFlight;
+// import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -41,8 +41,8 @@ import frc.robot.logging.Loggable;
 
 public class Intake extends SubsystemBase implements Loggable, CANTestable {
   private WPI_TalonFX intakeMotor;
-  private TimeOfFlight leftDistanceSensor;
-  private TimeOfFlight rightDistanceSensor;
+  //  private TimeOfFlight leftDistanceSensor;
+  //  private TimeOfFlight rightDistanceSensor;
 
   private double leftDistance;
   private double rightDistance;
@@ -62,16 +62,16 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     configIntakeCurrentLimit();
 
-    leftDistanceSensor = new TimeOfFlight(kLeftDistanceSensorID);
-    rightDistanceSensor = new TimeOfFlight(kRightDistanceSensorID);
-
-    leftDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
-    rightDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+    //    leftDistanceSensor = new TimeOfFlight(kLeftDistanceSensorID);
+    //    rightDistanceSensor = new TimeOfFlight(kRightDistanceSensorID);
+    //
+    //    leftDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+    //    rightDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
 
     if (Constants.kDebugEnabled) {
       SmartDashboard.putData("Intake motor", intakeMotor);
-      SmartDashboard.putData("Left distance sensor", leftDistanceSensor);
-      SmartDashboard.putData("Right distance sensor", rightDistanceSensor);
+      //      SmartDashboard.putData("Left distance sensor", leftDistanceSensor);
+      //      SmartDashboard.putData("Right distance sensor", rightDistanceSensor);
     }
   }
 
@@ -85,10 +85,10 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void updateSensorDistances() {
-    double leftMeasurement = leftDistanceSensor.getRange() / 1000;
-    double rightMeasurement = rightDistanceSensor.getRange() / 1000;
-    if (leftDistanceSensor.isRangeValid()) leftDistance = leftMeasurement;
-    if (rightDistanceSensor.isRangeValid()) rightDistance = rightMeasurement;
+    //    double leftMeasurement = leftDistanceSensor.getRange() / 1000;
+    //    double rightMeasurement = rightDistanceSensor.getRange() / 1000;
+    //    if (leftDistanceSensor.isRangeValid()) leftDistance = leftMeasurement;
+    //    if (rightDistanceSensor.isRangeValid()) rightDistance = rightMeasurement;
   }
 
   public double getIntakeSpeed() {
