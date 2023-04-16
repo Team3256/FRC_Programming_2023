@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
-import frc.robot.arm.commands.KeepArm;
 import frc.robot.arm.commands.SetArmVoltage;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
@@ -255,26 +254,6 @@ public class RobotContainer implements CANTestable, Loggable {
                   this::isCurrentPieceCone));
 
       driver
-          .rightTrigger()
-          .onTrue(
-              new GroundIntake(
-                  elevatorSubsystem,
-                  armSubsystem,
-                  intakeSubsystem,
-                  ConeOrientation.STANDING_CONE,
-                  this::isCurrentPieceCone));
-
-      driver
-          .rightBumper()
-          .onTrue(
-              new GroundIntake(
-                  elevatorSubsystem,
-                  armSubsystem,
-                  intakeSubsystem,
-                  ConeOrientation.SITTING_CONE,
-                  this::isCurrentPieceCone));
-
-      driver
           .y()
           .onTrue(
               new AutoScore(
@@ -299,7 +278,7 @@ public class RobotContainer implements CANTestable, Loggable {
                   elevatorSubsystem,
                   armSubsystem,
                   ledSubsystem,
-                  currentScoringPreset,
+                  () -> currentScoringPreset,
                   this::isCurrentPieceCone,
                   () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
                   () -> isMovingJoystick(driver)));
@@ -315,6 +294,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
+    intakeSubsystem.setDefaultCommand(
+        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
     operator
         .rightTrigger()
         .whileTrue(
@@ -323,6 +304,28 @@ public class RobotContainer implements CANTestable, Loggable {
                 new OuttakeCube(intakeSubsystem),
                 this::isCurrentPieceCone))
         .onFalse(new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
+
+    if (kArmEnabled && kElevatorEnabled) {
+      driver
+          .rightTrigger()
+          .onTrue(
+              new GroundIntake(
+                  elevatorSubsystem,
+                  armSubsystem,
+                  intakeSubsystem,
+                  ConeOrientation.STANDING_CONE,
+                  this::isCurrentPieceCone));
+
+      driver
+          .rightBumper()
+          .onTrue(
+              new GroundIntake(
+                  elevatorSubsystem,
+                  armSubsystem,
+                  intakeSubsystem,
+                  ConeOrientation.SITTING_CONE,
+                  this::isCurrentPieceCone));
+    }
   }
 
   public void configureElevator() {
@@ -334,7 +337,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureArm() {
-    armSubsystem.setDefaultCommand(new KeepArm(armSubsystem));
+    // armSubsystem.setDefaultCommand(new KeepArm(armSubsystem));
 
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));

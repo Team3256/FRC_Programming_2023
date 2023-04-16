@@ -26,13 +26,6 @@ public class GroundIntake extends ParallelCommandGroup {
     STANDING_CONE,
   }
 
-  private Elevator elevatorSubsystem;
-  private Arm armSubsystem;
-  private Intake intakeSubsystem;
-  private ConeOrientation coneOrientation = ConeOrientation.STANDING_CONE;
-
-  private BooleanSupplier isCurrentPieceCone;
-
   public GroundIntake(
       Elevator elevatorSubsystem,
       Arm armSubsystem,
@@ -52,13 +45,6 @@ public class GroundIntake extends ParallelCommandGroup {
       Intake intakeSubsystem,
       ConeOrientation coneOrientation,
       BooleanSupplier isCurrentPieceCone) {
-
-    this.coneOrientation = coneOrientation;
-    this.elevatorSubsystem = elevatorSubsystem;
-    this.armSubsystem = armSubsystem;
-    this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentPieceCone = isCurrentPieceCone;
-
     ArmPreset coneArmPreset =
         coneOrientation == ConeOrientation.SITTING_CONE
             ? ArmPreset.SITTING_CONE_GROUND_INTAKE
@@ -71,18 +57,19 @@ public class GroundIntake extends ParallelCommandGroup {
                 isCurrentPieceCone)
             .andThen(
                 Commands.deadline(
-                        new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
-                        new ConditionalCommand(
-                                new IntakeCone(intakeSubsystem).repeatedly(),
-                                new InstantCommand(),
-                                isCurrentPieceCone)
-                            .asProxy())
-                    .andThen(new LatchGamePiece(intakeSubsystem, isCurrentPieceCone))),
-        new ConditionalCommand(
-            new SetArmAngle(armSubsystem, coneArmPreset).andThen(new KeepArm(armSubsystem)),
-            new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)
-                .andThen(new KeepArm(armSubsystem)),
-            isCurrentPieceCone));
+                    new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone)
+                        .asProxy(),
+                    new ConditionalCommand(
+                            new IntakeCone(intakeSubsystem).repeatedly(),
+                            new InstantCommand(),
+                            isCurrentPieceCone)
+                        .asProxy()),
+                // .andThen(new LatchGamePiece(intakeSubsystem, isCurrentPieceCone))),
+                new ConditionalCommand(
+                    new SetArmAngle(armSubsystem, coneArmPreset).andThen(new KeepArm(armSubsystem)),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)
+                        .andThen(new KeepArm(armSubsystem)),
+                    isCurrentPieceCone)));
     super.initialize();
   }
 }

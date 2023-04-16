@@ -9,8 +9,8 @@ package frc.robot.elevator.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.arm.Arm;
+import frc.robot.arm.commands.KeepArm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.helpers.ParentCommand;
@@ -20,6 +20,7 @@ public class SetEndEffectorState extends ParentCommand {
   private Elevator elevatorSubsystem;
   private Rotation2d armAngle;
   private double elevatorExtension;
+  private boolean moveArmFirst;
 
   public enum EndEffectorPreset {
     SCORE_CONE_HIGH(Arm.ArmPreset.CONE_HIGH, Elevator.ElevatorPreset.CONE_HIGH),
@@ -44,36 +45,48 @@ public class SetEndEffectorState extends ParentCommand {
   }
 
   public SetEndEffectorState(
-      Elevator elevatorSubsystem, Arm armSubsystem, EndEffectorPreset endEffectorPreset) {
-    this(
-        elevatorSubsystem,
-        armSubsystem,
-        endEffectorPreset.elevatorPreset.position,
-        endEffectorPreset.armPreset.rotation);
-  }
-
-  @Override
-  public void initialize() {
-    addChildCommands(
-        new SetArmAngle(
-                armSubsystem,
-                armSubsystem.getClosestSafePosition(elevatorSubsystem.getElevatorPosition()))
-            .asProxy()
-            .andThen(
-                Commands.parallel(
-                    new SetElevatorExtension(elevatorSubsystem, elevatorExtension),
-                    new SetArmAngle(armSubsystem, armAngle)
-                        .asProxy()
-                        .beforeStarting(new WaitUntilCommand(elevatorSubsystem::isSafeFromArm)))));
-    super.initialize();
-  }
-
-  public SetEndEffectorState(
       Elevator elevatorSubsystem, Arm armSubsystem, double elevatorExtension, Rotation2d armAngle) {
 
     this.armSubsystem = armSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.elevatorExtension = elevatorExtension;
     this.armAngle = armAngle;
+  }
+
+  public SetEndEffectorState(
+      Elevator elevatorSubsystem,
+      Arm armSubsystem,
+      EndEffectorPreset endEffectorPreset,
+      boolean moveArmFirst) {
+    this(
+        elevatorSubsystem,
+        armSubsystem,
+        endEffectorPreset.elevatorPreset.position,
+        endEffectorPreset.armPreset.rotation);
+    this.moveArmFirst = moveArmFirst;
+  }
+
+  public SetEndEffectorState(
+      Elevator elevatorSubsystem, Arm armSubsystem, EndEffectorPreset endEffectorPreset) {
+    this(elevatorSubsystem, armSubsystem, endEffectorPreset, false);
+  }
+
+  @Override
+  public void initialize() {
+    if (moveArmFirst) {
+      addChildCommands(
+          Commands.sequence(
+              new SetArmAngle(armSubsystem, armAngle),
+              Commands.parallel(
+                  new KeepArm(armSubsystem),
+                  new SetElevatorExtension(elevatorSubsystem, elevatorExtension))));
+    } else {
+      addChildCommands(
+          Commands.sequence(
+              new SetElevatorExtension(elevatorSubsystem, elevatorExtension),
+              new SetArmAngle(armSubsystem, armAngle),
+              new KeepArm(armSubsystem)));
+    }
+    super.initialize();
   }
 }

@@ -8,50 +8,30 @@
 package frc.robot.helpers;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import java.util.ArrayList;
-import java.util.Arrays;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class ParentCommand extends DebugCommandBase {
-  private ArrayList<Command> childCommands = new ArrayList<>();
+  private Command childCommands = new InstantCommand();
 
   protected void addChildCommands(Command... commands) {
-    for (Command childCommand : childCommands) {
-      if (childCommand != null) {
-        System.out.println("Parent killing child " + childCommand.getName());
-        childCommand.cancel();
-      }
-    }
-    childCommands.clear();
-    childCommands.addAll(Arrays.asList(commands));
+    childCommands = new ParallelCommandGroup(commands);
   }
 
   @Override
   public void initialize() {
-    for (Command childCommand : childCommands) {
-      if (childCommand != null) {
-        childCommand.schedule();
-      }
-    }
+    childCommands.schedule();
     super.initialize();
   }
 
   @Override
   public void end(boolean interrupted) {
+    childCommands.cancel();
     super.end(interrupted);
-    for (Command childCommand : childCommands) {
-      System.out.println("Parent killing child " + childCommand.getName());
-      childCommand.end(interrupted);
-      childCommand.cancel();
-    }
   }
 
   @Override
   public boolean isFinished() {
-    for (Command childCommand : childCommands) {
-      if (childCommand != null) {
-        if (!childCommand.isFinished()) return false;
-      }
-    }
-    return true;
+    return childCommands.isFinished();
   }
 }

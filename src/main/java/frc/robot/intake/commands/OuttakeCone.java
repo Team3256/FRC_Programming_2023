@@ -38,7 +38,7 @@ public class OuttakeCone extends DebugCommandBase {
 
   @Override
   public boolean isFinished() {
-    return false;
-    // return timer.hasElapsed(1.0);
+    // return false;
+    return timer.hasElapsed(1.0);
   }
 }

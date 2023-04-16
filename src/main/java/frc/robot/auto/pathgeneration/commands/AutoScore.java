@@ -11,10 +11,12 @@ import static frc.robot.Constants.FeatureFlags.kAutoOuttakeEnabled;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 import static frc.robot.led.LEDConstants.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,6 +39,7 @@ import frc.robot.led.commands.SetAllBlink;
 import frc.robot.led.commands.SetAllColor;
 import frc.robot.swerve.SwerveDrive;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class AutoScore extends ParentCommand {
   public enum GridScoreHeight {
@@ -50,7 +53,7 @@ public class AutoScore extends ParentCommand {
   private Arm armSubsystem;
   private LED ledSubsystem;
   private Intake intakeSubsystem;
-  private GridScoreHeight gridScoreHeight;
+  private Supplier<GridScoreHeight> gridScoreHeight;
   private BooleanSupplier cancelCommand;
   private BooleanSupplier isCurrentLEDPieceCone;
   private BooleanSupplier isAutoScoreMode;
@@ -62,6 +65,29 @@ public class AutoScore extends ParentCommand {
       Arm armSubsystem,
       LED ledSubsystem,
       GridScoreHeight gridScoreHeight,
+      BooleanSupplier isCurrentLEDPieceCone,
+      BooleanSupplier isAutoScoreMode,
+      BooleanSupplier cancelCommand) {
+
+    this(
+        swerveDrive,
+        intakeSubsystem,
+        elevatorSubsystem,
+        armSubsystem,
+        ledSubsystem,
+        () -> gridScoreHeight,
+        isCurrentLEDPieceCone,
+        isAutoScoreMode,
+        cancelCommand);
+  }
+
+  public AutoScore(
+      SwerveDrive swerveDrive,
+      Intake intakeSubsystem,
+      Elevator elevatorSubsystem,
+      Arm armSubsystem,
+      LED ledSubsystem,
+      Supplier<GridScoreHeight> gridScoreHeight,
       BooleanSupplier isCurrentLEDPieceCone,
       BooleanSupplier isAutoScoreMode,
       BooleanSupplier cancelCommand) {
@@ -82,7 +108,7 @@ public class AutoScore extends ParentCommand {
     System.out.println(
         "Is running auto score instead of presets: " + isAutoScoreMode.getAsBoolean());
     if (!isAutoScoreMode.getAsBoolean()) {
-      switch (gridScoreHeight) {
+      switch (gridScoreHeight.get()) {
         case HIGH:
           new ConditionalCommand(
                   new SetEndEffectorState(
@@ -160,7 +186,7 @@ public class AutoScore extends ParentCommand {
     Pose2d scoringLocation;
     Command moveArmElevatorToPreset;
 
-    switch (gridScoreHeight) {
+    switch (gridScoreHeight.get()) {
       case HIGH:
         scoringLocation = kHighBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
@@ -206,6 +232,7 @@ public class AutoScore extends ParentCommand {
           DriverStation.getAlliance() == Alliance.Red
               ? intakeSubsystem.getGamePieceOffset()
               : -intakeSubsystem.getGamePieceOffset();
+      offset = MathUtil.clamp(offset, -Units.inchesToMeters(7), Units.inchesToMeters(7));
 
       scoringLocation =
           scoringLocation.plus(new Transform2d(new Translation2d(0, offset), new Rotation2d()));
@@ -234,9 +261,9 @@ public class AutoScore extends ParentCommand {
     Command autoScore =
         Commands.sequence(
                 moveToScoringWaypoint,
-                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset),
+                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset.asProxy()),
                 Commands.either(
-                    Commands.sequence(runOuttake, stowArmElevator),
+                    Commands.sequence(runOuttake.asProxy(), stowArmElevator.asProxy()),
                     Commands.none(),
                     () -> kAutoOuttakeEnabled))
             .deadlineWith(runningLEDs.asProxy())

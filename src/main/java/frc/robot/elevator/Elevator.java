@@ -15,6 +15,7 @@ import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -83,12 +84,12 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
     elevatorMotor.setInverted(true);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0.2));
 
     elevatorFollowerMotor =
         TalonFXFactory.createPermanentFollowerTalon(kElevatorFollowerCANDevice, kElevatorCANDevice);
     elevatorFollowerMotor.setInverted(InvertType.FollowMaster);
     elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
-    // SmartDashboard.putData("Elevator motor", elevatorMotor);
     zeroElevator();
     zeroLimitSwitch = new DigitalInput(kElevatorLimitSwitchDIO);
   }
