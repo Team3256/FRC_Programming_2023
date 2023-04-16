@@ -38,6 +38,7 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.GroundIntake.ConeOrientation;
 import frc.robot.led.LED;
+import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
 import frc.robot.led.commands.SetAllBlink;
 import frc.robot.led.commands.SetAllColor;
@@ -51,9 +52,12 @@ import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -87,11 +91,16 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    if (kArmEnabled) armSubsystem = new Arm();
-    if (kIntakeEnabled) intakeSubsystem = new Intake();
-    if (kElevatorEnabled) elevatorSubsystem = new Elevator();
-    if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
-    if (kLedStripEnabled) ledSubsystem = new LED();
+    if (kArmEnabled)
+      armSubsystem = new Arm();
+    if (kIntakeEnabled)
+      intakeSubsystem = new Intake();
+    if (kElevatorEnabled)
+      elevatorSubsystem = new Elevator();
+    if (kSwerveEnabled)
+      swerveSubsystem = new SwerveDrive();
+    if (kLedStripEnabled)
+      ledSubsystem = new LED();
 
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -130,13 +139,12 @@ public class RobotContainer implements CANTestable, Loggable {
         "Current Double Substation Location", doubleSubstationLocation.toString());
     SmartDashboard.putNumber("Elevator testing setpoint position", 0);
 
-    autoPaths =
-        new AutoPaths(
-            swerveSubsystem,
-            intakeSubsystem,
-            elevatorSubsystem,
-            armSubsystem,
-            this::isCurrentPieceCone);
+    autoPaths = new AutoPaths(
+        swerveSubsystem,
+        intakeSubsystem,
+        elevatorSubsystem,
+        armSubsystem,
+        this::isCurrentPieceCone);
     autoPaths.sendCommandsToChooser();
 
     if (AutoConstants.kAutoDebug) {
@@ -150,8 +158,7 @@ public class RobotContainer implements CANTestable, Loggable {
     }
 
     if (RobotBase.isSimulation()) {
-      robotSimulation =
-          new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
+      robotSimulation = new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
       robotSimulation.initializeRobot();
       robotSimulation.addDoubleSubstation(GamePiece.CONE);
     }
@@ -225,12 +232,12 @@ public class RobotContainer implements CANTestable, Loggable {
         .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
-                    swerveSubsystem,
-                    driver::getLeftY,
-                    driver::getLeftX,
-                    driver::getRightX,
-                    kFieldRelative,
-                    kOpenLoop)
+                swerveSubsystem,
+                driver::getLeftY,
+                driver::getLeftX,
+                driver::getRightX,
+                kFieldRelative,
+                kOpenLoop)
                 .deadlineWith(new LimitedSwervePattern(ledSubsystem, this::isCurrentPieceCone)));
 
     driver
@@ -340,7 +347,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledSubsystem.setDefaultCommand(new SetAllColor(ledSubsystem, kCube));
+    ledSubsystem.setDefaultCommand(new ColorFlowPattern(ledSubsystem));
 
     operator
         .rightBumper()
@@ -400,14 +407,15 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : canBusTestables) result &= subsystem.CANTest();
+    for (CANTestable subsystem : canBusTestables)
+      result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine =
-        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
+    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
+        armSubsystem);
     pitSubsystemRoutine.runPitRoutine();
   }
 
