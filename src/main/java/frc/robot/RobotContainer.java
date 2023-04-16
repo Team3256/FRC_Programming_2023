@@ -37,6 +37,7 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.GroundIntake.ConeOrientation;
 import frc.robot.led.LED;
+import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
 import frc.robot.led.commands.SetAllColor;
 import frc.robot.logging.Loggable;
