@@ -308,9 +308,8 @@ public class RobotContainer implements CANTestable, Loggable {
                 new OuttakeCube(intakeSubsystem),
                 this::isCurrentPieceCone));
     (operator.rightTrigger())
-            .or(driver.b())
-            .onFalse(
-                    new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
+        .or(driver.b())
+        .onFalse(new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
   }
 
   public void configureElevator() {

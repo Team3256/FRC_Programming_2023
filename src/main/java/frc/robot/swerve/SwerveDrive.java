@@ -37,7 +37,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeatureFlags;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.helpers.StatisticsHelper;
@@ -285,7 +284,11 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
     if (kDebugEnabled) {
       SmartDashboard.putNumber("April Tag Distance", aprilTagDistance);
     }
-    if (aprilTagDistance > VisionConstants.kMaxValidDistanceFromAprilTag) return;
+    double maxLocalizationDistance =
+        DriverStation.isAutonomous()
+            ? kMaxValidDistanceFromAprilTagAuto
+            : kMaxValidDistanceFromAprilTagTeleop;
+    if (aprilTagDistance > maxLocalizationDistance) return;
 
     if (FeatureFlags.kLocalizationStdDistanceBased) {
       if (kDebugEnabled) {

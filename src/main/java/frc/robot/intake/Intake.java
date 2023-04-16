@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
@@ -62,16 +63,18 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     configIntakeCurrentLimit();
 
-    //    leftDistanceSensor = new TimeOfFlight(kLeftDistanceSensorID);
-    //    rightDistanceSensor = new TimeOfFlight(kRightDistanceSensorID);
-    //
-    //    leftDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
-    //    rightDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {
+      //      leftDistanceSensor = new TimeOfFlight(kLeftDistanceSensorID);
+      //      rightDistanceSensor = new TimeOfFlight(kRightDistanceSensorID);
+      //
+      //      leftDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
+      //      rightDistanceSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 0.05);
 
-    if (Constants.kDebugEnabled) {
-      SmartDashboard.putData("Intake motor", intakeMotor);
-      //      SmartDashboard.putData("Left distance sensor", leftDistanceSensor);
-      //      SmartDashboard.putData("Right distance sensor", rightDistanceSensor);
+      if (Constants.kDebugEnabled) {
+        SmartDashboard.putData("Intake motor", intakeMotor);
+        //        SmartDashboard.putData("Left distance sensor", leftDistanceSensor);
+        //        SmartDashboard.putData("Right distance sensor", rightDistanceSensor);
+      }
     }
   }
 
@@ -80,8 +83,11 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public double getGamePieceOffset() {
-    updateSensorDistances();
-    return (rightDistance - leftDistance) / 2;
+    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {
+      updateSensorDistances();
+      return (rightDistance - leftDistance) / 2;
+    }
+    return 0;
   }
 
   public void updateSensorDistances() {
@@ -141,10 +147,6 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
     if (Constants.kDebugEnabled) {
       SmartDashboard.putNumber("Intake supply current", intakeMotor.getSupplyCurrent());
       SmartDashboard.putNumber("Intake stator current", intakeMotor.getStatorCurrent());
-
-      updateSensorDistances();
-      //      SmartDashboard.putNumber("Left distance sensor measurement", leftDistance);
-      //      SmartDashboard.putNumber("Right distance sensor measurement", rightDistance);
     }
   }
 

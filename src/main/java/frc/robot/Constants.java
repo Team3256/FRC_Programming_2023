@@ -40,15 +40,16 @@ public final class Constants {
 
   public static final class FeatureFlags {
     public static final boolean kUsePrefs = false;
+
     public static final boolean kAutoScoreEnabled = true;
     public static final boolean kAutoOuttakeEnabled = true;
     public static final boolean kOperatorManualArmControlEnabled = true;
-    public static final boolean kSwerveAccelerationLimitingEnabled = false;
     public static final boolean kLocalizationStdDistanceBased = true;
     public static final boolean kLocalizeDuringAuto = true;
-
-    public static final boolean kLocalizationDataCollectionMode = false;
     public static final boolean kIntakeAutoScoreDistanceSensorOffset = true;
+
+    public static final boolean kSwerveAccelerationLimitingEnabled = false;
+    public static final boolean kLocalizationDataCollectionMode = false;
     public static final boolean kShuffleboardLayoutEnabled = true;
     public static final boolean kGamePieceDetection = false;
     public static final boolean kDynamicPathGenEnabled = false;
@@ -335,7 +336,8 @@ public final class Constants {
     // TODO: set the indexes
     public static final int kDefaultPipeline = 0;
     public static final int kDetectorPipelineIndex = 1;
-    public static final double kMaxValidDistanceFromAprilTag = 3.5;
+    public static final double kMaxValidDistanceFromAprilTagTeleop = 3.5;
+    public static final double kMaxValidDistanceFromAprilTagAuto = 1.5;
 
     public static class RightConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
