@@ -36,7 +36,6 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.GroundIntake.ConeOrientation;
 import frc.robot.led.LED;
-import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
 import frc.robot.led.commands.SetAllBlink;
 import frc.robot.led.commands.SetAllColor;
@@ -306,9 +305,7 @@ public class RobotContainer implements CANTestable, Loggable {
             new ConditionalCommand(
                 new OuttakeCone(intakeSubsystem),
                 new OuttakeCube(intakeSubsystem),
-                this::isCurrentPieceCone));
-    (operator.rightTrigger())
-        .or(driver.b())
+                this::isCurrentPieceCone))
         .onFalse(new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
   }
 
@@ -340,9 +337,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledSubsystem.setDefaultCommand(new ColorFlowPattern(ledSubsystem));
-
-    updateGamePieceLEDs();
+    ledSubsystem.setDefaultCommand(new SetAllColor(ledSubsystem, kCube));
     operator
         .rightBumper()
         .toggleOnTrue(
