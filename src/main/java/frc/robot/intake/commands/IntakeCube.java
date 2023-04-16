@@ -31,7 +31,7 @@ public class IntakeCube extends DebugCommandBase {
 
   public IntakeCube(Intake intakeSubsystem, double triggerTime) {
     this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentSpiking = new TimedBoolean(() -> intakeSubsystem.isCurrentSpiking(), triggerTime);
+    this.isCurrentSpiking = new TimedBoolean(intakeSubsystem::isCurrentSpiking, triggerTime);
     this.addRequirements(intakeSubsystem);
   }
 

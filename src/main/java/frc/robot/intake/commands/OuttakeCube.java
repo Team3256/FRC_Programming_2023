@@ -23,13 +23,6 @@ public class OuttakeCube extends DebugCommandBase {
     addRequirements(intakeSubsystem);
   }
 
-  public OuttakeCube(Intake intakeSubsystem, LED ledSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
-    this.ledSubsystem = ledSubsystem;
-    this.timer = new Timer();
-    addRequirements(intakeSubsystem);
-  }
-
   @Override
   public void initialize() {
     super.initialize();

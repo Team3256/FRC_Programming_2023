@@ -23,13 +23,6 @@ public class OuttakeCone extends DebugCommandBase {
     addRequirements(intakeSubsystem);
   }
 
-  public OuttakeCone(Intake intakeSubsystem, LED ledSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
-    this.ledSubsystem = ledSubsystem;
-    this.timer = new Timer();
-    addRequirements(intakeSubsystem);
-  }
-
   @Override
   public void initialize() {
     super.initialize();

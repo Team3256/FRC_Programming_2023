@@ -353,7 +353,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledSubsystem.setDefaultCommand(new SetAllColor(ledSubsystem, kCube));
+    ledSubsystem.setDefaultCommand(new SetAllColor(ledSubsystem, kDefault));
 
     operator
         .leftBumper()
@@ -438,9 +438,9 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void updateGamePieceLEDs() {
     if (currentPiece == GamePiece.CONE) {
-      new SetAllBlink(ledSubsystem, kCone).schedule();
+      new SetAllColor(ledSubsystem, kCone).schedule();
     } else {
-      new SetAllBlink(ledSubsystem, kCube).schedule();
+      new SetAllColor(ledSubsystem, kCube).schedule();
     }
   }
 

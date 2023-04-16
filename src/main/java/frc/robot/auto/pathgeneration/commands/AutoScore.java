@@ -130,7 +130,7 @@ public class AutoScore extends ParentCommand {
     }
     if (0 > locationId || locationId > 8) {
       System.out.println("locationId was invalid (" + locationId + ")");
-      new SetAllBlink(ledSubsystem, kError).withTimeout(6).schedule();
+      new SetAllColor(ledSubsystem, kError).withTimeout(2.5).schedule();
       return;
     }
 
@@ -154,8 +154,8 @@ public class AutoScore extends ParentCommand {
     BooleanSupplier isCurrentPieceCone = () -> scoringGamePiece.equals(GamePiece.CONE);
     Command runOuttake =
         new ConditionalCommand(
-            new OuttakeCone(intakeSubsystem, ledSubsystem),
-            new OuttakeCube(intakeSubsystem, ledSubsystem),
+            new OuttakeCone(intakeSubsystem),
+            new OuttakeCube(intakeSubsystem),
             isCurrentPieceCone);
     // Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
     // Set arm and elevator command and end pose based on node type and height
@@ -221,13 +221,13 @@ public class AutoScore extends ParentCommand {
         PathGeneration.createDynamicAbsolutePath(
             scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
 
-    Command successLEDs = new SetAllBlink(ledSubsystem, kSuccess).withTimeout(5);
+    Command successLEDs = new SetAllColor(ledSubsystem, kSuccess).withTimeout(2.5);
 
-    Command errorLEDs = new SetAllBlink(ledSubsystem, kError).withTimeout(5);
+    Command errorLEDs = new SetAllColor(ledSubsystem, kError).withTimeout(2.5);
     Command runningLEDs =
         new ConditionalCommand(
-            new SetAllColor(ledSubsystem, kCone),
-            new SetAllColor(ledSubsystem, kCube),
+            new SetAllBlink(ledSubsystem, kCone),
+            new SetAllBlink(ledSubsystem, kCube),
             isCurrentPieceCone);
 
     Command stowArmElevator =
