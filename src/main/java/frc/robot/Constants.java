@@ -43,7 +43,7 @@ public final class Constants {
 
     public static final boolean kAutoScoreEnabled = true;
     public static final boolean kAutoOuttakeEnabled = true;
-    public static final boolean kOperatorManualArmControlEnabled = true;
+    public static final boolean kOperatorManualArmControlEnabled = false;
     public static final boolean kLocalizationStdDistanceBased = true;
     public static final boolean kLocalizeDuringAuto = true;
     public static final boolean kIntakeAutoScoreDistanceSensorOffset = true;
