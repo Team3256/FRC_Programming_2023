@@ -27,12 +27,11 @@ import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.pathgeneration.commands.*;
 import frc.robot.auto.pathgeneration.commands.AutoIntakeAtDoubleSubstation.SubstationLocation;
+import frc.robot.auto.pathgeneration.commands.AutoScore.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorPreset;
 import frc.robot.elevator.commands.SetElevatorExtension;
-import frc.robot.elevator.commands.SetEndEffectorState;
-import frc.robot.elevator.commands.SetEndEffectorState.EndEffectorPreset;
 import frc.robot.elevator.commands.StowEndEffector;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
@@ -50,15 +49,11 @@ import frc.robot.swerve.commands.TeleopSwerve;
 import frc.robot.swerve.commands.TeleopSwerveLimited;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
-import frc.robot.auto.pathgeneration.commands.AutoScore.*;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer implements CANTestable, Loggable {
@@ -93,16 +88,11 @@ public class RobotContainer implements CANTestable, Loggable {
   private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
 
   public RobotContainer() {
-    if (kArmEnabled)
-      armSubsystem = new Arm();
-    if (kIntakeEnabled)
-      intakeSubsystem = new Intake();
-    if (kElevatorEnabled)
-      elevatorSubsystem = new Elevator();
-    if (kSwerveEnabled)
-      swerveSubsystem = new SwerveDrive();
-    if (kLedStripEnabled)
-      ledSubsystem = new LED();
+    if (kArmEnabled) armSubsystem = new Arm();
+    if (kIntakeEnabled) intakeSubsystem = new Intake();
+    if (kElevatorEnabled) elevatorSubsystem = new Elevator();
+    if (kSwerveEnabled) swerveSubsystem = new SwerveDrive();
+    if (kLedStripEnabled) ledSubsystem = new LED();
 
     if (kLedStripEnabled) {
       configureLEDStrip();
@@ -141,12 +131,13 @@ public class RobotContainer implements CANTestable, Loggable {
         "Current Double Substation Location", doubleSubstationLocation.toString());
     SmartDashboard.putNumber("Elevator testing setpoint position", 0);
 
-    autoPaths = new AutoPaths(
-        swerveSubsystem,
-        intakeSubsystem,
-        elevatorSubsystem,
-        armSubsystem,
-        this::isCurrentPieceCone);
+    autoPaths =
+        new AutoPaths(
+            swerveSubsystem,
+            intakeSubsystem,
+            elevatorSubsystem,
+            armSubsystem,
+            this::isCurrentPieceCone);
     autoPaths.sendCommandsToChooser();
 
     if (AutoConstants.kAutoDebug) {
@@ -160,7 +151,8 @@ public class RobotContainer implements CANTestable, Loggable {
     }
 
     if (RobotBase.isSimulation()) {
-      robotSimulation = new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
+      robotSimulation =
+          new RobotSimulation(swerveSubsystem, intakeSubsystem, armSubsystem, elevatorSubsystem);
       robotSimulation.initializeRobot();
       robotSimulation.addDoubleSubstation(GamePiece.CONE);
     }
@@ -234,12 +226,12 @@ public class RobotContainer implements CANTestable, Loggable {
         .leftBumper()
         .toggleOnTrue(
             new TeleopSwerveLimited(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                driver::getRightX,
-                kFieldRelative,
-                kOpenLoop)
+                    swerveSubsystem,
+                    driver::getLeftY,
+                    driver::getLeftX,
+                    driver::getRightX,
+                    kFieldRelative,
+                    kOpenLoop)
                 .deadlineWith(new LimitedSwervePattern(ledSubsystem, this::isCurrentPieceCone)));
 
     driver
@@ -251,64 +243,73 @@ public class RobotContainer implements CANTestable, Loggable {
 
     if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
 
-       driver
-       .leftTrigger()
-       .onTrue(
-       new AutoIntakeAtDoubleSubstation(
-       swerveSubsystem,
-       intakeSubsystem,
-       elevatorSubsystem,
-       armSubsystem,
-       ledSubsystem,
-       () -> doubleSubstationLocation,
-       () -> isMovingJoystick(driver),
-       () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
-       this::isCurrentPieceCone));
-
-       driver
-       .rightTrigger()
-       .onTrue(
-               new GroundIntake(elevatorSubsystem, armSubsystem, intakeSubsystem, ConeOrientation.STANDING_CONE, this::isCurrentPieceCone)
-       );
+      driver
+          .leftTrigger()
+          .onTrue(
+              new AutoIntakeAtDoubleSubstation(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledSubsystem,
+                  () -> doubleSubstationLocation,
+                  () -> isMovingJoystick(driver),
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  this::isCurrentPieceCone));
 
       driver
-              .rightBumper()
-              .onTrue(
-                      new GroundIntake(elevatorSubsystem, armSubsystem, intakeSubsystem, ConeOrientation.SITTING_CONE, this::isCurrentPieceCone)
-              );
+          .rightTrigger()
+          .onTrue(
+              new GroundIntake(
+                  elevatorSubsystem,
+                  armSubsystem,
+                  intakeSubsystem,
+                  ConeOrientation.STANDING_CONE,
+                  this::isCurrentPieceCone));
 
+      driver
+          .rightBumper()
+          .onTrue(
+              new GroundIntake(
+                  elevatorSubsystem,
+                  armSubsystem,
+                  intakeSubsystem,
+                  ConeOrientation.SITTING_CONE,
+                  this::isCurrentPieceCone));
 
-       driver
-       .y()
-       .onTrue(
-       new AutoScore(
-       swerveSubsystem,
-       intakeSubsystem,
-       elevatorSubsystem,
-       armSubsystem,
-       ledSubsystem,
-       AutoScore.GridScoreHeight.LOW,
-       this::isCurrentPieceCone,
-       () -> false,
-       () -> false));
+      driver
+          .y()
+          .onTrue(
+              new AutoScore(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledSubsystem,
+                  AutoScore.GridScoreHeight.LOW,
+                  this::isCurrentPieceCone,
+                  () -> false,
+                  () -> false));
 
-       //B Auto Score
+      // B Auto Score
 
-       driver
-       .b()
-       .onTrue(
-       new AutoScore(
-       swerveSubsystem,
-       intakeSubsystem,
-       elevatorSubsystem,
-       armSubsystem,
-       ledSubsystem,
-       currentScoringPreset,
-       this::isCurrentPieceCone,
-       () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
-       () -> isMovingJoystick(driver)));
+      driver
+          .b()
+          .onTrue(
+              new AutoScore(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledSubsystem,
+                  currentScoringPreset,
+                  this::isCurrentPieceCone,
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  () -> isMovingJoystick(driver)));
 
-      operator.rightBumper().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.HIGH)));
+      operator
+          .rightBumper()
+          .onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.HIGH)));
       operator.povUp().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.MID)));
       operator.povDown().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.LOW)));
     }
@@ -326,7 +327,8 @@ public class RobotContainer implements CANTestable, Loggable {
                 intakeSubsystem,
                 ConeOrientation.SITTING_CONE,
                 () -> true));
-    operator.rightTrigger()
+    operator
+        .rightTrigger()
         .whileTrue(
             new ConditionalCommand(
                 new OuttakeCone(intakeSubsystem),
@@ -337,7 +339,9 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void configureElevator() {
     if (kArmEnabled) {
-      operator.leftTrigger().onTrue(new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
+      operator
+          .leftTrigger()
+          .onTrue(new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
     }
   }
 
@@ -420,15 +424,14 @@ public class RobotContainer implements CANTestable, Loggable {
   public boolean CANTest() {
     System.out.println("Testing CAN connections:");
     boolean result = true;
-    for (CANTestable subsystem : canBusTestables)
-      result &= subsystem.CANTest();
+    for (CANTestable subsystem : canBusTestables) result &= subsystem.CANTest();
     System.out.println("CAN fully connected: " + result);
     return result;
   }
 
   public void startPitRoutine() {
-    PitTestRoutine pitSubsystemRoutine = new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem,
-        armSubsystem);
+    PitTestRoutine pitSubsystemRoutine =
+        new PitTestRoutine(elevatorSubsystem, intakeSubsystem, swerveSubsystem, armSubsystem);
     pitSubsystemRoutine.runPitRoutine();
   }
 
@@ -467,11 +470,9 @@ public class RobotContainer implements CANTestable, Loggable {
         "Current Double Substation Location", doubleSubstationLocation.toString());
   }
 
-
   public void setScoreLocation(GridScoreHeight Preset) {
     currentScoringPreset = Preset;
-    SmartDashboard.putString(
-            "Current Scoring Preset", currentScoringPreset.toString());
+    SmartDashboard.putString("Current Scoring Preset", currentScoringPreset.toString());
   }
 
   public void updateSimulation() {
