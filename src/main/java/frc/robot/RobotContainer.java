@@ -352,7 +352,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledSubsystem.setDefaultCommand(new SetAllColor(ledSubsystem, kDefault));
+    ledSubsystem.setDefaultCommand(new ColorFlowPattern(ledSubsystem));
 
     operator
         .leftBumper()

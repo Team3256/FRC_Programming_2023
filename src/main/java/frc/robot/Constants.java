@@ -42,7 +42,7 @@ public final class Constants {
   public static final class FeatureFlags {
     public static final boolean kUsePrefs = false;
 
-    public static final boolean kAutoScoreEnabled = true;
+    public static final boolean kAutoScoreEnabled = false;
     public static final boolean kAutoOuttakeEnabled = true;
     public static final boolean kOperatorManualArmControlEnabled = false;
     public static final boolean kLocalizationStdDistanceBased = true;

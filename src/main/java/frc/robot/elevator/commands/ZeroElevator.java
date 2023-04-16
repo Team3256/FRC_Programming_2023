@@ -37,8 +37,8 @@ public class ZeroElevator extends DebugCommandBase {
 
   @Override
   public boolean isFinished() {
-    if (elevatorSubsystem.isMoving()) hasStarted = true;
-    return elevatorSubsystem.isStopping(hasStarted);
-    //    return elevatorSubsystem.isZeroLimitSwitchTriggered();
+    // if (elevatorSubsystem.isMoving()) hasStarted = true;
+    // return elevatorSubsystem.isStopping(hasStarted);
+    return elevatorSubsystem.isZeroLimitSwitchTriggered();
   }
 }
