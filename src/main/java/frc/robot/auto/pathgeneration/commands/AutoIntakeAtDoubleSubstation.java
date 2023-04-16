@@ -152,9 +152,7 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
 
     Command runIntake =
         new ConditionalCommand(
-            new IntakeCone(intakeSubsystem, ledSubsystem),
-            new IntakeCube(intakeSubsystem, ledSubsystem),
-            isCurrentPieceCone);
+            new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
     Command moveToSubstation =
         PathGeneration.createDynamicAbsolutePath(
             substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
@@ -164,11 +162,11 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
 
     Command runningLEDs =
         new ConditionalCommand(
-            new SetAllColor(ledSubsystem, kCone),
-            new SetAllColor(ledSubsystem, kCube),
+            new SetAllBlink(ledSubsystem, kCone),
+            new SetAllBlink(ledSubsystem, kCube),
             isCurrentPieceCone);
-    Command successLEDs = new SetAllBlink(ledSubsystem, kSuccess);
-    Command errorLEDs = new SetAllBlink(ledSubsystem, kError);
+    Command successLEDs = new SetAllColor(ledSubsystem, kSuccess);
+    Command errorLEDs = new SetAllColor(ledSubsystem, kError);
 
     // Automatically intake at the double substation
     Command autoIntakeCommand =

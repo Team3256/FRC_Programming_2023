@@ -37,7 +37,6 @@ import frc.robot.intake.commands.GroundIntake.ConeOrientation;
 import frc.robot.led.LED;
 import frc.robot.led.commands.ColorFlowPattern;
 import frc.robot.led.commands.LimitedSwervePattern;
-import frc.robot.led.commands.SetAllBlink;
 import frc.robot.led.commands.SetAllColor;
 import frc.robot.logging.Loggable;
 import frc.robot.simulation.RobotSimulation;
@@ -353,7 +352,7 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void configureLEDStrip() {
-    ledSubsystem.setDefaultCommand(new ColorFlowPattern(ledSubsystem));
+    ledSubsystem.setDefaultCommand(new SetAllColor(ledSubsystem, kDefault));
 
     operator
         .leftBumper()
@@ -427,9 +426,9 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void updateGamePieceLEDs() {
     if (currentPiece == GamePiece.CONE) {
-      new SetAllBlink(ledSubsystem, kCone).schedule();
+      new SetAllColor(ledSubsystem, kCone).schedule();
     } else {
-      new SetAllBlink(ledSubsystem, kCube).schedule();
+      new SetAllColor(ledSubsystem, kCube).schedule();
     }
   }
 

@@ -17,9 +17,9 @@ import java.util.function.BooleanSupplier;
 public class LimitedSwervePattern extends CommandBase {
   public LimitedSwervePattern(LED ledSubsystem, BooleanSupplier isCurrentPieceCone) {
     if (isCurrentPieceCone.getAsBoolean()) {
-      LED.LEDSegment.MainStrip.setStrobeAnimation(kCone, 1);
+      LED.LEDSegment.MainStrip.setStrobeAnimation(kCone, 0.3);
     } else {
-      LED.LEDSegment.MainStrip.setStrobeAnimation(kCube, 1);
+      LED.LEDSegment.MainStrip.setStrobeAnimation(kCube, 0.3);
     }
     addRequirements(ledSubsystem);
   }

@@ -12,10 +12,10 @@ import java.awt.Color;
 public class LEDConstants {
   public static final int kLedID = 0;
   public static final String kLEDCanbus = "mani";
-  public static final Color kCone = Color.yellow; // new Color(1.0f,0.84313726f,0.0f);
+  public static final Color kCone = Color.orange;
   public static final Color kCube = new Color(0.5411765f, 0.16862746f, 0.8862745f);
   public static final Color kLockSwerve = Color.green;
   public static final Color kSuccess = Color.green;
   public static final Color kError = Color.red;
-  public static final Color kDefault = Color.MAGENTA;
+  public static final Color kDefault = Color.blue;
 }
