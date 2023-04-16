@@ -90,7 +90,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
     SmartDashboard.putData("Elevator motor", elevatorMotor);
     zeroElevator();
-
     zeroLimitSwitch = new DigitalInput(kElevatorLimitSwitchDIO);
   }
 

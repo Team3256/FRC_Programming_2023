@@ -204,10 +204,13 @@ public class AutoScore extends ParentCommand {
     }
 
     if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {
+      double offset =
+          DriverStation.getAlliance() == Alliance.Red
+              ? intakeSubsystem.getGamePieceOffset()
+              : -intakeSubsystem.getGamePieceOffset();
+
       scoringLocation =
-          scoringLocation.plus(
-              new Transform2d(
-                  new Translation2d(0, intakeSubsystem.getGamePieceOffset()), new Rotation2d()));
+          scoringLocation.plus(new Transform2d(new Translation2d(0, offset), new Rotation2d()));
     }
 
     if (DriverStation.getAlliance() == Alliance.Red) {

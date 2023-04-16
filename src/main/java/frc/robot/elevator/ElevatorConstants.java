@@ -37,17 +37,15 @@ public final class ElevatorConstants {
       kAnyPieceLowPosition - Units.inchesToMeters(7);
 
   public static final double kElevatorS = 0.45;
-  public static final double kElevatorV = 7.00;
+  public static final double kElevatorV = 7.30;
   public static final double kElevatorA = 0.01;
   public static final double kElevatorG = 0.00;
-  public static final double kElevatorP = 7;
+  public static final double kElevatorP = 30;
   public static final double kElevatorI = 0;
   public static final double kElevatorD = 0;
 
   public static final TrapezoidProfile.Constraints kElevatorConstraints =
-      new TrapezoidProfile.Constraints(0.5, 0.5); // 3
-  // and
-  // 3
+      new TrapezoidProfile.Constraints(5, 2);
 
   public static final double kDownSpeedVolts = -7; // -9
   public static final double kElevatorCurrentThreshold = 64; // amps

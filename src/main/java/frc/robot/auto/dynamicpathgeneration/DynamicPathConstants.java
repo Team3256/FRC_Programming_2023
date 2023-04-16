@@ -64,7 +64,7 @@ public final class DynamicPathConstants {
   }
 
   public static final PathConstraints kWaypointPathConstraints = new PathConstraints(4, 3);
-  public static final PathConstraints kPathToDestinationConstraints = new PathConstraints(3, 2);
+  public static final PathConstraints kPathToDestinationConstraints = new PathConstraints(3, 1);
 
   // x value for the blue tape in front of the blue scoring grid
   public static final double kBlueGridTapeX = 1.36;
