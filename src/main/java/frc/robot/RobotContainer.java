@@ -335,6 +335,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureArm() {
     armSubsystem.setDefaultCommand(new KeepArm(armSubsystem));
+
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
       operator
@@ -354,11 +355,7 @@ public class RobotContainer implements CANTestable, Loggable {
   public void configureLEDStrip() {
     ledSubsystem.setDefaultCommand(new ColorFlowPattern(ledSubsystem));
 
-    operator
-        .leftBumper()
-        .toggleOnTrue(
-            new InstantCommand(this::toggleGamePiece)
-                .andThen(new InstantCommand(this::updateGamePieceLEDs)));
+    operator.leftBumper().onTrue(new InstantCommand(this::toggleGamePiece));
   }
 
   public Command getAutonomousCommand() {
@@ -418,18 +415,12 @@ public class RobotContainer implements CANTestable, Loggable {
   public void toggleGamePiece() {
     if (currentPiece == GamePiece.CONE) {
       currentPiece = GamePiece.CUBE;
+      new SetAllColor(ledSubsystem, kCube).schedule();
     } else {
       currentPiece = GamePiece.CONE;
+      new SetAllColor(ledSubsystem, kCone).schedule();
     }
     System.out.println("Current game piece: " + currentPiece);
-  }
-
-  public void updateGamePieceLEDs() {
-    if (currentPiece == GamePiece.CONE) {
-      new SetAllColor(ledSubsystem, kCone).schedule();
-    } else {
-      new SetAllColor(ledSubsystem, kCube).schedule();
-    }
   }
 
   public GamePiece getCurrentPiece() {

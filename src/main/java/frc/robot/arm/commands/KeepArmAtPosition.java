@@ -32,11 +32,9 @@ public class KeepArmAtPosition extends ProfiledPIDCommand {
         armSubsystem.getArmPositionElevatorRelative(),
         (output, setpoint) ->
             armSubsystem.setInputVoltage(
-                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)),
-        armSubsystem);
+                output + armSubsystem.calculateFeedForward(setpoint.position, setpoint.velocity)));
 
     this.armSubsystem = armSubsystem;
-    // addRequirements(armSubsystem);
   }
 
   @Override

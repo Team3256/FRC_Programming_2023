@@ -15,6 +15,13 @@ public class ParentCommand extends DebugCommandBase {
   private ArrayList<Command> childCommands = new ArrayList<>();
 
   protected void addChildCommands(Command... commands) {
+    for (Command childCommand : childCommands) {
+      if (childCommand != null) {
+        System.out.println("Parent killing child " + childCommand.getName());
+        childCommand.cancel();
+      }
+    }
+    childCommands.clear();
     childCommands.addAll(Arrays.asList(commands));
   }
 
@@ -32,10 +39,9 @@ public class ParentCommand extends DebugCommandBase {
   public void end(boolean interrupted) {
     super.end(interrupted);
     for (Command childCommand : childCommands) {
-      if (childCommand != null) {
-        System.out.println("Parent killing child " + childCommand.getName());
-        childCommand.cancel();
-      }
+      System.out.println("Parent killing child " + childCommand.getName());
+      childCommand.end(interrupted);
+      childCommand.cancel();
     }
   }
 

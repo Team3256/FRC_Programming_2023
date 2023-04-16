@@ -9,13 +9,18 @@ package frc.robot.elevator.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.arm.Arm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
+import frc.robot.helpers.ParentCommand;
 
-public class SetEndEffectorState extends ParallelCommandGroup {
+public class SetEndEffectorState extends ParentCommand {
+  private Arm armSubsystem;
+  private Elevator elevatorSubsystem;
+  private Rotation2d armAngle;
+  private double elevatorExtension;
+
   public enum EndEffectorPreset {
     SCORE_CONE_HIGH(Arm.ArmPreset.CONE_HIGH, Elevator.ElevatorPreset.CONE_HIGH),
     SCORE_CONE_MID(Arm.ArmPreset.CONE_MID, Elevator.ElevatorPreset.ANY_PIECE_MID),
@@ -40,28 +45,35 @@ public class SetEndEffectorState extends ParallelCommandGroup {
 
   public SetEndEffectorState(
       Elevator elevatorSubsystem, Arm armSubsystem, EndEffectorPreset endEffectorPreset) {
-
-    addCommands(
-        new SetArmAngle(
-                armSubsystem,
-                armSubsystem.getClosestSafePosition(elevatorSubsystem.getElevatorPosition()))
-            .andThen(
-                Commands.parallel(
-                    new SetElevatorExtension(elevatorSubsystem, endEffectorPreset.elevatorPreset),
-                    new SetArmAngle(armSubsystem, endEffectorPreset.armPreset)
-                        .beforeStarting(new WaitUntilCommand(elevatorSubsystem::isSafeFromArm)))));
+    this(
+        elevatorSubsystem,
+        armSubsystem,
+        endEffectorPreset.elevatorPreset.position,
+        endEffectorPreset.armPreset.rotation);
   }
 
-  public SetEndEffectorState(
-      Elevator elevatorSubsystem, Arm armSubsystem, double elevatorExtension, Rotation2d armAngle) {
-    addCommands(
+  @Override
+  public void initialize() {
+    addChildCommands(
         new SetArmAngle(
                 armSubsystem,
                 armSubsystem.getClosestSafePosition(elevatorSubsystem.getElevatorPosition()))
+            .asProxy()
             .andThen(
                 Commands.parallel(
                     new SetElevatorExtension(elevatorSubsystem, elevatorExtension),
                     new SetArmAngle(armSubsystem, armAngle)
+                        .asProxy()
                         .beforeStarting(new WaitUntilCommand(elevatorSubsystem::isSafeFromArm)))));
+    super.initialize();
+  }
+
+  public SetEndEffectorState(
+      Elevator elevatorSubsystem, Arm armSubsystem, double elevatorExtension, Rotation2d armAngle) {
+
+    this.armSubsystem = armSubsystem;
+    this.elevatorSubsystem = elevatorSubsystem;
+    this.elevatorExtension = elevatorExtension;
+    this.armAngle = armAngle;
   }
 }

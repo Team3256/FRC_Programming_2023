@@ -23,4 +23,9 @@ public class KeepArm extends ParentCommand {
     addChildCommands(new KeepArmAtPosition(armSubsystem));
     super.initialize();
   }
+
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

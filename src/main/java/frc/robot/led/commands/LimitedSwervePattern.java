@@ -23,4 +23,9 @@ public class LimitedSwervePattern extends CommandBase {
     }
     addRequirements(ledSubsystem);
   }
+
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
+  }
 }

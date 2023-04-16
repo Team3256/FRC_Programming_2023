@@ -13,15 +13,14 @@ import static frc.robot.Constants.VisionConstants.*;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.arm.Arm;
 import frc.robot.arm.Arm.ArmPreset;
+import frc.robot.arm.commands.KeepArm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.StowEndEffector;
-import frc.robot.helpers.ParentCommand;
 import frc.robot.intake.Intake;
-import frc.robot.limelight.Limelight;
 import java.util.function.BooleanSupplier;
 
-public class GroundIntake extends ParentCommand {
+public class GroundIntake extends ParallelCommandGroup {
   public enum ConeOrientation {
     SITTING_CONE,
     STANDING_CONE,
@@ -39,10 +38,12 @@ public class GroundIntake extends ParentCommand {
       Arm armSubsystem,
       Intake intakeSubsystem,
       BooleanSupplier isCurrentPieceCone) {
-    this.elevatorSubsystem = elevatorSubsystem;
-    this.armSubsystem = armSubsystem;
-    this.intakeSubsystem = intakeSubsystem;
-    this.isCurrentPieceCone = isCurrentPieceCone;
+    this(
+        elevatorSubsystem,
+        armSubsystem,
+        intakeSubsystem,
+        ConeOrientation.SITTING_CONE,
+        isCurrentPieceCone);
   }
 
   public GroundIntake(
@@ -51,51 +52,37 @@ public class GroundIntake extends ParentCommand {
       Intake intakeSubsystem,
       ConeOrientation coneOrientation,
       BooleanSupplier isCurrentPieceCone) {
-    this(elevatorSubsystem, armSubsystem, intakeSubsystem, isCurrentPieceCone);
-    this.coneOrientation = coneOrientation;
-  }
 
-  @Override
-  public void initialize() {
-    if (kGamePieceDetection) {
-      Limelight.setPipelineIndex(
-          RightConstants.kLimelightNetworkTablesName, kDetectorPipelineIndex);
-      isCurrentPieceCone =
-          () -> Limelight.isConeDetected(RightConstants.kLimelightNetworkTablesName);
-    }
+    this.coneOrientation = coneOrientation;
+    this.elevatorSubsystem = elevatorSubsystem;
+    this.armSubsystem = armSubsystem;
+    this.intakeSubsystem = intakeSubsystem;
+    this.isCurrentPieceCone = isCurrentPieceCone;
 
     ArmPreset coneArmPreset =
         coneOrientation == ConeOrientation.SITTING_CONE
             ? ArmPreset.SITTING_CONE_GROUND_INTAKE
             : ArmPreset.STANDING_CONE_GROUND_INTAKE;
 
-    addChildCommands(
-        // new ZeroElevator(elevatorSubsystem),
-        new ConditionalCommand(
-            new SetArmAngle(armSubsystem, coneArmPreset),
-            new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
-            isCurrentPieceCone),
+    addCommands(
         new ConditionalCommand(
                 new IntakeCone(intakeSubsystem),
                 new IntakeCube(intakeSubsystem),
                 isCurrentPieceCone)
             .andThen(
                 Commands.deadline(
-                    new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone)
-                        .asProxy(),
-                    new ConditionalCommand(
-                            new IntakeCone(intakeSubsystem)
-                                .andThen(new LatchGamePiece(intakeSubsystem, true)),
-                            new LatchGamePiece(intakeSubsystem, false),
-                            isCurrentPieceCone)
-                        .asProxy())));
-
+                        new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
+                        new ConditionalCommand(
+                                new IntakeCone(intakeSubsystem).repeatedly(),
+                                new InstantCommand(),
+                                isCurrentPieceCone)
+                            .asProxy())
+                    .andThen(new LatchGamePiece(intakeSubsystem, isCurrentPieceCone))),
+        new ConditionalCommand(
+            new SetArmAngle(armSubsystem, coneArmPreset).andThen(new KeepArm(armSubsystem)),
+            new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)
+                .andThen(new KeepArm(armSubsystem)),
+            isCurrentPieceCone));
     super.initialize();
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    Limelight.setPipelineIndex(RightConstants.kLimelightNetworkTablesName, kDefaultPipeline);
-    super.end(interrupted);
   }
 }

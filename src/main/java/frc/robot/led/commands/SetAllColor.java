@@ -28,4 +28,9 @@ public class SetAllColor extends CommandBase {
   public boolean runsWhenDisabled() {
     return true;
   }
+
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

@@ -79,7 +79,7 @@ public class Intake extends SubsystemBase implements Loggable, CANTestable {
   }
 
   public void configIntakeCurrentLimit() {
-    intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(false, 60, 60, 0.2));
+    intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(false, 60, 60, 0.6));
   }
 
   public double getGamePieceOffset() {
