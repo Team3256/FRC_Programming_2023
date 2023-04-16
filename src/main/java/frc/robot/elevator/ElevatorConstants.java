@@ -33,6 +33,8 @@ public final class ElevatorConstants {
   public static final double kAnyPieceMidPosition = Units.inchesToMeters(37);
   public static final double kAnyPieceLowPosition = Units.inchesToMeters(18);
   public static final double kGroundIntakePosition = Units.inchesToMeters(0);
+  public static final double kSafeForArmMinPosition =
+      kAnyPieceLowPosition - Units.inchesToMeters(7);
 
   public static final double kElevatorS = 0.45;
   public static final double kElevatorV = 7.00;
@@ -43,7 +45,9 @@ public final class ElevatorConstants {
   public static final double kElevatorD = 0;
 
   public static final TrapezoidProfile.Constraints kElevatorConstraints =
-      new TrapezoidProfile.Constraints(0.5, 0.5); // 3 and 3
+      new TrapezoidProfile.Constraints(0.5, 0.5); // 3
+  // and
+  // 3
 
   public static final double kDownSpeedVolts = -7; // -9
   public static final double kElevatorCurrentThreshold = 64; // amps

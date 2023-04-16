@@ -39,6 +39,7 @@ import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
+import frc.robot.elevator.ElevatorConstants;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 
@@ -120,6 +121,22 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
 
   public double getEncoderDistanceRad() {
     return armEncoder.getAbsolutePosition() * kArmRadiansPerAbsoluteEncoderRotation;
+  }
+
+  public Rotation2d getClosestSafePosition(double elevatorPosition) {
+    if (elevatorPosition > ElevatorConstants.kSafeForArmMinPosition) {
+      return Rotation2d.fromDegrees(
+          MathUtil.clamp(
+              Units.radiansToDegrees(getArmPositionElevatorRelative()),
+              kArmAngleMinConstraint.getDegrees(),
+              kArmAngleMinConstraint.getDegrees()));
+    } else {
+      return Rotation2d.fromDegrees(
+          MathUtil.clamp(
+              Units.radiansToDegrees(getArmPositionElevatorRelative()),
+              kMinSafeRotation,
+              kMaxSafeRotation));
+    }
   }
 
   public double getArmPositionGroundRelative() {

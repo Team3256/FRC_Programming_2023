@@ -88,13 +88,11 @@ public class AutoScore extends ParentCommand {
                   new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH,
-                      true),
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH),
                   new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH,
-                      true),
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
                   isCurrentLEDPieceCone)
               .schedule();
           break;
@@ -103,13 +101,11 @@ public class AutoScore extends ParentCommand {
                   new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID,
-                      true),
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID),
                   new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID,
-                      true),
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
                   isCurrentLEDPieceCone)
               .schedule();
           break;
@@ -174,13 +170,11 @@ public class AutoScore extends ParentCommand {
                 new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH,
-                    true),
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH),
                 new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH,
-                    true),
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
                 isCurrentPieceCone);
         break;
       case MID:
@@ -190,13 +184,11 @@ public class AutoScore extends ParentCommand {
                 new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID,
-                    true),
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID),
                 new SetEndEffectorState(
                     elevatorSubsystem,
                     armSubsystem,
-                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID,
-                    true),
+                    SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
                 isCurrentPieceCone);
         break;
 

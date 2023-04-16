@@ -13,17 +13,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.SetEndEffectorState;
 import frc.robot.elevator.commands.StowEndEffector;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.IntakeCone;
-import frc.robot.intake.commands.IntakeCube;
+import frc.robot.intake.commands.GroundIntake;
+import frc.robot.intake.commands.GroundIntake.ConeOrientation;
 import frc.robot.intake.commands.IntakeOff;
 import frc.robot.intake.commands.OuttakeCone;
 import frc.robot.intake.commands.OuttakeCube;
@@ -164,11 +161,12 @@ public class AutoPaths {
           "intakeCone",
           () ->
               runParallelWithPath(
-                      Commands.deadline(
-                          new IntakeCone(intakeSubsystem),
-                          new SetElevatorExtension(
-                              elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.STANDING_CONE_GROUND_INTAKE)))
+                      new GroundIntake(
+                          elevatorSubsystem,
+                          armSubsystem,
+                          intakeSubsystem,
+                          ConeOrientation.STANDING_CONE,
+                          () -> true))
                   .asProxy()
                   .withName("intakeCone"));
 
@@ -176,11 +174,8 @@ public class AutoPaths {
           "intakeCube",
           () ->
               runParallelWithPath(
-                      Commands.deadline(
-                          new IntakeCube(intakeSubsystem),
-                          new SetElevatorExtension(
-                              elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE),
-                          new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)))
+                      new GroundIntake(
+                          elevatorSubsystem, armSubsystem, intakeSubsystem, () -> false))
                   .asProxy()
                   .withName("intakeCube"));
     }

@@ -32,7 +32,6 @@ import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetEndEffectorState;
 import frc.robot.elevator.commands.SetEndEffectorState.EndEffectorPreset;
 import frc.robot.elevator.commands.StowEndEffector;
-import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.GroundIntake.ConeOrientation;
@@ -339,7 +338,7 @@ public class RobotContainer implements CANTestable, Loggable {
   public void configureLEDStrip() {
     ledSubsystem.setDefaultCommand(new ColorFlowPattern(ledSubsystem));
 
-    updateGamePieceLEDs();
+    // updateGamePieceLEDs();
     operator
         .rightBumper()
         .toggleOnTrue(
@@ -349,7 +348,8 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public Command getAutonomousCommand() {
     if (true) {
-      return new ZeroElevator(elevatorSubsystem);
+      return new SetEndEffectorState(
+          elevatorSubsystem, armSubsystem, EndEffectorPreset.DOUBLE_SUBSTATION_CONE);
       // return new GroundIntake(
       // elevatorSubsystem,
       // armSubsystem,

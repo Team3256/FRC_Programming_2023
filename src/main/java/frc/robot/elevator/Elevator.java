@@ -146,6 +146,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     System.out.println("Elevator off");
   }
 
+  public boolean isSafeFromArm() {
+    return getElevatorPosition() > kSafeForArmMinPosition;
+  }
+
   boolean hasStarted = false;
 
   @Override
