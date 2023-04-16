@@ -35,7 +35,7 @@ public class LED extends SubsystemBase {
   }
 
   public enum LEDSegment {
-    MainStrip(0, 100, 0);
+    MainStrip(0, 200, 0);
 
     public final int startIndex;
     public final int segmentSize;

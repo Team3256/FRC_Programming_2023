@@ -66,6 +66,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  private final CommandXboxController tester = new CommandXboxController(2);
 
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
@@ -126,7 +127,6 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("Auto Score Toggle", modeChooser);
     SmartDashboard.putString(
         "Current Double Substation Location", doubleSubstationLocation.toString());
-    SmartDashboard.putNumber("Elevator testing setpoint position", 0);
 
     autoPaths =
         new AutoPaths(

@@ -49,9 +49,9 @@ public final class Constants {
     public static final boolean kLocalizeDuringAuto = true;
     public static final boolean kIntakeAutoScoreDistanceSensorOffset = false;
 
-    public static final boolean kSwerveAccelerationLimitingEnabled = false;
+    public static final boolean kShuffleboardLayoutEnabled = false;
     public static final boolean kLocalizationDataCollectionMode = false;
-    public static final boolean kShuffleboardLayoutEnabled = true;
+    public static final boolean kSwerveAccelerationLimitingEnabled = false;
     public static final boolean kGamePieceDetection = false;
     public static final boolean kDynamicPathGenEnabled = false;
     public static final boolean kPitRoutineEnabled = false;

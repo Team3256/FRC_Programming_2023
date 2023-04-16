@@ -17,7 +17,7 @@ public final class ArmConstants {
   public static final String kArmCanBus = "rio";
   public static final CanDeviceId kArmCANDevice = new CanDeviceId(kArmMotorID, kArmCanBus);
   public static final int kArmSimulationID = 16;
-  public static final int kArmEncoderDIOPort = 9;
+  public static final int kArmEncoderDIOPort = 8;
 
   public static final double kArmEncoderGearRatio = 2 / 1;
   public static final double kArmRadiansPerAbsoluteEncoderRotation =
@@ -41,8 +41,8 @@ public final class ArmConstants {
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(16, 16);
 
-  public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(2);
-  public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(2);
+  public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(10);
+  public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(10);
 
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);

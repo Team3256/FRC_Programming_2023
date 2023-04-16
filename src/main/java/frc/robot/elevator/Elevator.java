@@ -88,7 +88,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
         TalonFXFactory.createPermanentFollowerTalon(kElevatorFollowerCANDevice, kElevatorCANDevice);
     elevatorFollowerMotor.setInverted(InvertType.FollowMaster);
     elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
-    SmartDashboard.putData("Elevator motor", elevatorMotor);
+    // SmartDashboard.putData("Elevator motor", elevatorMotor);
     zeroElevator();
     zeroLimitSwitch = new DigitalInput(kElevatorLimitSwitchDIO);
   }
@@ -146,7 +146,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public boolean isSafeFromArm() {
-    return getElevatorPosition() > kSafeForArmMinPosition;
+    return true;
+    // return getElevatorPosition() > kSafeForArmMinPosition;
   }
 
   boolean hasStarted = false;

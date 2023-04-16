@@ -17,9 +17,11 @@ public class StowEndEffector extends ConditionalCommand {
       Elevator elevatorSubsystem, Arm armSubsystem, BooleanSupplier isCurrentPieceCone) {
     super(
         new SetEndEffectorState(
-            elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CONE),
+                elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CONE)
+            .andThen(new ZeroElevator(elevatorSubsystem)),
         new SetEndEffectorState(
-            elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CUBE),
+                elevatorSubsystem, armSubsystem, SetEndEffectorState.EndEffectorPreset.STOW_CUBE)
+            .andThen(new ZeroElevator(elevatorSubsystem)),
         isCurrentPieceCone);
   }
 }

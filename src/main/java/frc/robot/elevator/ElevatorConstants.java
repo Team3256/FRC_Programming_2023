@@ -15,7 +15,7 @@ import java.util.Map;
 public final class ElevatorConstants {
   public static final int kElevatorMasterID = 5;
   public static final int kElevatorFollowerID = 14;
-  public static final int kElevatorLimitSwitchDIO = 8;
+  public static final int kElevatorLimitSwitchDIO = 9;
   public static final double kElevatorStartingPosition = 0.5;
   public static final double kElevatorAngleOffset = Units.degreesToRadians(35.4);
   public static final String kElevatorCANBus = "rio";
@@ -31,7 +31,7 @@ public final class ElevatorConstants {
   public static final double kCubeHighPosition = Units.inchesToMeters(59);
   public static final double kConeHighPosition = Units.inchesToMeters(59);
   public static final double kAnyPieceMidPosition = Units.inchesToMeters(37);
-  public static final double kAnyPieceLowPosition = Units.inchesToMeters(18);
+  public static final double kAnyPieceLowPosition = Units.inchesToMeters(0);
   public static final double kGroundIntakePosition = Units.inchesToMeters(0);
   public static final double kSafeForArmMinPosition =
       kAnyPieceLowPosition - Units.inchesToMeters(7);

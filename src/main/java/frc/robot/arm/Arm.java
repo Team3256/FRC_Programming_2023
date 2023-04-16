@@ -90,7 +90,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armMotor.setSelectedSensorPosition(0);
 
     if (Constants.kDebugEnabled) {
-      SmartDashboard.putData("Arm motor", armMotor);
+      // SmartDashboard.putData("Arm motor", armMotor);
     }
   }
 
@@ -124,11 +124,6 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public Rotation2d getClosestSafePosition(double elevatorPosition) {
-    System.out.println(
-        "Closest safe "
-            + Units.radiansToDegrees(getArmPositionElevatorRelative())
-            + " elevator: "
-            + elevatorPosition);
     if (elevatorPosition > ElevatorConstants.kSafeForArmMinPosition) {
       return Rotation2d.fromDegrees(
           MathUtil.clamp(
