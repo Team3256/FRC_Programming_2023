@@ -16,6 +16,7 @@ import frc.robot.arm.Arm.ArmPreset;
 import frc.robot.arm.commands.KeepArm;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.StowEndEffector;
 import frc.robot.intake.Intake;
 import java.util.function.BooleanSupplier;
@@ -51,6 +52,14 @@ public class GroundIntake extends ParallelCommandGroup {
             : ArmPreset.STANDING_CONE_GROUND_INTAKE;
 
     addCommands(
+        new SetElevatorExtension(elevatorSubsystem, 0)
+            .andThen(
+                new ConditionalCommand(
+                    new SetArmAngle(armSubsystem, coneArmPreset)
+                        .andThen(new InstantCommand(() -> new KeepArm(armSubsystem).schedule())),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)
+                        .andThen(new KeepArm(armSubsystem)),
+                    isCurrentPieceCone)),
         new ConditionalCommand(
                 new IntakeCone(intakeSubsystem),
                 new IntakeCube(intakeSubsystem),
@@ -63,13 +72,8 @@ public class GroundIntake extends ParallelCommandGroup {
                             new IntakeCone(intakeSubsystem).repeatedly(),
                             new InstantCommand(),
                             isCurrentPieceCone)
-                        .asProxy()),
-                // .andThen(new LatchGamePiece(intakeSubsystem, isCurrentPieceCone))),
-                new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, coneArmPreset).andThen(new KeepArm(armSubsystem)),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)
-                        .andThen(new KeepArm(armSubsystem)),
-                    isCurrentPieceCone)));
+                        .asProxy())));
+    // .andThen(new LatchGamePiece(intakeSubsystem, isCurrentPieceCone))),
     super.initialize();
   }
 }

@@ -24,8 +24,8 @@ public final class ElevatorConstants {
   public static final CanDeviceId kElevatorFollowerCANDevice =
       new CanDeviceId(kElevatorFollowerID, kElevatorCANBus);
   public static final int kNumElevatorMotors = 2;
-  public static final double kCubeStowPosition = Units.inchesToMeters(0);
-  public static final double kConeStowPosition = Units.inchesToMeters(0);
+  public static final double kCubeStowPosition = Units.inchesToMeters(2);
+  public static final double kConeStowPosition = Units.inchesToMeters(2);
   public static final double kCubeDoubleSubstationPosition = Units.inchesToMeters(47);
   public static final double kConeDoubleSubstationPosition = Units.inchesToMeters(47);
   public static final double kCubeHighPosition = Units.inchesToMeters(59);
@@ -45,9 +45,9 @@ public final class ElevatorConstants {
   public static final double kElevatorD = 0;
 
   public static final TrapezoidProfile.Constraints kElevatorConstraints =
-      new TrapezoidProfile.Constraints(5, 2);
+      new TrapezoidProfile.Constraints(3, 3);
 
-  public static final double kDownSpeedVolts = -3; // -9
+  public static final double kDownSpeedVolts = -3.5; // -9
   public static final double kElevatorCurrentThreshold = 64; // amps
 
   public static final double kDrumRadius = Units.inchesToMeters(0.94);
@@ -55,8 +55,8 @@ public final class ElevatorConstants {
   public static final double kMaxExtension = Units.inchesToMeters(59);
   public static final double kElevatorGearing = 527 / 45;
   public static final double kCarriageMass = 9; // kg
-  public static final double kTolerancePosition = Units.inchesToMeters(1);
-  public static final double kToleranceVelocity = Units.inchesToMeters(1);
+  public static final double kTolerancePosition = Units.inchesToMeters(2.5);
+  public static final double kToleranceVelocity = Units.inchesToMeters(2.5);
   public static final double kRateLimiting = 0.05;
 
   public static class ElevatorPreferencesKeys {

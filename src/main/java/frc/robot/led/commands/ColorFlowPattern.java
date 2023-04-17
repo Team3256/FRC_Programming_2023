@@ -19,7 +19,7 @@ public class ColorFlowPattern extends CommandBase {
 
   @Override
   public void initialize() {
-    LED.LEDSegment.MainStrip.setFlowAnimation(LEDConstants.kDefault, 0.5);
+    LED.LEDSegment.MainStrip.setFlowAnimation(LEDConstants.kDefault, 0.8);
   }
 
   @Override

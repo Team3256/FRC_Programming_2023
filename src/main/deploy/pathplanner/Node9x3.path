@@ -17,8 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "coneHigh",
-          "outtakeCube"
+          "coneMid",
+          "outtakeCone"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -27,16 +27,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.468324976735519,
-        "y": 4.659433794314017
+        "x": 6.990355277422795,
+        "y": 4.588348780552271
       },
       "prevControl": {
-        "x": 4.827118500360106,
-        "y": 4.617373225653666
+        "x": 5.349148801047382,
+        "y": 4.54628821189192
       },
       "nextControl": {
-        "x": 4.827118500360106,
-        "y": 4.617373225653666
+        "x": 5.349148801047382,
+        "y": 4.54628821189192
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -77,16 +77,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.5401384335251,
-        "y": 3.598537647391224
+        "x": 6.91532610153979,
+        "y": 3.462142348763864
       },
       "prevControl": {
-        "x": 5.720962520538323,
-        "y": 5.298321236752065
+        "x": 6.096150188553013,
+        "y": 5.161925938124703
       },
       "nextControl": {
-        "x": 5.720962520538323,
-        "y": 5.298321236752065
+        "x": 6.096150188553013,
+        "y": 5.161925938124703
       },
       "holonomicAngle": 145.0,
       "isReversal": true,
@@ -102,18 +102,18 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9,
-        "y": 4.45
+        "x": 1.8966853416020202,
+        "y": 4.441682724633353
       },
       "prevControl": {
-        "x": 4.211134529139283,
-        "y": 4.827355563871433
+        "x": 4.207819870741304,
+        "y": 4.819038288504785
       },
       "nextControl": {
-        "x": 4.211134529139283,
-        "y": 4.827355563871433
+        "x": 4.207819870741304,
+        "y": 4.819038288504785
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -159,7 +159,7 @@
       ]
     },
     {
-      "position": 0.4,
+      "position": 0.1,
       "names": [
         "intakeCube"
       ]
@@ -173,7 +173,7 @@
     {
       "position": 1.7,
       "names": [
-        "cubeHigh"
+        "cubeMid"
       ]
     },
     {
@@ -189,7 +189,7 @@
       ]
     },
     {
-      "position": 2.4,
+      "position": 2.1,
       "names": [
         "intakeCube"
       ]
@@ -203,7 +203,7 @@
     {
       "position": 3.7,
       "names": [
-        "cubeMid"
+        "cubeLow"
       ]
     },
     {

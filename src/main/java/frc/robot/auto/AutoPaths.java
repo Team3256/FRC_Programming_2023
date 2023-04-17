@@ -173,9 +173,7 @@ public class AutoPaths {
       autoEventMap.put(
           "intakeCube",
           () ->
-              runParallelWithPath(
-                      new GroundIntake(
-                          elevatorSubsystem, armSubsystem, intakeSubsystem, () -> false))
+              new GroundIntake(elevatorSubsystem, armSubsystem, intakeSubsystem, () -> false)
                   .asProxy()
                   .withName("intakeCube"));
     }
