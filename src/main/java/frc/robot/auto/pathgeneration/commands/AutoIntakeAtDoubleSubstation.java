@@ -174,7 +174,7 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
                 moveToWaypoint,
                 Commands.deadline(
                     runIntake.withTimeout(8), moveArmElevatorToPreset, moveToSubstation),
-                stowArmElevator)
+                stowArmElevator.asProxy())
             .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
             .finallyDo(
