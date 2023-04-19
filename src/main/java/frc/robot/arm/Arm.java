@@ -48,7 +48,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     STOW_CUBE(kStowRotationCube),
     STOW_CONE(kStowRotationCone),
     ANY_PIECE_LOW_BACK(kAnyPieceLowBackRotation),
-    ANY_PIECE_LOW_FRONT(kAnyPieceLowBackRotation),
+    ANY_PIECE_LOW_FRONT(kAnyPieceLowFrontRotation),
     CUBE_MID(kCubeMidRotation),
     CONE_MID(kConeMidRotation),
     CUBE_HIGH(kCubeHighRotation),

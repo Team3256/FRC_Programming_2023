@@ -416,13 +416,9 @@ public class RobotContainer implements CANTestable, Loggable {
     return GamePiece.CONE.equals(currentPiece);
   }
 
+  // only for auto to change latch
   public void setGamePiece(GamePiece piece) {
     currentPiece = piece;
-    if (currentPiece == GamePiece.CONE) {
-      new SetAllColor(ledSubsystem, kCone).schedule();
-    } else {
-      new SetAllColor(ledSubsystem, kCube).schedule();
-    }
   }
 
   public void toggleGamePiece() {

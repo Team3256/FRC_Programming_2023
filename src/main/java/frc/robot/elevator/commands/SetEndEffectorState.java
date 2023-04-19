@@ -29,7 +29,7 @@ public class SetEndEffectorState extends ParentCommand {
     SCORE_ANY_LOW_BACK(
         Arm.ArmPreset.ANY_PIECE_LOW_BACK, Elevator.ElevatorPreset.ANY_PIECE_LOW_BACK),
     SCORE_ANY_LOW_FRONT(
-        Arm.ArmPreset.ANY_PIECE_LOW_FRONT, Elevator.ElevatorPreset.ANY_PIECE_LOW_BACK),
+        Arm.ArmPreset.ANY_PIECE_LOW_FRONT, Elevator.ElevatorPreset.ANY_PIECE_LOW_FRONT),
     DOUBLE_SUBSTATION_CONE(
         Arm.ArmPreset.DOUBLE_SUBSTATION_CONE, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
     STOW_CONE(Arm.ArmPreset.STOW_CONE, Elevator.ElevatorPreset.STOW_CONE),
