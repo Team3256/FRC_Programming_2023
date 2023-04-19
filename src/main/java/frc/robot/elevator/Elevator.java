@@ -221,6 +221,9 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW_BACK),
         kAnyPieceLowBackPosition);
     Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW_FRONT),
+        kAnyPieceLowFrontPosition);
+    Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_MID), kAnyPieceMidPosition);
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.GROUND_INTAKE), kGroundIntakePosition);

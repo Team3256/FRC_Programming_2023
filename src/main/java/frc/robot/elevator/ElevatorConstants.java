@@ -35,7 +35,7 @@ public final class ElevatorConstants {
   public static final double kAnyPieceLowFrontPosition = Units.inchesToMeters(30);
   public static final double kGroundIntakePosition = Units.inchesToMeters(2);
   public static final double kSafeForArmMinPosition =
-      kAnyPieceLowBackPosition - Units.inchesToMeters(7);
+      kAnyPieceLowFrontPosition - Units.inchesToMeters(7);
 
   public static final double kElevatorS = 0.45;
   public static final double kElevatorV = 7.30;
@@ -67,7 +67,8 @@ public final class ElevatorConstants {
             Elevator.ElevatorPreset.STOW_CUBE, "kStowPositionCube",
             Elevator.ElevatorPreset.CUBE_HIGH, "kCubeHighPositionMeters",
             Elevator.ElevatorPreset.CONE_HIGH, "kConeHighPositionMeters",
-            Elevator.ElevatorPreset.ANY_PIECE_LOW_BACK, "kAnyPieceLowPositionMeters",
+            Elevator.ElevatorPreset.ANY_PIECE_LOW_BACK, "kAnyPieceBackLowPositionMeters",
+            Elevator.ElevatorPreset.ANY_PIECE_LOW_FRONT, "kAnyPieceFrontLowPositionMeters",
             Elevator.ElevatorPreset.ANY_PIECE_MID, "kAnyPieceMidPositionMeters",
             Elevator.ElevatorPreset.GROUND_INTAKE, "kGroundIntakePositionMeters",
             Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE, "kDoubleSubstationPositionConeMeters",

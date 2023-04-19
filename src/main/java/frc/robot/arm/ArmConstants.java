@@ -74,7 +74,8 @@ public final class ArmConstants {
         Map.ofEntries(
             Map.entry(Arm.ArmPreset.STOW_CONE, "kStowRotationCone"),
             Map.entry(Arm.ArmPreset.STOW_CUBE, "kStowRotationCube"),
-            Map.entry(Arm.ArmPreset.ANY_PIECE_LOW_BACK, "kAnyPieceLowRotation"),
+            Map.entry(Arm.ArmPreset.ANY_PIECE_LOW_BACK, "kAnyPieceLowBackRotation"),
+            Map.entry(Arm.ArmPreset.ANY_PIECE_LOW_FRONT, "kAnyPieceLowFrontRotation"),
             Map.entry(Arm.ArmPreset.CUBE_MID, "kCubeMidRotation"),
             Map.entry(Arm.ArmPreset.CONE_MID, "kConeMidRotation"),
             Map.entry(Arm.ArmPreset.CUBE_HIGH, "kCubeHighRotation"),

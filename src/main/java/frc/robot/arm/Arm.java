@@ -245,6 +245,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         kArmPositionKeys.get(ArmPreset.STOW_CUBE), kStowRotationCube.getRadians());
     Preferences.initDouble(
         kArmPositionKeys.get(ArmPreset.ANY_PIECE_LOW_BACK), kAnyPieceLowBackRotation.getRadians());
+    Preferences.initDouble(
+        kArmPositionKeys.get(ArmPreset.ANY_PIECE_LOW_FRONT),
+        kAnyPieceLowFrontRotation.getRadians());
     Preferences.initDouble(kArmPositionKeys.get(ArmPreset.CUBE_MID), kCubeMidRotation.getRadians());
     Preferences.initDouble(kArmPositionKeys.get(ArmPreset.CONE_MID), kConeMidRotation.getRadians());
     Preferences.initDouble(
