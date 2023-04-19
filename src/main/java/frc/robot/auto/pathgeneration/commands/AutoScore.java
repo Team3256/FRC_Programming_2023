@@ -227,12 +227,14 @@ public class AutoScore extends ParentCommand {
         break;
     }
 
-    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset) {
+    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset && isCurrentPieceCone.getAsBoolean()) {
       double offset =
           DriverStation.getAlliance() == Alliance.Red
               ? intakeSubsystem.getGamePieceOffset()
               : -intakeSubsystem.getGamePieceOffset();
       offset = MathUtil.clamp(offset, -Units.inchesToMeters(7), Units.inchesToMeters(7));
+      System.out.println(
+          "AUTO SCORE: Offsetting cone by " + offset + " meters based on distance sensors!");
 
       scoringLocation =
           scoringLocation.plus(new Transform2d(new Translation2d(0, offset), new Rotation2d()));
