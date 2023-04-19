@@ -52,14 +52,13 @@ public class GroundIntake extends ParallelCommandGroup {
             : ArmPreset.STANDING_CONE_GROUND_INTAKE;
 
     addCommands(
-        new SetElevatorExtension(elevatorSubsystem, 0)
+        new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE)
             .andThen(
                 new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, coneArmPreset)
-                        .andThen(new InstantCommand(() -> new KeepArm(armSubsystem).schedule())),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE)
-                        .andThen(new KeepArm(armSubsystem)),
-                    isCurrentPieceCone)),
+                    new SetArmAngle(armSubsystem, coneArmPreset),
+                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
+                    isCurrentPieceCone))
+            .andThen(new ScheduleCommand(new KeepArm(armSubsystem))),
         new ConditionalCommand(
                 new IntakeCone(intakeSubsystem),
                 new IntakeCube(intakeSubsystem),

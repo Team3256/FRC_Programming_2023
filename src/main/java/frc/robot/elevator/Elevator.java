@@ -51,7 +51,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     CUBE_HIGH(kCubeHighPosition),
     CONE_HIGH(kConeHighPosition),
     ANY_PIECE_MID(kAnyPieceMidPosition),
-    ANY_PIECE_LOW(kAnyPieceLowPosition),
+    ANY_PIECE_LOW_BACK(kAnyPieceLowBackPosition),
+    ANY_PIECE_LOW_FRONT(kAnyPieceLowBackPosition),
     GROUND_INTAKE(kGroundIntakePosition),
     DOUBLE_SUBSTATION_CONE(kConeDoubleSubstationPosition),
     DOUBLE_SUBSTATION_CUBE(kCubeDoubleSubstationPosition);
@@ -217,7 +218,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.CONE_HIGH), kConeHighPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW), kAnyPieceLowPosition);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW_BACK),
+        kAnyPieceLowBackPosition);
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_MID), kAnyPieceMidPosition);
     Preferences.initDouble(

@@ -12,6 +12,8 @@ import static frc.robot.auto.AutoConstants.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.auto.helpers.AutoChooser;
@@ -29,6 +31,7 @@ import frc.robot.swerve.commands.AutoBalance;
 import frc.robot.swerve.commands.LockSwerveX;
 import java.util.HashMap;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class AutoPaths {
@@ -38,17 +41,20 @@ public class AutoPaths {
   private Arm armSubsystem;
   private BooleanSupplier isCurrentPieceCone;
   private HashMap<String, Supplier<Command>> autoEventMap = new HashMap<>();
+  private Consumer<GamePiece> setGamePiece;
 
   public AutoPaths(
       SwerveDrive swerveSubsystem,
       Intake intakeSubsystem,
       Elevator elevatorSubsystem,
       Arm armSubsystem,
+      Consumer<GamePiece> setGamePiece,
       BooleanSupplier isCurrentPieceCone) {
     this.swerveSubsystem = swerveSubsystem;
     this.intakeSubsystem = intakeSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.armSubsystem = armSubsystem;
+    this.setGamePiece = setGamePiece;
     this.isCurrentPieceCone = isCurrentPieceCone;
   }
 
@@ -73,9 +79,9 @@ public class AutoPaths {
         && armSubsystem != null
         && elevatorSubsystem != null) {
 
-      autoEventMap.put("outtakeCube", () -> new OuttakeCube(intakeSubsystem).asProxy());
+      autoEventMap.put("outtakeCube", () -> new OuttakeCube(intakeSubsystem, 0.5).asProxy());
 
-      autoEventMap.put("outtakeCone", () -> new OuttakeCone(intakeSubsystem).asProxy());
+      autoEventMap.put("outtakeCone", () -> new OuttakeCone(intakeSubsystem, 0.5).asProxy());
 
       autoEventMap.put(
           "coneHigh",
@@ -103,7 +109,7 @@ public class AutoPaths {
               new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW)
+                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
                   .asProxy()
                   .withName("coneLow"));
 
@@ -133,7 +139,7 @@ public class AutoPaths {
               new SetEndEffectorState(
                       elevatorSubsystem,
                       armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW)
+                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
                   .asProxy()
                   .withName("cubeLow"));
 
@@ -161,6 +167,7 @@ public class AutoPaths {
           "intakeCone",
           () ->
               runParallelWithPath(
+                      setPieceToCone(),
                       new GroundIntake(
                           elevatorSubsystem,
                           armSubsystem,
@@ -173,7 +180,10 @@ public class AutoPaths {
       autoEventMap.put(
           "intakeCube",
           () ->
-              new GroundIntake(elevatorSubsystem, armSubsystem, intakeSubsystem, () -> false)
+              runParallelWithPath(
+                      setPieceToCube(),
+                      new GroundIntake(
+                          elevatorSubsystem, armSubsystem, intakeSubsystem, () -> false))
                   .asProxy()
                   .withName("intakeCube"));
     }
@@ -225,8 +235,16 @@ public class AutoPaths {
     AutoChooser.sendChooserToDashboard("Auto Chooser");
   }
 
-  public Command runParallelWithPath(Command command) {
-    return new InstantCommand(command::schedule);
+  public Command runParallelWithPath(Command... commands) {
+    return new ScheduleCommand(commands);
+  }
+
+  public Command setPieceToCone() {
+    return new InstantCommand(() -> this.setGamePiece.accept(GamePiece.CONE));
+  }
+
+  public Command setPieceToCube() {
+    return new InstantCommand(() -> this.setGamePiece.accept(GamePiece.CUBE));
   }
 
   public Command getSelectedPath() {

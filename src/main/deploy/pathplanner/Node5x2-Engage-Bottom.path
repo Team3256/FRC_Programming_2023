@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "cubeHigh",
+          "cubeMid",
           "outtakeCube"
         ],
         "executionBehavior": "parallel",
@@ -175,7 +175,7 @@
     {
       "position": 3.0,
       "names": [
-        "cubeHigh"
+        "cubeLow"
       ]
     },
     {

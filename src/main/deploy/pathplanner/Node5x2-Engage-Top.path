@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "cubeHigh",
+          "cubeMid",
           "outtakeCube"
         ],
         "executionBehavior": "parallel",
@@ -150,5 +150,36 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "stow"
+      ]
+    },
+    {
+      "position": 0.5,
+      "names": [
+        "intakeCube"
+      ]
+    },
+    {
+      "position": 2.1624520041725916,
+      "names": [
+        "stow"
+      ]
+    },
+    {
+      "position": 2.7968985817649195,
+      "names": [
+        "cubeLow"
+      ]
+    },
+    {
+      "position": 4.0,
+      "names": [
+        "outtakeCube"
+      ]
+    }
+  ]
 }

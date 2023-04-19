@@ -110,21 +110,27 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.4,
+      "position": 0.01,
       "names": [
         "intakeCube"
       ]
     },
     {
-      "position": 0.01,
+      "position": 1.4,
       "names": [
         "stow"
       ]
     },
     {
-      "position": 1.05,
+      "position": 1.7,
       "names": [
-        "stow"
+        "cubeMid"
+      ]
+    },
+    {
+      "position": 2.0,
+      "names": [
+        "outtakeCube"
       ]
     }
   ]

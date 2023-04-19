@@ -133,6 +133,7 @@ public class RobotContainer implements CANTestable, Loggable {
             intakeSubsystem,
             elevatorSubsystem,
             armSubsystem,
+            this::setGamePiece,
             this::isCurrentPieceCone);
     autoPaths.sendCommandsToChooser();
 
@@ -413,6 +414,15 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public boolean isCurrentPieceCone() {
     return GamePiece.CONE.equals(currentPiece);
+  }
+
+  public void setGamePiece(GamePiece piece) {
+    currentPiece = piece;
+    if (currentPiece == GamePiece.CONE) {
+      new SetAllColor(ledSubsystem, kCone).schedule();
+    } else {
+      new SetAllColor(ledSubsystem, kCube).schedule();
+    }
   }
 
   public void toggleGamePiece() {

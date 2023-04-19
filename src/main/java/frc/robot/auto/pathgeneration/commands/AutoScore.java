@@ -139,7 +139,7 @@ public class AutoScore extends ParentCommand {
           new SetEndEffectorState(
                   elevatorSubsystem,
                   armSubsystem,
-                  SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW)
+                  SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_BACK)
               .schedule();
           break;
       }
@@ -223,7 +223,7 @@ public class AutoScore extends ParentCommand {
             new SetEndEffectorState(
                 elevatorSubsystem,
                 armSubsystem,
-                SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW);
+                SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_BACK);
         break;
     }
 

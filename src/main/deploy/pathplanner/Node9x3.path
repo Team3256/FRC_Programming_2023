@@ -102,18 +102,18 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8966853416020202,
-        "y": 4.441682724633353
+        "x": 1.9026164229628806,
+        "y": 4.442659006357509
       },
       "prevControl": {
-        "x": 4.207819870741304,
-        "y": 4.819038288504785
+        "x": 4.213750952102165,
+        "y": 4.820014570228942
       },
       "nextControl": {
-        "x": 4.207819870741304,
-        "y": 4.819038288504785
+        "x": 4.213750952102165,
+        "y": 4.820014570228942
       },
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -148,24 +148,18 @@
       }
     }
   ],
-  "maxVelocity": 5.0,
-  "maxAcceleration": 3.0,
+  "maxVelocity": 7.0,
+  "maxAcceleration": 4.0,
   "isReversed": null,
   "markers": [
     {
       "position": 0.01,
       "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 0.1,
-      "names": [
         "intakeCube"
       ]
     },
     {
-      "position": 1.05,
+      "position": 1.4,
       "names": [
         "stow"
       ]
@@ -185,17 +179,11 @@
     {
       "position": 2.05,
       "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 2.1,
-      "names": [
         "intakeCube"
       ]
     },
     {
-      "position": 3.05,
+      "position": 3.4,
       "names": [
         "stow"
       ]
@@ -210,6 +198,12 @@
       "position": 4.05,
       "names": [
         "stow"
+      ]
+    },
+    {
+      "position": 3.95,
+      "names": [
+        "cubeLow"
       ]
     }
   ]

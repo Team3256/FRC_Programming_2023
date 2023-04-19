@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "coneHigh",
+          "coneMid",
           "outtakeCone"
         ],
         "executionBehavior": "sequential",
@@ -132,17 +132,11 @@
     {
       "position": 0.01,
       "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 0.4,
-      "names": [
         "intakeCube"
       ]
     },
     {
-      "position": 1.01,
+      "position": 1.4,
       "names": [
         "stow"
       ]
@@ -150,7 +144,7 @@
     {
       "position": 1.7,
       "names": [
-        "cubeHigh"
+        "cubeMid"
       ]
     },
     {
@@ -161,12 +155,6 @@
     },
     {
       "position": 2.05,
-      "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 2.4,
       "names": [
         "intakeCube"
       ]

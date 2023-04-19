@@ -85,7 +85,7 @@ public class PitTestRoutine {
         new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_MID)
             .until(driver.b());
     Command setElevatorHeightLOW =
-        new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW)
+        new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.ANY_PIECE_LOW_BACK)
             .until(driver.b());
     Command setElevatorToStart =
         new SetElevatorExtension(elevatorSubsystem, kElevatorStartingPosition).until(driver.b());
