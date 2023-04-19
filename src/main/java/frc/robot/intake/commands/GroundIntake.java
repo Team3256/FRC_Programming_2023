@@ -36,7 +36,7 @@ public class GroundIntake extends ParallelCommandGroup {
         elevatorSubsystem,
         armSubsystem,
         intakeSubsystem,
-        ConeOrientation.SITTING_CONE,
+        ConeOrientation.STANDING_CONE,
         isCurrentPieceCone);
   }
 
