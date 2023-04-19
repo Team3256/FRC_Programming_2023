@@ -264,6 +264,7 @@ public class RobotContainer implements CANTestable, Loggable {
                   armSubsystem,
                   ledSubsystem,
                   AutoScore.GridScoreHeight.LOW,
+                  driver,
                   this::isCurrentPieceCone,
                   () -> false,
                   () -> false));
@@ -280,6 +281,7 @@ public class RobotContainer implements CANTestable, Loggable {
                   armSubsystem,
                   ledSubsystem,
                   () -> currentScoringPreset,
+                  driver,
                   this::isCurrentPieceCone,
                   () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
                   () -> isMovingJoystick(driver)));
