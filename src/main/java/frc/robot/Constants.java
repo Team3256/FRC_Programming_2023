@@ -41,6 +41,7 @@ public final class Constants {
 
   public static final class FeatureFlags {
     public static final boolean kUsePrefs = false;
+    public static final boolean kCalibrationMode = false;
 
     public static final boolean kAutoScoreEnabled = true;
     public static final boolean kAutoOuttakeEnabled = false;

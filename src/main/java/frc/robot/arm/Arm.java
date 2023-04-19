@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
@@ -87,7 +88,12 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     armEncoder.setDistancePerRotation(kArmRadiansPerAbsoluteEncoderRotation);
     armEncoder.reset();
 
-    armMotor.setNeutralMode(NeutralMode.Brake);
+    if (FeatureFlags.kCalibrationMode) {
+      armMotor.setNeutralMode(NeutralMode.Coast);
+    } else {
+      armMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
     armMotor.setSelectedSensorPosition(0);
 
     if (Constants.kDebugEnabled) {
