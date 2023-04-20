@@ -285,9 +285,9 @@ public class RobotContainer implements CANTestable, Loggable {
                   () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
                   () -> isMovingJoystick(driver)));
 
-      operator
-          .rightBumper()
-          .onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.HIGH)));
+      //      operator
+      //          .rightBumper()
+      //          .onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.HIGH)));
       operator.povUp().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.MID)));
       operator.povDown().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.LOW)));
     }
