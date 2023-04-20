@@ -198,6 +198,13 @@ public class AutoPaths {
                           elevatorSubsystem, armSubsystem, intakeSubsystem, () -> false))
                   .asProxy()
                   .withName("intakeCube"));
+
+      AutoChooser.createSinglePath(
+          "Score Preload Cube Mid",
+          autoEventMap.get("cubeMid").get().andThen(new OuttakeCube(intakeSubsystem)));
+      AutoChooser.createSinglePath(
+          "Score Preload Cone Mid",
+          autoEventMap.get("coneMid").get().andThen(new OuttakeCone(intakeSubsystem)));
     }
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);

@@ -93,28 +93,34 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kLedStripEnabled) ledSubsystem = new LED();
 
     if (kLedStripEnabled) {
+      System.out.println("LED Subsystem Enabled");
       configureLEDStrip();
-    }
+    } else System.out.println("LED Subsystem NOT Enabled");
+
     if (kIntakeEnabled) {
+      System.out.println("Intake Subsystem Enabled");
       configureIntake();
       canBusTestables.add(intakeSubsystem);
       loggables.add(intakeSubsystem);
-    }
+    } else System.out.println("Intake Subsystem NOT Enabled");
     if (kArmEnabled) {
+      System.out.println("Arm Subsystem Enabled");
       configureArm();
       canBusTestables.add(armSubsystem);
       loggables.add(armSubsystem);
-    }
+    } else System.out.println("Arm Subsystem NOT Enabled");
     if (kElevatorEnabled) {
+      System.out.println("Elevator Subsystem Enabled");
       configureElevator();
       canBusTestables.add(elevatorSubsystem);
       loggables.add(elevatorSubsystem);
-    }
+    } else System.out.println("Elevator Subsystem NOT Enabled");
     if (kSwerveEnabled) {
+      System.out.println("Swerve Subsystem Enabled");
       configureSwerve();
       canBusTestables.add(swerveSubsystem);
       loggables.add(swerveSubsystem);
-    }
+    } else System.out.println("Swerve Subsystem NOT Enabled");
 
     modeChooser = new SendableChooser<>();
     if (FeatureFlags.kAutoScoreEnabled) {
@@ -368,10 +374,12 @@ public class RobotContainer implements CANTestable, Loggable {
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(
-          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone),
+          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
+              .withTimeout(4),
           autoPath,
           Commands.parallel(
               new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
+                  .withTimeout(4)
                   .asProxy(),
               new LockSwerveX(swerveSubsystem)
                   .andThen(new SetAllColor(ledSubsystem, kLockSwerve))
