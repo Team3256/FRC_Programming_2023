@@ -8,13 +8,9 @@
 package frc.robot.elevator.commands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.commands.KeepArm;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.Elevator.ElevatorPreset;
+import frc.robot.elevator.commands.SetEndEffectorState.EndEffectorPreset;
 import frc.robot.helpers.ParentCommand;
 import java.util.function.BooleanSupplier;
 
@@ -35,16 +31,20 @@ public class StowEndEffector extends ParentCommand {
     if (isCurrentPieceCone.getAsBoolean()) {
       addChildCommands(
           Commands.sequence(
-              new SetArmAngle(armSubsystem, ArmPreset.STOW_CONE).asProxy(),
-              new ScheduleCommand(new KeepArm(armSubsystem)).asProxy(),
-              new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.STOW_CONE).asProxy(),
+              new SetEndEffectorState(elevatorSubsystem, armSubsystem, EndEffectorPreset.STOW_CONE),
+              // new SetArmAngle(armSubsystem, ArmPreset.STOW_CONE).asProxy(),
+              // new ScheduleCommand(new KeepArm(armSubsystem)).asProxy(),
+              // new SetElevatorExtension(elevatorSubsystem,
+              // ElevatorPreset.STOW_CONE).asProxy(),
               new ZeroElevator(elevatorSubsystem).asProxy()));
     } else {
       addChildCommands(
           Commands.sequence(
-              new SetArmAngle(armSubsystem, ArmPreset.STOW_CUBE).asProxy(),
-              new ScheduleCommand(new KeepArm(armSubsystem)).asProxy(),
-              new SetElevatorExtension(elevatorSubsystem, ElevatorPreset.STOW_CUBE).asProxy(),
+              new SetEndEffectorState(elevatorSubsystem, armSubsystem, EndEffectorPreset.STOW_CUBE),
+              // new SetArmAngle(armSubsystem, ArmPreset.STOW_CUBE).asProxy(),
+              // new ScheduleCommand(new KeepArm(armSubsystem)).asProxy(),
+              // new SetElevatorExtension(elevatorSubsystem,
+              // ElevatorPreset.STOW_CUBE).asProxy(),
               new ZeroElevator(elevatorSubsystem).asProxy()));
     }
     super.initialize();

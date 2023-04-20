@@ -10,6 +10,8 @@ package frc.robot.arm.commands;
 import static frc.robot.arm.ArmConstants.kZeroArmVoltage;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 
@@ -28,9 +30,12 @@ public class ZeroArm extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    armSubsystem.off();
     if (!interrupted) {
       if (FeatureFlags.kUseRelativeArmEncoder) {
-        armSubsystem.zeroArmEncoderElevatorRelative();
+        new WaitCommand(0.05)
+            .andThen(new InstantCommand(armSubsystem::zeroArmEncoderElevatorRelative))
+            .schedule();
       } else {
         armSubsystem.zeroThroughboreEncoder();
       }

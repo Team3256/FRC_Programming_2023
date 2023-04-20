@@ -240,19 +240,19 @@ public class RobotContainer implements CANTestable, Loggable {
 
     if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
 
-      driver
-          .leftTrigger()
-          .onTrue(
-              new AutoIntakeAtDoubleSubstation(
-                  swerveSubsystem,
-                  intakeSubsystem,
-                  elevatorSubsystem,
-                  armSubsystem,
-                  ledSubsystem,
-                  () -> doubleSubstationLocation,
-                  () -> isMovingJoystick(driver),
-                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
-                  this::isCurrentPieceCone));
+      // driver
+      // .leftTrigger()
+      // .onTrue(
+      // new AutoIntakeAtDoubleSubstation(
+      // swerveSubsystem,
+      // intakeSubsystem,
+      // elevatorSubsystem,
+      // armSubsystem,
+      // ledSubsystem,
+      // () -> doubleSubstationLocation,
+      // () -> isMovingJoystick(driver),
+      // () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+      // this::isCurrentPieceCone));
 
       driver
           .y()
@@ -359,8 +359,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void configureLEDStrip() {
     ledSubsystem.setDefaultCommand(new ColorFlowPattern(ledSubsystem));
-    // ledSubsystem.setDefaultCommand(
-    // new LimitedSwervePattern(ledSubsystem, this::isCurrentPieceCone));
 
     operator.leftBumper().onTrue(new InstantCommand(this::toggleGamePiece));
   }

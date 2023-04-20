@@ -30,19 +30,19 @@ public final class ArmConstants {
   public static final double kArmMassKg = 7.5;
   public static final int kNumArmMotors = 1;
 
-  public static final double kArmS = 0.41305;
-  public static final double kArmV = 1.30;
+  public static final double kArmS = 0.21305;
+  public static final double kArmV = 0.23;
   public static final double kArmA = 0.011292;
   public static final double kArmG = 0.72163;
-  public static final double kArmP = 10.0;
+  public static final double kArmP = 6.5;
   public static final double kArmI = 0;
-  public static final double kArmD = 0.15699;
+  public static final double kArmD = 0.25699;
 
   public static final TrapezoidProfile.Constraints kArmProfileContraints =
       new TrapezoidProfile.Constraints(16, 16);
 
-  public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(10);
-  public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(10);
+  public static final Rotation2d kArmToleranceAngle = Rotation2d.fromDegrees(5);
+  public static final Rotation2d kArmToleranceAngularVelocity = Rotation2d.fromDegrees(5);
 
   public static final Rotation2d kArmAngleMinConstraint = Rotation2d.fromDegrees(0);
   public static final Rotation2d kArmAngleMaxConstraint = Rotation2d.fromDegrees(180);
@@ -109,6 +109,6 @@ public final class ArmConstants {
   }
 
   // Zero Arm
-  public static final double kZeroArmVoltage = -3.0;
-  public static final double kZeroArmCurrentThreshold = 60.0;
+  public static final double kZeroArmVoltage = -6.0;
+  public static final double kZeroArmCurrentThreshold = 50.0;
 }
