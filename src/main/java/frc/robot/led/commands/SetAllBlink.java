@@ -13,7 +13,7 @@ import java.awt.Color;
 
 public class SetAllBlink extends CommandBase {
   private Color color;
-  private double speed = 0.7;
+  private double speed = 0.4;
 
   public SetAllBlink(LED ledSubsystem, Color color) {
     this.color = color;

@@ -22,7 +22,7 @@ public final class ArmConstants {
   public static final double kArmEncoderGearRatio = 2 / 1;
   public static final double kArmRadiansPerAbsoluteEncoderRotation =
       -(2 / kArmEncoderGearRatio) * Math.PI;
-  public static final double kAbsoluteEncoderOffsetRadians = 3.748531;
+  public static final double kAbsoluteEncoderOffsetRadians = 3.6506685;
 
   public static final double kArmGearing = 80;
   public static final double kArmLength = 0.569075;

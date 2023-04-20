@@ -127,7 +127,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public double getEncoderDistanceRad() {
-    return armEncoder.getAbsolutePosition() * kArmRadiansPerAbsoluteEncoderRotation;
+    return armEncoder.getDistance();
+    // return armEncoder.getAbsolutePosition() *
+    // kArmRadiansPerAbsoluteEncoderRotation;
   }
 
   public Rotation2d getClosestSafePosition(double elevatorPosition) {

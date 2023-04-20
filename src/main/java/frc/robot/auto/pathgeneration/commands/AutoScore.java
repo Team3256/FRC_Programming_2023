@@ -226,7 +226,6 @@ public class AutoScore extends ParentCommand {
                     SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
                 isCurrentPieceCone);
         break;
-
         // case LOW
       default:
         scoringLocation = kBottomBlueScoringPoses[locationId];
@@ -234,7 +233,7 @@ public class AutoScore extends ParentCommand {
             new SetEndEffectorState(
                 elevatorSubsystem,
                 armSubsystem,
-                SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_BACK);
+                SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT);
         break;
     }
 
