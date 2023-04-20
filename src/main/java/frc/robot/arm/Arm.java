@@ -80,6 +80,7 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     }
 
     System.out.println("Arm initialized");
+    zeroArmEncoderElevatorRelative();
     off();
   }
 
@@ -118,8 +119,9 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
         && Units.radiansToDegrees(getArmPositionElevatorRelative()) >= kMinSafeRotation);
   }
 
-  public void zeroMotorEncoder() {
-    armMotor.setSelectedSensorPosition(0);
+  public void zeroArmEncoderElevatorRelative() {
+    armMotor.setSelectedSensorPosition(
+        Conversions.radiansToFalcon(kElevatorAngleOffset, kArmGearing));
   }
 
   public double getAbsoluteEncoderDistanceRad() {

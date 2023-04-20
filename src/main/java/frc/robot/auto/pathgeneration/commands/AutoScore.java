@@ -10,8 +10,6 @@ package frc.robot.auto.pathgeneration.commands;
 import static frc.robot.Constants.FeatureFlags.kAutoOuttakeEnabled;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 import static frc.robot.led.LEDConstants.*;
-import static frc.robot.swerve.SwerveConstants.kFieldRelative;
-import static frc.robot.swerve.SwerveConstants.kOpenLoop;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,7 +21,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.RobotContainer.GamePiece;
 import frc.robot.arm.Arm;
@@ -38,11 +35,9 @@ import frc.robot.intake.Intake;
 import frc.robot.intake.commands.OuttakeCone;
 import frc.robot.intake.commands.OuttakeCube;
 import frc.robot.led.LED;
-import frc.robot.led.commands.LimitedSwervePattern;
 import frc.robot.led.commands.SetAllBlink;
 import frc.robot.led.commands.SetAllColor;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.TeleopSwerveLimited;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -60,9 +55,8 @@ public class AutoScore extends ParentCommand {
   private Intake intakeSubsystem;
   private Supplier<GridScoreHeight> gridScoreHeight;
   private BooleanSupplier cancelCommand;
-  private BooleanSupplier isCurrentLEDPieceCone;
+  private BooleanSupplier isOperatorSelectingCone;
   private BooleanSupplier isAutoScoreMode;
-  private CommandXboxController driver;
 
   public AutoScore(
       SwerveDrive swerveDrive,
@@ -71,8 +65,7 @@ public class AutoScore extends ParentCommand {
       Arm armSubsystem,
       LED ledSubsystem,
       GridScoreHeight gridScoreHeight,
-      CommandXboxController driver,
-      BooleanSupplier isCurrentPieceCone,
+      BooleanSupplier isOperatorSelectingCone,
       BooleanSupplier isAutoScoreMode,
       BooleanSupplier cancelCommand) {
 
@@ -83,8 +76,7 @@ public class AutoScore extends ParentCommand {
         armSubsystem,
         ledSubsystem,
         () -> gridScoreHeight,
-        driver,
-        isCurrentPieceCone,
+        isOperatorSelectingCone,
         isAutoScoreMode,
         cancelCommand);
   }
@@ -96,8 +88,7 @@ public class AutoScore extends ParentCommand {
       Arm armSubsystem,
       LED ledSubsystem,
       Supplier<GridScoreHeight> gridScoreHeight,
-      CommandXboxController driver,
-      BooleanSupplier isCurrentLEDPieceCone,
+      BooleanSupplier isOperatorSelectingCone,
       BooleanSupplier isAutoScoreMode,
       BooleanSupplier cancelCommand) {
 
@@ -108,8 +99,7 @@ public class AutoScore extends ParentCommand {
     this.ledSubsystem = ledSubsystem;
     this.gridScoreHeight = gridScoreHeight;
     this.isAutoScoreMode = isAutoScoreMode;
-    this.driver = driver;
-    this.isCurrentLEDPieceCone = isCurrentLEDPieceCone;
+    this.isOperatorSelectingCone = isOperatorSelectingCone;
     this.cancelCommand = cancelCommand;
   }
 
@@ -129,7 +119,7 @@ public class AutoScore extends ParentCommand {
                       elevatorSubsystem,
                       armSubsystem,
                       SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
-                  isCurrentLEDPieceCone)
+                  isOperatorSelectingCone)
               .schedule();
           break;
         case MID:
@@ -142,7 +132,7 @@ public class AutoScore extends ParentCommand {
                       elevatorSubsystem,
                       armSubsystem,
                       SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
-                  isCurrentLEDPieceCone)
+                  isOperatorSelectingCone)
               .schedule();
           break;
         case LOW:
@@ -187,10 +177,10 @@ public class AutoScore extends ParentCommand {
           PathGeneration.createDynamicAbsolutePath(
               start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
 
-    BooleanSupplier isCurrentPieceCone = () -> scoringGamePiece.equals(GamePiece.CONE);
+    BooleanSupplier isSelectedNodeCone = () -> scoringGamePiece.equals(GamePiece.CONE);
     Command runOuttake =
         new ConditionalCommand(
-            new OuttakeCone(intakeSubsystem), new OuttakeCube(intakeSubsystem), isCurrentPieceCone);
+            new OuttakeCone(intakeSubsystem), new OuttakeCube(intakeSubsystem), isSelectedNodeCone);
     // Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
     // Set arm and elevator command and end pose based on node type and height
     Pose2d scoringLocation;
@@ -209,7 +199,7 @@ public class AutoScore extends ParentCommand {
                     elevatorSubsystem,
                     armSubsystem,
                     SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
-                isCurrentPieceCone);
+                isSelectedNodeCone);
         break;
       case MID:
         scoringLocation = kMidBlueScoringPoses[locationId];
@@ -223,7 +213,7 @@ public class AutoScore extends ParentCommand {
                     elevatorSubsystem,
                     armSubsystem,
                     SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
-                isCurrentPieceCone);
+                isSelectedNodeCone);
         break;
         // case LOW
       default:
@@ -236,7 +226,7 @@ public class AutoScore extends ParentCommand {
         break;
     }
 
-    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset && isCurrentPieceCone.getAsBoolean()) {
+    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset && isSelectedNodeCone.getAsBoolean()) {
       double offset =
           DriverStation.getAlliance() == Alliance.Red
               ? intakeSubsystem.getGamePieceOffset()
@@ -257,16 +247,6 @@ public class AutoScore extends ParentCommand {
         PathGeneration.createDynamicAbsolutePath(
             scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
 
-    Command limitedSwerve =
-        new TeleopSwerveLimited(
-                swerveSubsystem,
-                driver::getLeftY,
-                driver::getLeftX,
-                driver::getRightX,
-                kFieldRelative,
-                kOpenLoop)
-            .deadlineWith(new LimitedSwervePattern(ledSubsystem, isCurrentPieceCone));
-
     Command successLEDs = new SetAllColor(ledSubsystem, kSuccess).withTimeout(2.5);
 
     Command errorLEDs = new SetAllColor(ledSubsystem, kError).withTimeout(2.5);
@@ -274,10 +254,10 @@ public class AutoScore extends ParentCommand {
         new ConditionalCommand(
             new SetAllBlink(ledSubsystem, kCone),
             new SetAllBlink(ledSubsystem, kCube),
-            isCurrentPieceCone);
+            isSelectedNodeCone);
 
     Command stowArmElevator =
-        new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone);
+        new StowEndEffector(elevatorSubsystem, armSubsystem, isSelectedNodeCone);
 
     Command autoScore =
         Commands.sequence(

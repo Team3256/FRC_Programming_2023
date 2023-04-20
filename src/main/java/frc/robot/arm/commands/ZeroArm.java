@@ -30,7 +30,7 @@ public class ZeroArm extends CommandBase {
   public void end(boolean interrupted) {
     if (!interrupted) {
       if (FeatureFlags.kUseRelativeArmEncoder) {
-        armSubsystem.zeroMotorEncoder();
+        armSubsystem.zeroArmEncoderElevatorRelative();
       } else {
         armSubsystem.zeroThroughboreEncoder();
       }
