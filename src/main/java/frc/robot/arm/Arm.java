@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.commands.SetArmAngle;
+import frc.robot.arm.commands.ZeroArm;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
@@ -82,6 +83,8 @@ public class Arm extends SubsystemBase implements CANTestable, Loggable {
     System.out.println("Arm initialized");
     zeroArmEncoderElevatorRelative();
     off();
+
+    getLayout(kDriverTabName).add(new ZeroArm(this));
   }
 
   private void configureRealHardware() {

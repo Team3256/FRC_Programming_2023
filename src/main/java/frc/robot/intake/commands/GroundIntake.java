@@ -18,6 +18,7 @@ import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.StowEndEffector;
+import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import java.util.function.BooleanSupplier;
 
@@ -53,11 +54,14 @@ public class GroundIntake extends ParallelCommandGroup {
 
     Command setArmElevatorToPreset =
         new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE)
+            .asProxy()
             .andThen(
-                new ConditionalCommand(
-                    new SetArmAngle(armSubsystem, coneArmPreset),
-                    new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
-                    isCurrentPieceCone))
+                Commands.parallel(
+                    new ConditionalCommand(
+                        new SetArmAngle(armSubsystem, coneArmPreset),
+                        new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
+                        isCurrentPieceCone)),
+                new ZeroElevator(elevatorSubsystem))
             .asProxy()
             .andThen(new ScheduleCommand(new KeepArm(armSubsystem)).asProxy());
 

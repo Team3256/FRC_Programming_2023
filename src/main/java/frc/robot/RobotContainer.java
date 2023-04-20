@@ -22,6 +22,7 @@ import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 import frc.robot.arm.ArmConstants;
 import frc.robot.arm.commands.SetArmVoltage;
+import frc.robot.arm.commands.ZeroArm;
 import frc.robot.auto.AutoConstants;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.pathgeneration.commands.*;
@@ -338,6 +339,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureArm() {
     // armSubsystem.setDefaultCommand(new KeepArm(armSubsystem));
+    operator.start().onTrue(new ZeroArm(armSubsystem));
 
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
