@@ -45,7 +45,6 @@ public final class Constants {
 
     public static final boolean kAutoScoreEnabled = false;
     public static final boolean kAutoOuttakeEnabled = false;
-    public static final boolean kAutoLimitedSwerveEnabled = false;
     public static final boolean kIntakeAutoScoreDistanceSensorOffset = false;
 
     public static final boolean kOperatorManualArmControlEnabled = false;

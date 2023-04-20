@@ -15,17 +15,30 @@ import frc.robot.led.LED;
 import java.util.function.BooleanSupplier;
 
 public class LimitedSwervePattern extends CommandBase {
+  private BooleanSupplier isCurrentPieceCone;
+
   public LimitedSwervePattern(LED ledSubsystem, BooleanSupplier isCurrentPieceCone) {
+    this.isCurrentPieceCone = isCurrentPieceCone;
+
+    addRequirements(ledSubsystem);
+  }
+
+  @Override
+  public void initialize() {
     if (isCurrentPieceCone.getAsBoolean()) {
       LED.LEDSegment.MainStrip.setStrobeAnimation(kCone, 0.7);
     } else {
       LED.LEDSegment.MainStrip.setStrobeAnimation(kCube, 0.7);
     }
-    addRequirements(ledSubsystem);
   }
 
   @Override
   public boolean runsWhenDisabled() {
     return true;
+  }
+
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }

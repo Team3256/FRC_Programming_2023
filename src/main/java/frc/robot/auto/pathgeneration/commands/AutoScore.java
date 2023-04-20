@@ -7,7 +7,6 @@
 
 package frc.robot.auto.pathgeneration.commands;
 
-import static frc.robot.Constants.FeatureFlags.kAutoLimitedSwerveEnabled;
 import static frc.robot.Constants.FeatureFlags.kAutoOuttakeEnabled;
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 import static frc.robot.led.LEDConstants.*;
@@ -287,11 +286,7 @@ public class AutoScore extends ParentCommand {
                 Commands.either(
                     Commands.sequence(runOuttake.asProxy(), stowArmElevator.asProxy()),
                     Commands.none(),
-                    () -> kAutoOuttakeEnabled),
-                Commands.either(
-                    limitedSwerve.until(armSubsystem::isSafeFromElevator).asProxy(),
-                    Commands.none(),
-                    () -> kAutoLimitedSwerveEnabled))
+                    () -> kAutoOuttakeEnabled))
             .deadlineWith(runningLEDs.asProxy())
             .finallyDo(
                 (interrupted) -> {
