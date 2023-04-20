@@ -31,20 +31,14 @@ public class StowEndEffector extends ParentCommand {
     if (isCurrentPieceCone.getAsBoolean()) {
       addChildCommands(
           Commands.sequence(
-              new SetEndEffectorState(elevatorSubsystem, armSubsystem, EndEffectorPreset.STOW_CONE),
-              // new SetArmAngle(armSubsystem, ArmPreset.STOW_CONE).asProxy(),
-              // new ScheduleCommand(new KeepArm(armSubsystem)).asProxy(),
-              // new SetElevatorExtension(elevatorSubsystem,
-              // ElevatorPreset.STOW_CONE).asProxy(),
+              new SetEndEffectorState(
+                  elevatorSubsystem, armSubsystem, EndEffectorPreset.STOW_CONE, true),
               new ZeroElevator(elevatorSubsystem).asProxy()));
     } else {
       addChildCommands(
           Commands.sequence(
-              new SetEndEffectorState(elevatorSubsystem, armSubsystem, EndEffectorPreset.STOW_CUBE),
-              // new SetArmAngle(armSubsystem, ArmPreset.STOW_CUBE).asProxy(),
-              // new ScheduleCommand(new KeepArm(armSubsystem)).asProxy(),
-              // new SetElevatorExtension(elevatorSubsystem,
-              // ElevatorPreset.STOW_CUBE).asProxy(),
+              new SetEndEffectorState(
+                  elevatorSubsystem, armSubsystem, EndEffectorPreset.STOW_CUBE, true),
               new ZeroElevator(elevatorSubsystem).asProxy()));
     }
     super.initialize();

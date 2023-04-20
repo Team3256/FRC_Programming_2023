@@ -36,12 +36,14 @@ import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.GroundIntake.ConeOrientation;
 import frc.robot.led.LED;
 import frc.robot.led.commands.ColorFlowPattern;
+import frc.robot.led.commands.LimitedSwervePattern;
 import frc.robot.led.commands.SetAllColor;
 import frc.robot.logging.Loggable;
 import frc.robot.simulation.RobotSimulation;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.commands.LockSwerveX;
 import frc.robot.swerve.commands.TeleopSwerve;
+import frc.robot.swerve.commands.TeleopSwerveLimited;
 import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
 import java.util.ArrayList;
 
@@ -218,18 +220,17 @@ public class RobotContainer implements CANTestable, Loggable {
 
     driver.a().onTrue(new InstantCommand(swerveSubsystem::zeroGyroYaw));
 
-    // driver
-    // .leftBumper()
-    // .toggleOnTrue(
-    // new TeleopSwerveLimited(
-    // swerveSubsystem,
-    // driver::getLeftY,
-    // driver::getLeftX,
-    // driver::getRightX,
-    // kFieldRelative,
-    // kOpenLoop)
-    // .deadlineWith(new LimitedSwervePattern(ledSubsystem,
-    // this::isCurrentPieceCone)));
+    driver
+        .leftBumper()
+        .toggleOnTrue(
+            new TeleopSwerveLimited(
+                    swerveSubsystem,
+                    driver::getLeftY,
+                    driver::getLeftX,
+                    driver::getRightX,
+                    kFieldRelative,
+                    kOpenLoop)
+                .deadlineWith(new LimitedSwervePattern(ledSubsystem, this::isCurrentPieceCone)));
 
     driver
         .x()
@@ -295,8 +296,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    intakeSubsystem.setDefaultCommand(
-        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
+    //    intakeSubsystem.setDefaultCommand(
+    //        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
     operator
         .rightTrigger()
         .whileTrue(

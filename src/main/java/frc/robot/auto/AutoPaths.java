@@ -59,7 +59,7 @@ public class AutoPaths {
   }
 
   public void sendCommandsToChooser() {
-    AutoChooser.createSingleDefaultPath("Do Nothing", new InstantCommand());
+    AutoChooser.createSingleDefaultPath("Do Nothing", Commands.none());
 
     if (swerveSubsystem == null) {
       AutoChooser.sendChooserToDashboard("Auto Chooser");
@@ -86,62 +86,74 @@ public class AutoPaths {
       autoEventMap.put(
           "coneHigh",
           () ->
-              new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH)
-                  .asProxy()
-                  .withName("coneHigh"));
+              setPieceToCone()
+                  .andThen(
+                      new SetEndEffectorState(
+                              elevatorSubsystem,
+                              armSubsystem,
+                              SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH)
+                          .asProxy()
+                          .withName("coneHigh")));
 
       autoEventMap.put(
           "coneMid",
           () ->
-              new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID)
-                  .asProxy()
-                  .withName("coneMid"));
+              setPieceToCone()
+                  .andThen(
+                      new SetEndEffectorState(
+                              elevatorSubsystem,
+                              armSubsystem,
+                              SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID)
+                          .asProxy()
+                          .withName("coneMid")));
 
       autoEventMap.put(
           "coneLow",
           () ->
-              new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
-                  .asProxy()
-                  .withName("coneLow"));
+              setPieceToCone()
+                  .andThen(
+                      new SetEndEffectorState(
+                              elevatorSubsystem,
+                              armSubsystem,
+                              SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
+                          .asProxy()
+                          .withName("coneLow")));
 
       autoEventMap.put(
           "cubeHigh",
           () ->
-              new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH)
-                  .asProxy()
-                  .withName("cubeHigh"));
+              setPieceToCube()
+                  .andThen(
+                      new SetEndEffectorState(
+                              elevatorSubsystem,
+                              armSubsystem,
+                              SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH)
+                          .asProxy()
+                          .withName("cubeHigh")));
 
       autoEventMap.put(
           "cubeMid",
           () ->
-              new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID)
-                  .asProxy()
-                  .withName("cubeMid"));
+              setPieceToCube()
+                  .andThen(
+                      new SetEndEffectorState(
+                              elevatorSubsystem,
+                              armSubsystem,
+                              SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID)
+                          .asProxy()
+                          .withName("cubeMid")));
 
       autoEventMap.put(
           "cubeLow",
           () ->
-              new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
-                  .asProxy()
-                  .withName("cubeLow"));
+              setPieceToCube()
+                  .andThen(
+                      new SetEndEffectorState(
+                              elevatorSubsystem,
+                              armSubsystem,
+                              SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
+                          .asProxy()
+                          .withName("cubeLow")));
 
       autoEventMap.put(
           "defaultPosition",
