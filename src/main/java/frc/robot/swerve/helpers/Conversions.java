@@ -7,6 +7,8 @@
 
 package frc.robot.swerve.helpers;
 
+import edu.wpi.first.math.util.Units;
+
 public class Conversions {
 
   /**
@@ -52,6 +54,15 @@ public class Conversions {
    */
   public static double degreesToFalcon(double degrees, double gearRatio) {
     return degrees / (360.0 / (gearRatio * 2048.0));
+  }
+
+  /**
+   * @param radians Radians of rotation of Mechanism
+   * @param gearRatio Gear Ratio between Falcon and Mechanism
+   * @return Falcon Position Counts
+   */
+  public static double radiansToFalcon(double radians, double gearRatio) {
+    return degreesToFalcon(Units.radiansToDegrees(radians), gearRatio);
   }
 
   /**

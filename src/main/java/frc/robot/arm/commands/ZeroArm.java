@@ -10,6 +10,7 @@ package frc.robot.arm.commands;
 import static frc.robot.arm.ArmConstants.kZeroArmVoltage;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.FeatureFlags;
 import frc.robot.arm.Arm;
 
 public class ZeroArm extends CommandBase {
@@ -27,7 +28,13 @@ public class ZeroArm extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    if (!interrupted) armSubsystem.zeroThroughboreEncoder();
+    if (!interrupted) {
+      if (FeatureFlags.kUseRelativeArmEncoder) {
+        armSubsystem.zeroMotorEncoder();
+      } else {
+        armSubsystem.zeroThroughboreEncoder();
+      }
+    }
   }
 
   @Override

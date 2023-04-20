@@ -30,7 +30,6 @@ import frc.robot.auto.pathgeneration.commands.AutoScore.*;
 import frc.robot.drivers.CANTestable;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.StowEndEffector;
-import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.*;
 import frc.robot.intake.commands.GroundIntake.ConeOrientation;
@@ -370,7 +369,7 @@ public class RobotContainer implements CANTestable, Loggable {
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(
-          new ZeroElevator(elevatorSubsystem),
+          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone),
           autoPath,
           Commands.parallel(
               new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
