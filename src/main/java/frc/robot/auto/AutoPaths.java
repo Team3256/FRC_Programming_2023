@@ -68,11 +68,10 @@ public class AutoPaths {
 
     autoEventMap.put(
         "engage",
-        () ->
-            new AutoBalance(swerveSubsystem)
-                .andThen(new LockSwerveX(swerveSubsystem))
-                .asProxy()
-                .withName("engage"));
+        () -> new AutoBalance(swerveSubsystem)
+            .andThen(new LockSwerveX(swerveSubsystem))
+            .asProxy()
+            .withName("engage"));
 
     if (swerveSubsystem != null
         && intakeSubsystem != null
@@ -85,119 +84,108 @@ public class AutoPaths {
 
       autoEventMap.put(
           "coneHigh",
-          () ->
-              setPieceToCone()
-                  .andThen(
-                      new SetEndEffectorState(
-                              elevatorSubsystem,
-                              armSubsystem,
-                              SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH)
-                          .asProxy()
-                          .withName("coneHigh")));
+          () -> setPieceToCone()
+              .andThen(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH)
+                      .asProxy()
+                      .withName("coneHigh")));
 
       autoEventMap.put(
           "coneMid",
-          () ->
-              setPieceToCone()
-                  .andThen(
-                      new SetEndEffectorState(
-                              elevatorSubsystem,
-                              armSubsystem,
-                              SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID)
-                          .asProxy()
-                          .withName("coneMid")));
+          () -> setPieceToCone()
+              .andThen(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID)
+                      .asProxy()
+                      .withName("coneMid")));
 
       autoEventMap.put(
           "coneLow",
-          () ->
-              setPieceToCone()
-                  .andThen(
-                      new SetEndEffectorState(
-                              elevatorSubsystem,
-                              armSubsystem,
-                              SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
-                          .asProxy()
-                          .withName("coneLow")));
+          () -> setPieceToCone()
+              .andThen(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
+                      .asProxy()
+                      .withName("coneLow")));
 
       autoEventMap.put(
           "cubeHigh",
-          () ->
-              setPieceToCube()
-                  .andThen(
-                      new SetEndEffectorState(
-                              elevatorSubsystem,
-                              armSubsystem,
-                              SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH)
-                          .asProxy()
-                          .withName("cubeHigh")));
+          () -> setPieceToCube()
+              .andThen(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH)
+                      .asProxy()
+                      .withName("cubeHigh")));
 
       autoEventMap.put(
           "cubeMid",
-          () ->
-              setPieceToCube()
-                  .andThen(
-                      new SetEndEffectorState(
-                              elevatorSubsystem,
-                              armSubsystem,
-                              SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID)
-                          .asProxy()
-                          .withName("cubeMid")));
+          () -> setPieceToCube()
+              .andThen(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID)
+                      .asProxy()
+                      .withName("cubeMid")));
 
       autoEventMap.put(
           "cubeLow",
-          () ->
-              setPieceToCube()
-                  .andThen(
-                      new SetEndEffectorState(
-                              elevatorSubsystem,
-                              armSubsystem,
-                              SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
-                          .asProxy()
-                          .withName("cubeLow")));
+          () -> setPieceToCube()
+              .andThen(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
+                      .asProxy()
+                      .withName("cubeLow")));
 
       autoEventMap.put(
           "defaultPosition",
-          () ->
-              runParallelWithPath(
-                  Commands.parallel(
-                          new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
-                          new IntakeOff(intakeSubsystem))
-                      .asProxy()
-                      .withName("stow")));
+          () -> runParallelWithPath(
+              Commands.parallel(
+                  new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
+                  new IntakeOff(intakeSubsystem))
+                  .asProxy()
+                  .withName("stow")));
 
       autoEventMap.put(
           "stow",
-          () ->
-              runParallelWithPath(
-                  Commands.parallel(
-                          new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
-                          new IntakeOff(intakeSubsystem))
-                      .asProxy()
-                      .withName("stow")));
+          () -> Commands.parallel(
+              new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
+              new IntakeOff(intakeSubsystem))
+              .asProxy()
+              .withName("stow"));
 
       autoEventMap.put(
           "intakeCone",
-          () ->
-              runParallelWithPath(
-                      setPieceToCone(),
-                      new GroundIntake(
-                          elevatorSubsystem,
-                          armSubsystem,
-                          intakeSubsystem,
-                          ConeOrientation.STANDING_CONE,
-                          () -> true))
-                  .asProxy()
-                  .withName("intakeCone"));
+          () -> runParallelWithPath(
+              setPieceToCone(),
+              new GroundIntake(
+                  elevatorSubsystem,
+                  armSubsystem,
+                  intakeSubsystem,
+                  ConeOrientation.STANDING_CONE,
+                  () -> true, true))
+              .asProxy()
+              .withName("intakeCone"));
 
       autoEventMap.put(
           "intakeCube",
-          () ->
-              runParallelWithPath(
-                      setPieceToCube(),
-                      new GroundIntake(
-                          elevatorSubsystem, armSubsystem, intakeSubsystem, () -> false))
-                  .asProxy()
-                  .withName("intakeCube"));
+          () -> runParallelWithPath(
+              setPieceToCube(),
+              new GroundIntake(
+                  elevatorSubsystem, armSubsystem, intakeSubsystem, () -> false))
+              .asProxy()
+              .withName("intakeCube"));
     }
 
     AutoBuilder autoBuilder = new AutoBuilder(swerveSubsystem, autoEventMap);
@@ -232,16 +220,13 @@ public class AutoPaths {
     Command node5Engage = autoBuilder.createPath("Node5-Engage", kFastPathConstraints, true);
     AutoChooser.createSinglePath("Node5-Engage", node5Engage);
 
-    Command node5x2EngageBottom =
-        autoBuilder.createPath("Node5x2-Engage-Bottom", kEngagePathConstraints, true);
+    Command node5x2EngageBottom = autoBuilder.createPath("Node5x2-Engage-Bottom", kEngagePathConstraints, true);
     AutoChooser.createSinglePath("Node5x2-Engage-Bottom", node5x2EngageBottom);
 
-    Command node5x2EngageTop =
-        autoBuilder.createPath("Node5x2-Engage-Top", kEngagePathConstraints, true);
+    Command node5x2EngageTop = autoBuilder.createPath("Node5x2-Engage-Top", kEngagePathConstraints, true);
     AutoChooser.createSinglePath("Node5x2-Engage-Top", node5x2EngageTop);
 
-    Command node5MobilityEngage =
-        autoBuilder.createPath("Node5-Mobility-Engage", kEngagePathConstraints, true);
+    Command node5MobilityEngage = autoBuilder.createPath("Node5-Mobility-Engage", kEngagePathConstraints, true);
     AutoChooser.createSinglePath("Node5-Mobility-Engage", node5MobilityEngage);
 
     AutoChooser.sendChooserToDashboard("Auto Chooser");

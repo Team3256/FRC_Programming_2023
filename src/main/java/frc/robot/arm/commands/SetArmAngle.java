@@ -101,6 +101,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
     armSubsystem.off();
+    if (!interrupted) {
+      new KeepArm(armSubsystem).schedule();
+    }
     if (Constants.kDebugEnabled) {
       System.out.println(
           this.getName()
@@ -108,7 +111,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
               + armPreset
               + ", rotation: "
               + Units.radiansToDegrees(angleRotation)
-              + " deg)");
+              + " deg, interrupted: "
+              + interrupted
+              + ")");
     }
   }
 

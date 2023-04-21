@@ -285,9 +285,9 @@ public class RobotContainer implements CANTestable, Loggable {
                   () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
                   () -> isMovingJoystick(driver)));
 
-      //      operator
-      //          .rightBumper()
-      //          .onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.HIGH)));
+      // operator
+      // .rightBumper()
+      // .onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.HIGH)));
       operator.povUp().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.MID)));
       operator.povDown().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.LOW)));
     }
@@ -296,8 +296,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    //    intakeSubsystem.setDefaultCommand(
-    //        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
+    // intakeSubsystem.setDefaultCommand(
+    // new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
     operator
         .rightTrigger()
         .whileTrue(
@@ -368,7 +368,8 @@ public class RobotContainer implements CANTestable, Loggable {
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(
-          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone),
+          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
+              .withTimeout(5),
           autoPath,
           Commands.parallel(
               new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
