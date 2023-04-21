@@ -56,11 +56,11 @@ public final class ArmConstants {
   public static final Rotation2d kConeMidRotation = new Rotation2d(0);
   public static final Rotation2d kCubeHighRotation = new Rotation2d(0);
   public static final Rotation2d kConeHighRotation = new Rotation2d(0);
-  public static final Rotation2d kAnyPieceLowBackRotation = Rotation2d.fromDegrees(150);
+  public static final Rotation2d kAnyPieceLowBackRotation = Rotation2d.fromDegrees(135);
   public static final Rotation2d kAnyPieceLowFrontRotation = Rotation2d.fromDegrees(0);
 
   public static final Rotation2d kStandingConeGroundIntakeRotation =
-      Rotation2d.fromDegrees(145.644);
+      Rotation2d.fromDegrees(142.644);
   public static final Rotation2d kTippedConeGroundIntakeRotation = Rotation2d.fromDegrees(180);
   public static final Rotation2d kCubeGroundIntakeRotation = Rotation2d.fromDegrees(180);
 

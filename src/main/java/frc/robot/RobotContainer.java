@@ -346,7 +346,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureArm() {
     // armSubsystem.setDefaultCommand(new KeepArm(armSubsystem));
-    operator.start().onTrue(new ZeroArm(armSubsystem));
+    operator.start().onTrue(new ZeroArm(armSubsystem).withTimeout(4));
 
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
@@ -370,16 +370,15 @@ public class RobotContainer implements CANTestable, Loggable {
     operator.leftBumper().onTrue(new InstantCommand(this::toggleGamePiece));
   }
 
+  // TODO: Remove timeouts before competition
   public Command getAutonomousCommand() {
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(
-          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
-              .withTimeout(4),
+          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone),
           autoPath,
           Commands.parallel(
               new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
-                  .withTimeout(4)
                   .asProxy(),
               new LockSwerveX(swerveSubsystem)
                   .andThen(new SetAllColor(ledSubsystem, kLockSwerve))
@@ -424,7 +423,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public boolean isCurrentPieceCone() {
-    return GamePiece.CONE.equals(currentPiece);
+    //    return GamePiece.CONE.equals(currentPiece);
+    return true;
   }
 
   // only for auto to change latch
@@ -433,18 +433,16 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void toggleGamePiece() {
-    if (currentPiece == GamePiece.CONE) {
-      currentPiece = GamePiece.CUBE;
-      new SetAllColor(ledSubsystem, kCube).schedule();
-    } else {
-      currentPiece = GamePiece.CONE;
-      new SetAllColor(ledSubsystem, kCone).schedule();
-    }
+    //    if (currentPiece == GamePiece.CONE) {
+    //      currentPiece = GamePiece.CUBE;
+    //      new SetAllColor(ledSubsystem, kCube).schedule();
+    //    } else {
+    //      currentPiece = GamePiece.CONE;
+    //      new SetAllColor(ledSubsystem, kCone).schedule();
+    //    }
+    currentPiece = GamePiece.CONE;
+    new SetAllColor(ledSubsystem, kCone).schedule();
     System.out.println("Current game piece: " + currentPiece);
-  }
-
-  public GamePiece getCurrentPiece() {
-    return currentPiece;
   }
 
   public void toggleSubstationLocation() {
@@ -461,6 +459,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void setScoreLocation(GridScoreHeight Preset) {
     currentScoringPreset = Preset;
+    System.out.println("Switching Scoring Preset to " + currentScoringPreset.toString());
     SmartDashboard.putString("Current Scoring Preset", currentScoringPreset.toString());
   }
 
