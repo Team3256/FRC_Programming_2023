@@ -375,7 +375,8 @@ public class RobotContainer implements CANTestable, Loggable {
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(
-          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone),
+          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
+              .withTimeout(5),
           autoPath,
           Commands.parallel(
               new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)

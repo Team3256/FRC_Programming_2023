@@ -235,9 +235,9 @@ public class AutoPaths {
     Command node9Mobility = autoBuilder.createPath("Node9-Mobility", kFastPathConstraints, true);
     AutoChooser.createSinglePath("Node9-Mobility", node9Mobility);
 
-    // NODE 5
-    Command node5Engage = autoBuilder.createPath("Node5-Engage", kFastPathConstraints, true);
-    AutoChooser.createSinglePath("Node5-Engage", node5Engage);
+    // NODE 6
+    Command node6Engage = autoBuilder.createPath("Node6-Engage", kEngagePathConstraints, true);
+    AutoChooser.createSinglePath("Node6-Engage", node6Engage);
 
     Command node5x2EngageBottom =
         autoBuilder.createPath("Node5x2-Engage-Bottom", kEngagePathConstraints, true);
@@ -247,9 +247,9 @@ public class AutoPaths {
         autoBuilder.createPath("Node5x2-Engage-Top", kEngagePathConstraints, true);
     AutoChooser.createSinglePath("Node5x2-Engage-Top", node5x2EngageTop);
 
-    Command node5MobilityEngage =
-        autoBuilder.createPath("Node5-Mobility-Engage", kEngagePathConstraints, true);
-    AutoChooser.createSinglePath("Node5-Mobility-Engage", node5MobilityEngage);
+    Command node6MobilityEngage =
+        autoBuilder.createPath("Node6-Mobility-Engage", kEngagePathConstraints, true);
+    AutoChooser.createSinglePath("Node6-Mobility-Engage", node6MobilityEngage);
 
     AutoChooser.sendChooserToDashboard("Auto Chooser");
   }

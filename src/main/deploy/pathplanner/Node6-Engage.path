@@ -3,12 +3,12 @@
     {
       "anchorPoint": {
         "x": 1.850666003401777,
-        "y": 2.7457228089369368
+        "y": 3.27
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.3032987364144066,
-        "y": 2.7429513387478845
+        "y": 3.267228529810948
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,8 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "cubeMid",
-          "outtakeCube"
+          "coneMid",
+          "outtakeCone"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -27,12 +27,12 @@
     },
     {
       "anchorPoint": {
-        "x": 4.062847452355061,
-        "y": 2.7583225060655847
+        "x": 4.1,
+        "y": 3.27
       },
       "prevControl": {
-        "x": 4.118553498595169,
-        "y": 2.7402551216218285
+        "x": 4.155706046240108,
+        "y": 3.251932615556244
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
