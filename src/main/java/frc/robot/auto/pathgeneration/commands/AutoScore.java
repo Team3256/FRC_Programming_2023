@@ -76,7 +76,7 @@ public class AutoScore extends ParentCommand {
         armSubsystem,
         ledSubsystem,
         () -> gridScoreHeight,
-        isOperatorSelectingCone,
+        () -> true, // isOperatorSelectingCone,
         isAutoScoreMode,
         cancelCommand);
   }
@@ -139,7 +139,7 @@ public class AutoScore extends ParentCommand {
           new SetEndEffectorState(
                   elevatorSubsystem,
                   armSubsystem,
-                  SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_BACK)
+                  SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
               .schedule();
           break;
       }

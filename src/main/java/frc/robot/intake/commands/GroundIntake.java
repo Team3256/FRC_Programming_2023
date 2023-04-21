@@ -79,9 +79,10 @@ public class GroundIntake extends ParallelCommandGroup {
       Intake intakeSubsystem,
       ConeOrientation coneOrientation,
       BooleanSupplier isCurrentPieceCone) {
-    ArmPreset coneArmPreset = coneOrientation == ConeOrientation.SITTING_CONE
-        ? ArmPreset.SITTING_CONE_GROUND_INTAKE
-        : ArmPreset.STANDING_CONE_GROUND_INTAKE;
+    ArmPreset coneArmPreset =
+        coneOrientation == ConeOrientation.SITTING_CONE
+            ? ArmPreset.SITTING_CONE_GROUND_INTAKE
+            : ArmPreset.STANDING_CONE_GROUND_INTAKE;
 
     Command runArmEarly = Commands.none();
     if (autoOptimize
@@ -91,32 +92,34 @@ public class GroundIntake extends ParallelCommandGroup {
       runArmEarly = new SetArmAngle(armSubsystem, ArmPreset.STANDING_CONE_GROUND_INTAKE);
     }
 
-    Command setArmElevatorToPreset = Commands.sequence(
-        Commands.deadline(
-            new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE)
-                .asProxy(),
-            runArmEarly.asProxy()),
-        Commands.parallel(
-            new ConditionalCommand(
-                new SetArmAngle(armSubsystem, coneArmPreset),
-                new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
-                isCurrentPieceCone)
-                .asProxy(),
-            new ZeroElevator(elevatorSubsystem).asProxy()));
-
-    Command intakeAndStow = new ConditionalCommand(
-        new IntakeCone(intakeSubsystem),
-        new IntakeCube(intakeSubsystem),
-        isCurrentPieceCone)
-        .andThen(
+    Command setArmElevatorToPreset =
+        Commands.sequence(
             Commands.deadline(
-                new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone)
+                new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE)
                     .asProxy(),
+                runArmEarly.asProxy()),
+            Commands.parallel(
                 new ConditionalCommand(
-                    new IntakeCone(intakeSubsystem).repeatedly(),
-                    new InstantCommand(),
-                    isCurrentPieceCone)
-                    .asProxy()));
+                        new SetArmAngle(armSubsystem, coneArmPreset),
+                        new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
+                        isCurrentPieceCone)
+                    .asProxy(),
+                new ZeroElevator(elevatorSubsystem).asProxy()));
+
+    Command intakeAndStow =
+        new ConditionalCommand(
+                new IntakeCone(intakeSubsystem),
+                new IntakeCube(intakeSubsystem),
+                isCurrentPieceCone)
+            .andThen(
+                Commands.deadline(
+                    new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone)
+                        .asProxy(),
+                    new ConditionalCommand(
+                            new IntakeCone(intakeSubsystem).repeatedly(),
+                            new InstantCommand(),
+                            isCurrentPieceCone)
+                        .asProxy()));
     // .andThen(new LatchGamePiece(intakeSubsystem, isCurrentPieceCone))),
 
     addCommands(setArmElevatorToPreset, intakeAndStow.asProxy());

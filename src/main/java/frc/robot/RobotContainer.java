@@ -93,28 +93,34 @@ public class RobotContainer implements CANTestable, Loggable {
     if (kLedStripEnabled) ledSubsystem = new LED();
 
     if (kLedStripEnabled) {
+      System.out.println("LED Subsystem Enabled");
       configureLEDStrip();
-    }
+    } else System.out.println("LED Subsystem NOT Enabled");
+
     if (kIntakeEnabled) {
+      System.out.println("Intake Subsystem Enabled");
       configureIntake();
       canBusTestables.add(intakeSubsystem);
       loggables.add(intakeSubsystem);
-    }
+    } else System.out.println("Intake Subsystem NOT Enabled");
     if (kArmEnabled) {
+      System.out.println("Arm Subsystem Enabled");
       configureArm();
       canBusTestables.add(armSubsystem);
       loggables.add(armSubsystem);
-    }
+    } else System.out.println("Arm Subsystem NOT Enabled");
     if (kElevatorEnabled) {
+      System.out.println("Elevator Subsystem Enabled");
       configureElevator();
       canBusTestables.add(elevatorSubsystem);
       loggables.add(elevatorSubsystem);
-    }
+    } else System.out.println("Elevator Subsystem NOT Enabled");
     if (kSwerveEnabled) {
+      System.out.println("Swerve Subsystem Enabled");
       configureSwerve();
       canBusTestables.add(swerveSubsystem);
       loggables.add(swerveSubsystem);
-    }
+    } else System.out.println("Swerve Subsystem NOT Enabled");
 
     modeChooser = new SendableChooser<>();
     if (FeatureFlags.kAutoScoreEnabled) {
@@ -340,7 +346,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private void configureArm() {
     // armSubsystem.setDefaultCommand(new KeepArm(armSubsystem));
-    operator.start().onTrue(new ZeroArm(armSubsystem));
+    operator.start().onTrue(new ZeroArm(armSubsystem).withTimeout(4));
 
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
       operator.povUp().whileTrue(new SetArmVoltage(armSubsystem, ArmConstants.kManualArmVoltage));
@@ -364,6 +370,7 @@ public class RobotContainer implements CANTestable, Loggable {
     operator.leftBumper().onTrue(new InstantCommand(this::toggleGamePiece));
   }
 
+  // TODO: Remove timeouts before competition
   public Command getAutonomousCommand() {
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
@@ -417,7 +424,8 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public boolean isCurrentPieceCone() {
-    return GamePiece.CONE.equals(currentPiece);
+    //    return GamePiece.CONE.equals(currentPiece);
+    return true;
   }
 
   // only for auto to change latch
@@ -426,18 +434,16 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   public void toggleGamePiece() {
-    if (currentPiece == GamePiece.CONE) {
-      currentPiece = GamePiece.CUBE;
-      new SetAllColor(ledSubsystem, kCube).schedule();
-    } else {
-      currentPiece = GamePiece.CONE;
-      new SetAllColor(ledSubsystem, kCone).schedule();
-    }
+    //    if (currentPiece == GamePiece.CONE) {
+    //      currentPiece = GamePiece.CUBE;
+    //      new SetAllColor(ledSubsystem, kCube).schedule();
+    //    } else {
+    //      currentPiece = GamePiece.CONE;
+    //      new SetAllColor(ledSubsystem, kCone).schedule();
+    //    }
+    currentPiece = GamePiece.CONE;
+    new SetAllColor(ledSubsystem, kCone).schedule();
     System.out.println("Current game piece: " + currentPiece);
-  }
-
-  public GamePiece getCurrentPiece() {
-    return currentPiece;
   }
 
   public void toggleSubstationLocation() {
@@ -454,6 +460,7 @@ public class RobotContainer implements CANTestable, Loggable {
 
   public void setScoreLocation(GridScoreHeight Preset) {
     currentScoringPreset = Preset;
+    System.out.println("Switching Scoring Preset to " + currentScoringPreset.toString());
     SmartDashboard.putString("Current Scoring Preset", currentScoringPreset.toString());
   }
 
