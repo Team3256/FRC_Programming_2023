@@ -323,7 +323,7 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   public void periodic() {
     poseEstimator.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
-    SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
+    SmartDashboard.putNumber("Gyro Pitch", getPitch().getDegrees());
     SmartDashboard.putNumber("Pose X", poseEstimator.getEstimatedPosition().getX());
     SmartDashboard.putNumber("Pose Y", poseEstimator.getEstimatedPosition().getY());
     field.setRobotPose(poseEstimator.getEstimatedPosition());
@@ -420,14 +420,14 @@ public class SwerveDrive extends SubsystemBase implements Loggable, CANTestable 
   }
 
   public boolean isTiltedForward() {
-    return getPitch().getDegrees() > kAutoBalanceMaxError.getDegrees();
+    return getRoll().getDegrees() > kAutoBalanceMaxError.getDegrees();
   }
 
   public boolean isTiltedBackward() {
-    return getPitch().getDegrees() < -kAutoBalanceMaxError.getDegrees();
+    return getRoll().getDegrees() < -kAutoBalanceMaxError.getDegrees();
   }
 
   public boolean isNotTilted() {
-    return Math.abs(getPitch().getDegrees()) < kAutoBalanceMaxError.getDegrees();
+    return Math.abs(getRoll().getDegrees()) < kAutoBalanceMaxError.getDegrees();
   }
 }

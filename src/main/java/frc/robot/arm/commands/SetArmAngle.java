@@ -106,6 +106,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
           this.getName()
               + " ended (preset: "
               + armPreset
+              + ", current arm rotation elevator relative: "
+              + Units.radiansToDegrees(armSubsystem.getArmPositionElevatorRelative())
+              + " deg, "
               + ", rotation: "
               + Units.radiansToDegrees(angleRotation)
               + " deg)");

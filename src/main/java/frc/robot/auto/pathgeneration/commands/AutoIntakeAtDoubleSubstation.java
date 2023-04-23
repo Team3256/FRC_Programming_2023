@@ -177,11 +177,11 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
                 stowArmElevator.asProxy())
             .deadlineWith(runningLEDs.asProxy())
             .until(cancelCommand)
+            .handleInterrupt(errorLEDs::schedule)
             .finallyDo(
                 (interrupted) -> {
                   if (!interrupted) successLEDs.schedule();
-                })
-            .handleInterrupt(() -> errorLEDs.schedule());
+                });
 
     addChildCommands(autoIntakeCommand);
     super.initialize();

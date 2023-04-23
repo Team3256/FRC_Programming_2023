@@ -99,7 +99,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     zeroElevator();
     zeroLimitSwitch = new DigitalInput(kElevatorLimitSwitchDIO);
 
-    getLayout(kDriverTabName).add(new ZeroElevator(this));
+    //    getLayout(kDriverTabName).add(new ZeroElevator(this));
   }
 
   public boolean isMotorCurrentSpiking() {

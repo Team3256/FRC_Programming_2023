@@ -21,8 +21,8 @@
           "outtakeCone"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "deadline",
+        "waitTime": 5.0
       }
     },
     {

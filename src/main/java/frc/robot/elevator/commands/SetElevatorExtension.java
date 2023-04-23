@@ -116,6 +116,9 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
             + " finished (preset: "
             + this.elevatorPreset
             + ", height: "
+            + ", current height: "
+            + elevatorSubsystem.getElevatorPosition()
+            + " meters, "
             + setpointPosition
             + " meters)");
   }

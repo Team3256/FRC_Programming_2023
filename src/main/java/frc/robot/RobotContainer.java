@@ -41,10 +41,7 @@ import frc.robot.led.commands.SetAllColor;
 import frc.robot.logging.Loggable;
 import frc.robot.simulation.RobotSimulation;
 import frc.robot.swerve.SwerveDrive;
-import frc.robot.swerve.commands.LockSwerveX;
-import frc.robot.swerve.commands.TeleopSwerve;
-import frc.robot.swerve.commands.TeleopSwerveLimited;
-import frc.robot.swerve.commands.TeleopSwerveWithAzimuth;
+import frc.robot.swerve.commands.*;
 import java.util.ArrayList;
 
 /**
@@ -247,19 +244,19 @@ public class RobotContainer implements CANTestable, Loggable {
 
     if (kElevatorEnabled && kArmEnabled && kLedStripEnabled) {
 
-      // driver
-      // .leftTrigger()
-      // .onTrue(
-      // new AutoIntakeAtDoubleSubstation(
-      // swerveSubsystem,
-      // intakeSubsystem,
-      // elevatorSubsystem,
-      // armSubsystem,
-      // ledSubsystem,
-      // () -> doubleSubstationLocation,
-      // () -> isMovingJoystick(driver),
-      // () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
-      // this::isCurrentPieceCone));
+      driver
+          .leftTrigger()
+          .onTrue(
+              new AutoIntakeAtDoubleSubstation(
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledSubsystem,
+                  () -> doubleSubstationLocation,
+                  () -> isMovingJoystick(driver),
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  this::isCurrentPieceCone));
 
       driver
           .y()
@@ -273,7 +270,8 @@ public class RobotContainer implements CANTestable, Loggable {
                   AutoScore.GridScoreHeight.LOW,
                   this::isCurrentPieceCone,
                   () -> false,
-                  () -> false));
+                  () -> false,
+                  false));
 
       // B Auto Score
 
@@ -289,11 +287,13 @@ public class RobotContainer implements CANTestable, Loggable {
                   () -> currentScoringPreset,
                   this::isCurrentPieceCone,
                   () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
-                  () -> isMovingJoystick(driver)));
+                  () -> false,
+                  true));
+      //                  () -> isMovingJoystick(driver)));
 
-      //      operator
-      //          .rightBumper()
-      //          .onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.HIGH)));
+      operator
+          .rightBumper()
+          .onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.HIGH)));
       operator.povUp().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.MID)));
       operator.povDown().onTrue(new InstantCommand(() -> setScoreLocation(GridScoreHeight.LOW)));
     }
@@ -311,7 +311,9 @@ public class RobotContainer implements CANTestable, Loggable {
                 new OuttakeCone(intakeSubsystem),
                 new OuttakeCube(intakeSubsystem),
                 this::isCurrentPieceCone))
-        .onFalse(new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone));
+        .onFalse(
+            new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
+                .asProxy());
 
     if (kArmEnabled && kElevatorEnabled) {
       driver
@@ -372,11 +374,23 @@ public class RobotContainer implements CANTestable, Loggable {
 
   // TODO: Remove timeouts before competition
   public Command getAutonomousCommand() {
+    if (true) {
+      return new AutoIntakeAtDoubleSubstation(
+          swerveSubsystem,
+          intakeSubsystem,
+          elevatorSubsystem,
+          armSubsystem,
+          ledSubsystem,
+          () -> doubleSubstationLocation,
+          () -> isMovingJoystick(driver),
+          () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+          this::isCurrentPieceCone);
+    }
+
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(
-          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)
-              .withTimeout(5),
+          new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone),
           autoPath,
           Commands.parallel(
               new StowEndEffector(elevatorSubsystem, armSubsystem, this::isCurrentPieceCone)

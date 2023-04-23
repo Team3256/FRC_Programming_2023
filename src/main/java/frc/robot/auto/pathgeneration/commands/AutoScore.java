@@ -57,6 +57,7 @@ public class AutoScore extends ParentCommand {
   private BooleanSupplier cancelCommand;
   private BooleanSupplier isOperatorSelectingCone;
   private BooleanSupplier isAutoScoreMode;
+  private boolean isFrontLow;
 
   public AutoScore(
       SwerveDrive swerveDrive,
@@ -67,7 +68,8 @@ public class AutoScore extends ParentCommand {
       GridScoreHeight gridScoreHeight,
       BooleanSupplier isOperatorSelectingCone,
       BooleanSupplier isAutoScoreMode,
-      BooleanSupplier cancelCommand) {
+      BooleanSupplier cancelCommand,
+      boolean isFrontLow) {
 
     this(
         swerveDrive,
@@ -78,7 +80,8 @@ public class AutoScore extends ParentCommand {
         () -> gridScoreHeight,
         () -> true, // isOperatorSelectingCone,
         isAutoScoreMode,
-        cancelCommand);
+        cancelCommand,
+        isFrontLow);
   }
 
   public AutoScore(
@@ -90,7 +93,8 @@ public class AutoScore extends ParentCommand {
       Supplier<GridScoreHeight> gridScoreHeight,
       BooleanSupplier isOperatorSelectingCone,
       BooleanSupplier isAutoScoreMode,
-      BooleanSupplier cancelCommand) {
+      BooleanSupplier cancelCommand,
+      boolean isFrontLow) {
 
     this.swerveSubsystem = swerveDrive;
     this.intakeSubsystem = intakeSubsystem;
@@ -101,6 +105,7 @@ public class AutoScore extends ParentCommand {
     this.isAutoScoreMode = isAutoScoreMode;
     this.isOperatorSelectingCone = isOperatorSelectingCone;
     this.cancelCommand = cancelCommand;
+    this.isFrontLow = isFrontLow;
   }
 
   @Override
@@ -136,10 +141,16 @@ public class AutoScore extends ParentCommand {
               .schedule();
           break;
         case LOW:
-          new SetEndEffectorState(
-                  elevatorSubsystem,
-                  armSubsystem,
-                  SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT)
+          new ConditionalCommand(
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT),
+                  new SetEndEffectorState(
+                      elevatorSubsystem,
+                      armSubsystem,
+                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_BACK),
+                  () -> isFrontLow)
               .schedule();
           break;
       }
@@ -219,10 +230,16 @@ public class AutoScore extends ParentCommand {
       default:
         scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
-            new SetEndEffectorState(
-                elevatorSubsystem,
-                armSubsystem,
-                SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT);
+            new ConditionalCommand(
+                new SetEndEffectorState(
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT),
+                new SetEndEffectorState(
+                    elevatorSubsystem,
+                    armSubsystem,
+                    SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_BACK),
+                () -> isFrontLow);
         break;
     }
 
@@ -264,16 +281,17 @@ public class AutoScore extends ParentCommand {
                 moveToScoringWaypoint,
                 Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset.asProxy()),
                 Commands.either(
-                    Commands.sequence(runOuttake.asProxy(), stowArmElevator.asProxy()),
+                    Commands.sequence(
+                        runOuttake.asProxy(), stowArmElevator.asProxy().withTimeout(4)),
                     Commands.none(),
                     () -> kAutoOuttakeEnabled))
             .deadlineWith(runningLEDs.asProxy())
+            .handleInterrupt(errorLEDs::schedule)
             .finallyDo(
                 (interrupted) -> {
                   if (!interrupted) successLEDs.schedule();
                 })
-            .until(cancelCommand)
-            .handleInterrupt(errorLEDs::schedule);
+            .until(cancelCommand);
 
     addChildCommands(autoScore);
     super.initialize();

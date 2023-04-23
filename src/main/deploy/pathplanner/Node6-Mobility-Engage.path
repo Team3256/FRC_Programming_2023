@@ -20,9 +20,9 @@
           "coneMid",
           "outtakeCone"
         ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 5.0
       }
     },
     {
@@ -52,12 +52,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.797452388576885,
-        "y": 3.27
+        "x": 3.7217966831767,
+        "y": 3.263504580828606
       },
       "prevControl": {
-        "x": 4.27905148355676,
-        "y": 3.2474771126690687
+        "x": 4.203395778156576,
+        "y": 3.2409816934976745
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
