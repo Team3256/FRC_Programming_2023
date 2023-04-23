@@ -66,7 +66,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   private WPI_TalonFX elevatorMotor;
   private WPI_TalonFX elevatorFollowerMotor;
-  private ElevatorFeedforward elevatorFeedforward =
+  private final ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
   private DigitalInput zeroLimitSwitch;
 
@@ -98,8 +98,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
     zeroElevator();
     zeroLimitSwitch = new DigitalInput(kElevatorLimitSwitchDIO);
-
-    //    getLayout(kDriverTabName).add(new ZeroElevator(this));
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -112,17 +110,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
 
   public boolean isZeroLimitSwitchTriggered() {
     return !zeroLimitSwitch.get();
-  }
-
-  public boolean isMoving() {
-    return Math.abs(elevatorMotor.getSelectedSensorVelocity()) >= 75;
-  }
-
-  public boolean isStopping(boolean hasStarted) {
-    if (hasStarted) {
-      return !isMoving();
-    }
-    return false;
   }
 
   public double calculateFeedForward(double velocity) {
@@ -155,11 +142,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   }
 
   public boolean isSafeFromArm() {
-    return true;
-    // return getElevatorPosition() > kSafeForArmMinPosition;
+    return getElevatorPosition() > kSafeForArmMinPosition;
   }
-
-  boolean hasStarted = false;
 
   @Override
   public void periodic() {
@@ -167,13 +151,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
     SmartDashboard.putBoolean("Elevator limit switch (closed is false)", zeroLimitSwitch.get());
-    SmartDashboard.putBoolean("Is Motor Moving", isMoving());
-    SmartDashboard.putNumber(
-        "Elevator motor su speed: ", elevatorMotor.getSelectedSensorVelocity());
-
-    if (this.isMoving()) hasStarted = true;
-    SmartDashboard.putBoolean("HAS ELEVATOR ZERO MOTOR STOPPED", isStopping(hasStarted));
-    if (isStopping(hasStarted)) hasStarted = false;
   }
 
   public void logInit() {

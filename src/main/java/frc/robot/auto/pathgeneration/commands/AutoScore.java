@@ -57,7 +57,7 @@ public class AutoScore extends ParentCommand {
   private BooleanSupplier cancelCommand;
   private BooleanSupplier isOperatorSelectingCone;
   private BooleanSupplier isAutoScoreMode;
-  private boolean isFrontLow;
+  private boolean isScoringFront;
 
   public AutoScore(
       SwerveDrive swerveDrive,
@@ -69,7 +69,7 @@ public class AutoScore extends ParentCommand {
       BooleanSupplier isOperatorSelectingCone,
       BooleanSupplier isAutoScoreMode,
       BooleanSupplier cancelCommand,
-      boolean isFrontLow) {
+      boolean isScoringFront) {
 
     this(
         swerveDrive,
@@ -78,10 +78,10 @@ public class AutoScore extends ParentCommand {
         armSubsystem,
         ledSubsystem,
         () -> gridScoreHeight,
-        () -> true, // isOperatorSelectingCone,
+        isOperatorSelectingCone,
         isAutoScoreMode,
         cancelCommand,
-        isFrontLow);
+        isScoringFront);
   }
 
   public AutoScore(
@@ -94,7 +94,7 @@ public class AutoScore extends ParentCommand {
       BooleanSupplier isOperatorSelectingCone,
       BooleanSupplier isAutoScoreMode,
       BooleanSupplier cancelCommand,
-      boolean isFrontLow) {
+      boolean isScoringFront) {
 
     this.swerveSubsystem = swerveDrive;
     this.intakeSubsystem = intakeSubsystem;
@@ -105,101 +105,18 @@ public class AutoScore extends ParentCommand {
     this.isAutoScoreMode = isAutoScoreMode;
     this.isOperatorSelectingCone = isOperatorSelectingCone;
     this.cancelCommand = cancelCommand;
-    this.isFrontLow = isFrontLow;
+    this.isScoringFront = isScoringFront;
   }
 
   @Override
   public void initialize() {
     System.out.println(
         "Is running auto score instead of presets: " + isAutoScoreMode.getAsBoolean());
-    if (!isAutoScoreMode.getAsBoolean()) {
-      switch (gridScoreHeight.get()) {
-        case HIGH:
-          new ConditionalCommand(
-                  new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_HIGH),
-                  new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
-                  isOperatorSelectingCone)
-              .schedule();
-          break;
-        case MID:
-          new ConditionalCommand(
-                  new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CONE_MID),
-                  new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
-                  isOperatorSelectingCone)
-              .schedule();
-          break;
-        case LOW:
-          new ConditionalCommand(
-                  new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_FRONT),
-                  new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_BACK),
-                  () -> isFrontLow)
-              .schedule();
-          break;
-      }
-
-      return;
-    }
-
-    Pose2d start = swerveSubsystem.getPose();
-
-    // Get scoring location id from SD
-    int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      locationId = 8 - locationId;
-    }
-    if (0 > locationId || locationId > 8) {
-      System.out.println("locationId was invalid (" + locationId + ")");
-      new SetAllColor(ledSubsystem, kError).withTimeout(2.5).schedule();
-      return;
-    }
-
-    // Move to scoring waypoint
-    Pose2d scoringWaypoint = kBlueScoreWaypointPoses[locationId];
-    GamePiece scoringGamePiece = kScoringLocationPiece[locationId];
-
-    System.out.println("Running: Go to grid (id: " + locationId + ") from " + start);
-    if (DriverStation.getAlliance() == Alliance.Red) {
-      scoringWaypoint = PathUtil.flip(scoringWaypoint);
-    }
-    Command moveToScoringWaypoint;
-    if (kDynamicPathGenerationEnabled) {
-      DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint, swerveSubsystem);
-      moveToScoringWaypoint = gen.getCommand();
-    } else
-      moveToScoringWaypoint =
-          PathGeneration.createDynamicAbsolutePath(
-              start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
-
-    BooleanSupplier isSelectedNodeCone = () -> scoringGamePiece.equals(GamePiece.CONE);
-    Command runOuttake =
-        new ConditionalCommand(
-            new OuttakeCone(intakeSubsystem), new OuttakeCube(intakeSubsystem), isSelectedNodeCone);
-    // Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
-    // Set arm and elevator command and end pose based on node type and height
-    Pose2d scoringLocation;
     Command moveArmElevatorToPreset;
+    boolean isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
 
     switch (gridScoreHeight.get()) {
       case HIGH:
-        scoringLocation = kHighBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ConditionalCommand(
                 new SetEndEffectorState(
@@ -210,10 +127,9 @@ public class AutoScore extends ParentCommand {
                     elevatorSubsystem,
                     armSubsystem,
                     SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_HIGH),
-                isSelectedNodeCone);
+                isOperatorSelectingCone);
         break;
       case MID:
-        scoringLocation = kMidBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ConditionalCommand(
                 new SetEndEffectorState(
@@ -224,11 +140,9 @@ public class AutoScore extends ParentCommand {
                     elevatorSubsystem,
                     armSubsystem,
                     SetEndEffectorState.EndEffectorPreset.SCORE_CUBE_MID),
-                isSelectedNodeCone);
+                isOperatorSelectingCone);
         break;
-        // case LOW
       default:
-        scoringLocation = kBottomBlueScoringPoses[locationId];
         moveArmElevatorToPreset =
             new ConditionalCommand(
                 new SetEndEffectorState(
@@ -239,61 +153,118 @@ public class AutoScore extends ParentCommand {
                     elevatorSubsystem,
                     armSubsystem,
                     SetEndEffectorState.EndEffectorPreset.SCORE_ANY_LOW_BACK),
-                () -> isFrontLow);
+                () -> isScoringFront);
         break;
     }
+    if (!isAutoScoreMode.getAsBoolean()) {
+      addChildCommands(moveArmElevatorToPreset);
+    } else {
 
-    if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset && isSelectedNodeCone.getAsBoolean()) {
-      double offset =
-          DriverStation.getAlliance() == Alliance.Red
-              ? intakeSubsystem.getGamePieceOffset()
-              : -intakeSubsystem.getGamePieceOffset();
-      offset = MathUtil.clamp(offset, -Units.inchesToMeters(7), Units.inchesToMeters(7));
-      System.out.println(
-          "AUTO SCORE: Offsetting cone by " + offset + " meters based on distance sensors!");
+      Pose2d start = swerveSubsystem.getPose();
 
-      scoringLocation =
-          scoringLocation.plus(new Transform2d(new Translation2d(0, offset), new Rotation2d()));
+      // Get scoring location id from SD
+      int locationId = (int) SmartDashboard.getNumber("guiColumn", -1);
+      if (DriverStation.getAlliance() == Alliance.Blue) {
+        locationId = 8 - locationId;
+      }
+      if (0 > locationId || locationId > 8) {
+        System.out.println("locationId was invalid (" + locationId + ")");
+        new SetAllColor(ledSubsystem, kError).withTimeout(2.5).schedule();
+        return;
+      }
+
+      // Move to scoring waypoint
+      Pose2d scoringWaypoint = kBlueScoreWaypointPoses[locationId];
+      GamePiece scoringGamePiece = kScoringLocationPiece[locationId];
+
+      System.out.println("Running: Go to grid (id: " + locationId + ") from " + start);
+      if (isRedAlliance) {
+        scoringWaypoint = PathUtil.flip(scoringWaypoint);
+      }
+
+      Command moveToScoringWaypoint;
+      if (kDynamicPathGenerationEnabled) {
+        DynamicPathGenerator gen =
+            new DynamicPathGenerator(start, scoringWaypoint, swerveSubsystem);
+        moveToScoringWaypoint = gen.getCommand();
+      } else
+        moveToScoringWaypoint =
+            PathGeneration.createDynamicAbsolutePath(
+                start, scoringWaypoint, swerveSubsystem, kWaypointPathConstraints);
+
+      BooleanSupplier isSelectedNodeCone = () -> scoringGamePiece.equals(GamePiece.CONE);
+      Command runOuttake =
+          new ConditionalCommand(
+              new OuttakeCone(intakeSubsystem),
+              new OuttakeCube(intakeSubsystem),
+              isSelectedNodeCone);
+      // Command stow = new StowArmElevator(elevatorSubsystem, armSubsystem);
+      // Set arm and elevator command and end pose based on node type and height
+      Pose2d scoringLocation;
+
+      switch (gridScoreHeight.get()) {
+        case HIGH:
+          scoringLocation = kHighBlueScoringPoses[locationId];
+          break;
+        case MID:
+          scoringLocation = kMidBlueScoringPoses[locationId];
+          break;
+        default:
+          scoringLocation = kBottomBlueScoringPoses[locationId];
+      }
+
+      if (FeatureFlags.kIntakeAutoScoreDistanceSensorOffset && isSelectedNodeCone.getAsBoolean()) {
+        double offset =
+            isRedAlliance
+                ? intakeSubsystem.getGamePieceOffset()
+                : -intakeSubsystem.getGamePieceOffset();
+        offset = MathUtil.clamp(offset, -Units.inchesToMeters(7), Units.inchesToMeters(7));
+        System.out.println(
+            "AUTO SCORE: Offsetting cone by " + offset + " meters based on distance sensors!");
+
+        scoringLocation =
+            scoringLocation.plus(new Transform2d(new Translation2d(0, offset), new Rotation2d()));
+      }
+
+      if (isRedAlliance) {
+        scoringLocation = PathUtil.flip(scoringLocation);
+      }
+
+      Command moveToScoringLocation =
+          PathGeneration.createDynamicAbsolutePath(
+              scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
+
+      Command successLEDs = new SetAllColor(ledSubsystem, kSuccess).withTimeout(2.5);
+
+      Command errorLEDs = new SetAllColor(ledSubsystem, kError).withTimeout(2.5);
+      Command runningLEDs =
+          new ConditionalCommand(
+              new SetAllBlink(ledSubsystem, kCone),
+              new SetAllBlink(ledSubsystem, kCube),
+              isSelectedNodeCone);
+
+      Command stowArmElevator =
+          new StowEndEffector(elevatorSubsystem, armSubsystem, isSelectedNodeCone);
+
+      Command autoScore =
+          Commands.sequence(
+                  moveToScoringWaypoint,
+                  Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset.asProxy()),
+                  Commands.either(
+                      Commands.sequence(
+                          runOuttake.asProxy(), stowArmElevator.asProxy().withTimeout(4)),
+                      Commands.none(),
+                      () -> kAutoOuttakeEnabled))
+              .deadlineWith(runningLEDs.asProxy())
+              .handleInterrupt(errorLEDs::schedule)
+              .finallyDo(
+                  (interrupted) -> {
+                    if (!interrupted) successLEDs.schedule();
+                  })
+              .until(cancelCommand);
+
+      addChildCommands(autoScore);
     }
-
-    if (DriverStation.getAlliance() == Alliance.Red) {
-      scoringLocation = PathUtil.flip(scoringLocation);
-    }
-
-    Command moveToScoringLocation =
-        PathGeneration.createDynamicAbsolutePath(
-            scoringWaypoint, scoringLocation, swerveSubsystem, kPathToDestinationConstraints);
-
-    Command successLEDs = new SetAllColor(ledSubsystem, kSuccess).withTimeout(2.5);
-
-    Command errorLEDs = new SetAllColor(ledSubsystem, kError).withTimeout(2.5);
-    Command runningLEDs =
-        new ConditionalCommand(
-            new SetAllBlink(ledSubsystem, kCone),
-            new SetAllBlink(ledSubsystem, kCube),
-            isSelectedNodeCone);
-
-    Command stowArmElevator =
-        new StowEndEffector(elevatorSubsystem, armSubsystem, isSelectedNodeCone);
-
-    Command autoScore =
-        Commands.sequence(
-                moveToScoringWaypoint,
-                Commands.parallel(moveToScoringLocation, moveArmElevatorToPreset.asProxy()),
-                Commands.either(
-                    Commands.sequence(
-                        runOuttake.asProxy(), stowArmElevator.asProxy().withTimeout(4)),
-                    Commands.none(),
-                    () -> kAutoOuttakeEnabled))
-            .deadlineWith(runningLEDs.asProxy())
-            .handleInterrupt(errorLEDs::schedule)
-            .finallyDo(
-                (interrupted) -> {
-                  if (!interrupted) successLEDs.schedule();
-                })
-            .until(cancelCommand);
-
-    addChildCommands(autoScore);
     super.initialize();
   }
 }

@@ -14,7 +14,6 @@ import frc.robot.helpers.DebugCommandBase;
 
 public class ZeroElevator extends DebugCommandBase {
   Elevator elevatorSubsystem;
-  boolean hasStarted = false;
 
   public ZeroElevator(Elevator elevatorSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
@@ -23,7 +22,6 @@ public class ZeroElevator extends DebugCommandBase {
 
   @Override
   public void initialize() {
-    hasStarted = false;
     super.initialize();
     elevatorSubsystem.setInputVoltage(kDownSpeedVolts);
   }

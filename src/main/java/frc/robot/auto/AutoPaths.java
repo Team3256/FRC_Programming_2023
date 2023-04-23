@@ -168,12 +168,11 @@ public class AutoPaths {
       autoEventMap.put(
           "stow",
           () ->
-              runParallelWithPath(
-                  Commands.parallel(
-                          new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
-                          new IntakeOff(intakeSubsystem))
-                      .asProxy()
-                      .withName("stow")));
+              Commands.parallel(
+                      new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone),
+                      new IntakeOff(intakeSubsystem))
+                  .asProxy()
+                  .withName("stow"));
 
       autoEventMap.put(
           "intakeCone",

@@ -20,14 +20,14 @@ public class ParentCommand extends DebugCommandBase {
 
   @Override
   public void initialize() {
-    childCommands.schedule();
     super.initialize();
+    childCommands.schedule();
   }
 
   @Override
   public void end(boolean interrupted) {
-    childCommands.cancel();
     super.end(interrupted);
+    childCommands.cancel();
   }
 
   @Override

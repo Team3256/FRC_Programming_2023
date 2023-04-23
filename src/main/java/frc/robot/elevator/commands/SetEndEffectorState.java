@@ -37,7 +37,14 @@ public class SetEndEffectorState extends ParentCommand {
     SCORE_CUBE_MID(Arm.ArmPreset.CUBE_MID, Elevator.ElevatorPreset.ANY_PIECE_MID),
     DOUBLE_SUBSTATION_CUBE(
         Arm.ArmPreset.DOUBLE_SUBSTATION_CUBE, Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
-    STOW_CUBE(Arm.ArmPreset.STOW_CUBE, Elevator.ElevatorPreset.STOW_CUBE);
+    STOW_CUBE(Arm.ArmPreset.STOW_CUBE, Elevator.ElevatorPreset.STOW_CUBE),
+    CUBE_GROUND_INTAKE(Arm.ArmPreset.CUBE_GROUND_INTAKE, Elevator.ElevatorPreset.GROUND_INTAKE),
+
+    SITTING_CONE_GROUND_INTAKE(
+        Arm.ArmPreset.SITTING_CONE_GROUND_INTAKE, Elevator.ElevatorPreset.GROUND_INTAKE),
+
+    STANDING_CONE_GROUND_INTAKE(
+        Arm.ArmPreset.STANDING_CONE_GROUND_INTAKE, Elevator.ElevatorPreset.GROUND_INTAKE);
 
     public final Arm.ArmPreset armPreset;
     public final Elevator.ElevatorPreset elevatorPreset;
@@ -49,24 +56,15 @@ public class SetEndEffectorState extends ParentCommand {
   }
 
   public SetEndEffectorState(
-      Elevator elevatorSubsystem, Arm armSubsystem, double elevatorExtension, Rotation2d armAngle) {
-
-    this.armSubsystem = armSubsystem;
-    this.elevatorSubsystem = elevatorSubsystem;
-    this.elevatorExtension = elevatorExtension;
-    this.armAngle = armAngle;
-  }
-
-  public SetEndEffectorState(
       Elevator elevatorSubsystem,
       Arm armSubsystem,
       EndEffectorPreset endEffectorPreset,
       boolean moveArmFirst) {
-    this(
-        elevatorSubsystem,
-        armSubsystem,
-        endEffectorPreset.elevatorPreset.position,
-        endEffectorPreset.armPreset.rotation);
+
+    this.armSubsystem = armSubsystem;
+    this.elevatorSubsystem = elevatorSubsystem;
+    this.elevatorExtension = endEffectorPreset.elevatorPreset.position;
+    this.armAngle = endEffectorPreset.armPreset.rotation;
     this.moveArmFirst = moveArmFirst;
   }
 

@@ -93,7 +93,7 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
     System.out.println(
         this.getName()
             + " started (preset: "
-            + this.elevatorPreset
+            + elevatorPreset
             + ", height: "
             + setpointPosition
             + " meters)");
@@ -114,7 +114,7 @@ public class SetElevatorExtension extends ProfiledPIDCommand {
     System.out.println(
         this.getName()
             + " finished (preset: "
-            + this.elevatorPreset
+            + elevatorPreset
             + ", height: "
             + ", current height: "
             + elevatorSubsystem.getElevatorPosition()

@@ -63,8 +63,6 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-  private final CommandXboxController tester = new CommandXboxController(2);
-
   private SwerveDrive swerveSubsystem;
   private Intake intakeSubsystem;
   private Elevator elevatorSubsystem;
@@ -79,8 +77,8 @@ public class RobotContainer implements CANTestable, Loggable {
 
   private AutoPaths autoPaths;
 
-  private final ArrayList<CANTestable> canBusTestables = new ArrayList<CANTestable>();
-  private final ArrayList<Loggable> loggables = new ArrayList<Loggable>();
+  private final ArrayList<CANTestable> canBusTestables = new ArrayList<>();
+  private final ArrayList<Loggable> loggables = new ArrayList<>();
 
   public RobotContainer() {
     if (kArmEnabled) armSubsystem = new Arm();
@@ -262,34 +260,31 @@ public class RobotContainer implements CANTestable, Loggable {
           .y()
           .onTrue(
               new AutoScore(
-                  swerveSubsystem,
-                  intakeSubsystem,
-                  elevatorSubsystem,
-                  armSubsystem,
-                  ledSubsystem,
-                  AutoScore.GridScoreHeight.LOW,
-                  this::isCurrentPieceCone,
-                  () -> false,
-                  () -> false,
-                  false));
-
-      // B Auto Score
+                      swerveSubsystem,
+                      intakeSubsystem,
+                      elevatorSubsystem,
+                      armSubsystem,
+                      ledSubsystem,
+                      AutoScore.GridScoreHeight.LOW,
+                      this::isCurrentPieceCone,
+                      () -> false,
+                      () -> false,
+                      false));
 
       driver
           .b()
           .onTrue(
               new AutoScore(
-                  swerveSubsystem,
-                  intakeSubsystem,
-                  elevatorSubsystem,
-                  armSubsystem,
-                  ledSubsystem,
-                  () -> currentScoringPreset,
-                  this::isCurrentPieceCone,
-                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
-                  () -> false,
-                  true));
-      //                  () -> isMovingJoystick(driver)));
+                      swerveSubsystem,
+                      intakeSubsystem,
+                      elevatorSubsystem,
+                      armSubsystem,
+                      ledSubsystem,
+                      () -> currentScoringPreset,
+                      this::isCurrentPieceCone,
+                      () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                      () -> isMovingJoystick(driver),
+                      true));
 
       operator
           .rightBumper()
@@ -302,8 +297,6 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureIntake() {
-    //    intakeSubsystem.setDefaultCommand(
-    //        new LatchGamePiece(intakeSubsystem, this::isCurrentPieceCone));
     operator
         .rightTrigger()
         .whileTrue(
@@ -347,7 +340,6 @@ public class RobotContainer implements CANTestable, Loggable {
   }
 
   private void configureArm() {
-    // armSubsystem.setDefaultCommand(new KeepArm(armSubsystem));
     operator.start().onTrue(new ZeroArm(armSubsystem).withTimeout(4));
 
     if (kIntakeEnabled && FeatureFlags.kOperatorManualArmControlEnabled) {
@@ -372,21 +364,7 @@ public class RobotContainer implements CANTestable, Loggable {
     operator.leftBumper().onTrue(new InstantCommand(this::toggleGamePiece));
   }
 
-  // TODO: Remove timeouts before competition
   public Command getAutonomousCommand() {
-    if (true) {
-      return new AutoIntakeAtDoubleSubstation(
-          swerveSubsystem,
-          intakeSubsystem,
-          elevatorSubsystem,
-          armSubsystem,
-          ledSubsystem,
-          () -> doubleSubstationLocation,
-          () -> isMovingJoystick(driver),
-          () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
-          this::isCurrentPieceCone);
-    }
-
     Command autoPath = autoPaths.getSelectedPath();
     if (kElevatorEnabled && kArmEnabled) {
       return Commands.sequence(

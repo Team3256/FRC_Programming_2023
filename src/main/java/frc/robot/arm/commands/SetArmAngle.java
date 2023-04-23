@@ -111,7 +111,9 @@ public class SetArmAngle extends ProfiledPIDCommand {
               + " deg, "
               + ", rotation: "
               + Units.radiansToDegrees(angleRotation)
-              + " deg)");
+              + " deg, interrupted: "
+              + interrupted
+              + ")");
     }
   }
 

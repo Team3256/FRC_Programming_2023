@@ -7,25 +7,43 @@
 
 package frc.robot.intake.commands;
 
-import static frc.robot.Constants.FeatureFlags.*;
-import static frc.robot.Constants.VisionConstants.*;
-
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.arm.Arm;
-import frc.robot.arm.Arm.ArmPreset;
-import frc.robot.arm.commands.KeepArm;
-import frc.robot.arm.commands.SetArmAngle;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.commands.SetElevatorExtension;
+import frc.robot.elevator.commands.SetEndEffectorState;
+import frc.robot.elevator.commands.SetEndEffectorState.EndEffectorPreset;
 import frc.robot.elevator.commands.StowEndEffector;
-import frc.robot.elevator.commands.ZeroElevator;
+import frc.robot.helpers.DebugCommandBase;
 import frc.robot.intake.Intake;
 import java.util.function.BooleanSupplier;
 
-public class GroundIntake extends ParallelCommandGroup {
+public class GroundIntake extends DebugCommandBase {
+
+  private EndEffectorPreset coneEndEffectorPreset;
+  private Elevator elevatorSubsystem;
+  private Arm armSubsystem;
+  private Intake intakeSubsystem;
+  private BooleanSupplier isCurrentPieceCone;
+
   public enum ConeOrientation {
     SITTING_CONE,
     STANDING_CONE,
+  }
+
+  public GroundIntake(
+      Elevator elevatorSubsystem,
+      Arm armSubsystem,
+      Intake intakeSubsystem,
+      ConeOrientation coneOrientation,
+      BooleanSupplier isCurrentPieceCone) {
+    this.elevatorSubsystem = elevatorSubsystem;
+    this.armSubsystem = armSubsystem;
+    this.intakeSubsystem = intakeSubsystem;
+    this.isCurrentPieceCone = isCurrentPieceCone;
+    this.coneEndEffectorPreset =
+        coneOrientation == ConeOrientation.SITTING_CONE
+            ? EndEffectorPreset.SITTING_CONE_GROUND_INTAKE
+            : EndEffectorPreset.STANDING_CONE_GROUND_INTAKE;
   }
 
   public GroundIntake(
@@ -41,32 +59,18 @@ public class GroundIntake extends ParallelCommandGroup {
         isCurrentPieceCone);
   }
 
-  public GroundIntake(
-      Elevator elevatorSubsystem,
-      Arm armSubsystem,
-      Intake intakeSubsystem,
-      ConeOrientation coneOrientation,
-      BooleanSupplier isCurrentPieceCone) {
-    ArmPreset coneArmPreset =
-        coneOrientation == ConeOrientation.SITTING_CONE
-            ? ArmPreset.SITTING_CONE_GROUND_INTAKE
-            : ArmPreset.STANDING_CONE_GROUND_INTAKE;
-
+  @Override
+  public void initialize() {
+    super.initialize();
     Command setArmElevatorToPreset =
-        Commands.sequence(
-            new SetElevatorExtension(elevatorSubsystem, Elevator.ElevatorPreset.GROUND_INTAKE)
-                .asProxy(),
-            Commands.parallel(
-                new ConditionalCommand(
-                        new SetArmAngle(armSubsystem, coneArmPreset),
-                        new SetArmAngle(armSubsystem, ArmPreset.CUBE_GROUND_INTAKE),
-                        isCurrentPieceCone)
-                    .asProxy()
-                    .andThen(new InstantCommand(() -> new KeepArm(armSubsystem).schedule())),
-                new ZeroElevator(elevatorSubsystem).asProxy()));
+        Commands.either(
+            new SetEndEffectorState(elevatorSubsystem, armSubsystem, coneEndEffectorPreset),
+            new SetEndEffectorState(
+                elevatorSubsystem, armSubsystem, EndEffectorPreset.CUBE_GROUND_INTAKE),
+            isCurrentPieceCone);
 
     Command intakeAndStow =
-        new ConditionalCommand(
+        Commands.either(
                 new IntakeCone(intakeSubsystem),
                 new IntakeCube(intakeSubsystem),
                 isCurrentPieceCone)
@@ -79,8 +83,7 @@ public class GroundIntake extends ParallelCommandGroup {
                             new InstantCommand(),
                             isCurrentPieceCone)
                         .asProxy()));
-    // .andThen(new LatchGamePiece(intakeSubsystem, isCurrentPieceCone))),
 
-    addCommands(setArmElevatorToPreset, intakeAndStow.asProxy());
+    Commands.sequence(setArmElevatorToPreset, intakeAndStow.asProxy()).schedule();
   }
 }

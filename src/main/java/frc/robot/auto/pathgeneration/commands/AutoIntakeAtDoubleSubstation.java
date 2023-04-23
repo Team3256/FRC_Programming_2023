@@ -75,67 +75,23 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
 
   @Override
   public void initialize() {
-    System.out.println(
-        "Is running auto intake instead of presets: " + isAutoScoreMode.getAsBoolean());
-    if (!isAutoScoreMode.getAsBoolean()) {
-      System.out.println(
-          "Running intake preset at double substation for cone? "
-              + isCurrentPieceCone.getAsBoolean());
-      new ConditionalCommand(
-              new ParallelCommandGroup(
-                  new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.DOUBLE_SUBSTATION_CONE),
-                  new IntakeCone(intakeSubsystem, ledSubsystem)),
-              new ParallelCommandGroup(
-                  new SetEndEffectorState(
-                      elevatorSubsystem,
-                      armSubsystem,
-                      SetEndEffectorState.EndEffectorPreset.DOUBLE_SUBSTATION_CUBE),
-                  new IntakeCube(intakeSubsystem, ledSubsystem)),
-              isCurrentPieceCone)
-          .schedule();
-      return;
-    }
 
-    System.out.println("Running: Go to substation from " + swerveSubsystem.getPose());
-    Alliance alliance = DriverStation.getAlliance();
+    Command DoubleSubstationIntake;
 
-    Pose2d end;
-    if (substationLocation.get().equals(SubstationLocation.RIGHT_SIDE)) {
-      // Left and right are different depending on alliance
-      if (alliance == Alliance.Red) {
-        end = kBlueOuterDoubleSubstationPose;
-      } else {
-        end = kBlueInnerDoubleSubstationPose;
-      }
-    } else {
-      if (alliance == Alliance.Red) {
-        end = kBlueInnerDoubleSubstationPose;
-      } else {
-        end = kBlueOuterDoubleSubstationPose;
-      }
-    }
+    Command runIntake =
+        new ConditionalCommand(
+            new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
 
-    Pose2d substationWaypoint =
-        new Pose2d(
-            end.getX() - kSubstationWaypointOffset,
-            end.getY(),
-            end.getRotation().plus(kElevatorFckConstant));
+    Command stowArmElevator =
+        new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone);
 
-    if (alliance == Alliance.Red) {
-      end = PathUtil.flip(end);
-      substationWaypoint = PathUtil.flip(substationWaypoint);
-    }
-
-    // commands that will be run sequentially
-    Command moveToWaypoint =
-        PathGeneration.createDynamicAbsolutePath(
-            swerveSubsystem.getPose(),
-            substationWaypoint,
-            swerveSubsystem,
-            kWaypointPathConstraints);
+    Command runningLEDs =
+        new ConditionalCommand(
+            new SetAllBlink(ledSubsystem, kCone),
+            new SetAllBlink(ledSubsystem, kCube),
+            isCurrentPieceCone);
+    Command successLEDs = new SetAllColor(ledSubsystem, kSuccess);
+    Command errorLEDs = new SetAllColor(ledSubsystem, kError);
 
     Command moveArmElevatorToPreset =
         new ParallelCommandGroup(
@@ -150,40 +106,82 @@ public class AutoIntakeAtDoubleSubstation extends ParentCommand {
                     SetEndEffectorState.EndEffectorPreset.DOUBLE_SUBSTATION_CUBE),
                 isCurrentPieceCone));
 
-    Command runIntake =
-        new ConditionalCommand(
-            new IntakeCone(intakeSubsystem), new IntakeCube(intakeSubsystem), isCurrentPieceCone);
-    Command moveToSubstation =
-        PathGeneration.createDynamicAbsolutePath(
-            substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
+    System.out.println(
+        "Is running auto intake instead of presets: " + isAutoScoreMode.getAsBoolean());
+    if (!isAutoScoreMode.getAsBoolean()) {
+      System.out.println(
+          "Running intake preset at double substation for cone? "
+              + isCurrentPieceCone.getAsBoolean());
+      DoubleSubstationIntake =
+          Commands.sequence(
+                  Commands.deadline(runIntake, moveArmElevatorToPreset), stowArmElevator.asProxy())
+              .deadlineWith(runningLEDs.asProxy())
+              .until(cancelCommand)
+              .handleInterrupt(errorLEDs::schedule)
+              .finallyDo(
+                  (interrupted) -> {
+                    if (!interrupted) successLEDs.schedule();
+                  });
+    } else {
 
-    Command stowArmElevator =
-        new StowEndEffector(elevatorSubsystem, armSubsystem, isCurrentPieceCone);
+      System.out.println("Running: Go to substation from " + swerveSubsystem.getPose());
+      Alliance alliance = DriverStation.getAlliance();
 
-    Command runningLEDs =
-        new ConditionalCommand(
-            new SetAllBlink(ledSubsystem, kCone),
-            new SetAllBlink(ledSubsystem, kCube),
-            isCurrentPieceCone);
-    Command successLEDs = new SetAllColor(ledSubsystem, kSuccess);
-    Command errorLEDs = new SetAllColor(ledSubsystem, kError);
+      Pose2d end;
+      if (substationLocation.get().equals(SubstationLocation.RIGHT_SIDE)) {
+        // Left and right are different depending on alliance
+        if (alliance == Alliance.Red) {
+          end = kBlueOuterDoubleSubstationPose;
+        } else {
+          end = kBlueInnerDoubleSubstationPose;
+        }
+      } else {
+        if (alliance == Alliance.Red) {
+          end = kBlueInnerDoubleSubstationPose;
+        } else {
+          end = kBlueOuterDoubleSubstationPose;
+        }
+      }
 
-    // Automatically intake at the double substation
-    Command autoIntakeCommand =
-        Commands.sequence(
-                moveToWaypoint,
-                Commands.deadline(
-                    runIntake.withTimeout(6), moveArmElevatorToPreset, moveToSubstation),
-                stowArmElevator.asProxy())
-            .deadlineWith(runningLEDs.asProxy())
-            .until(cancelCommand)
-            .handleInterrupt(errorLEDs::schedule)
-            .finallyDo(
-                (interrupted) -> {
-                  if (!interrupted) successLEDs.schedule();
-                });
+      Pose2d substationWaypoint =
+          new Pose2d(
+              end.getX() - kSubstationWaypointOffset,
+              end.getY(),
+              end.getRotation().plus(kElevatorFckConstant));
 
-    addChildCommands(autoIntakeCommand);
+      if (alliance == Alliance.Red) {
+        end = PathUtil.flip(end);
+        substationWaypoint = PathUtil.flip(substationWaypoint);
+      }
+
+      // commands that will be run sequentially
+      Command moveToWaypoint =
+          PathGeneration.createDynamicAbsolutePath(
+              swerveSubsystem.getPose(),
+              substationWaypoint,
+              swerveSubsystem,
+              kWaypointPathConstraints);
+
+      Command moveToSubstation =
+          PathGeneration.createDynamicAbsolutePath(
+              substationWaypoint, end, swerveSubsystem, kPathToDestinationConstraints);
+
+      // Automatically intake at the double substation
+      DoubleSubstationIntake =
+          Commands.sequence(
+                  moveToWaypoint,
+                  Commands.deadline(
+                      runIntake.withTimeout(6), moveArmElevatorToPreset, moveToSubstation),
+                  stowArmElevator.asProxy())
+              .deadlineWith(runningLEDs.asProxy())
+              .until(cancelCommand)
+              .handleInterrupt(errorLEDs::schedule)
+              .finallyDo(
+                  (interrupted) -> {
+                    if (!interrupted) successLEDs.schedule();
+                  });
+    }
+    addChildCommands(DoubleSubstationIntake);
     super.initialize();
   }
 }
