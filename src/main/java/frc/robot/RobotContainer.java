@@ -260,31 +260,31 @@ public class RobotContainer implements CANTestable, Loggable {
           .y()
           .onTrue(
               new AutoScore(
-                      swerveSubsystem,
-                      intakeSubsystem,
-                      elevatorSubsystem,
-                      armSubsystem,
-                      ledSubsystem,
-                      AutoScore.GridScoreHeight.LOW,
-                      this::isCurrentPieceCone,
-                      () -> false,
-                      () -> false,
-                      false));
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledSubsystem,
+                  AutoScore.GridScoreHeight.LOW,
+                  this::isCurrentPieceCone,
+                  () -> false,
+                  () -> false,
+                  false));
 
       driver
           .b()
           .onTrue(
               new AutoScore(
-                      swerveSubsystem,
-                      intakeSubsystem,
-                      elevatorSubsystem,
-                      armSubsystem,
-                      ledSubsystem,
-                      () -> currentScoringPreset,
-                      this::isCurrentPieceCone,
-                      () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
-                      () -> isMovingJoystick(driver),
-                      true));
+                  swerveSubsystem,
+                  intakeSubsystem,
+                  elevatorSubsystem,
+                  armSubsystem,
+                  ledSubsystem,
+                  () -> currentScoringPreset,
+                  this::isCurrentPieceCone,
+                  () -> modeChooser.getSelected().equals(Mode.AUTO_SCORE),
+                  () -> isMovingJoystick(driver),
+                  true));
 
       operator
           .rightBumper()
