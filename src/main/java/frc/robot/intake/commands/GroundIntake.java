@@ -44,6 +44,8 @@ public class GroundIntake extends DebugCommandBase {
         coneOrientation == ConeOrientation.SITTING_CONE
             ? EndEffectorPreset.SITTING_CONE_GROUND_INTAKE
             : EndEffectorPreset.STANDING_CONE_GROUND_INTAKE;
+
+    addRequirements(elevatorSubsystem, armSubsystem, intakeSubsystem);
   }
 
   public GroundIntake(

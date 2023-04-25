@@ -24,6 +24,8 @@ public class StowEndEffector extends ParentCommand {
     this.armSubsystem = armSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.isCurrentPieceCone = isCurrentPieceCone;
+
+    addRequirements(elevatorSubsystem, armSubsystem);
   }
 
   @Override

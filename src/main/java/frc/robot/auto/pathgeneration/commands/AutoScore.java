@@ -106,6 +106,8 @@ public class AutoScore extends ParentCommand {
     this.isOperatorSelectingCone = isOperatorSelectingCone;
     this.cancelCommand = cancelCommand;
     this.isScoringFront = isScoringFront;
+
+    addRequirements(swerveDrive, intakeSubsystem, elevatorSubsystem, armSubsystem, ledSubsystem);
   }
 
   @Override
