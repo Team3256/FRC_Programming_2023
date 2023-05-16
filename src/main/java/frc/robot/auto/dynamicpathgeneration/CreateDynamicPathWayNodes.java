@@ -19,6 +19,10 @@ import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
+/**
+ * Creates the blue and red alliance visibility graphs for DPG It explicitly builds the graph for
+ * the blue alliance and then mirrors all the points for the red alliance
+ */
 public class CreateDynamicPathWayNodes {
   public static void init() {
 
@@ -27,38 +31,37 @@ public class CreateDynamicPathWayNodes {
     PathNode topPreSink = preSinks.get(preSinks.size() - 1);
     PathNode botPreSink = preSinks.get(0);
 
-    // add passages
+    // add top passage nodes
     PathNode topPassageSink = new PathNode(2.8, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
     PathNode topPassageSrc = new PathNode(5.81, 5.53 - 0.75, PathNode.NodeType.PASSAGE);
     ArrayList<PathNode> topPassage =
         passage(blueDynamicPathWayNodes, topPassageSrc, topPassageSink);
-    // link top passage with top 2 PreSink
+    // link top passage with top 2 preSinks
     PathUtil.fullyConnect(topPreSink, topPassageSink);
     PathUtil.fullyConnect(preSinks.get(preSinks.size() - 2), topPassageSink);
+    // add bottom passage nodes
+    PathNode bottomPassageSink = new PathNode(2.8, 0 + 0.73, PathNode.NodeType.PASSAGE);
+    PathNode bottomPassageSrc = new PathNode(5.81, 0 + 0.73, PathNode.NodeType.PASSAGE);
+    ArrayList<PathNode> bottomPassage =
+        passage(blueDynamicPathWayNodes, bottomPassageSrc, bottomPassageSink);
+    // link bottom passage with bottom 2 preSinks
+    PathUtil.fullyConnect(botPreSink, bottomPassageSink);
+    PathUtil.fullyConnect(preSinks.get(1), bottomPassageSink);
 
-    PathNode botPassageSink = new PathNode(2.8, 0 + 0.73, PathNode.NodeType.PASSAGE);
-    PathNode botPassageSrc = new PathNode(5.81, 0 + 0.73, PathNode.NodeType.PASSAGE);
-    ArrayList<PathNode> botPassage =
-        passage(blueDynamicPathWayNodes, botPassageSrc, botPassageSink);
-    // link bottom passage with bottom 2 preSink
-    PathUtil.fullyConnect(botPreSink, botPassageSink);
-    PathUtil.fullyConnect(preSinks.get(1), botPassageSink);
-
-    // add station nodes
-    PathNode leftStation = new PathNode(6.28, 6.39, PathNode.NodeType.NORMAL);
-    blueDynamicPathWayNodes.add(leftStation);
+    // add the double substations connector nodes
+    PathNode leftDoubleSubstationConnector = new PathNode(6.28, 6.39, PathNode.NodeType.NORMAL);
+    blueDynamicPathWayNodes.add(leftDoubleSubstationConnector);
     // link left station node with top and bot passage src
-    PathUtil.fullyConnect(leftStation, topPassageSrc);
-    PathUtil.fullyConnect(leftStation, botPassageSrc);
-
-    PathNode rightStation =
+    PathUtil.fullyConnect(leftDoubleSubstationConnector, topPassageSrc);
+    PathUtil.fullyConnect(leftDoubleSubstationConnector, bottomPassageSrc);
+    PathNode rightDoubleSubstationConnector =
         new PathNode(Constants.FieldConstants.kFieldLength - 6.28, 6.39, PathNode.NodeType.NORMAL);
-    blueDynamicPathWayNodes.add(rightStation);
+    blueDynamicPathWayNodes.add(rightDoubleSubstationConnector);
     // link right station node with top and bot passage src
-    PathUtil.fullyConnect(rightStation, topPassageSrc);
-    PathUtil.fullyConnect(rightStation, botPassageSrc);
+    PathUtil.fullyConnect(rightDoubleSubstationConnector, topPassageSrc);
+    PathUtil.fullyConnect(rightDoubleSubstationConnector, bottomPassageSrc);
 
-    // create redDynamicPathWayNodes
+    // mirror the blue graph to create the red graph
     for (PathNode node : blueDynamicPathWayNodes) {
       redDynamicPathWayNodes.add(node.getRedVersion());
     }
@@ -82,7 +85,7 @@ public class CreateDynamicPathWayNodes {
     for (Translation2d sink : Constants.FieldConstants.Grids.kLowTranslations) {
       preSinks.add(new PathNode(preSinkX, sink.getY(), PathNode.NodeType.PRESINK));
     }
-    // shift the ends of the preSink inwards to avoid colliding into the wall
+    // shift the ends of the top and bottom preSink inwards to avoid colliding into the wall
     preSinks.get(0).addY(preSinkEndpointsOffset);
     preSinks.get(preSinks.size() - 1).addY(-preSinkEndpointsOffset);
     pathNodes.addAll(preSinks);

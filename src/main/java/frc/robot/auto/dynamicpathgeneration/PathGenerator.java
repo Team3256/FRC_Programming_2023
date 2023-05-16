@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.auto.pathgeneration;
+package frc.robot.auto.dynamicpathgeneration;
 
 import static frc.robot.Constants.trajectoryViewer;
 import static frc.robot.Constants.waypointViewer;
@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.auto.helpers.AutoBuilder;
 import frc.robot.swerve.SwerveDrive;
 
-public class PathGeneration {
+public class PathGenerator {
   public static Command createDynamicAbsolutePath(
       Pose2d start, Pose2d end, SwerveDrive swerveDrive, PathConstraints pathConstraints) {
     System.out.println("Running: Go to absolute " + end);
@@ -51,7 +51,7 @@ public class PathGeneration {
 
   public static Command createDynamicRelativePath(
       SwerveDrive swerveDrive, Transform2d poseTransformation, PathConstraints pathConstraints) {
-    return PathGeneration.createDynamicAbsolutePath(
+    return PathGenerator.createDynamicAbsolutePath(
         swerveDrive.getPose(),
         swerveDrive.getPose().transformBy(poseTransformation),
         swerveDrive,

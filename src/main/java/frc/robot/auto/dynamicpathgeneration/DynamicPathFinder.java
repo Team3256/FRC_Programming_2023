@@ -9,10 +9,8 @@ package frc.robot.auto.dynamicpathgeneration;
 
 import static frc.robot.auto.dynamicpathgeneration.DynamicPathConstants.*;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathNode;
 import frc.robot.auto.dynamicpathgeneration.helpers.PathUtil;
-import frc.robot.swerve.SwerveConstants;
 import java.util.*;
 
 public class DynamicPathFinder {
@@ -24,6 +22,13 @@ public class DynamicPathFinder {
   private int[] pre;
   private double[] dist;
 
+  /**
+   * initialize dynamic path finder
+   *
+   * @param src index of src node in the graph
+   * @param sink index of sink node in the graph
+   * @param pathNodes graph to run algorithm on
+   */
   public DynamicPathFinder(int src, int sink, ArrayList<PathNode> pathNodes) {
     this.src = src;
     this.sink = sink;
@@ -33,6 +38,11 @@ public class DynamicPathFinder {
     System.out.println("src: " + src + ", sink: " + sink + ", nodes: " + nodes);
   }
 
+  /**
+   * find shortest path between src and sink
+   *
+   * @return optimal path of nodes (indexes) to travel through to get from src to sink
+   */
   public List<Integer> findPath() {
     int nodesExplored = 0;
     // Time to travel from src to all other nodes
@@ -54,16 +64,22 @@ public class DynamicPathFinder {
       // Find unvisited lowest priority node
       int currentNode = pq.poll();
       if (visitedNodes[currentNode]) continue;
-
       nodesExplored++;
 
-      // Found the shortest path to sink
+      // If the shortest path to sink has been found, return the path
       if (currentNode == sink) {
         System.out.println("Path found. Explored " + nodesExplored + " nodes.");
-        return getPathIdsFromNode(sink);
+        List<Integer> pathIds = new ArrayList<>();
+        while (currentNode != src) {
+          pathIds.add(currentNode);
+          currentNode = pre[currentNode];
+        }
+        pathIds.add(currentNode);
+        Collections.reverse(pathIds);
+        return pathIds;
       }
 
-      // Update all unvisited neighboring nodes
+      // else update all unvisited neighboring nodes
       for (int childId = 0; childId < pathNodes.get(currentNode).getEdges().size(); childId++) {
         int next = pathNodes.get(currentNode).getEdges().get(childId);
         if (visitedNodes[next]) continue;
@@ -78,56 +94,15 @@ public class DynamicPathFinder {
           // Save path as new current shortest path
           dist[next] = newDist;
           pre[next] = currentNode;
-
           // Add node to queue
           pq.add(next);
         }
       }
-
       // mark as visited
       visitedNodes[currentNode] = true;
     }
-    // No paths available
+    // Sink is unreachable, return empty list
     System.out.println("No paths available. Explored " + nodesExplored + " nodes.");
     return new ArrayList<>();
-  }
-
-  // calculate time to travel list of pathIds
-  private double getPathTime(List<Integer> pathIds) {
-    // make sure pathIds are valid (doesn't hit obstacles)
-    double totalDistance = 0;
-    for (int i = 0; i < pathIds.size() - 1; i++) {
-      if (PathUtil.doesPathSegmentHitObstacles(
-          pathNodes.get(pathIds.get(i)).getPoint(), pathNodes.get(pathIds.get(i + 1)).getPoint()))
-        return INF_TIME;
-      totalDistance +=
-          pathNodes
-              .get(pathIds.get(i))
-              .getPoint()
-              .getDistance(pathNodes.get(pathIds.get(i + 1)).getPoint());
-    }
-    return totalDistance / SwerveConstants.kMaxSpeed;
-  }
-
-  // convert list of pathIds into list of pathPoses
-  private List<Translation2d> getPositionsFromPathIds(List<Integer> pathIds) {
-    List<Translation2d> pathPositions = new ArrayList<>();
-    for (int node : pathIds) pathPositions.add(pathNodes.get(node).getPoint());
-    return pathPositions;
-  }
-
-  // get the pathIds stored from src to node
-  private List<Integer> getPathIdsFromNode(int node) {
-    List<Integer> pathIds = new ArrayList<>();
-    int currentNode = node;
-
-    while (currentNode != src) {
-      pathIds.add(currentNode);
-      currentNode = pre[currentNode];
-    }
-
-    pathIds.add(currentNode);
-    Collections.reverse(pathIds);
-    return pathIds;
   }
 }

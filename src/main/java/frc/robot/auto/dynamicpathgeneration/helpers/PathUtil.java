@@ -29,25 +29,25 @@ public class PathUtil {
     return estimatedTime;
   }
 
-  public static boolean doesLineHitObstacles(Translation2d position1, Translation2d position2) {
+  public static boolean doesLineSegmentHitObstacles(
+      Translation2d position1, Translation2d position2) {
     for (Obstacle obstacle : obstacles) {
-      if (obstacle.intersectsLineSegment(position1, position2)) return true;
+      if (obstacle.intersectsLineSegment(position1, position2)) {
+        return true;
+      }
     }
     return false;
   }
 
   public static boolean doesPathSegmentHitObstacles(
       Translation2d position1, Translation2d position2) {
-    if (doesLineHitObstacles(position1, position2)) return true;
-
+    if (doesLineSegmentHitObstacles(position1, position2)) return true;
     Rotation2d normalAngle = position2.minus(position1).getAngle().plus(Rotation2d.fromDegrees(90));
-    Translation2d normalVector = new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotRadius);
-
-    if (doesLineHitObstacles(position1.minus(normalVector), position2.minus(normalVector)))
+    Translation2d normalVector = new Translation2d(1, 0).rotateBy(normalAngle).times(kRobotPadding);
+    if (doesLineSegmentHitObstacles(position1.minus(normalVector), position2.minus(normalVector)))
       return true;
-    if (doesLineHitObstacles(position1.plus(normalVector), position2.plus(normalVector)))
+    if (doesLineSegmentHitObstacles(position1.plus(normalVector), position2.plus(normalVector)))
       return true;
-
     return false;
   }
 

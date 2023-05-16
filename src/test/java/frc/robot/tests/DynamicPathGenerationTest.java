@@ -124,7 +124,7 @@ public class DynamicPathGenerationTest {
       sink = PathUtil.flip(sink);
     }
     long start = System.currentTimeMillis();
-    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink, swerveDrive);
+    DynamicPathGenerator generator = new DynamicPathGenerator(src, sink);
     List<PathNode> pathNodes = generator.getPathNodes();
     System.out.println("Time to find points: " + (System.currentTimeMillis() - start));
     testInterpolatePathBase(src.getRotation(), sink.getRotation(), pathNodes, fileName);
