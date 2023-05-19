@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.arm.Arm;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.commands.SetEndEffectorState.EndEffectorPreset;
-import frc.robot.helpers.ParentCommand;
+import frc.robot.helpers.DebugCommandBase;
 import java.util.function.BooleanSupplier;
 
-public class StowEndEffector extends ParentCommand {
+public class StowEndEffector extends DebugCommandBase {
   private Elevator elevatorSubsystem;
   private Arm armSubsystem;
   private BooleanSupplier isCurrentPieceCone;
@@ -31,18 +31,23 @@ public class StowEndEffector extends ParentCommand {
   @Override
   public void initialize() {
     if (isCurrentPieceCone.getAsBoolean()) {
-      addChildCommands(
-          Commands.sequence(
+      Commands.sequence(
               new SetEndEffectorState(
                   elevatorSubsystem, armSubsystem, EndEffectorPreset.STOW_CONE, true),
-              new ZeroElevator(elevatorSubsystem).asProxy()));
+              new ZeroElevator(elevatorSubsystem).asProxy())
+          .schedule();
     } else {
-      addChildCommands(
-          Commands.sequence(
+      Commands.sequence(
               new SetEndEffectorState(
                   elevatorSubsystem, armSubsystem, EndEffectorPreset.STOW_CUBE, true),
-              new ZeroElevator(elevatorSubsystem).asProxy()));
+              new ZeroElevator(elevatorSubsystem).asProxy())
+          .schedule();
     }
     super.initialize();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return true;
   }
 }

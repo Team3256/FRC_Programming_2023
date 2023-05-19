@@ -26,14 +26,14 @@ public final class ElevatorConstants {
   public static final int kNumElevatorMotors = 2;
   public static final double kCubeStowPosition = Units.inchesToMeters(4);
   public static final double kConeStowPosition = Units.inchesToMeters(4);
-  public static final double kCubeDoubleSubstationPosition = Units.inchesToMeters(47);
-  public static final double kConeDoubleSubstationPosition = Units.inchesToMeters(47);
+  public static final double kCubeDoubleSubstationPosition = Units.inchesToMeters(46);
+  public static final double kConeDoubleSubstationPosition = Units.inchesToMeters(46);
   public static final double kCubeHighPosition = Units.inchesToMeters(57);
   public static final double kConeHighPosition = Units.inchesToMeters(57);
   public static final double kAnyPieceMidPosition = Units.inchesToMeters(37);
   public static final double kAnyPieceLowBackPosition = Units.inchesToMeters(0);
   public static final double kAnyPieceLowFrontPosition = Units.inchesToMeters(15);
-  public static final double kGroundIntakePosition = Units.inchesToMeters(2);
+  public static final double kGroundIntakePosition = Units.inchesToMeters(0);
   public static final double kSafeForArmMinPosition =
       kAnyPieceLowFrontPosition - Units.inchesToMeters(7);
 
