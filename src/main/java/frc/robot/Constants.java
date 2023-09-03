@@ -26,8 +26,10 @@ public final class Constants {
   public static final boolean kLedStripEnabled = true;
 
   public static final boolean kAdvantageKitReplayEnabled = false;
+
   public static final RobotType kRobotType = RobotType.FINAL;
   public static final RobotMode kCurrentMode = RobotMode.SIM;
+
 
   public static final double kStickDeadband = 0.05;
   public static final double kStickCancelDeadband = 0.50;
