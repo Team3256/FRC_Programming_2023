@@ -43,15 +43,15 @@ public class SwerveModule implements Loggable {
     this.angleOffset = moduleConstants.angleOffset;
 
     /* Angle Encoder Config */
-    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID);
+    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID, kSwerveCANBus);
     configAngleEncoder();
 
     /* Angle Motor Config */
-    mAngleMotor = new WPI_TalonFX(moduleConstants.angleMotorID);
+    mAngleMotor = new WPI_TalonFX(moduleConstants.angleMotorID, kSwerveCANBus);
     configAngleMotor();
 
     /* Drive Motor Config */
-    mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
+    mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID, kSwerveCANBus);
     configDriveMotor();
 
     lastAngle = getState().angle;

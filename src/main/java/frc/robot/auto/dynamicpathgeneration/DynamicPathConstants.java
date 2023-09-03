@@ -63,25 +63,25 @@ public final class DynamicPathConstants {
     if (FeatureFlags.kDynamicPathGenEnabled) CreateDynamicPathWayNodes.init();
   }
 
-  public static final PathConstraints kWaypointPathConstraints = new PathConstraints(3, 3);
-  public static final PathConstraints kPathToDestinationConstraints = new PathConstraints(2, 2);
+  public static final PathConstraints kWaypointPathConstraints = new PathConstraints(4, 3);
+  public static final PathConstraints kPathToDestinationConstraints = new PathConstraints(3, 1);
 
   // x value for the blue tape in front of the blue scoring grid
   public static final double kBlueGridTapeX = 1.36;
 
   // x value offsets for the distance between the robots bumper and the blue tape
   // depending on the scoring height
-  public static final double kBlueLowOffset = Units.inchesToMeters(22);
-  public static final double kBlueMidOffset = Units.inchesToMeters(21.5);
+  public static final double kBlueLowOffset = Units.inchesToMeters(0);
+  public static final double kBlueMidOffset = Units.inchesToMeters(0);
   public static final double kBlueHighOffset = Units.inchesToMeters(0);
   public static final double kIntakeWidthOffset = Units.inchesToMeters(0); // Operator skill issue
 
   // Our arm is bent :)
-  public static final Rotation2d kArmFckConstant = Rotation2d.fromDegrees(3);
+  public static final Rotation2d kElevatorFckConstant = Rotation2d.fromDegrees(2);
 
   // x value offset for distance between the robots bumper and the blue tape
   // to determine the scoring waypoint of the robot given the scoring location
-  public static final double kBlueScoringWaypointOffset = Units.inchesToMeters(14);
+  public static final double kBlueScoringWaypointOffset = Units.inchesToMeters(10);
 
   // treat the edge nodes specially
   public static final double kRotationOffset = 0;
@@ -89,9 +89,9 @@ public final class DynamicPathConstants {
 
   // (lowest y location to highest y location)
   public static final double kSubstationWaypointOffset = Units.feetToMeters(5);
-  public static final Pose2d kBlueTopDoubleSubstationPose =
+  public static final Pose2d kBlueOuterDoubleSubstationPose =
       new Pose2d(15.45, 7.35, Rotation2d.fromDegrees(0));
-  public static final Pose2d kBlueBottomDoubleSubstationPose =
+  public static final Pose2d kBlueInnerDoubleSubstationPose =
       new Pose2d(15.45, 6.10, Rotation2d.fromDegrees(0));
   public static final Transform2d kSubstationPreSink =
       new Transform2d(new Translation2d(-kSubstationWaypointOffset, 0), new Rotation2d());
@@ -120,25 +120,25 @@ public final class DynamicPathConstants {
               new Translation2d(
                   kBlueGridTapeX + kBlueScoringWaypointOffset + Constants.kRobotLength / 2,
                   kBlueNodeY[i] + kIntakeWidthOffset),
-              Rotation2d.fromDegrees(180).plus(kArmFckConstant));
+              Rotation2d.fromDegrees(180).plus(kElevatorFckConstant));
       kBottomBlueScoringPoses[i] =
           new Pose2d(
               new Translation2d(
                   kBlueGridTapeX + kBlueLowOffset + Constants.kRobotLength / 2,
                   kBlueNodeY[i] + kIntakeWidthOffset),
-              Rotation2d.fromDegrees(180).plus(kArmFckConstant));
+              Rotation2d.fromDegrees(180).plus(kElevatorFckConstant));
       kMidBlueScoringPoses[i] =
           new Pose2d(
               new Translation2d(
                   kBlueGridTapeX + kBlueMidOffset + Constants.kRobotLength / 2,
                   kBlueNodeY[i] + kIntakeWidthOffset),
-              Rotation2d.fromDegrees(180).plus(kArmFckConstant));
+              Rotation2d.fromDegrees(180).plus(kElevatorFckConstant));
       kHighBlueScoringPoses[i] =
           new Pose2d(
               new Translation2d(
                   kBlueGridTapeX + kBlueHighOffset + Constants.kRobotLength / 2,
                   kBlueNodeY[i] + kIntakeWidthOffset),
-              Rotation2d.fromDegrees(180).plus(kArmFckConstant));
+              Rotation2d.fromDegrees(180).plus(kElevatorFckConstant));
     }
   }
 

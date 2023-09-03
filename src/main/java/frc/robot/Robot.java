@@ -11,6 +11,7 @@ import static frc.robot.arm.Arm.loadArmPreferences;
 import static frc.robot.elevator.Elevator.loadElevatorPreferences;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.FeatureFlags;
@@ -87,6 +88,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    if (RobotBase.isSimulation()) robotContainer.updateSimulation();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -116,8 +118,6 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
-    robotContainer.setTeleopGyro().schedule();
   }
 
   /** This function is called periodically during operator control. */
@@ -128,7 +128,6 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-
     // Run tests
     if (FeatureFlags.kCanTestEnabled) robotContainer.CANTest();
 

@@ -16,8 +16,29 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.robot.swerve.helpers.COTSFalconSwerveConstants;
 import frc.robot.swerve.helpers.SwerveModuleConstants;
+import frc.robot.swerve.helpers.TrainingDataPoint;
+import java.util.List;
 
 public final class SwerveConstants {
+  public static final String kSwerveCANBus = "mani";
+
+  public static final List<TrainingDataPoint> kSwervePoseEstimatorStdData =
+      List.of(
+          new TrainingDataPoint(0.804213, 7.8637125, 3.167025, 0.157388), // impossible location
+          new TrainingDataPoint(1.093281, 9.14025, 3.2641875, 0.167762), // 1 foot
+          new TrainingDataPoint(1.431827, 4.66685, 2.0580375, 0.130962), // 2 foot
+          new TrainingDataPoint(1.743492, 6.7381125, 3.246825, 0.158225), // 3 foot
+          new TrainingDataPoint(2.028354, 6.0687, 3.2111875, 0.171350), // 4 foot
+          new TrainingDataPoint(2.336431, 6.591775, 3.2745625, 0.166477), // 5 foot
+          new TrainingDataPoint(2.665142, 7.11455, 3.798075, 0.167438), // 6 foot
+          new TrainingDataPoint(2.953581, 7.4191, 3.9353125, 0.159327), // 7 foot
+          new TrainingDataPoint(3.282424, 6.574225, 3.6709625, 0.161348), // 8 foot
+          new TrainingDataPoint(3.560149, 6.7152875, 5.2717375, 0.186038),
+          new TrainingDataPoint(7.128826, 16.0333875, 30.8555875, 0.505372)); // 9 foot
+
+  public static final double kSwervePoseEstimatorMinValue = 0.804213;
+  public static final double kSwervePoseEstimatorMaxValue = 7.128826;
+
   public static final int kPigeonID = 1;
   public static final String kPigeonCanBus = "mani";
 
@@ -36,11 +57,11 @@ public final class SwerveConstants {
   public static double kAutoEngageLimitVelocity = 1;
 
   public static final COTSFalconSwerveConstants kChosenModule =
-      COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
+      COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L3);
 
   /* Drivetrain Constants */
-  public static final double kTrackWidth = Units.inchesToMeters(24.25);
-  public static final double kWheelBase = Units.inchesToMeters(24.25);
+  public static final double kTrackWidth = Units.inchesToMeters(20.75);
+  public static final double kWheelBase = Units.inchesToMeters(20.75);
   public static final double kWheelDiameter = 0.1016;
   public static final double kWheelCircumference = kWheelDiameter * Math.PI;
 
@@ -126,6 +147,13 @@ public final class SwerveConstants {
   public static final double kAzimuthP = 0.15;
   public static final double kAzimuthI = 0.00;
   public static final double kAzimuthD = 0.01;
+  public static final Rotation2d[] kFinalOffsets = {
+    Rotation2d.fromDegrees(269.033203125), // Front Left - 0
+    Rotation2d.fromDegrees(355.16601), // Front Right - 1
+    Rotation2d.fromDegrees(202.236328125), // Back Left - 2
+    Rotation2d.fromDegrees(161.2792968) // Back Right - 3
+  };
+
   public static final Rotation2d[] kAlphaOffsets = {
     Rotation2d.fromDegrees(265.2539), // Front Left - 0
     Rotation2d.fromDegrees(348.0469), // Front Right - 1
@@ -181,9 +209,9 @@ public final class SwerveConstants {
         new SwerveModuleConstants(kDriveMotorID, kAngleMotorID, kCanCoderID, angleOffset);
   }
 
-  public static final double kSensitivityScale = 0.3;
+  public static final double kSensitivityScale = 0.4;
 
   /* AutoBalance */
-  public static double kXAutoBalanceVelocityMeters = 0.7;
-  public static final Rotation2d kAutoBalanceMaxError = new Rotation2d(Units.degreesToRadians(12));
+  public static double kXAutoBalanceVelocity = -0.7;
+  public static final Rotation2d kAutoBalanceMaxError = new Rotation2d(Units.degreesToRadians(10));
 }

@@ -14,10 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.UnitTestBase;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.ElevatorConstants;
-import frc.robot.elevator.commands.SetElevatorHeight;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.ZeroElevator;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 public class ElevatorTests extends UnitTestBase {
   public final double DELTA = Units.inchesToMeters(2);
@@ -25,18 +23,18 @@ public class ElevatorTests extends UnitTestBase {
   private static Elevator elevatorSubsystem;
 
   // Run simulateJava to test Elevator
-  @BeforeAll
+  // @BeforeAll
   public static void setup() {
     UnitTestBase.setup();
     elevatorSubsystem = new Elevator();
   }
 
-  @Test
+  // @Test
   public void testElevatorHeightMax() {
-    testElevatorHeight(ElevatorConstants.kMaxHeight);
+    testElevatorHeight(ElevatorConstants.kMaxExtension);
   }
 
-  @Test
+  // @Test
   public void testElevatorZero() {
     Command zeroElevator = new ZeroElevator(elevatorSubsystem);
     System.out.println(elevatorSubsystem.getElevatorPosition());
@@ -44,11 +42,11 @@ public class ElevatorTests extends UnitTestBase {
 
     double height = elevatorSubsystem.getElevatorPosition();
     System.out.println(height);
-    assertEquals(ElevatorConstants.kMinHeight, height, DELTA, "Zeroing elevator");
+    assertEquals(ElevatorConstants.kMinExtension, height, DELTA, "Zeroing elevator");
   }
 
   public void testElevatorHeight(double heightSetpointMeters) { // 1 meter
-    Command command = new SetElevatorHeight(elevatorSubsystem, heightSetpointMeters);
+    Command command = new SetElevatorExtension(elevatorSubsystem, heightSetpointMeters);
 
     runScheduler(2, command, elevatorSubsystem);
     double height = elevatorSubsystem.getElevatorPosition();

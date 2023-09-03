@@ -26,8 +26,8 @@ public class Limelight {
   /** Print JSON Parse time to the console in milliseconds */
   static boolean profileJSON = false;
 
-  static final String sanitizeName(String name) {
-    if (name.equals("") || name == null) {
+  static String sanitizeName(String name) {
+    if (name.equals("")) {
       return "limelight";
     }
     return name;
@@ -139,12 +139,17 @@ public class Limelight {
     return getLimelightNTDouble(limelightName, "tid");
   }
 
-  public static double getNeuralClassID(String limelightName) {
-    return getLimelightNTDouble(limelightName, "tclass");
+  public static String getNeuralClassID(String limelightName) {
+    return getLimelightNTString(limelightName, "tclass");
   }
 
-  /////
-  /////
+  public static boolean isConeDetected(String limelightName) {
+    return getNeuralClassID(limelightName).equals("cone");
+  }
+
+  public static boolean isCubeDetected(String limelightName) {
+    return getNeuralClassID(limelightName).equals("cube");
+  }
 
   public static void setPipelineIndex(String limelightName, int pipelineIndex) {
     setLimelightNTDouble(limelightName, "pipeline", pipelineIndex);
@@ -200,9 +205,6 @@ public class Limelight {
   public static double[] getPythonScriptData(String limelightName) {
     return getLimelightNTDoubleArray(limelightName, "llpython");
   }
-
-  /////
-  /////
 
   /** Asynchronously take snapshot. */
   public static CompletableFuture<Boolean> takeSnapshot(String tableName, String snapshotName) {

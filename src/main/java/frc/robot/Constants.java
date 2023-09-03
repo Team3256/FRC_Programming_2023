@@ -7,20 +7,17 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Map;
 
 public final class Constants {
   public static final boolean kDebugEnabled = true;
-
+  public static final boolean kCommandDebugLogEnabled = true;
   public static final boolean kSwerveEnabled = true;
   public static final boolean kClimbEnabled = false;
   public static final boolean kIntakeEnabled = true;
@@ -29,13 +26,13 @@ public final class Constants {
   public static final boolean kLedStripEnabled = true;
 
   public static final boolean kAdvantageKitReplayEnabled = false;
-  public static final boolean kCompetitionModeEnabled = true;
-  public static final RobotType kRobotType = RobotType.ALPHA;
-  public static final RobotMode kCurrentMode = RobotMode.REAL;
+
+  public static final RobotType kRobotType = RobotType.FINAL;
+  public static final RobotMode kCurrentMode = RobotMode.SIM;
+
 
   public static final double kStickDeadband = 0.05;
   public static final double kStickCancelDeadband = 0.50;
-  public static final double kStickRotationThreshold = 0.3;
   public static final double kAzimuthStickDeadband = 0.3;
 
   /* Swerve Logging */
@@ -44,16 +41,26 @@ public final class Constants {
   public static final Field2d swerveViewer = new Field2d();
 
   public static final class FeatureFlags {
-    public static final boolean kAutoScoreEnabled = true;
-    public static final boolean kOperatorManualArmControlEnabled = true;
-    public static final boolean kArmAbsoluteEncoderEnabled = true;
-    public static final boolean kLocalizationEnabled = true;
-    public static final boolean kSwerveAccelerationLimitingEnabled = true;
-    public static final boolean kLocalizationUseWPIBlueOffset = true;
-    public static final boolean kLocalizationStdDistanceBased = true;
-
     public static final boolean kUsePrefs = false;
+    public static final boolean kCalibrationMode = false;
+
+    public static final boolean kAutoScoreEnabled = false;
+    public static final boolean kAutoOuttakeEnabled = false;
+    public static final boolean kIntakeAutoScoreDistanceSensorOffset = false;
+
+    public static final boolean kOperatorManualArmControlEnabled = false;
+    public static final boolean kUseAbsoluteEncoderToInitializeRelative = false;
+    public static final boolean kUseRelativeArmEncoder = true;
+
+    public static final boolean kLocalizationStdDistanceBased = true;
+    public static final boolean kLocalizationDataCollectionMode = false;
+    public static final boolean kLocalizeDuringAuto = true;
     public static final boolean kDynamicPathGenEnabled = false;
+
+    public static final boolean kShuffleboardLayoutEnabled = true;
+    public static final boolean kSwerveAccelerationLimitingEnabled = false;
+    public static final boolean kGamePieceDetection = false;
+
     public static final boolean kPitRoutineEnabled = false;
     public static final boolean kCanTestEnabled = false;
   }
@@ -75,8 +82,8 @@ public final class Constants {
     REPLAY
   }
 
-  public static final double kRobotLength = 0.9271;
-  public static final double kRobotWidth = 0.9271;
+  public static final double kRobotLength = Units.inchesToMeters(32.625);
+  public static final double kRobotWidth = Units.inchesToMeters(32.625);
 
   public static final class FieldConstants {
     public static final double kFieldLength = Units.inchesToMeters(651.25);
@@ -332,33 +339,24 @@ public final class Constants {
                   new Rotation3d()));
     }
   }
-  // TODO: tune distance and rotation thresholds for all limelights
+
   public static class VisionConstants {
-    public static class FrontConstants {
-      public static final String kLimelightNetworkTablesName = "limelight-front";
-      public static final double kLimelightTranslationThresholdMeters = 300;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
-      public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
-      public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
-      Matrix<N3, N1> visionMeasurementStdDevs;
-    }
+    // TODO: set the indexes
+    public static final int kDefaultPipeline = 0;
+    public static final int kDetectorPipelineIndex = 1;
+    public static final double kMaxValidDistanceFromAprilTagTeleop = 3.5;
+    public static final double kMaxValidDistanceFromAprilTagAuto = 1.5;
 
-    public static class BackConstants {
-      public static final String kLimelightNetworkTablesName = "limelight-back";
-      public static final double kLimelightTranslationThresholdMeters = 300;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
-      public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
-      public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
-      Matrix<N3, N1> visionMeasurementStdDevs;
-    }
-
-    public static class SideConstants {
+    public static class RightConstants {
       public static final String kLimelightNetworkTablesName = "limelight-right";
-      public static final double kLimelightTranslationThresholdMeters = 300;
-      public static final double kLimelightRotationThreshold = Units.degreesToRadians(361);
-      public static final double kFieldTranslationOffsetX = FieldConstants.kFieldLength / 2;
-      public static final double kFieldTranslationOffsetY = FieldConstants.kFieldWidth / 2;
-      Matrix<N3, N1> visionMeasurementStdDevs;
+    }
+
+    public static class LeftConstants {
+      public static final String kLimelightNetworkTablesName = "limelight-left";
+    }
+
+    public static class MiddleConstants {
+      public static final String kLimelightNetworkTablesName = "limelight-middle";
     }
   }
 }

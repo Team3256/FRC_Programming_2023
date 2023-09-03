@@ -9,15 +9,19 @@ package frc.robot.elevator;
 
 import static frc.robot.Constants.ShuffleboardConstants.*;
 import static frc.robot.elevator.ElevatorConstants.*;
-import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.kElevatorPositionKeys;
+import static frc.robot.elevator.ElevatorConstants.ElevatorPreferencesKeys.*;
+import static frc.robot.simulation.SimulationConstants.*;
 import static frc.robot.swerve.helpers.Conversions.falconToMeters;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -26,56 +30,45 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeatureFlags;
 import frc.robot.drivers.CANDeviceTester;
 import frc.robot.drivers.CANTestable;
 import frc.robot.drivers.TalonFXFactory;
+import frc.robot.elevator.commands.SetElevatorExtension;
 import frc.robot.elevator.commands.ZeroElevator;
 import frc.robot.logging.DoubleSendable;
 import frc.robot.logging.Loggable;
 
 public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   public enum ElevatorPreset {
-    CUBE_HIGH(ElevatorConstants.kCubeHighPositionMeters),
-    CONE_HIGH(ElevatorConstants.kConeHighPositionMeters),
-    ANY_PIECE_MID(ElevatorConstants.kAnyPieceMidPositionMeters),
-    ANY_PIECE_LOW(ElevatorConstants.kAnyPieceLowPositionMeters),
-    GROUND_INTAKE(ElevatorConstants.kGroundIntakePositionMeters),
-    DOUBLE_SUBSTATION_CONE(ElevatorConstants.kDoubleSubstationPositionConeMeters),
-    DOUBLE_SUBSTATION_CUBE(ElevatorConstants.kDoubleSubstationPositionCubeMeters);
+    STOW_CONE(kConeStowPosition),
+    STOW_CUBE(kCubeStowPosition),
+    CUBE_HIGH(kCubeHighPosition),
+    CONE_HIGH(kConeHighPosition),
+    ANY_PIECE_MID(kAnyPieceMidPosition),
+    ANY_PIECE_LOW_BACK(kAnyPieceLowBackPosition),
+    ANY_PIECE_LOW_FRONT(kAnyPieceLowFrontPosition),
+    GROUND_INTAKE(kGroundIntakePosition),
+    DOUBLE_SUBSTATION_CONE(kConeDoubleSubstationPosition),
+    DOUBLE_SUBSTATION_CUBE(kCubeDoubleSubstationPosition);
 
-    public double position;
+    public final double position;
 
-    private ElevatorPreset(double position) {
+    ElevatorPreset(double position) {
       this.position = position;
     }
   }
 
   private WPI_TalonFX elevatorMotor;
-  private ElevatorFeedforward elevatorFeedforward =
+  private WPI_TalonFX elevatorFollowerMotor;
+  private final ElevatorFeedforward elevatorFeedforward =
       new ElevatorFeedforward(kElevatorS, kElevatorG, kElevatorV, kElevatorA);
-
-  private ElevatorSim elevatorSim =
-      new ElevatorSim(
-          DCMotor.getFalcon500(kNumElevatorMotors),
-          kElevatorGearing,
-          kCarriageMass,
-          kDrumRadius,
-          kMinHeight,
-          kMaxHeight,
-          true);
-
-  private final Mechanism2d mechanism2d = new Mechanism2d(20, 50);
-  private final MechanismRoot2d mechanism2dRoot = mechanism2d.getRoot("Elevator Root", 10, 0);
-  private final MechanismLigament2d elevatorMech2d =
-      mechanism2dRoot.append(
-          new MechanismLigament2d(
-              "elevator", Units.metersToInches(elevatorSim.getPositionMeters()), 90));
+  private DigitalInput zeroLimitSwitch;
 
   public Elevator() {
     if (RobotBase.isReal()) {
@@ -88,16 +81,23 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     off();
   }
 
-  private void configureSimHardware() {
-    elevatorMotor = new WPI_TalonFX(kElevatorID);
-    SmartDashboard.putData("Elevator Sim", mechanism2d);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
-  }
-
   private void configureRealHardware() {
     elevatorMotor = TalonFXFactory.createDefaultTalon(kElevatorCANDevice);
-    elevatorMotor.setInverted(kElevatorInverted);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor.setInverted(true);
+    if (FeatureFlags.kCalibrationMode) {
+      elevatorMotor.setNeutralMode(NeutralMode.Coast);
+    } else {
+      elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0.2));
+
+    elevatorFollowerMotor =
+        TalonFXFactory.createPermanentFollowerTalon(kElevatorFollowerCANDevice, kElevatorCANDevice);
+    elevatorFollowerMotor.setInverted(InvertType.FollowMaster);
+    elevatorFollowerMotor.setNeutralMode(NeutralMode.Brake);
+    zeroElevator();
+    zeroLimitSwitch = new DigitalInput(kElevatorLimitSwitchDIO);
   }
 
   public boolean isMotorCurrentSpiking() {
@@ -106,6 +106,10 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     } else {
       return elevatorSim.getCurrentDrawAmps() >= kElevatorCurrentThreshold;
     }
+  }
+
+  public boolean isZeroLimitSwitchTriggered() {
+    return !zeroLimitSwitch.get();
   }
 
   public double calculateFeedForward(double velocity) {
@@ -137,16 +141,8 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     System.out.println("Elevator off");
   }
 
-  @Override
-  public void simulationPeriodic() {
-    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * 12);
-    elevatorSim.update(0.020);
-
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    elevatorMech2d.setLength(Units.metersToInches(elevatorSim.getPositionMeters()));
-
-    simulationOutputToDashboard();
+  public boolean isSafeFromArm() {
+    return getElevatorPosition() > kSafeForArmMinPosition;
   }
 
   @Override
@@ -154,6 +150,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     SmartDashboard.putNumber(
         "Elevator position inches", Units.metersToInches(getElevatorPosition()));
     SmartDashboard.putNumber("Elevator Current Draw", elevatorMotor.getSupplyCurrent());
+    SmartDashboard.putBoolean("Elevator limit switch (closed is false)", zeroLimitSwitch.get());
   }
 
   public void logInit() {
@@ -161,6 +158,7 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     getLayout(kDriverTabName).add(new ZeroElevator(this));
     getLayout(kDriverTabName).add("Position", new DoubleSendable(this::getElevatorPosition));
     getLayout(kDriverTabName).add(elevatorMotor);
+    getLayout(kDriverTabName).add(new SetElevatorExtension(this, 0));
   }
 
   @Override
@@ -168,12 +166,6 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
     return Shuffleboard.getTab(tab)
         .getLayout(kElevatorLayoutName, BuiltInLayouts.kList)
         .withSize(2, 4);
-  }
-
-  private void simulationOutputToDashboard() {
-    SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
-    SmartDashboard.putNumber("Current Draw", elevatorSim.getCurrentDrawAmps());
-    SmartDashboard.putNumber("Elevator Sim Voltage", elevatorMotor.getMotorOutputPercent() * 12);
   }
 
   @Override
@@ -198,28 +190,78 @@ public class Elevator extends SubsystemBase implements CANTestable, Loggable {
   /** Populating elevator preferences on network tables */
   public static void loadElevatorPreferences() {
     // Elevator PID Preferences
-    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kPKey, ElevatorConstants.kP);
-    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kIKey, ElevatorConstants.kI);
-    Preferences.initDouble(ElevatorConstants.ElevatorPreferencesKeys.kDKey, ElevatorConstants.kD);
+    Preferences.initDouble(ElevatorPreferencesKeys.kPKey, kElevatorP);
+    Preferences.initDouble(ElevatorPreferencesKeys.kIKey, kElevatorI);
+    Preferences.initDouble(ElevatorPreferencesKeys.kDKey, kElevatorD);
     // Elevator Preset Preferences
+    Preferences.initDouble(kElevatorPositionKeys.get(ElevatorPreset.STOW_CONE), kConeStowPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CUBE_HIGH), kCubeHighPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.STOW_CUBE), kCubeStowPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CONE_HIGH), kConeHighPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CUBE_HIGH), kCubeHighPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW),
-        kAnyPieceLowPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.CONE_HIGH), kConeHighPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_MID),
-        kAnyPieceMidPositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW_BACK),
+        kAnyPieceLowBackPosition);
     Preferences.initDouble(
-        kElevatorPositionKeys.get(Elevator.ElevatorPreset.GROUND_INTAKE),
-        kGroundIntakePositionMeters);
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_LOW_FRONT),
+        kAnyPieceLowFrontPosition);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.ANY_PIECE_MID), kAnyPieceMidPosition);
+    Preferences.initDouble(
+        kElevatorPositionKeys.get(Elevator.ElevatorPreset.GROUND_INTAKE), kGroundIntakePosition);
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CUBE),
-        kDoubleSubstationPositionCubeMeters);
+        kCubeDoubleSubstationPosition);
     Preferences.initDouble(
         kElevatorPositionKeys.get(Elevator.ElevatorPreset.DOUBLE_SUBSTATION_CONE),
-        kDoubleSubstationPositionConeMeters);
+        kConeDoubleSubstationPosition);
+  }
+
+  private final ElevatorSim elevatorSim =
+      new ElevatorSim(
+          DCMotor.getFalcon500(kNumElevatorMotors),
+          kElevatorGearing,
+          kCarriageMass,
+          kDrumRadius,
+          kMinExtension,
+          kMaxExtension,
+          true);
+  private MechanismLigament2d elevatorLigament;
+
+  private void configureSimHardware() {
+    elevatorMotor = new WPI_TalonFX(kElevatorMasterID);
+    elevatorMotor.setInverted(true);
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    zeroLimitSwitch = new DigitalInput(kElevatorLimitSwitchDIO);
+
+    elevatorLigament =
+        new MechanismLigament2d(
+            "Elevator",
+            Units.inchesToMeters(kArmStartPosition) + elevatorSim.getPositionMeters(),
+            Units.radiansToDegrees(kElevatorAngleOffset),
+            kElevatorLineWidth,
+            new Color8Bit(Color.kRed));
+  }
+
+  public MechanismLigament2d getLigament() {
+    return elevatorLigament;
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    elevatorSim.setInput(elevatorMotor.getMotorOutputPercent() * kVoltage);
+    elevatorSim.update(kSimulateDelta);
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
+    simulationOutputToDashboard();
+  }
+
+  private void simulationOutputToDashboard() {
+    SmartDashboard.putNumber("Elevator position", elevatorSim.getPositionMeters());
+    SmartDashboard.putNumber("Current Draw", elevatorSim.getCurrentDrawAmps());
+    SmartDashboard.putNumber(
+        "Elevator Sim Voltage", elevatorMotor.getMotorOutputPercent() * kVoltage);
   }
 }

@@ -26,7 +26,7 @@ public class TalonFXFactory {
         SensorInitializationStrategy.BootToZero;
     public double SENSOR_OFFSET_DEGREES = 0;
 
-    public boolean ENABLE_SUPPLY_CURRENT_LIMIT = false;
+    public boolean ENABLE_SUPPLY_CURRENT_LIMIT = true;
     public boolean ENABLE_STATOR_CURRENT_LIMIT = false;
 
     public boolean ENABLE_SOFT_LIMIT = false;
@@ -141,10 +141,10 @@ public class TalonFXFactory {
     talon.enableVoltageCompensation(false);
 
     talon.configSupplyCurrentLimit(
-        new SupplyCurrentLimitConfiguration(config.ENABLE_SUPPLY_CURRENT_LIMIT, 20, 60, .2),
+        new SupplyCurrentLimitConfiguration(config.ENABLE_SUPPLY_CURRENT_LIMIT, 20, 60, 0.2),
         kTimeoutMs);
     talon.configStatorCurrentLimit(
-        new StatorCurrentLimitConfiguration(config.ENABLE_STATOR_CURRENT_LIMIT, 20, 60, .2),
+        new StatorCurrentLimitConfiguration(config.ENABLE_STATOR_CURRENT_LIMIT, 20, 60, 0.2),
         kTimeoutMs);
 
     talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, kTimeoutMs);

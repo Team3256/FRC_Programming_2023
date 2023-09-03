@@ -35,6 +35,6 @@ public class TimedBoolean {
   }
 
   public boolean hasBeenTrueForThreshold() {
-    return timer.get() > triggerThreshold && condition.getAsBoolean();
+    return timer.hasElapsed(triggerThreshold) && condition.getAsBoolean();
   }
 }

@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static frc.robot.swerve.SwerveConstants.kAlphaOffsets;
+import static frc.robot.swerve.SwerveConstants.kFinalOffsets;
 import static frc.robot.swerve.SwerveConstants.kZiptideOffsets;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,6 +25,13 @@ public enum RobotType {
     @Override
     public Rotation2d getOffset(int module) {
       return kAlphaOffsets[module];
+    }
+  },
+
+  FINAL {
+    @Override
+    public Rotation2d getOffset(int module) {
+      return kFinalOffsets[module];
     }
   };
 
