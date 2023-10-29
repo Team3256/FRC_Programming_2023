@@ -291,7 +291,7 @@ public class RobotContainer implements CANTestable, Loggable {
                             DynamicPathConstants.kBlueBottomDoubleSubstationPose,
                             DynamicPathConstants.kHighBlueScoringPoses[(int) (Math.random() * 9)])
                         .getCommand(
-                            swerveSubsystem, DynamicPathConstants.kPathToDestinationConstraints)
+                            swerveSubsystem)
                         .schedule()));
     tester
         .b()
@@ -302,8 +302,9 @@ public class RobotContainer implements CANTestable, Loggable {
                             PathUtil.flip(DynamicPathConstants.kBlueBottomDoubleSubstationPose),
                             DynamicPathConstants.kHighBlueScoringPoses[(int) (Math.random() * 9)])
                         .getCommand(
-                            swerveSubsystem, DynamicPathConstants.kPathToDestinationConstraints)
+                            swerveSubsystem)
                         .schedule()));
+    tester.x().onTrue(new PrintCommand("TEST JOYSTICK WORKS"));
   }
 
   private void configureIntake() {
@@ -388,6 +389,7 @@ public class RobotContainer implements CANTestable, Loggable {
     SmartDashboard.putData("trajectoryViewer", trajectoryViewer);
     SmartDashboard.putData("waypointViewer", waypointViewer);
     SmartDashboard.putData("swerveViewer", swerveViewer);
+
   }
 
   public boolean isMovingJoystick(CommandXboxController controller) {

@@ -142,7 +142,7 @@ public class AutoIntakeAtDoubleSubstation extends CommandBase {
     if (dynamicPathGenEnabled) {
       DynamicPathGenerator gen =
           new DynamicPathGenerator(swerveSubsystem.getPose(), substationWaypoint);
-      moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);
+      moveToScoringWaypoint = gen.getCommand(swerveSubsystem);
     } else
       moveToScoringWaypoint =
           PathGenerator.createDynamicAbsolutePath(

@@ -136,7 +136,7 @@ public class AutoScore extends CommandBase {
     boolean dynamicPathGenEnabled = SmartDashboard.getBoolean("dynamicPathGenEnabled", false);
     if (dynamicPathGenEnabled) {
       DynamicPathGenerator gen = new DynamicPathGenerator(start, scoringWaypoint);
-      moveToScoringWaypoint = gen.getCommand(swerveSubsystem, kWaypointPathConstraints);
+      moveToScoringWaypoint = gen.getCommand(swerveSubsystem);
     } else
       moveToScoringWaypoint =
           PathGenerator.createDynamicAbsolutePath(

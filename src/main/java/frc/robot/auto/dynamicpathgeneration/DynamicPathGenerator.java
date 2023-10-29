@@ -117,7 +117,7 @@ public class DynamicPathGenerator {
     return PathPlanner.generatePath(kWaypointPathConstraints, pathPoints);
   }
 
-  public Command getCommand(SwerveDrive swerveDrive, PathConstraints pathConstraints) {
+  public Command getCommand(SwerveDrive swerveDrive) {
     double ms0 = System.currentTimeMillis();
     PathPlannerTrajectory trajectory = getTrajectory();
     System.out.println("PROGRAM TOOK:" + (System.currentTimeMillis() - ms0) + " MS");
@@ -137,8 +137,6 @@ public class DynamicPathGenerator {
     if (trajectory == null) return new PrintCommand("ERROR: NO PATH AVAILABLE");
     // otherwise create command that runs the trajectory
     AutoBuilder autoBuilder = new AutoBuilder(swerveDrive);
-    Command trajCommand = autoBuilder.createPathPlannerCommand(trajectory, false, false);
-
-    return trajCommand;
+    return autoBuilder.createPathPlannerCommand(trajectory, false, false);
   }
 }
